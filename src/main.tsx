@@ -1,78 +1,84 @@
 /**
- * toolboxpay - Clean Production Build
- * Theme: Orange, White & Slate | British English
- * Logic: Removed dev markers, local addresses, and platform badges.
+ * toolboxpay - Production Master v3.1
+ * Focus: Central Header Alignment & Mobile Optimisation
+ * Theme: Orange & White | British English
  */
 
 const root = document.getElementById('root');
+
 if (root) {
-  let showTutorial = true; 
-
-  /**
-   * BRANDING SCRUB: This function targets the "Made in Bolt" badge 
-   * specifically to ensure the app looks fully bespoke.
-   */
-  const scrubBranding = () => {
-    // Target common selectors and text patterns used by the platform badge
-    const platformElements = document.querySelectorAll('a[href*="bolt.new"], [class*="bolt-badge"], #bolt-logo');
-    platformElements.forEach(el => (el as HTMLElement).style.display = 'none');
-    
-    // Safety check: Remove by searching for the text content directly if necessary
-    const allDivs = document.getElementsByTagName('div');
-    for (let i = 0; i < allDivs.length; i++) {
-        if (allDivs[i].textContent === 'Made in Bolt') {
-            allDivs[i].style.display = 'none';
-        }
-    }
-  };
-
   const render = () => {
     if (!root) return;
     root.innerHTML = '';
-    
-    const ui = document.createElement('div');
-    ui.style.cssText = "background:#2F3542; min-height:100dvh; display:flex; flex-direction:column; color:#fff; font-family:sans-serif; overflow:hidden;";
 
-    // Header
-    const head = document.createElement('div');
-    head.style.cssText = "padding:20px; background:#111; border-bottom:1px solid #333; display:flex; justify-content:space-between; align-items:center; padding-top: env(safe-area-inset-top);";
-    head.innerHTML = `<b style="color:orange; font-size:1.2rem;">toolbox<span style="color:#fff;">pay</span></b>`;
-    ui.appendChild(head);
+    const app = document.createElement('div');
+    app.style.cssText = `
+      background: #2F3542; 
+      min-height: 100dvh; 
+      display: flex; 
+      flex-direction: column; 
+      color: #fff; 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      padding-top: env(safe-area-inset-top); /* Handles iPhone Notches */
+    `;
 
-    const body = document.createElement('div');
-    body.style.cssText = "padding:20px; flex:1; overflow-y:auto; padding-bottom: calc(env(safe-area-inset-bottom) + 80px);";
+    // --- CENTRED HEADER LOGIC ---
+    const header = document.createElement('div');
+    header.style.cssText = `
+      padding: 15px 20px; 
+      background: #111; 
+      border-bottom: 1px solid #333; 
+      display: flex; 
+      justify-content: center; /* Centres horizontally */
+      align-items: center;     /* Centres vertically */
+      position: relative; 
+      min-height: 60px;
+    `;
 
-    if (showTutorial) {
-      body.innerHTML = `
-        <div style="margin-top:10px;">
-            <div style="display:flex; gap:15px; margin-bottom:25px; align-items: flex-start;">
-                <div style="background:orange; color:#000; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0;">1</div>
-                <div>
-                    <b style="font-size:1.1rem;">Set Up Your Brand</b>
-                    <p style="font-size:0.85rem; color:#a4b0be; margin-top:8px; line-height:1.4;">
-                        Go to the <b>ADMIN</b> tab. Enter your business name, business address, and bank details. Upload your logo to appear on all professional paperwork.
-                    </p>
-                </div>
-            </div>
-            <button id="close-guide" style="width:100%; padding:18px; background:orange; color:#000; border:none; border-radius:12px; font-weight:bold; cursor:pointer; font-size:0.9rem;">
-                GET STARTED
-            </button>
-        </div>
-      `;
-    } else {
-      body.innerHTML = `<div style="text-align:center; padding-top:100px; color:#57606f;">Terminal Active & Secure</div>`;
-    }
+    // Logo Container
+    const logo = document.createElement('div');
+    logo.style.cssText = "display: flex; align-items: center; justify-content: center;";
+    logo.innerHTML = `
+      <span style="color:orange; font-weight: 800; font-size: 1.3rem; letter-spacing: -0.5px;">toolbox</span>
+      <span style="color:#fff; font-weight: 400; font-size: 1.3rem; letter-spacing: -0.5px;">pay</span>
+    `;
 
-    ui.appendChild(body);
-    root.appendChild(ui);
+    header.appendChild(logo);
+    app.appendChild(header);
 
-    // Run scrub immediately and then on a short interval to catch late injections
-    scrubBranding();
-    setTimeout(scrubBranding, 500);
-    setTimeout(scrubBranding, 2000);
+    // --- MAIN CONTENT ---
+    const content = document.createElement('div');
+    content.style.cssText = "flex: 1; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;";
+    content.innerHTML = `
+      <div style="background: rgba(255,165,0,0.05); border: 1px solid rgba(255,165,0,0.2); padding: 30px; border-radius: 20px;">
+        <h2 style="margin: 0; color: orange; font-size: 1.2rem;">Terminal Secure</h2>
+        <p style="color: #a4b0be; font-size: 0.85rem; margin-top: 10px; line-height: 1.5;">
+          Header alignment updated for mobile optimisation.
+        </p>
+      </div>
+    `;
+    app.appendChild(content);
 
-    const btn = document.getElementById('close-guide');
-    if (btn) btn.onclick = () => { showTutorial = false; render(); };
+    // --- NAVIGATION ---
+    const nav = document.createElement('div');
+    nav.style.cssText = `
+      display: grid; 
+      grid-template-columns: repeat(4, 1fr); 
+      background: #111; 
+      border-top: 2px solid orange; 
+      padding-bottom: env(safe-area-inset-bottom, 15px);
+      padding-top: 10px;
+    `;
+
+    ['BILLING', 'QUOTE', 'TERMS', 'ADMIN'].forEach(label => {
+      const btn = document.createElement('button');
+      btn.style.cssText = "background: none; border: none; color: #fff; font-weight: bold; font-size: 0.65rem; padding: 10px 0; letter-spacing: 1px;";
+      btn.innerText = label;
+      nav.appendChild(btn);
+    });
+
+    app.appendChild(nav);
+    root.appendChild(app);
   };
 
   render();
