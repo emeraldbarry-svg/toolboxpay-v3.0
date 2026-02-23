@@ -1,16 +1,16 @@
 /**
- * toolboxpay - Priority Terminal v8.9
- * Focus: Direct Terminal Access & British Localisation
- * Theme: Orange/White
+ * toolboxpay - Production Terminal v9.3
+ * Status: Standard Bolt Host Active
+ * Theme: Orange/White | British English
  */
 
-const startTerminal = () => {
+const bootTerminal = () => {
   const root = document.getElementById('root');
   if (!root) return;
 
-  let recipient = '';
+  let client = '';
   let pounds = 0;
-  let flowType: 'IN' | 'OUT' = 'IN';
+  let flow: 'IN' | 'OUT' = 'IN';
 
   const render = () => {
     const time = new Date().toLocaleTimeString('en-GB', { 
@@ -33,14 +33,14 @@ const startTerminal = () => {
         <div style="flex:1; padding:20px; display:flex; flex-direction:column; justify-content:center;">
           <div style="background:rgba(0,0,0,0.3); padding:25px; border-radius:20px; border:1px solid #444; margin-bottom:20px;">
             <label style="font-size:0.7rem; color:#a4b0be; display:block; margin-bottom:10px; font-weight:bold;">RECIPIENT / CLIENT NAME</label>
-            <input id="client-name" type="text" placeholder="Full Name" value="${recipient}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:18px; border-radius:12px; margin-bottom:15px; box-sizing:border-box; outline:none; font-size:1rem;">
+            <input id="c-name" type="text" placeholder="Full Name" value="${client}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:18px; border-radius:12px; margin-bottom:15px; box-sizing:border-box; outline:none; font-size:1rem;">
             
             <label style="font-size:0.7rem; color:#a4b0be; display:block; margin-bottom:10px; font-weight:bold;">AMOUNT (£)</label>
-            <input id="amount-val" type="number" placeholder="0.00" value="${pounds || ''}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:18px; border-radius:12px; margin-bottom:25px; box-sizing:border-box; font-size:1.4rem; font-weight:bold; outline:none;">
+            <input id="a-val" type="number" placeholder="0.00" value="${pounds || ''}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:18px; border-radius:12px; margin-bottom:25px; box-sizing:border-box; font-size:1.4rem; font-weight:bold; outline:none;">
             
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-              <button id="set-incoming" style="padding:15px; border-radius:12px; border:none; font-weight:900; background:${flowType === 'IN' ? 'orange' : '#333'}; color:${flowType === 'IN' ? '#000' : '#fff'}; cursor:pointer;">INCOMING</button>
-              <button id="set-outgoing" style="padding:15px; border-radius:12px; border:none; font-weight:900; background:${flowType === 'OUT' ? 'orange' : '#333'}; color:${flowType === 'OUT' ? '#000' : '#fff'}; cursor:pointer;">OUTGOING</button>
+              <button id="set-in" style="padding:15px; border-radius:12px; border:none; font-weight:900; background:${flow === 'IN' ? 'orange' : '#333'}; color:${flow === 'IN' ? '#000' : '#fff'}; cursor:pointer;">INCOMING</button>
+              <button id="set-out" style="padding:15px; border-radius:12px; border:none; font-weight:900; background:${flow === 'OUT' ? 'orange' : '#333'}; color:${flow === 'OUT' ? '#000' : '#fff'}; cursor:pointer;">OUTGOING</button>
             </div>
           </div>
           <button id="confirm-btn" style="width:100%; padding:22px; background:#2ecc71; color:#fff; border:none; border-radius:15px; font-weight:900; font-size:1.1rem; cursor:pointer;">CONFIRM TRANSACTION</button>
@@ -56,31 +56,22 @@ const startTerminal = () => {
     `;
 
     // Functional Bindings
-    const c = document.getElementById('client-name') as HTMLInputElement;
-    const a = document.getElementById('amount-val') as HTMLInputElement;
-    
-    c?.addEventListener('input', () => { recipient = c.value; });
-    a?.addEventListener('input', () => { pounds = Number(a.value); });
-    
-    document.getElementById('set-incoming')?.addEventListener('click', () => { flowType = 'IN'; render(); });
-    document.getElementById('set-outgoing')?.addEventListener('click', () => { flowType = 'OUT'; render(); });
+    const ci = document.getElementById('c-name') as HTMLInputElement;
+    const ai = document.getElementById('a-val') as HTMLInputElement;
+    ci?.addEventListener('input', () => { client = ci.value; });
+    ai?.addEventListener('input', () => { pounds = Number(ai.value); });
+    document.getElementById('set-in')?.addEventListener('click', () => { flow = 'IN'; render(); });
+    document.getElementById('set-out')?.addEventListener('click', () => { flow = 'OUT'; render(); });
     document.getElementById('confirm-btn')?.addEventListener('click', () => {
-       alert("Terminal v8.9: Specialising British settings. Transaction ready for processing.");
+      alert(`Transaction for £${pounds} ready. System specialising British English parameters.`);
     });
   };
 
   render();
-
-  // Clock Ticker
   setInterval(() => {
     const el = document.getElementById('live-time');
     if (el) el.innerText = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   }, 1000);
 };
 
-// Initialise System
-if (document.readyState === 'complete') {
-  startTerminal();
-} else {
-  window.addEventListener('load', startTerminal);
-}
+window.onload = bootTerminal;
