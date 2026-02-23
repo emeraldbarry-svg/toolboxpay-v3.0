@@ -1,6 +1,6 @@
 /**
- * toolboxpay - Production Master v6.6
- * Feature: Admin Activity Log & Persistent Storage
+ * toolboxpay - Production Master v6.7
+ * Feature: Detailed Audit Log with In/Out Timing
  * Theme: Orange/White UI | British English
  */
 
@@ -17,15 +17,15 @@ if (root) {
   let activeTab = 'BILLING';
   let paymentStatus: 'IDLE' | 'SUCCESS' = 'IDLE';
   let clientName = '';
-  let labourTotal = 0;
-  let materialsTotal = 0;
+  let amount = 0;
+  let transactionType: 'IN' | 'OUT' = 'IN';
 
-  // Load transaction history from storage
-  const savedHistory = localStorage.getItem('toolboxpay_history');
+  // Load persistent history
+  const savedHistory = localStorage.getItem('toolboxpay_audit_log');
   let history = savedHistory ? JSON.parse(savedHistory) : [];
 
   const triggerSuccessEffects = () => {
-    if ('vibrate' in navigator) navigator.vibrate([100, 50, 100]);
+    if ('vibrate' in navigator) navigator.vibrate([100, 50, 100]); // Haptic Wobble
     const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
     const playNote = (freq: number, start: number, duration: number) => {
       const osc = audioCtx.createOscillator();
@@ -39,26 +39,31 @@ if (root) {
       osc.start(start);
       osc.stop(start + duration);
     };
-    playNote(523.25, audioCtx.currentTime, 0.5); 
-    playNote(392.00, audioCtx.currentTime + 0.3, 0.5);
+    playNote(523.25, audioCtx.currentTime, 0.5); // Ding
+    playNote(392.00, audioCtx.currentTime + 0.3, 0.5); // Dong
   };
 
   const params = new URLSearchParams(window.location.search);
   if (params.get('success') === 'true' && paymentStatus === 'IDLE') {
     paymentStatus = 'SUCCESS';
-    clientName = params.get('client') || 'Customer';
-    const amount = Number(params.get('total')) || 0;
+    clientName = params.get('client') || 'Unknown';
+    const total = Number(params.get('total')) || 0;
+    const type = (params.get('type') as 'IN' | 'OUT') || 'IN';
+
+    // Log with precise British Date and Time
+    const now = new Date();
+    const timestamp = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
     
-    // Add to history if not already present
     const newEntry = {
       id: Date.now(),
-      client: clientName,
-      total: amount,
-      date: new Date().toLocaleDateString('en-GB')
+      name: clientName,
+      total: total,
+      type: type,
+      time: timestamp
     };
-    history = [newEntry, ...history].slice(0, 10); // Keep last 10
-    localStorage.setItem('toolboxpay_history', JSON.stringify(history));
-    
+
+    history = [newEntry, ...history].slice(0, 20); // Store last 20 actions
+    localStorage.setItem('toolboxpay_audit_log', JSON.stringify(history));
     setTimeout(triggerSuccessEffects, 500);
   }
 
@@ -72,12 +77,13 @@ if (root) {
     if (paymentStatus === 'SUCCESS') {
       app.innerHTML = `
         <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:30px; text-align:center;">
-          <div style="width:110px; height:110px; background:#fff; border: 8px solid #2ecc71; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:30px;">
+          <div style="width:110px; height:110px; background:#fff; border: 8px solid #2ecc71; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:30px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
             <svg width="55" height="55" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
-          <h1 style="color:#fff; font-size:1.8rem; margin:0; font-weight:900;">Action Success</h1>
-          <p style="color:orange; margin-top:10px; font-size:1.2rem; font-weight:bold;">Client: ${clientName}</p>
-          <button id="done-btn" style="margin-top:40px; width:100%; max-width:280px; padding:20px; background:orange; color:#000; border:none; border-radius:15px; font-weight:900;">BACK TO TERMINAL</button>
+          <h1 style="color:#fff; font-size:1.8rem; margin:0; font-weight:900;">Action Logged</h1>
+          <p style="color:orange; margin-top:10px; font-size:1.2rem; font-weight:bold;">${clientName}</p>
+          <p style="color:#a4b0be; font-size:0.8rem;">Logged at: ${new Date().toLocaleTimeString('en-GB')}</p>
+          <button id="done-btn" style="margin-top:40px; width:100%; max-width:280px; padding:20px; background:orange; color:#000; border:none; border-radius:15px; font-weight:900;">CONTINUE</button>
         </div>
       `;
       root.appendChild(app);
@@ -101,29 +107,33 @@ if (root) {
     if (activeTab === 'BILLING') {
       content.innerHTML = `
         <div style="background:rgba(0,0,0,0.2); padding:20px; border-radius:15px; border:1px solid #444; margin-bottom:20px;">
-          <label style="font-size:0.7rem; color:#a4b0be; display:block; margin-bottom:5px;">CLIENT NAME</label>
-          <input id="client-in" type="text" placeholder="e.g. J. Blogs" value="${clientName}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:15px; border-radius:10px; margin-bottom:15px; box-sizing:border-box;">
-          <label style="font-size:0.7rem; color:#a4b0be; display:block; margin-bottom:5px;">LABOUR (£)</label>
-          <input id="lab-in" type="number" value="${labourTotal || ''}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:15px; border-radius:10px; box-sizing:border-box;">
+          <label style="font-size:0.7rem; color:#a4b0be; display:block; margin-bottom:5px;">RECIPIENT / CLIENT NAME</label>
+          <input id="client-in" type="text" placeholder="Name" value="${clientName}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:15px; border-radius:10px; margin-bottom:15px; box-sizing:border-box;">
+          
+          <label style="font-size:0.7rem; color:#a4b0be; display:block; margin-bottom:5px;">AMOUNT (£)</label>
+          <input id="amt-in" type="number" value="${amount || ''}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:15px; border-radius:10px; margin-bottom:15px; box-sizing:border-box;">
+          
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <button id="set-in" style="padding:10px; border-radius:8px; border:none; font-weight:bold; background:${transactionType === 'IN' ? 'orange' : '#333'}; color:${transactionType === 'IN' ? '#000' : '#fff'};">INCOMING</button>
+            <button id="set-out" style="padding:10px; border-radius:8px; border:none; font-weight:bold; background:${transactionType === 'OUT' ? 'orange' : '#333'}; color:${transactionType === 'OUT' ? '#000' : '#fff'};">OUTGOING</button>
+          </div>
         </div>
-        <div style="background:orange; padding:30px; border-radius:20px; text-align:center; color:#000; margin-bottom:20px;">
-          <div style="font-size:3rem; font-weight:900;">£${(labourTotal + materialsTotal).toFixed(2)}</div>
-        </div>
-        <button id="test-pay" style="width:100%; padding:20px; background:#2ecc71; color:#fff; border:none; border-radius:15px; font-weight:900;">PROCESS PAYMENT</button>
+        <button id="process-btn" style="width:100%; padding:20px; background:#2ecc71; color:#fff; border:none; border-radius:15px; font-weight:900;">CONFIRM TRANSACTION</button>
       `;
     } else if (activeTab === 'ADMIN') {
       content.innerHTML = `
-        <h2 style="color:orange; font-size:1.1rem; margin-bottom:20px;">Recent Activity</h2>
-        ${history.length === 0 ? '<p style="color:#636e72;">No transactions yet.</p>' : history.map((item: any) => `
-          <div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:12px; border:1px solid #333; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-            <div>
-              <div style="font-weight:bold; color:#fff;">${item.client}</div>
-              <div style="font-size:0.7rem; color:#636e72;">${item.date}</div>
+        <h2 style="color:orange; font-size:1.1rem; margin-bottom:20px;">Audit Log (In/Out)</h2>
+        ${history.length === 0 ? '<p style="color:#636e72;">Log empty.</p>' : history.map((item: any) => `
+          <div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:12px; border-left:4px solid ${item.type === 'IN' ? '#2ecc71' : '#ff4757'}; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="flex:1;">
+              <div style="font-weight:bold; color:#fff; font-size:0.95rem;">${item.name}</div>
+              <div style="font-size:0.65rem; color:#a4b0be;">${item.time} • ${item.type === 'IN' ? 'RECEIVED' : 'PAID OUT'}</div>
             </div>
-            <div style="color:orange; font-weight:900;">£${item.total.toFixed(2)}</div>
+            <div style="color:${item.type === 'IN' ? '#2ecc71' : '#ff4757'}; font-weight:900; font-size:1.1rem;">
+              ${item.type === 'IN' ? '+' : '-'}£${item.total.toFixed(2)}
+            </div>
           </div>
         `).join('')}
-        <button id="clear-history" style="width:100%; margin-top:20px; background:none; border:none; color:#636e72; font-size:0.7rem;">Clear Log</button>
       `;
     }
 
@@ -145,17 +155,12 @@ if (root) {
     // Listeners
     if (activeTab === 'BILLING') {
       document.getElementById('client-in')?.addEventListener('input', (e) => clientName = (e.target as HTMLInputElement).value);
-      document.getElementById('lab-in')?.addEventListener('input', (e) => { labourTotal = Number((e.target as HTMLInputElement).value); render(); });
-      document.getElementById('test-pay')?.addEventListener('click', () => {
-        if (!clientName) return alert("Enter client name.");
-        window.location.search = `?success=true&client=${encodeURIComponent(clientName)}&total=${labourTotal + materialsTotal}`;
-      });
-    }
-    if (activeTab === 'ADMIN') {
-      document.getElementById('clear-history')?.addEventListener('click', () => {
-        localStorage.removeItem('toolboxpay_history');
-        history = [];
-        render();
+      document.getElementById('amt-in')?.addEventListener('input', (e) => amount = Number((e.target as HTMLInputElement).value));
+      document.getElementById('set-in')?.addEventListener('click', () => { transactionType = 'IN'; render(); });
+      document.getElementById('set-out')?.addEventListener('click', () => { transactionType = 'OUT'; render(); });
+      document.getElementById('process-btn')?.addEventListener('click', () => {
+        if (!clientName || !amount) return alert("Enter name and amount.");
+        window.location.search = `?success=true&client=${encodeURIComponent(clientName)}&total=${amount}&type=${transactionType}`;
       });
     }
   };
