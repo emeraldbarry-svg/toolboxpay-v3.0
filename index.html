@@ -58,12 +58,17 @@
     </div>
     <script>
         function process() {
-            const n = document.getElementById('c').value;
-            const a = document.getElementById('a').value;
-            if(!n || !a) return alert("Please fill in all specialised labour fields.");
+            const name = document.getElementById('c').value;
+            const amount = document.getElementById('a').value;
             
-            // Re-route to your Stripe Payment Link once generated
-            alert("ToolboxPay: Redirecting to branded checkout for " + n.toUpperCase());
+            if(!name || !amount) {
+                return alert("Please fill in all specialised labour fields.");
+            }
+            
+            // Your active Stripe link integrated
+            const stripeLink = "https://buy.stripe.com/test_7sY3cxcp84IngOCeYF0Fi00";
+            
+            window.location.href = stripeLink;
         }
     </script>
 </body>
