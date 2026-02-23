@@ -1,6 +1,6 @@
 /**
- * toolboxpay - Production Master v5.0
- * Feature: Secure User Authentication & Personalised Profiles
+ * toolboxpay - Production Master v5.1
+ * Feature: Strong Password Suggestions & Auth UI
  * Theme: Orange & White | British English
  */
 
@@ -14,30 +14,34 @@ const root = document.getElementById('root');
 
 if (root) {
   let session = null;
-  let activeTab = 'BILLING';
+  let isSigningUp = false; // Toggle between Login and Sign-up UI
   let email = '';
   let password = '';
   let isLoading = false;
 
-  // --- AUTH LOGIC ---
-  const handleAuth = async (type: 'LOGIN' | 'SIGNUP') => {
+  const handleAuth = async () => {
+    if (!email || !password) {
+      alert("Please enter both email and password.");
+      return;
+    }
+    
     isLoading = true;
     render();
-    const { data, error } = type === 'LOGIN' 
-      ? await supabase.auth.signInWithPassword({ email, password })
-      : await supabase.auth.signUp({ email, password });
+
+    const { error } = isSigningUp 
+      ? await supabase.auth.signUp({ email, password })
+      : await supabase.auth.signInWithPassword({ email, password });
     
-    if (error) alert(error.message);
+    if (error) {
+      alert(error.message);
+    } else if (isSigningUp) {
+      alert("Account created! Please check your email for a confirmation link (if enabled).");
+    }
+
     isLoading = false;
     render();
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    render();
-  };
-
-  // Check for active session on load
   supabase.auth.onAuthStateChange((_event, currentSession) => {
     session = currentSession;
     render();
@@ -50,68 +54,72 @@ if (root) {
     const app = document.createElement('div');
     app.style.cssText = "background:#2F3542; min-height:100dvh; display:flex; flex-direction:column; color:#fff; font-family:sans-serif; padding-top:env(safe-area-inset-top);";
 
-    // --- LOGIN SCREEN ---
     if (!session) {
       app.innerHTML = `
-        <div style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:30px;">
+        <div style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:30px; max-width:450px; margin:0 auto; width:100%; box-sizing:border-box;">
           <div style="text-align:center; margin-bottom:40px;">
-            <span style="color:orange; font-weight:800; font-size:2.5rem;">toolbox</span><span style="color:#fff; font-weight:400; font-size:2.5rem;">pay</span>
-            <p style="color:#a4b0be; margin-top:10px;">The Professional Mobile Terminal</p>
+            <span style="color:orange; font-weight:800; font-size:2.8rem; letter-spacing:-1px;">toolbox</span><span style="color:#fff; font-weight:400; font-size:2.8rem;">pay</span>
+            <p style="color:#a4b0be; margin-top:10px; font-size:0.9rem;">${isSigningUp ? 'Join the professional trade network' : 'Secure Terminal Login'}</p>
           </div>
-          <div style="background:rgba(0,0,0,0.2); padding:20px; border-radius:15px; border:1px solid #444;">
-            <input id="email-in" type="email" placeholder="Email Address" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:15px; border-radius:10px; margin-bottom:15px;">
-            <input id="pass-in" type="password" placeholder="Password" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:15px; border-radius:10px; margin-bottom:20px;">
-            <button id="login-btn" style="width:100%; padding:18px; background:orange; color:#000; border:none; border-radius:12px; font-weight:900; margin-bottom:10px;">${isLoading ? 'PROCESSING...' : 'LOGIN'}</button>
-            <button id="signup-btn" style="width:100%; padding:10px; background:none; color:orange; border:none; font-weight:bold; font-size:0.8rem;">CREATE NEW ACCOUNT</button>
+
+          <div style="background:rgba(0,0,0,0.25); padding:25px; border-radius:20px; border:1px solid #444; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+            <label style="font-size:0.7rem; color:#a4b0be; display:block; margin-bottom:8px; font-weight:bold;">EMAIL ADDRESS</label>
+            <input id="email-in" type="email" autocomplete="email" placeholder="e.g. j.blogs@gmail.com" value="${email}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:15px; border-radius:10px; margin-bottom:20px; box-sizing:border-box;">
+            
+            <label style="font-size:0.7rem; color:#a4b0be; display:block; margin-bottom:8px; font-weight:bold;">PASSWORD</label>
+            <input id="pass-in" 
+                   type="password" 
+                   ${isSigningUp ? 'autocomplete="new-password"' : 'autocomplete="current-password"'} 
+                   placeholder="${isSigningUp ? 'Create a strong password' : 'Enter your password'}" 
+                   value="${password}" 
+                   style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:15px; border-radius:10px; margin-bottom:10px; box-sizing:border-box;">
+            
+            ${isSigningUp ? `
+              <div style="display:flex; gap:4px; margin-bottom:20px;">
+                <div style="height:4px; flex:1; background:${password.length > 8 ? 'orange' : '#333'}; border-radius:2px;"></div>
+                <div style="height:4px; flex:1; background:${password.length > 10 ? 'orange' : '#333'}; border-radius:2px;"></div>
+                <div style="height:4px; flex:1; background:${password.length > 12 ? 'orange' : '#333'}; border-radius:2px;"></div>
+                <div style="height:4px; flex:1; background:${password.length > 14 ? 'orange' : '#333'}; border-radius:2px;"></div>
+              </div>
+            ` : '<div style="margin-bottom:20px;"></div>'}
+
+            <button id="auth-btn" style="width:100%; padding:20px; background:orange; color:#000; border:none; border-radius:12px; font-weight:900; font-size:1rem; cursor:pointer; transition:0.2s;">
+              ${isLoading ? 'PLEASE WAIT...' : isSigningUp ? 'CREATE ACCOUNT' : 'SECURE LOGIN'}
+            </button>
+
+            <button id="toggle-mode" style="width:100%; margin-top:20px; background:none; border:none; color:#a4b0be; font-size:0.8rem; cursor:pointer;">
+              ${isSigningUp ? 'Already have an account? <span style="color:orange; font-weight:bold;">Login</span>' : 'New to toolboxpay? <span style="color:orange; font-weight:bold;">Sign up</span>'}
+            </button>
           </div>
         </div>
       `;
       root.appendChild(app);
-      
+
+      // Listeners
       const eIn = document.getElementById('email-in') as HTMLInputElement;
-      if (eIn) eIn.oninput = (e) => email = (e.target as HTMLInputElement).value;
+      if (eIn) eIn.oninput = (e) => { email = (e.target as HTMLInputElement).value; };
       const pIn = document.getElementById('pass-in') as HTMLInputElement;
-      if (pIn) pIn.oninput = (e) => password = (e.target as HTMLInputElement).value;
+      if (pIn) pIn.oninput = (e) => { password = (e.target as HTMLInputElement).value; render(); };
       
-      document.getElementById('login-btn')?.addEventListener('click', () => handleAuth('LOGIN'));
-      document.getElementById('signup-btn')?.addEventListener('click', () => handleAuth('SIGNUP'));
+      document.getElementById('auth-btn')?.addEventListener('click', handleAuth);
+      document.getElementById('toggle-mode')?.addEventListener('click', () => {
+        isSigningUp = !isSigningUp;
+        password = ''; // Clear for security when switching
+        render();
+      });
       return;
     }
 
-    // --- MAIN APP UI (Once logged in) ---
-    const header = document.createElement('div');
-    header.style.cssText = "padding:15px; background:#111; border-bottom:1px solid #333; display:grid; grid-template-columns:1fr auto 1fr; align-items:center;";
-    header.innerHTML = `
-      <button id="logout-btn" style="background:none; border:none; color:#636e72; font-size:0.6rem; font-weight:bold;">LOGOUT</button>
-      <div style="display:flex; align-items:center;"><span style="color:orange; font-weight:800; font-size:1.3rem;">toolbox</span><span style="color:#fff; font-weight:400; font-size:1.3rem;">pay</span></div>
-      <div></div>
-    `;
-    app.appendChild(header);
-
-    const content = document.createElement('div');
-    content.style.cssText = "flex:1; padding:20px; overflow-y:auto; text-align:center;";
-    content.innerHTML = `
-      <h2 style="color:orange; margin-top:40px;">Welcome back</h2>
-      <p style="color:#a4b0be;">Logged in as: ${session.user.email}</p>
-      <div style="margin-top:30px; padding:20px; background:rgba(0,0,0,0.2); border-radius:15px; border:1px solid orange;">
-        Your terminal is ready. Use the menu below to start billing.
+    // Authenticated View
+    app.innerHTML = `
+      <div style="padding:20px; text-align:center; flex:1; display:flex; flex-direction:column; justify-content:center;">
+        <h1 style="color:orange;">Security Active</h1>
+        <p>You are logged in as ${session.user.email}</p>
+        <button id="logout-btn" style="margin-top:20px; background:none; border:1px solid #444; color:#fff; padding:10px 20px; border-radius:8px;">Logout</button>
       </div>
     `;
-    app.appendChild(content);
-
-    const nav = document.createElement('div');
-    nav.style.cssText = "display:grid; grid-template-columns:repeat(4,1fr); background:#111; border-top:2px solid orange; padding-bottom:env(safe-area-inset-bottom, 15px); padding-top:10px;";
-    ['BILLING', 'QUOTE', 'TERMS', 'ADMIN'].forEach(label => {
-      const btn = document.createElement('button');
-      btn.style.cssText = `background:none; border:none; color:${activeTab === label ? 'orange' : '#fff'}; font-weight:bold; font-size:0.65rem; padding:12px 0;`;
-      btn.innerText = label;
-      btn.onclick = () => { activeTab = label; render(); };
-      nav.appendChild(btn);
-    });
-    app.appendChild(nav);
     root.appendChild(app);
-
-    document.getElementById('logout-btn')?.addEventListener('click', handleLogout);
+    document.getElementById('logout-btn')?.addEventListener('click', () => supabase.auth.signOut());
   };
 
   render();
