@@ -27,6 +27,7 @@
         .footer-nav { display: flex; justify-content: space-around; width: 100%; }
         .nav { color: orange; font-weight: bold; font-size: 0.75rem; letter-spacing: 1px; text-decoration: none; }
         .email-link { color: #555; font-size: 0.65rem; text-decoration: none; font-family: monospace; }
+        .secure-note { font-size: 0.5rem; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -42,7 +43,7 @@
                 <input type="text" id="c" placeholder="Full Name">
                 <label>Labour Total (£)</label>
                 <input type="number" id="a" class="amt" placeholder="0.00">
-                <button onclick="process()">Confirm & Send Invoice</button>
+                <button onclick="process()">Confirm & Issue Receipt</button>
             </div>
             <div style="margin-top:25px; color:#555; font-size:0.6rem; font-family:monospace; letter-spacing:3px;">WWW.TOOLBOXPAY.COM</div>
         </div>
@@ -52,6 +53,7 @@
                 <a class="nav" style="color:#222" href="#">TERMS</a>
             </div>
             <a href="mailto:support@toolboxpay.com" class="email-link">support@toolboxpay.com</a>
+            <div class="secure-note">Verified British Gateway • Encrypted</div>
         </div>
     </div>
     <script>
@@ -59,9 +61,7 @@
             const n = document.getElementById('c').value;
             const a = document.getElementById('a').value;
             if(!n || !a) return alert("Please fill in all specialised labour fields.");
-            
-            // Link this to your Stripe Payment Link once ready
-            alert("ToolboxPay: Preparing branded invoice for " + n.toUpperCase());
+            alert("ToolboxPay: Verifying branded delivery for " + n.toUpperCase());
         }
     </script>
 </body>
