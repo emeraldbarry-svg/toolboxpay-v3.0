@@ -1,6 +1,6 @@
 /**
- * toolboxpay - Production Master v4.4
- * Feature: Quote Generation with Expiry Logic
+ * toolboxpay - Production Master v4.5
+ * Feature: Terms of Business & PDF Integration
  * Theme: Orange & White | British English
  */
 
@@ -13,31 +13,42 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const root = document.getElementById('root');
 
 if (root) {
-  let activeTab = 'QUOTE';
+  let activeTab = 'TERMS';
   let labourTotal = 0;
   let materialsTotal = 0;
-  let quoteDescription = '';
   let isVatRegistered = false;
   
+  // State for business details and terms
   let businessAddress = "No address found in Admin"; 
   let specialisingIn = "Specialist Trade";
+  let termsOfBusiness = "1. Payment is due within 7 days of invoice date.\n2. All materials remain property of the contractor until paid in full.\n3. Work is guaranteed for 12 months.";
 
   const loadProfileData = async () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('address, specialising_in')
+        .select('address, specialising_in, terms')
         .limit(1)
         .single();
       
       if (data && !error) {
         businessAddress = data.address || businessAddress;
         specialisingIn = data.specialising_in || specialisingIn;
+        if (data.terms) termsOfBusiness = data.terms;
         render();
       }
     } catch (err) {
       console.error("Profile fetch error:", err);
     }
+  };
+
+  const saveTerms = async () => {
+    const { error } = await supabase
+      .from('profiles')
+      .upsert({ terms: termsOfBusiness, updated_at: new Date() });
+    
+    if (!error) alert("Terms of Business updated.");
+    render();
   };
 
   const render = () => {
@@ -61,39 +72,18 @@ if (root) {
     const content = document.createElement('div');
     content.style.cssText = "flex:1; padding:20px; overflow-y:auto;";
 
-    if (activeTab === 'QUOTE') {
+    if (activeTab === 'TERMS') {
       content.innerHTML = `
-        <h2 style="color:orange; font-size:1.1rem; margin-bottom:20px;">Create a Quote</h2>
-        
-        <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #444;">
-          <label style="font-size:0.7rem; color:#a4b0be; display:block; margin-bottom:8px;">SCOPE OF WORK</label>
-          <textarea id="quote-desc" placeholder="Describe the job..." style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:12px; border-radius:8px; height:80px; margin-bottom:15px;">${quoteDescription}</textarea>
-          
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div>
-              <label style="font-size:0.6rem; color:#a4b0be;">LABOUR (£)</label>
-              <input id="labour-input" type="number" value="${labourTotal || ''}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:12px; border-radius:8px;">
-            </div>
-            <div>
-              <label style="font-size:0.6rem; color:#a4b0be;">MATERIALS (£)</label>
-              <input id="mats-input" type="number" value="${materialsTotal || ''}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:12px; border-radius:8px;">
-            </div>
-          </div>
+        <h2 style="color:orange; font-size:1.1rem; margin-bottom:20px;">Terms of Business</h2>
+        <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:12px; border:1px solid #444; margin-bottom:20px;">
+          <label style="font-size:0.7rem; color:#a4b0be; display:block; margin-bottom:10px;">YOUR SMALL PRINT</label>
+          <textarea id="terms-input" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:15px; border-radius:10px; height:200px; font-size:0.85rem; line-height:1.5;">${termsOfBusiness}</textarea>
+          <p style="font-size:0.65rem; color:#636e72; margin-top:10px;">These terms will appear at the bottom of every PDF you generate.</p>
         </div>
-
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:5px; margin-bottom:20px;">
-          <span style="font-size:0.8rem; color:#a4b0be;">Quote valid for 30 days</span>
-          <input id="vat-toggle" type="checkbox" ${isVatRegistered ? 'checked' : ''} style="width:22px; height:22px; accent-color:orange;">
-        </div>
-
-        <div style="background:orange; padding:25px; border-radius:18px; text-align:center; color:#000; margin-bottom:20px;">
-          <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase;">Estimated Total</div>
-          <div style="font-size:2.5rem; font-weight:900;">£${grandTotal.toFixed(2)}</div>
-        </div>
-        <button id="print-btn" style="width:100%; padding:20px; background:#fff; color:#000; border:none; border-radius:12px; font-weight:900; letter-spacing:1px;">SHARE QUOTATION</button>
+        <button id="save-terms-btn" style="width:100%; padding:18px; background:orange; color:#000; border:none; border-radius:12px; font-weight:900;">SAVE TERMS</button>
       `;
     } else {
-      content.innerHTML = `<div style="text-align:center; padding-top:50px; color:#a4b0be;">${activeTab} section selected.</div>`;
+      content.innerHTML = `<div style="text-align:center; padding-top:50px; color:#a4b0be;">${activeTab} active. Total: £${grandTotal.toFixed(2)}</div>`;
     }
     app.appendChild(content);
 
@@ -110,65 +100,38 @@ if (root) {
     app.appendChild(nav);
     root.appendChild(app);
 
-    // --- PDF QUOTE TEMPLATE ---
+    // --- PDF TEMPLATE (WITH TERMS INJECTED) ---
     const printArea = document.createElement('div');
     printArea.className = "only-print";
     printArea.style.cssText = "display:none; color:#000; padding:40px; font-family:sans-serif;";
-    
-    const expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + 30);
-
     printArea.innerHTML = `
       <div style="display:flex; justify-content:space-between; border-bottom:5px solid orange; padding-bottom:20px; margin-bottom:30px;">
         <div>
           <h1 style="margin:0; color:orange; font-size:2rem;">toolboxpay</h1>
-          <p style="margin:5px 0; font-weight:bold; text-transform:uppercase;">${specialisingIn}</p>
-          <p style="margin:0; font-size:0.85rem; color:#444;">${businessAddress}</p>
+          <p style="text-transform:uppercase; font-weight:bold; margin:5px 0;">${specialisingIn}</p>
         </div>
         <div style="text-align:right;">
-          <h2 style="margin:0; color:#222;">QUOTATION</h2>
-          <p style="margin:5px 0; color:#666;">Date: ${new Date().toLocaleDateString('en-GB')}</p>
-          <p style="margin:0; color:red; font-size:0.8rem; font-weight:bold;">Valid until: ${expiryDate.toLocaleDateString('en-GB')}</p>
+          <h2 style="margin:0;">DOCUMENT</h2>
+          <p>Date: ${new Date().toLocaleDateString('en-GB')}</p>
         </div>
       </div>
-      <div style="margin-bottom:30px;">
-        <h3 style="font-size:0.9rem; border-bottom:1px solid #eee; padding-bottom:5px;">Proposed Work</h3>
-        <p style="white-space:pre-wrap; font-size:1rem; line-height:1.5;">${quoteDescription || 'No description provided.'}</p>
+      
+      <div style="min-height:300px;">
+        <p>Document details would appear here...</p>
       </div>
-      <table style="width:100%; border-collapse:collapse; margin-bottom:40px;">
-        <tr style="background:#f8f8f8; text-align:left; border-bottom:2px solid #eee;">
-          <th style="padding:15px; font-size:0.9rem;">Breakdown</th>
-          <th style="padding:15px; font-size:0.9rem; text-align:right;">Estimate (£)</th>
-        </tr>
-        <tr>
-          <td style="padding:15px; border-bottom:1px solid #eee;">Labour Estimate</td>
-          <td style="padding:15px; border-bottom:1px solid #eee; text-align:right;">${labourTotal.toFixed(2)}</td>
-        </tr>
-        <tr>
-          <td style="padding:15px; border-bottom:1px solid #eee;">Materials Estimate</td>
-          <td style="padding:15px; border-bottom:1px solid #eee; text-align:right;">${materialsTotal.toFixed(2)}</td>
-        </tr>
-        ${isVatRegistered ? `<tr><td style="padding:15px; text-align:right; font-weight:bold; color:#666;">VAT (20%)</td><td style="padding:15px; text-align:right; font-weight:bold;">${vatAmount.toFixed(2)}</td></tr>` : ''}
-        <tr style="font-size:1.6rem; font-weight:900;">
-          <td style="padding:30px 15px; text-align:right; color:orange;">TOTAL QUOTE</td>
-          <td style="padding:30px 15px; text-align:right; color:orange;">£${grandTotal.toFixed(2)}</td>
-        </tr>
-      </table>
-      <p style="font-size:0.75rem; color:#666;">* Please note: This is an estimate based on current material costs. Prices may vary if the scope of work changes.</p>
+
+      <div style="margin-top:50px; border-top:2px solid #eee; padding-top:20px;">
+        <h4 style="margin-bottom:10px; font-size:0.9rem; color:orange;">Terms & Conditions</h4>
+        <p style="white-space:pre-wrap; font-size:0.75rem; color:#444; line-height:1.4;">${termsOfBusiness}</p>
+      </div>
     `;
     root.appendChild(printArea);
 
-    // Listeners
-    const descIn = document.getElementById('quote-desc') as HTMLTextAreaElement;
-    if (descIn) descIn.oninput = (e) => { quoteDescription = (e.target as HTMLTextAreaElement).value; };
-    const labIn = document.getElementById('labour-input') as HTMLInputElement;
-    if (labIn) labIn.oninput = (e) => { labourTotal = Number((e.target as HTMLInputElement).value); render(); };
-    const matsIn = document.getElementById('mats-input') as HTMLInputElement;
-    if (matsIn) matsIn.oninput = (e) => { materialsTotal = Number((e.target as HTMLInputElement).value); render(); };
-    const vatTog = document.getElementById('vat-toggle') as HTMLInputElement;
-    if (vatTog) vatTog.onchange = (e) => { isVatRegistered = (e.target as HTMLInputElement).checked; render(); };
-    const printBtn = document.getElementById('print-btn');
-    if (printBtn) printBtn.onclick = () => window.print();
+    // Bindings
+    const termsIn = document.getElementById('terms-input') as HTMLTextAreaElement;
+    if (termsIn) termsIn.oninput = (e) => { termsOfBusiness = (e.target as HTMLTextAreaElement).value; };
+    const saveBtn = document.getElementById('save-terms-btn');
+    if (saveBtn) saveBtn.onclick = saveTerms;
   };
 
   loadProfileData();
