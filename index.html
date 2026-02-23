@@ -1,12 +1,66 @@
 <!DOCTYPE html>
 <html lang="en-GB">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>toolboxpay | Terminal</title>
-  </head>
-  <body style="margin:0; background:#2F3542;">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <style>
+        body, html { margin: 0; padding: 0; background: #2F3542; height: 100%; font-family: sans-serif; overflow: hidden; }
+        #app { height: 100vh; display: flex; flex-direction: column; color: #fff; }
+        .header { padding: 25px 15px; background: #111; border-bottom: 3px solid orange; text-align: center; }
+        .logo-tool { color: orange; font-weight: 900; font-size: 1.8rem; letter-spacing: -1.5px; }
+        .logo-pay { color: #fff; font-weight: 300; font-size: 1.8rem; letter-spacing: -1.5px; }
+        .sub-head { color: orange; font-size: 0.6rem; font-weight: 900; letter-spacing: 5px; text-transform: uppercase; margin-top: 5px; }
+        .content { flex: 1; padding: 30px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .card { width: 100%; max-width: 380px; background: rgba(0,0,0,0.4); padding: 30px; border-radius: 24px; border: 1px solid #444; box-sizing: border-box; }
+        label { font-size: 0.7rem; color: orange; font-weight: bold; display: block; margin-bottom: 8px; text-transform: uppercase; }
+        input { width: 100%; background: #111; border: 1px solid #555; color: #fff; padding: 18px; border-radius: 12px; margin-bottom: 20px; box-sizing: border-box; font-size: 1rem; outline: none; }
+        input:focus { border-color: orange; }
+        .amount-input { font-size: 1.4rem; font-weight: bold; }
+        button { width: 100%; padding: 22px; background: #2ecc71; color: #fff; border: none; border-radius: 16px; font-weight: 900; font-size: 1.1rem; cursor: pointer; }
+        button:active { transform: scale(0.98); background: #27ae60; }
+        .footer { background: #111; padding: 20px 10px 45px 10px; border-top: 1px solid #222; display: grid; grid-template-columns: 1fr 1fr; text-align: center; }
+        .nav-item { color: orange; font-weight: bold; font-size: 0.75rem; letter-spacing: 1px; cursor: pointer; }
+        .nav-inactive { color: #444; }
+        .version { margin-top: 20px; color: #555; font-size: 0.6rem; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="header">
+            <div><span class="logo-tool">toolbox</span><span class="logo-pay">pay</span></div>
+            <div class="sub-head">Specialised Payments</div>
+        </div>
+
+        <div class="content">
+            <div class="card">
+                <label>Client Name</label>
+                <input type="text" id="client" placeholder="Full Name">
+                
+                <label>Labour Total (£)</label>
+                <input type="number" id="amount" class="amount-input" placeholder="0.00">
+                
+                <button onclick="process()">Confirm Transaction</button>
+            </div>
+            <div class="version">RECOVERY_BUILD_v11.0_STABLE</div>
+        </div>
+
+        <div class="footer">
+            <div class="nav-item">BILLING</div>
+            <div class="nav-item nav-inactive">TERMS</div>
+        </div>
+    </div>
+
+    <script>
+        function process() {
+            const name = document.getElementById('client').value;
+            const amt = document.getElementById('amount').value;
+            if(!name || !amt) {
+                alert("Please ensure all specialised labour fields are filled.");
+                return;
+            }
+            alert("ToolboxPay Success: £" + amt + " processed for " + name + ".");
+        }
+    </script>
+</body>
 </html>
