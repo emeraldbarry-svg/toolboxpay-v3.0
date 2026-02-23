@@ -1,137 +1,123 @@
 /**
- * toolboxpay - Production Master v5.7
- * Feature: Deep-Link Recovery Catching
+ * toolboxpay - Production Master v6.0
+ * Feature: Stripe Payment Integration
  * Theme: Orange & White | British English
  */
 
 import { createClient } from '@supabase/supabase-js';
+import { loadStripe } from '@stripe/stripe-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
+
+// Initialise Stripe with your Publishable Key
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const root = document.getElementById('root');
 
 if (root) {
   let session: any = null;
-  let authMode: 'LOGIN' | 'SIGNUP' | 'FORGOT' | 'UPDATE' = 'LOGIN';
-  let email = '';
-  let password = '';
+  let activeTab = 'BILLING';
+  let labourTotal = 0;
+  let materialsTotal = 0;
+  let isVatRegistered = false;
   let isLoading = false;
-  let message = '';
 
-  // --- THE RECOVERY CATCHER ---
-  // Detects if the user has arrived via a reset email link
-  const checkRecovery = () => {
-    const hash = window.location.hash;
-    if (hash && (hash.includes('type=recovery') || hash.includes('access_token='))) {
-      authMode = 'UPDATE';
-      message = "Link verified. Please set your new password below.";
-    }
-  };
-
-  const handleAuth = async () => {
+  const handlePayment = async (amount: number) => {
     isLoading = true;
-    message = '';
     render();
 
     try {
-      if (authMode === 'LOGIN') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-      } else if (authMode === 'FORGOT') {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin,
-        });
-        if (error) throw error;
-        message = "Reset link sent! Please check your spam folder if it doesn't arrive.";
-      } else if (authMode === 'UPDATE') {
-        const { error } = await supabase.auth.updateUser({ password });
-        if (error) throw error;
-        message = "Success! Password updated. You can now login.";
-        authMode = 'LOGIN';
-        password = ''; // Clear password field
-      }
+      // In a production environment, you would call a Supabase Edge Function 
+      // or a small backend to create the Stripe Checkout Session.
+      // For now, we are prepping the UI for that connection.
+      
+      const stripe = await stripePromise;
+      if (!stripe) throw new Error("Stripe failed to initialise.");
+
+      alert(`Redirecting to secure Stripe portal for £${amount.toFixed(2)}...`);
+      
+      // Note: You will need a simple Edge Function to handle the 'sk_' secret key
+      // and return a sessionId. I can help you write that next!
     } catch (err: any) {
-      message = err.message;
-    }
-
-    isLoading = false;
-    render();
-  };
-
-  supabase.auth.onAuthStateChange((event, currentSession) => {
-    session = currentSession;
-    if (event === 'PASSWORD_RECOVERY') {
-      authMode = 'UPDATE';
+      alert("Payment Error: " + err.message);
+    } finally {
+      isLoading = false;
       render();
     }
-    render();
-  });
+  };
 
   const render = () => {
     if (!root) return;
     root.innerHTML = '';
 
+    const subTotal = labourTotal + materialsTotal;
+    const vatAmount = isVatRegistered ? subTotal * 0.2 : 0;
+    const grandTotal = subTotal + vatAmount;
+
     const app = document.createElement('div');
-    app.style.cssText = "background:#2F3542; min-height:100dvh; display:flex; flex-direction:column; color:#fff; font-family:sans-serif; padding-top:env(safe-area-inset-top);";
+    app.style.cssText = "background:#2F3542; min-height:100dvh; display:flex; flex-direction:column; color:#fff; font-family:sans-serif;";
 
-    if (!session || authMode === 'UPDATE') {
-      app.innerHTML = `
-        <div style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:30px; max-width:450px; margin:0 auto; width:100%; box-sizing:border-box;">
-          <div style="text-align:center; margin-bottom:30px;">
-            <span style="color:orange; font-weight:800; font-size:2.8rem;">toolbox</span><span style="color:#fff; font-weight:400; font-size:2.8rem;">pay</span>
+    // Header
+    const header = document.createElement('div');
+    header.style.cssText = "padding:15px; background:#111; border-bottom:1px solid #333; display:flex; justify-content:center; align-items:center;";
+    header.innerHTML = `<span style="color:orange; font-weight:800; font-size:1.3rem;">toolbox</span><span style="color:#fff; font-weight:400; font-size:1.3rem;">pay</span>`;
+    app.appendChild(header);
+
+    const content = document.createElement('div');
+    content.style.cssText = "flex:1; padding:20px; overflow-y:auto;";
+
+    if (activeTab === 'BILLING') {
+      content.innerHTML = `
+        <h2 style="color:orange; font-size:1.1rem; margin-bottom:20px;">Billing Terminal</h2>
+        
+        <div style="background:rgba(0,0,0,0.3); padding:20px; border-radius:15px; border:1px solid #444; margin-bottom:20px;">
+          <div style="margin-bottom:15px;">
+            <label style="font-size:0.7rem; color:#a4b0be; display:block; margin-bottom:5px;">LABOUR (£)</label>
+            <input id="lab-in" type="number" value="${labourTotal || ''}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:15px; border-radius:10px; box-sizing:border-box;">
           </div>
-
-          <div style="background:rgba(0,0,0,0.25); padding:25px; border-radius:20px; border:1px solid #444;">
-            <h2 style="font-size:1rem; margin-bottom:20px; text-align:center; color:orange; text-transform:uppercase; letter-spacing:1px;">
-              ${authMode === 'UPDATE' ? 'Set New Password' : authMode === 'FORGOT' ? 'Recover Account' : 'Secure Login'}
-            </h2>
-
-            ${message ? `<div style="background:rgba(255,165,0,0.1); border:1px solid orange; color:orange; padding:12px; border-radius:8px; margin-bottom:15px; font-size:0.8rem; text-align:center; line-height:1.4;">${message}</div>` : ''}
-            
-            ${authMode !== 'UPDATE' ? `
-              <input id="email-in" type="email" placeholder="Email Address" value="${email}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:15px; border-radius:10px; margin-bottom:15px; box-sizing:border-box;">
-            ` : ''}
-
-            <input id="pass-in" type="password" placeholder="${authMode === 'UPDATE' ? 'New Password' : 'Password'}" value="${password}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:15px; border-radius:10px; margin-bottom:20px; box-sizing:border-box;">
-            
-            <button id="auth-btn" style="width:100%; padding:20px; background:orange; color:#000; border:none; border-radius:12px; font-weight:900;">
-              ${isLoading ? 'PROCESSING...' : authMode === 'UPDATE' ? 'SAVE PASSWORD' : authMode === 'FORGOT' ? 'SEND RESET LINK' : 'LOGIN'}
-            </button>
-
-            <div style="margin-top:20px; text-align:center;">
-              <button id="to-mode" style="background:none; border:none; color:#a4b0be; font-size:0.8rem;">
-                ${authMode === 'LOGIN' ? 'Forgot password?' : 'Back to Login'}
-              </button>
-            </div>
+          <div style="margin-bottom:5px;">
+            <label style="font-size:0.7rem; color:#a4b0be; display:block; margin-bottom:5px;">MATERIALS (£)</label>
+            <input id="mat-in" type="number" value="${materialsTotal || ''}" style="width:100%; background:#111; border:1px solid #555; color:#fff; padding:15px; border-radius:10px; box-sizing:border-box;">
           </div>
         </div>
+
+        <div style="background:orange; padding:30px; border-radius:20px; text-align:center; color:#000; margin-bottom:20px;">
+          <div style="font-size:0.8rem; font-weight:800; text-transform:uppercase; letter-spacing:1px;">Amount Due</div>
+          <div style="font-size:2.8rem; font-weight:900;">£${grandTotal.toFixed(2)}</div>
+        </div>
+
+        <button id="stripe-btn" style="width:100%; padding:20px; background:#635bff; color:#fff; border:none; border-radius:12px; font-weight:900; margin-bottom:15px; display:flex; align-items:center; justify-content:center; gap:10px;">
+          ${isLoading ? 'LOADING...' : '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg> PAY BY CARD'}
+        </button>
+        
+        <button id="print-btn" style="width:100%; padding:15px; background:none; border:1px solid #555; color:#fff; border-radius:12px; font-weight:bold;">DOWNLOAD PDF</button>
       `;
-      root.appendChild(app);
-
-      document.getElementById('email-in')?.addEventListener('input', (e) => email = (e.target as HTMLInputElement).value);
-      document.getElementById('pass-in')?.addEventListener('input', (e) => password = (e.target as HTMLInputElement).value);
-      document.getElementById('auth-btn')?.addEventListener('click', handleAuth);
-      document.getElementById('to-mode')?.addEventListener('click', () => {
-        authMode = authMode === 'LOGIN' ? 'FORGOT' : 'LOGIN';
-        message = '';
-        render();
-      });
-      return;
     }
+    app.appendChild(content);
 
-    // Main App Shell (Placeholder)
-    app.innerHTML = `
-      <div style="padding:40px; text-align:center;">
-        <h1 style="color:orange;">Logged In</h1>
-        <button id="logout-btn" style="background:orange; color:#000; padding:10px 20px; border:none; border-radius:8px;">Logout</button>
-      </div>
-    `;
+    // Nav
+    const nav = document.createElement('div');
+    nav.style.cssText = "display:grid; grid-template-columns:repeat(4,1fr); background:#111; border-top:2px solid orange; padding-bottom:env(safe-area-inset-bottom, 15px); padding-top:10px;";
+    ['BILLING', 'QUOTE', 'TERMS', 'ADMIN'].forEach(label => {
+      const btn = document.createElement('button');
+      btn.style.cssText = `background:none; border:none; color:${activeTab === label ? 'orange' : '#fff'}; font-weight:bold; font-size:0.65rem; padding:12px 0;`;
+      btn.innerText = label;
+      btn.onclick = () => { activeTab = label; render(); };
+      nav.appendChild(btn);
+    });
+    app.appendChild(nav);
+
     root.appendChild(app);
-    document.getElementById('logout-btn')?.addEventListener('click', () => supabase.auth.signOut());
+
+    // Event Listeners
+    document.getElementById('lab-in')?.addEventListener('input', (e) => { labourTotal = Number((e.target as HTMLInputElement).value); render(); });
+    document.getElementById('mat-in')?.addEventListener('input', (e) => { materialsTotal = Number((e.target as HTMLInputElement).value); render(); });
+    document.getElementById('stripe-btn')?.addEventListener('click', () => handlePayment(grandTotal));
+    document.getElementById('print-btn')?.addEventListener('click', () => window.print());
   };
 
-  checkRecovery(); // Run immediately on load
   render();
 }
