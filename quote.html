@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -6,66 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quote Estimator | Toolbox Pay</title>
     <link rel="stylesheet" href="src/index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         .page-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; }
         .logo-text { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 30px; }
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
 
-        /* High-Visibility Menu Button */
         .menu-trigger {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 55px;
-            height: 55px;
-            background: rgba(255, 165, 0, 0.15);
-            border: 2px solid #FFA500;
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(255, 165, 0, 0.3);
+            position: fixed; top: 20px; left: 20px; width: 55px; height: 55px;
+            background: rgba(255, 165, 0, 0.15); border: 2px solid #FFA500;
+            border-radius: 15px; display: flex; justify-content: center;
+            align-items: center; z-index: 2000; backdrop-filter: blur(10px);
         }
         .menu-trigger span { font-size: 32px; color: #FFA500; }
 
-        /* Live Estimate Display */
         .estimate-header {
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 4px solid #FFA500;
+            background: #111; border: 1px solid #333; border-radius: 20px;
+            padding: 25px; text-align: center; margin-bottom: 25px; border-bottom: 4px solid #FFA500;
         }
         .total-glow {
-            font-size: 40px;
-            font-weight: 800;
-            color: #FFA500;
-            text-shadow: 0 0 15px rgba(255, 165, 0, 0.4);
-            margin: 10px 0;
+            font-size: 40px; font-weight: 800; color: #FFA500;
+            text-shadow: 0 0 15px rgba(255, 165, 0, 0.4); margin: 10px 0;
         }
 
-        /* Tactical Form Elements */
-        .input-group { margin-bottom: 20px; }
-        .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
         .calc-input {
-            width: 100%;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            border-radius: 15px;
-            padding: 18px;
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
+            width: 100%; background: #1a1a1a; border: 2px solid #333;
+            border-radius: 15px; padding: 18px; color: white; font-size: 18px;
+            box-sizing: border-box; outline: none; margin-bottom: 20px;
         }
-        .calc-input:focus { border-color: #FFA500; background: #222; }
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 8px; }
+
+        /* Hidden PDF Template Styles */
+        #pdf-template { display: none; background: white; color: black; padding: 40px; font-family: sans-serif; }
+        .pdf-logo { font-size: 28px; font-weight: 900; color: #FFA500; margin-bottom: 10px; }
+        .pdf-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .pdf-table th { text-align: left; border-bottom: 2px solid #eee; padding: 10px; color: #666; font-size: 12px; }
+        .pdf-table td { padding: 15px 10px; border-bottom: 1px solid #eee; }
 
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 1999; transition: 0.4s; padding-top: 100px; border-right: 1px solid #333; }
         .sidebar.active { left: 0; }
@@ -91,30 +67,51 @@
         <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
 
         <div class="estimate-header">
-            <span style="font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase;">Estimated Project Total</span>
+            <span style="font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase;">Live Estimate</span>
             <div class="total-glow" id="displayTotal">£0.00</div>
-            <span id="taxHint" style="font-size: 11px; color: #444;">Incl. VAT/Tax estimates</span>
         </div>
 
         <form id="quoteForm">
-            <div class="input-group">
-                <span class="form-label">Client Name</span>
-                <input type="text" id="custName" class="calc-input" placeholder="e.g. Mr. Smith" required>
-            </div>
+            <span class="form-label">Client Name</span>
+            <input type="text" id="custName" class="calc-input" placeholder="e.g. David Harrison" required>
 
-            <div class="input-group">
-                <span class="form-label">Labour Cost (£)</span>
-                <input type="number" id="labour" class="calc-input" placeholder="0.00" step="0.01" oninput="updateLiveTotal()" required>
-            </div>
+            <span class="form-label">Labour (£)</span>
+            <input type="number" id="labour" class="calc-input" placeholder="0.00" oninput="updateLiveTotal()" required>
 
-            <div class="input-group">
-                <span class="form-label">Materials & Parts (£)</span>
-                <input type="number" id="materials" class="calc-input" placeholder="0.00" step="0.01" oninput="updateLiveTotal()">
-            </div>
+            <span class="form-label">Materials (£)</span>
+            <input type="number" id="materials" class="calc-input" placeholder="0.00" oninput="updateLiveTotal()">
 
-            <div style="background: rgba(255,165,0,0.05); padding: 20px; border-radius: 15px; margin-top: 25px; border: 1px dashed rgba(255,165,0,0.2);">
-                <span class="form-label" style="margin-top:0;">Job Progress Photo</span>
-                <input type="file" id="jobPhoto" accept="image/*" style="display: block; margin-top: 10px; color: #888; font-size: 12px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
+                <button type="button" onclick="generatePDF()" class="btn-primary" style="background: #333; border: 1px solid #555;">💾 Preview PDF</button>
+                <button type="submit" class="btn-primary">✅ Save Job</button>
             </div>
+        </form>
+    </div>
 
-            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 30px; padding: 20px; border-radius:
+    <div id="pdf-template">
+        <div class="pdf-logo">toolbox<span style="color:black">pay</span></div>
+        <div style="margin-bottom: 30px;">
+            <h1 style="margin:0; font-size: 24px;">OFFICIAL QUOTE</h1>
+            <p id="pdf-date" style="color:#888; margin-top:5px;"></p>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <b style="text-transform: uppercase; font-size: 10px; color: #888;">Prepared for:</b>
+            <div id="pdf-client" style="font-size: 18px; font-weight: bold;"></div>
+        </div>
+
+        <table class="pdf-table">
+            <thead>
+                <tr><th>Description</th><th style="text-align:right;">Amount</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Labour & Professional Services</td><td style="text-align:right;" id="pdf-labour">£0.00</td></tr>
+                <tr><td>Materials & Parts</td><td style="text-align:right;" id="pdf-materials">£0.00</td></tr>
+                <tr style="font-weight: bold; font-size: 18px; color: #FFA500;">
+                    <td style="padding-top: 30px;">TOTAL ESTIMATE</td>
+                    <td style="padding-top: 30px; text-align:right;" id="pdf-total">£0.00</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div style="margin-top: 50px; border-top: 1px solid #eee; padding-top: 20px; font-size:
