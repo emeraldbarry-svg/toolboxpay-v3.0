@@ -6,71 +6,150 @@
     <title>Toolbox Pay | Dashboard</title>
     <link rel="stylesheet" href="src/index.css">
     <style>
-        /* Local overrides for layout */
-        .dashboard-container { width: 95%; max-width: 450px; padding: 40px 20px; }
-        .logo-text { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 5px; }
+        .dashboard-container { width: 95%; max-width: 450px; padding: 60px 20px 40px 20px; }
+        .logo-text { font-size: 32px; font-weight: 800; text-align: center; }
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
         
-        .stat-card { 
-            background: linear-gradient(145deg, #1e1e1e, #141414);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid #FFA500;
+        /* Fixed Enlarged Menu Button */
+        .menu-trigger {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid rgba(255, 165, 0, 0.4);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.2);
         }
+        .menu-trigger span { font-size: 30px; color: #FFA500; }
 
-        .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
-        .nav-item { 
-            background: #1e1e1e; 
-            padding: 20px; 
-            border-radius: 18px; 
-            text-decoration: none; 
-            color: white; 
-            text-align: center;
-            border: 1px solid #333;
-            transition: 0.2s;
+        /* Sidebar Aesthetic */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 165, 0, 0.2);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1999;
+            padding-top: 80px;
+            display: flex;
+            flex-direction: column;
         }
-        .nav-item:active { border-color: #FFA500; background: #252525; }
-        .nav-item i { display: block; font-size: 24px; margin-bottom: 8px; }
+        .sidebar.active { left: 0; }
+        .sidebar a {
+            padding: 18px 30px;
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+        }
+        .sidebar a:active { background: rgba(255, 165, 0, 0.1); color: #FFA500; }
+        .sidebar .logout { margin-top: auto; border-top: 1px solid rgba(255, 165, 0, 0.2); color: #ff4d4d; margin-bottom: 20px; }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1998;
+        }
+        
+        .stat-card { border-left: 4px solid #FFA500; margin-bottom: 20px; padding: 20px; }
+        .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     </style>
 </head>
 <body>
 
+    <div class="menu-trigger" onclick="toggleMenu()">
+        <span>☰</span>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div style="padding: 0 30px 20px 30px; border-bottom: 1px solid #222;">
+            <div class="logo-text" style="font-size: 20px; text-align: left;"><span class="orange">toolbox</span><span class="white">pay</span></div>
+        </div>
+        <a href="index.html">🏠 Dashboard</a>
+        <a href="quote.html">📝 New Quote</a>
+        <a href="expense.html">💸 Log Expense</a>
+        <a href="report.html">📊 Monthly Report</a>
+        <a href="gallery.html">📸 Project Gallery</a>
+        <a href="directory.html">👤 Customers</a>
+        <a href="setup.html">⚙️ Business Setup</a>
+        <a href="#" class="logout" onclick="lockApp()">🔒 Lock App</a>
+    </div>
+
     <div class="dashboard-container">
-        <header style="text-align: center; margin-bottom: 40px;">
+        <header style="margin-bottom: 40px; text-align: center;">
             <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-            <p style="color: #888; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Business Command Centre</p>
+            <p id="bizDisplay" style="color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-top: 10px;">Loading Profile...</p>
         </header>
 
         <div class="card-glass" style="padding: 25px; margin-bottom: 25px;">
-            <p style="margin: 0; color: #888; font-size: 12px; font-weight: 700;">TOTAL ESTIMATED PROFIT</p>
-            <h1 class="orange-glow" style="font-size: 48px; margin: 10px 0; color: #FFA500;">£4,820<span style="font-size: 20px; color: #fff; opacity: 0.5;">.00</span></h1>
-            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #aaa;">
-                <span>20% Tax Reserve: -£964.00</span>
-                <span style="color: #00ff88;">Ready to Pay</span>
-            </div>
+            <p style="margin: 0; color: #888; font-size: 11px; font-weight: 700;">ESTIMATED NET EARNINGS</p>
+            <h1 class="orange-glow" id="netProfit" style="font-size: 42px; margin: 10px 0; color: #FFA500;">£0.00</h1>
+            <div style="font-size: 12px; color: #666;">Tax reserve and expenses deducted.</div>
         </div>
 
         <div class="nav-grid">
-            <a href="quote.html" class="nav-item">
-                <span class="orange" style="font-size: 20px;">+</span><br>New Quote
+            <a href="quote.html" class="card-glass" style="text-decoration: none; padding: 20px; text-align: center;">
+                <span class="orange" style="font-size: 24px;">+</span><br>
+                <span style="color: white; font-size: 14px;">New Quote</span>
             </a>
-            <a href="expense.html" class="nav-item">
-                <span class="orange" style="font-size: 20px;">£</span><br>Expenses
-            </a>
-            <a href="gallery.html" class="nav-item">
-                <span class="orange" style="font-size: 20px;">📸</span><br>Gallery
-            </a>
-            <a href="directory.html" class="nav-item">
-                <span class="orange" style="font-size: 20px;">👤</span><br>Customers
+            <a href="expense.html" class="card-glass" style="text-decoration: none; padding: 20px; text-align: center;">
+                <span class="orange" style="font-size: 24px;">£</span><br>
+                <span style="color: white; font-size: 14px;">Expense</span>
             </a>
         </div>
 
         <a href="report.html" class="btn-primary" style="display: block; text-align: center; margin-top: 25px; text-decoration: none;">
-            View Monthly Labour Report
+            View Full Labour Report
         </a>
     </div>
 
+    <script>
+        function toggleMenu() {
+            const sb = document.getElementById('sidebar');
+            const ov = document.getElementById('overlay');
+            sb.classList.toggle('active');
+            ov.style.display = sb.classList.contains('active') ? 'block' : 'none';
+        }
+
+        function lockApp() {
+            // Simple session lock - requires PIN to see data again
+            sessionStorage.removeItem('unlocked');
+            window.location.reload();
+        }
+
+        window.onload = () => {
+            const biz = localStorage.getItem('companyName');
+            if(!biz) {
+                window.location.href = "setup.html";
+            } else {
+                document.getElementById('bizDisplay').innerText = biz;
+            }
+        };
+    </script>
 </body>
 </html>
