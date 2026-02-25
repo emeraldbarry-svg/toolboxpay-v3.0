@@ -21,7 +21,6 @@
             background: rgba(255, 165, 0, 0.15); border: 2px solid #FFA500;
             border-radius: 15px; display: flex; justify-content: center;
             align-items: center; z-index: 2000; backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(255, 165, 0, 0.3);
         }
         .menu-trigger span { font-size: 32px; color: #FFA500; }
 
@@ -30,18 +29,18 @@
             color: #888; text-transform: uppercase; letter-spacing: 2px; margin-top: -5px;
         }
 
-        /* Quick Dial Component */
-        .quick-dial-card {
-            display: none; background: #111; border: 1px solid #333; 
-            border-radius: 20px; padding: 15px; margin-top: 25px;
-            align-items: center; justify-content: space-between;
+        /* Dual Quick Action Row */
+        .quick-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        .quick-card { 
+            background: #111; border: 1px solid #333; border-radius: 20px; 
+            padding: 12px; display: none; align-items: center; justify-content: space-between;
         }
-        .dial-info p { margin: 0; font-size: 11px; color: #666; font-weight: 700; text-transform: uppercase; }
-        .dial-info h3 { margin: 2px 0 0 0; font-size: 16px; color: #fff; }
-        .dial-btn { 
-            background: #FFA500; width: 45px; height: 45px; border-radius: 12px;
+        .q-info p { margin: 0; font-size: 9px; color: #666; font-weight: 800; text-transform: uppercase; }
+        .q-info h3 { margin: 2px 0 0 0; font-size: 13px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90px; }
+        .q-btn { 
+            background: #FFA500; width: 35px; height: 35px; border-radius: 10px;
             display: flex; align-items: center; justify-content: center; text-decoration: none;
-            font-size: 20px; box-shadow: 0 4px 10px rgba(255,165,0,0.3);
+            font-size: 16px; flex-shrink: 0;
         }
 
         .main-display {
@@ -94,12 +93,22 @@
             <div id="displayLoc" class="service-badge">Loading...</div>
         </header>
 
-        <div id="quickDial" class="quick-dial-card">
-            <div class="dial-info">
-                <p>Recent Contact</p>
-                <h3 id="lastContactName">No Contacts</h3>
+        <div class="quick-row">
+            <div id="quickDial" class="quick-card">
+                <div class="q-info">
+                    <p>Recent Call</p>
+                    <h3 id="lastContactName">-</h3>
+                </div>
+                <a href="#" id="lastContactLink" class="q-btn">📞</a>
             </div>
-            <a href="#" id="lastContactLink" class="dial-btn">📞</a>
+
+            <div id="quickQuote" class="quick-card">
+                <div class="q-info">
+                    <p>Last Quote</p>
+                    <h3 id="lastQuoteVal">£0.00</h3>
+                </div>
+                <a href="report.html" class="q-btn">📄</a>
+            </div>
         </div>
 
         <div class="main-display">
@@ -147,7 +156,7 @@
             document.getElementById('bizName').innerText = biz;
             document.getElementById('displayLoc').innerText = "Service Area: " + loc;
             
-            // Profit Logic
+            // Profit Data
             const quotes = JSON.parse(localStorage.getItem('quoteHistory')) || [];
             const expenses = JSON.parse(localStorage.getItem('expenseHistory')) || [];
             const income = quotes.reduce((sum, q) => sum + parseFloat(q.total || 0), 0);
@@ -155,13 +164,20 @@
             const net = (income - costs) * 0.8;
             document.getElementById('totalProfit').innerText = "£" + net.toLocaleString('en-GB', {minimumFractionDigits: 2});
 
-            // Quick Dial Logic
+            // Quick Dial Data
             const customers = JSON.parse(localStorage.getItem('directory')) || [];
             if (customers.length > 0) {
                 const last = customers[customers.length - 1];
                 document.getElementById('lastContactName').innerText = last.name;
                 document.getElementById('lastContactLink').href = "tel:" + last.phone;
                 document.getElementById('quickDial').style.display = "flex";
+            }
+
+            // Quick Quote Data
+            if (quotes.length > 0) {
+                const lastQ = quotes[quotes.length - 1];
+                document.getElementById('lastQuoteVal').innerText = "£" + parseFloat(lastQ.total).toLocaleString('en-GB');
+                document.getElementById('quickQuote').style.display = "flex";
             }
         };
     </script>
