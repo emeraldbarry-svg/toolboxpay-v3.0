@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Report | Toolbox Pay</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body { background-color: #000; margin: 0; padding: 20px; font-family: sans-serif; color: #fff; display: flex; flex-direction: column; align-items: center; }
+        .report-card { background-color: #1a1a1a; border: 2px solid #FFA500; border-radius: 30px; padding: 30px; width: 100%; max-width: 600px; box-sizing: border-box; }
+        .orange { color: #FFA500; }
+        .header { border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; text-align: center; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .stat-box { background: #222; padding: 15px; border-radius: 15px; border: 1px solid #333; }
+        .stat-val { font-size: 20px; font-weight: bold; display: block; margin-top: 5px; }
+        .stat-label { font-size: 11px; color: #888; text-transform: uppercase; }
+        .btn-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        .btn { background: #FFA500; color: #000; border: none; padding: 12px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .btn-secondary { background: #333; color: #fff; text-decoration: none; padding: 12px; border-radius: 12px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="btn-group">
+        <button class="btn" onclick="html2pdf().from(document.getElementById('reportContent')).save()">📥 Download PDF</button>
+        <a href="index.html" class="btn-secondary">Dashboard</a>
+    </div>
+    <div class="report-card" id="reportContent">
+        <div class="header">
+            <div style="font-size: 24px; font-weight: bold;"><span class="orange">toolbox</span>pay</div>
+            <h2 id="bizHeader">Business Summary</h2>
+        </div>
+        <div class="stat-grid">
+            <div class="stat-box"><span class="stat-label">Income</span><span class="stat-val" id="totalIn" style="color:#00ff88;">£0.00</span></div>
+            <div class="stat-box"><span class="stat-label">Expenses</span><span class="stat-val" id="totalOut" style="color:#ff4d4d;">£0.00</span></div>
+            <div class="stat-box"><span class="stat-label">Tax Due</span><span class="stat-val orange" id="taxVal">£0.00</span></div>
+            <div class="stat-box"><span class="stat-label">Net Profit</span><span class="stat-val" id="netProfit">£0.00</span></div>
+        </div>
+    </div>
+    <script>
+        const quotes = JSON.parse(localStorage.getItem('quoteHistory')) || [];
+        const expenses = JSON.parse(localStorage.getItem('expenseHistory')) || [];
+        const taxRate = parseFloat(localStorage.getItem('taxRate')) || 20;
+        const totalIn = quotes.filter(q => q.status === 'Paid').reduce((s, q) => s + parseFloat(q.total), 0);
+        const totalOut = expenses.reduce((s, e) => s + parseFloat(e.amt), 0);
+        const net = totalIn - totalOut;
+        const tax = net > 0 ? net * (taxRate / 100) : 0;
+        document.getElementById('totalIn').innerText = "£" + totalIn.toFixed(2);
+        document.getElementById('totalOut').innerText = "£" + totalOut.toFixed(2);
+        document.getElementById('taxVal').innerText = "£" + tax.toFixed(2);
+        document.getElementById('netProfit').innerText = "£" + (net - tax).toFixed(2);
+    </script>
+</body>
+</html>
