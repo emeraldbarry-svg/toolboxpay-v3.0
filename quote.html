@@ -2,181 +2,130 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quote Estimator | Toolbox Pay</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Create Quote | Toolbox Pay</title>
     <link rel="stylesheet" href="src/index.css">
     <script src="src/auth.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        .page-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; }
-        .logo-text { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 30px; }
+        .page-container { width: 90%; max-width: 400px; padding: 40px 20px; margin: 0 auto; }
+        
+        /* Logo and Header Styling */
+        .logo-text { font-size: 26px; font-weight: 800; text-align: center; margin-bottom: 5px; }
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
-
-        .menu-trigger {
-            position: fixed; top: 20px; left: 20px; width: 55px; height: 55px;
-            background: rgba(255, 165, 0, 0.15); border: 2px solid #FFA500;
-            border-radius: 15px; display: flex; justify-content: center;
-            align-items: center; z-index: 2000; backdrop-filter: blur(10px);
-        }
-        .menu-trigger span { font-size: 32px; color: #FFA500; }
-
-        .estimate-header {
-            background: #111; border: 1px solid #333; border-radius: 20px;
-            padding: 25px; text-align: center; margin-bottom: 25px; border-bottom: 4px solid #FFA500;
-        }
-        .total-glow {
-            font-size: 40px; font-weight: 800; color: #FFA500;
-            text-shadow: 0 0 15px rgba(255, 165, 0, 0.4); margin: 10px 0;
+        .page-header {
+            text-align: center;
+            color: #888;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
         }
 
-        .calc-input {
-            width: 100%; background: #1a1a1a; border: 2px solid #333;
-            border-radius: 15px; padding: 18px; color: white; font-size: 18px;
-            box-sizing: border-box; outline: none; margin-bottom: 20px;
+        .form-card {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 25px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 8px; }
 
-        /* PDF Hidden Template */
-        #pdf-template { display: none; background: white; color: #1a1a1a; padding: 50px; font-family: 'Segoe UI', Arial, sans-serif; }
-        .pdf-header { border-bottom: 2px solid #FFA500; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .pdf-table { width: 100%; border-collapse: collapse; margin: 30px 0; }
-        .pdf-table th { text-align: left; padding: 12px; background: #f9f9f9; font-size: 12px; color: #666; }
-        .pdf-table td { padding: 15px 12px; border-bottom: 1px solid #eee; }
-        .terms-section { margin-top: 50px; padding: 20px; background: #fdfdfd; border: 1px solid #eee; border-radius: 8px; font-size: 10px; color: #777; line-height: 1.5; }
+        .input-group { margin-bottom: 15px; }
+        .form-label { display: block; font-size: 10px; font-weight: 700; color: #666; text-transform: uppercase; margin-bottom: 5px; margin-left: 5px; }
+        
+        .quote-input {
+            width: 100%; background: #1a1a1a; border: 1px solid #222;
+            border-radius: 12px; padding: 14px; color: white; font-size: 16px;
+            box-sizing: border-box; outline: none; transition: 0.3s;
+        }
+        .quote-input:focus { border-color: #FFA500; }
 
-        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 1999; transition: 0.4s; padding-top: 100px; border-right: 1px solid #333; }
-        .sidebar.active { left: 0; }
-        .sidebar a { padding: 20px 30px; color: white; text-decoration: none; display: block; border-bottom: 1px solid #1a1a1a; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1998; }
+        /* Photo Upload Placeholder */
+        .photo-upload {
+            border: 1px dashed #FFA500;
+            background: rgba(255, 165, 0, 0.05);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .btn-stack { display: flex; flex-direction: column; gap: 12px; }
+        
+        .btn-quote {
+            width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; 
+            font-size: 16px; border: none; cursor: pointer; text-align: center;
+            transition: 0.2s;
+        }
+        .btn-main { background: #FFA500; color: #000; }
+        .btn-cancel { background: #222; color: #fff; border: 1px solid #333; }
+        
+        .btn-quote:active { transform: scale(0.98); opacity: 0.9; }
     </style>
 </head>
 <body>
 
-    <div class="menu-trigger" onclick="toggleMenu()"><span>☰</span></div>
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-    
-    <div class="sidebar" id="sidebar">
-        <a href="index.html">🏠 Dashboard</a>
-        <a href="quote.html">📝 Create Quote</a>
-        <a href="expense.html">💸 Log Expense</a>
-        <a href="report.html">📊 Labour Report</a>
-        <a href="gallery.html">📸 Portfolio</a>
-        <a href="directory.html">👤 Customers</a>
-    </div>
-
     <div class="page-container">
         <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
+        <div class="page-header">Create New Quote</div>
 
-        <div class="estimate-header">
-            <span style="font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase;">Estimated Total</span>
-            <div class="total-glow" id="displayTotal">£0.00</div>
-        </div>
+        <div class="form-card">
+            <form id="quoteForm">
+                <div class="input-group">
+                    <span class="form-label">Customer Search / Name</span>
+                    <input type="text" id="custName" class="quote-input" placeholder="Type name..." required>
+                </div>
 
-        <form id="quoteForm">
-            <span class="form-label">Client Name</span>
-            <input type="text" id="custName" class="calc-input" placeholder="Enter name..." required>
-            <span class="form-label">Labour (£)</span>
-            <input type="number" id="labour" class="calc-input" placeholder="0.00" oninput="updateLiveTotal()" required>
-            <span class="form-label">Materials (£)</span>
-            <input type="number" id="materials" class="calc-input" placeholder="0.00" oninput="updateLiveTotal()">
+                <div class="input-group">
+                    <span class="form-label">Labour (Total Hours)</span>
+                    <input type="number" id="labourHours" class="quote-input" placeholder="Hours" step="0.5" required>
+                </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                <button type="button" onclick="generatePDF()" class="btn-primary" style="background: #333; border: 1px solid #555;">💾 PDF Quote</button>
-                <button type="submit" class="btn-primary">✅ Save Job</button>
-            </div>
-        </form>
-    </div>
+                <div class="input-group">
+                    <span class="form-label">Material Costs (£)</span>
+                    <input type="number" id="materialCosts" class="quote-input" placeholder="0" step="0.01" required>
+                </div>
 
-    <div id="pdf-template">
-        <div class="pdf-header">
-            <div>
-                <div style="font-size: 28px; font-weight: 900; color: #FFA500;">toolbox<span style="color:#1a1a1a">pay</span></div>
-                <div id="pdf-biz-name" style="font-weight: bold; margin-top: 5px; text-transform: uppercase; font-size: 14px;"></div>
-            </div>
-            <div style="text-align: right;">
-                <h2 style="margin: 0; color: #444;">QUOTE</h2>
-                <p id="pdf-date" style="margin: 5px 0; font-size: 12px; color: #888;"></p>
-            </div>
-        </div>
+                <div class="photo-upload">
+                    📸 Tap to attach job photo
+                </div>
 
-        <div style="margin-bottom: 20px;">
-            <div style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: bold; margin-bottom: 5px;">Prepared For:</div>
-            <div id="pdf-client-name" style="font-size: 18px; font-weight: bold;"></div>
-        </div>
-
-        <table class="pdf-table">
-            <thead>
-                <tr><th>Description</th><th style="text-align: right;">Total</th></tr>
-            </thead>
-            <tbody>
-                <tr><td>Professional Labour & Services</td><td style="text-align: right;" id="pdf-labour-val">£0.00</td></tr>
-                <tr><td>Materials, Parts & Sundries</td><td style="text-align: right;" id="pdf-materials-val">£0.00</td></tr>
-                <tr style="font-size: 18px; font-weight: bold; color: #FFA500;">
-                    <td style="padding-top: 25px;">TOTAL ESTIMATE</td>
-                    <td style="padding-top: 25px; text-align: right;" id="pdf-total-val">£0.00</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="terms-section">
-            <b style="color: #444; text-transform: uppercase;">Terms & Conditions:</b><br>
-            1. This quote is valid for 30 days from the date shown above.<br>
-            2. Payment is due within 7 days of invoice unless otherwise agreed in writing.<br>
-            3. All materials remain the property of <span class="pdf-biz-name-insert">our business</span> until paid in full.<br>
-            4. Warranty covers <b>labour</b> and installation only; manufacturer warranties apply to parts.<br>
-            5. Final price may vary if unforeseen structural issues or additional work is requested.
+                <div class="btn-stack">
+                    <button type="submit" class="btn-quote btn-main">Create Digital Quote</button>
+                    <button type="button" onclick="window.location.href='index.html'" class="btn-quote btn-cancel">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
-        function toggleMenu() {
-            const sb = document.getElementById('sidebar');
-            const ov = document.getElementById('overlay');
-            sb.classList.toggle('active');
-            ov.style.display = sb.classList.contains('active') ? 'block' : 'none';
-        }
-
-        function updateLiveTotal() {
-            const l = parseFloat(document.getElementById('labour').value) || 0;
-            const m = parseFloat(document.getElementById('materials').value) || 0;
-            document.getElementById('displayTotal').innerText = "£" + (l + m).toFixed(2);
-        }
-
-        function generatePDF() {
-            const bizName = localStorage.getItem('companyName') || "Your Business";
-            const client = document.getElementById('custName').value || "Client";
-            const labour = parseFloat(document.getElementById('labour').value) || 0;
-            const materials = parseFloat(document.getElementById('materials').value) || 0;
-            const total = (labour + materials).toFixed(2);
-
-            document.getElementById('pdf-biz-name').innerText = bizName;
-            document.querySelector('.pdf-biz-name-insert').innerText = bizName;
-            document.getElementById('pdf-client-name').innerText = client;
-            document.getElementById('pdf-labour-val').innerText = "£" + labour.toFixed(2);
-            document.getElementById('pdf-materials-val').innerText = "£" + materials.toFixed(2);
-            document.getElementById('pdf-total-val').innerText = "£" + total;
-            document.getElementById('pdf-date').innerText = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-
-            const element = document.getElementById('pdf-template');
-            element.style.display = 'block';
-            const opt = { margin: 0.5, filename: `Quote_${client}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 3 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
-            
-            html2pdf().set(opt).from(element).save().then(() => {
-                element.style.display = 'none';
-            });
-        }
-
         document.getElementById('quoteForm').onsubmit = (e) => {
             e.preventDefault();
-            const history = JSON.parse(localStorage.getItem('quoteHistory')) || [];
-            history.push({
-                name: document.getElementById('custName').value,
-                total: (parseFloat(document.getElementById('labour').value) + parseFloat(document.getElementById('materials').value)).toFixed(2),
+            
+            // Basic calculation logic for the report
+            const hours = parseFloat(document.getElementById('labourHours').value);
+            const materials = parseFloat(document.getElementById('materialCosts').value);
+            const rate = parseFloat(localStorage.getItem('hourlyRate')) || 25; // Default if not set
+            
+            const total = (hours * rate) + materials;
+
+            const quoteData = {
+                customer: document.getElementById('custName').value,
+                total: total.toFixed(2),
                 date: new Date().toLocaleDateString('en-GB')
-            });
+            };
+
+            const history = JSON.parse(localStorage.getItem('quoteHistory')) || [];
+            history.push(quoteData);
             localStorage.setItem('quoteHistory', JSON.stringify(history));
-            window.location.href = "index.html";
+
+            alert('Quote Created: £' + quoteData.total);
+            window.location.href = 'index.html';
         };
     </script>
 </body>
