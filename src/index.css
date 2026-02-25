@@ -1,8 +1,64 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+:root {
+  --toolbox-orange: #FFA500;
+  --toolbox-white: #FFFFFF;
+  --toolbox-black: #0A0A0A;
+  --toolbox-gray: #1E1E1E;
+  font-family: 'Inter', sans-serif;
+}
 
 body {
+  background-color: var(--toolbox-black);
+  color: var(--toolbox-white);
   margin: 0;
-  background-color: #0b0f1a;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Master Aesthetic Classes */
+.card-glass {
+  background: rgba(30, 30, 30, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 165, 0, 0.3);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}
+
+.orange-glow {
+  text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+}
+
+.btn-primary {
+  background: var(--toolbox-orange);
+  color: var(--toolbox-black);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: none;
+  padding: 16px 24px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 165, 0, 0.5);
+}
+
+.input-field {
+  background: #121212;
+  border: 1px solid #333;
+  color: white;
+  padding: 14px;
+  border-radius: 10px;
+  transition: border-color 0.3s;
+}
+
+.input-field:focus {
+  border-color: var(--toolbox-orange);
+  outline: none;
 }
