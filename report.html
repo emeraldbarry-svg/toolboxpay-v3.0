@@ -5,97 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monthly Report | Toolbox Pay</title>
     <link rel="stylesheet" href="src/index.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        .page-container { width: 95%; max-width: 500px; padding: 40px 20px; }
+        .page-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; }
         .logo-text { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 30px; }
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
 
-        .report-header { border-bottom: 1px solid rgba(255, 165, 0, 0.2); padding-bottom: 15px; margin-bottom: 25px; }
-        .financial-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222; }
-        .financial-row:last-child { border-bottom: none; }
-        .label { color: #888; font-size: 14px; }
-        .value { font-weight: 700; color: #fff; }
-        
-        .summary-box { background: rgba(255, 165, 0, 0.1); border-radius: 15px; padding: 20px; margin-top: 25px; border: 1px solid rgba(255, 165, 0, 0.3); }
-        .btn-download { background: #fff; color: #000; width: 100%; margin-top: 20px; border-radius: 12px; padding: 15px; font-weight: bold; border: none; cursor: pointer; }
+        /* High-Visibility Menu Button */
+        .menu-trigger {
+            position: fixed; top: 20px; left: 20px; width: 55px; height: 55px;
+            background: rgba(255, 165, 0, 0.15); border: 2px solid #FFA500;
+            border-radius: 15px; display: flex; justify-content: center;
+            align-items: center; z-index: 2000; backdrop-filter: blur(10px);
+        }
+        .menu-trigger span { font-size: 32px; color: #FFA500; }
+
+        /* Report Cards */
+        .metric-card {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .metric-label { font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+        .metric-value { font-size: 20px; font-weight: 800; color: #fff; }
+
+        /* Profit Glow Box */
+        .profit-box {
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border: 1px solid #FFA500;
+            border-radius: 25px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.1);
+        }
+
+        /* Sidebar & Overlay */
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 1999; transition: 0.4s; padding-top: 100px; border-right: 1px solid #333; }
+        .sidebar.active { left: 0; }
+        .sidebar a { padding: 20px 30px; color: white; text-decoration: none; display: block; border-bottom: 1px solid #1a1a1a; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1998; }
     </style>
 </head>
 <body>
 
+    <div class="menu-trigger" onclick="toggleMenu()"><span>☰</span></div>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    
+    <div class="sidebar" id="sidebar">
+        <a href="index.html">🏠 Dashboard</a>
+        <a href="quote.html">📝 Create Quote</a>
+        <a href="expense.html">💸 Log Expense</a>
+        <a href="report.html">📊 Labour Report</a>
+        <a href="gallery.html">📸 Portfolio</a>
+        <a href="directory.html">👤 Customers</a>
+    </div>
+
     <div class="page-container">
         <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-        
-        <div id="report-content" class="card-glass" style="padding: 30px;">
-            <div class="report-header">
-                <h2 style="margin: 0; font-size: 18px;" class="orange-glow">Business Labour Report</h2>
-                <p id="reportDate" style="font-size: 12px; color: #888; margin-top: 5px;"></p>
-            </div>
 
-            <div class="financial-row">
-                <span class="label">Total Gross Income</span>
-                <span class="value" id="grossIncome">£0.00</span>
-            </div>
-            <div class="financial-row">
-                <span class="label">Total Business Expenses</span>
-                <span class="value" id="totalExpenses" style="color: #ff4d4d;">-£0.00</span>
-            </div>
-            <div class="financial-row">
-                <span class="label">Taxable Profit</span>
-                <span class="value" id="taxableProfit">£0.00</span>
-            </div>
-
-            <div class="summary-box">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 12px; font-weight: bold; color: #FFA500;">20% HMRC ESTIMATE</span>
-                    <span id="taxDue" style="font-size: 18px; font-weight: 800; color: #FFA500;">£0.00</span>
-                </div>
-            </div>
-
-            <div style="margin-top: 30px; text-align: center;">
-                <h3 style="font-size: 24px; margin: 0; color: #00ff88;" id="netTakeHome">£0.00</h3>
-                <p style="font-size: 11px; color: #888; margin-top: 5px; text-transform: uppercase;">Estimated Take-Home Pay</p>
-            </div>
+        <div class="profit-box">
+            <span class="metric-label" style="color: #FFA500;">Estimated Net Take-Home</span>
+            <div class="orange-glow" id="netTakeHome" style="font-size: 48px; color: #FFA500; margin: 10px 0; font-weight: 900;">£0.00</div>
+            <p style="font-size: 11px; color: #555; margin: 0;">After 20% Tax & Business Expenses</p>
         </div>
 
-        <button class="btn-download" onclick="downloadPDF()">📥 Download PDF for Accountant</button>
-        <a href="index.html" style="display: block; text-align: center; margin-top: 20px; color: #888; text-decoration: none; font-size: 14px;">← Back to Dashboard</a>
+        <div class="metric-card">
+            <span class="metric-label">Gross Income</span>
+            <span class="metric-value" id="grossIncome" style="color: #00ff88;">£0.00</span>
+        </div>
+
+        <div class="metric-card">
+            <span class="metric-label">Total Expenses</span>
+            <span class="metric-value" id="totalExpenses" style="color: #ff4d4d;">£0.00</span>
+        </div>
+
+        <div class="metric-card">
+            <span class="metric-label">HMRC Tax Pot (20%)</span>
+            <span class="metric-value" id="taxPot">£0.00</span>
+        </div>
+
+        <div style="margin-top: 40px; text-align: center;">
+            <p style="font-size: 12px; color: #444; line-height: 1.6;">
+                These figures are based on your logged <b>labour</b> and material costs. 
+                Always consult an accountant for final tax filings.
+            </p>
+        </div>
     </div>
 
     <script>
-        document.getElementById('reportDate').innerText = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+        function toggleMenu() {
+            const sb = document.getElementById('sidebar');
+            const ov = document.getElementById('overlay');
+            sb.classList.toggle('active');
+            ov.style.display = sb.classList.contains('active') ? 'block' : 'none';
+        }
 
-        function calculateReport() {
+        window.onload = () => {
             const quotes = JSON.parse(localStorage.getItem('quoteHistory')) || [];
             const expenses = JSON.parse(localStorage.getItem('expenseHistory')) || [];
-            const taxRate = parseFloat(localStorage.getItem('taxRate')) || 20;
-
-            const income = quotes.filter(q => q.status === 'Paid').reduce((sum, q) => sum + parseFloat(q.total), 0);
-            const costs = expenses.reduce((sum, e) => sum + parseFloat(e.amt), 0);
+            
+            const income = quotes.reduce((sum, q) => sum + parseFloat(q.total || 0), 0);
+            const costs = expenses.reduce((sum, e) => sum + parseFloat(e.amt || 0), 0);
             const profit = income - costs;
-            const tax = profit > 0 ? (profit * (taxRate / 100)) : 0;
+            const tax = profit > 0 ? (profit * 0.2) : 0;
+            const takeHome = profit - tax;
 
-            document.getElementById('grossIncome').innerText = "£" + income.toFixed(2);
-            document.getElementById('totalExpenses').innerText = "-£" + costs.toFixed(2);
-            document.getElementById('taxableProfit').innerText = "£" + profit.toFixed(2);
-            document.getElementById('taxDue').innerText = "£" + tax.toFixed(2);
-            document.getElementById('netTakeHome').innerText = "£" + (profit - tax).toFixed(2);
-        }
-
-        function downloadPDF() {
-            const element = document.getElementById('report-content');
-            const options = {
-                margin: 1,
-                filename: 'ToolboxPay-Report.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, backgroundColor: '#0A0A0A' },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().set(options).from(element).save();
-        }
-
-        calculateReport();
+            document.getElementById('grossIncome').innerText = "£" + income.toLocaleString('en-GB', {minimumFractionDigits: 2});
+            document.getElementById('totalExpenses').innerText = "£" + costs.toLocaleString('en-GB', {minimumFractionDigits: 2});
+            document.getElementById('taxPot').innerText = "£" + tax.toLocaleString('en-GB', {minimumFractionDigits: 2});
+            document.getElementById('netTakeHome').innerText = "£" + takeHome.toLocaleString('en-GB', {minimumFractionDigits: 2});
+        };
     </script>
 </body>
 </html>
