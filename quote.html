@@ -1,12 +1,120 @@
+
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Quote | Toolbox Pay</title>
+    <title>Quote Estimator | Toolbox Pay</title>
     <link rel="stylesheet" href="src/index.css">
     <style>
-        .page-container { width: 95%; max-width: 450px; padding: 40px 20px; }
+        .page-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; }
         .logo-text { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 30px; }
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
+
+        /* High-Visibility Menu Button */
+        .menu-trigger {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 55px;
+            height: 55px;
+            background: rgba(255, 165, 0, 0.15);
+            border: 2px solid #FFA500;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.3);
+        }
+        .menu-trigger span { font-size: 32px; color: #FFA500; }
+
+        /* Live Estimate Display */
+        .estimate-header {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 4px solid #FFA500;
+        }
+        .total-glow {
+            font-size: 40px;
+            font-weight: 800;
+            color: #FFA500;
+            text-shadow: 0 0 15px rgba(255, 165, 0, 0.4);
+            margin: 10px 0;
+        }
+
+        /* Tactical Form Elements */
+        .input-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .calc-input {
+            width: 100%;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 18px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+        .calc-input:focus { border-color: #FFA500; background: #222; }
+
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 1999; transition: 0.4s; padding-top: 100px; border-right: 1px solid #333; }
+        .sidebar.active { left: 0; }
+        .sidebar a { padding: 20px 30px; color: white; text-decoration: none; display: block; border-bottom: 1px solid #1a1a1a; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1998; }
+    </style>
+</head>
+<body>
+
+    <div class="menu-trigger" onclick="toggleMenu()"><span>☰</span></div>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    
+    <div class="sidebar" id="sidebar">
+        <a href="index.html">🏠 Dashboard</a>
+        <a href="quote.html">📝 Create Quote</a>
+        <a href="expense.html">💸 Log Expense</a>
+        <a href="report.html">📊 Labour Report</a>
+        <a href="gallery.html">📸 Portfolio</a>
+        <a href="directory.html">👤 Customers</a>
+    </div>
+
+    <div class="page-container">
+        <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
+
+        <div class="estimate-header">
+            <span style="font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase;">Estimated Project Total</span>
+            <div class="total-glow" id="displayTotal">£0.00</div>
+            <span id="taxHint" style="font-size: 11px; color: #444;">Incl. VAT/Tax estimates</span>
+        </div>
+
+        <form id="quoteForm">
+            <div class="input-group">
+                <span class="form-label">Client Name</span>
+                <input type="text" id="custName" class="calc-input" placeholder="e.g. Mr. Smith" required>
+            </div>
+
+            <div class="input-group">
+                <span class="form-label">Labour Cost (£)</span>
+                <input type="number" id="labour" class="calc-input" placeholder="0.00" step="0.01" oninput="updateLiveTotal()" required>
+            </div>
+
+            <div class="input-group">
+                <span class="form-label">Materials & Parts (£)</span>
+                <input type="number" id="materials" class="calc-input" placeholder="0.00" step="0.01" oninput="updateLiveTotal()">
+            </div>
+
+            <div style="background: rgba(255,165,0,0.05); padding: 20px; border-radius: 15px; margin-top: 25px; border: 1px dashed rgba(255,165,0,0.2);">
+                <span class="form-label" style="margin-top:0;">Job Progress Photo</span>
+                <input type="file" id="jobPhoto" accept="image/*" style="display: block; margin-top: 10px; color: #888; font-size: 12px;">
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 30px; padding: 20px; border-radius:
