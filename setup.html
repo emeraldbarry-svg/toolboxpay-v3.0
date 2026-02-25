@@ -5,41 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Business Setup | Toolbox Pay</title>
     <link rel="stylesheet" href="src/index.css">
+    <script src="src/auth.js"></script>
     <style>
         .page-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; }
         .logo-text { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 5px; }
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
 
-        /* Tactical Inputs */
         .setup-group { margin-bottom: 25px; }
         .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
         .setup-input {
-            width: 100%;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            border-radius: 15px;
-            padding: 18px;
-            color: white;
-            font-size: 16px;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
+            width: 100%; background: #1a1a1a; border: 2px solid #333;
+            border-radius: 15px; padding: 18px; color: white; font-size: 16px;
+            box-sizing: border-box; outline: none; transition: 0.3s;
         }
         .setup-input:focus { border-color: #FFA500; }
 
         .info-box {
-            background: rgba(255, 165, 0, 0.05);
-            border: 1px solid rgba(255, 165, 0, 0.2);
-            border-radius: 15px;
-            padding: 15px;
-            font-size: 12px;
-            color: #aaa;
-            line-height: 1.5;
-            margin-bottom: 30px;
+            background: rgba(255, 165, 0, 0.05); border: 1px solid rgba(255, 165, 0, 0.2);
+            border-radius: 15px; padding: 15px; font-size: 12px; color: #aaa; margin-bottom: 30px;
         }
 
-        /* High-Visibility Menu Button */
         .menu-trigger {
             position: fixed; top: 20px; left: 20px; width: 55px; height: 55px;
             background: rgba(255, 165, 0, 0.15); border: 2px solid #FFA500;
@@ -47,6 +33,10 @@
             align-items: center; z-index: 2000; backdrop-filter: blur(10px);
         }
         .menu-trigger span { font-size: 32px; color: #FFA500; }
+
+        .backup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; border-top: 1px solid #222; padding-top: 30px; }
+        .btn-outline { background: transparent; border: 1px solid #444; color: #888; padding: 15px; border-radius: 15px; font-weight: 700; font-size: 12px; cursor: pointer; }
+        .btn-outline:active { border-color: #FFA500; color: #FFA500; }
 
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 1999; transition: 0.4s; padding-top: 100px; border-right: 1px solid #333; }
         .sidebar.active { left: 0; }
@@ -75,14 +65,10 @@
             <p style="text-align: center; color: #666; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;">Business Configuration</p>
         </header>
 
-        <div class="info-box">
-            <b>Security Note:</b> Setting a PIN will lock your financial data and project gallery. Your business name will appear on all generated quotes and reports.
-        </div>
-
         <form id="setupForm">
             <div class="setup-group">
                 <span class="form-label">Trading Name</span>
-                <input type="text" id="bizName" class="setup-input" placeholder="e.g. Harrison Plumbing Ltd" required>
+                <input type="text" id="bizName" class="setup-input" placeholder="Business Name" required>
             </div>
 
             <div class="setup-group">
@@ -90,19 +76,15 @@
                 <input type="password" id="userPin" class="setup-input" placeholder="0000" maxlength="4" pattern="\d{4}" inputmode="numeric" required>
             </div>
 
-            <div class="setup-group">
-                <span class="form-label">VAT / Tax Number (Optional)</span>
-                <input type="text" id="taxRef" class="setup-input" placeholder="e.g. GB123456789">
-            </div>
-
-            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px; padding: 20px; border-radius: 20px; font-weight: 800;">
-                Save Business Profile
-            </button>
+            <button type="submit" class="btn-primary" style="width: 100%; padding: 20px; border-radius: 20px;">Save Profile</button>
         </form>
 
-        <p style="text-align: center; margin-top: 30px; font-size: 11px; color: #444;">
-            All data is stored locally on this device.
-        </p>
+        <div class="backup-grid">
+            <button class="btn-outline" onclick="exportData()">📤 Backup Data</button>
+            <button class="btn-outline" onclick="document.getElementById('importFile').click()">📥 Restore Data</button>
+            <input type="file" id="importFile" style="display:none" onchange="importData(this)">
+        </div>
+        <p style="text-align: center; font-size: 10px; color: #444; margin-top: 15px;">Export a backup file to secure your records off-device.</p>
     </div>
 
     <script>
@@ -113,30 +95,39 @@
             ov.style.display = sb.classList.contains('active') ? 'block' : 'none';
         }
 
-        // Load existing data if available
         window.onload = () => {
             document.getElementById('bizName').value = localStorage.getItem('companyName') || '';
             document.getElementById('userPin').value = localStorage.getItem('userPin') || '';
-            document.getElementById('taxRef').value = localStorage.getItem('taxReference') || '';
         };
 
         document.getElementById('setupForm').onsubmit = (e) => {
             e.preventDefault();
-            
-            const name = document.getElementById('bizName').value;
-            const pin = document.getElementById('userPin').value;
-            const tax = document.getElementById('taxRef').value;
-
-            localStorage.setItem('companyName', name);
-            localStorage.setItem('userPin', pin);
-            localStorage.setItem('taxReference', tax);
-            
-            // Auto-unlock for the current session after setup
-            sessionStorage.setItem('unlocked', 'true');
-
-            alert('Business profile updated successfully.');
+            localStorage.setItem('companyName', document.getElementById('bizName').value);
+            localStorage.setItem('userPin', document.getElementById('userPin').value);
+            alert('Settings Saved.');
             window.location.href = "index.html";
         };
+
+        function exportData() {
+            const data = JSON.stringify(localStorage);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `toolboxpay_backup_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+        }
+
+        function importData(input) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const data = JSON.parse(reader.result);
+                Object.keys(data).forEach(key => localStorage.setItem(key, data[key]));
+                alert('Restore Complete. The app will now reload.');
+                window.location.reload();
+            };
+            reader.readAsText(input.files[0]);
+        }
     </script>
 </body>
 </html>
