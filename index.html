@@ -2,184 +2,97 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Toolbox Pay | Command Centre</title>
-    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="src/index.css">
-    <meta name="theme-color" content="#FFA500">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <script src="src/auth.js"></script>
     <style>
-        .dashboard-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; margin: 0 auto; }
+        .dashboard-container { width: 95%; max-width: 450px; padding: 40px 20px; margin: 0 auto; }
         .logo-text { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 5px; }
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
         
-        .menu-trigger {
-            position: fixed; top: 20px; left: 20px; width: 55px; height: 55px;
-            background: rgba(255, 165, 0, 0.15); border: 2px solid #FFA500;
-            border-radius: 15px; display: flex; justify-content: center;
-            align-items: center; z-index: 2000; backdrop-filter: blur(10px);
-        }
-        .menu-trigger span { font-size: 32px; color: #FFA500; }
-
-        .service-badge {
-            display: block; text-align: center; font-size: 10px; font-weight: 700;
-            color: #888; text-transform: uppercase; letter-spacing: 2px; margin-top: -5px;
-        }
-
-        /* Dual Quick Action Row */
-        .quick-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
-        .quick-card { 
-            background: #111; border: 1px solid #333; border-radius: 20px; 
-            padding: 12px; display: none; align-items: center; justify-content: space-between;
-        }
-        .q-info p { margin: 0; font-size: 9px; color: #666; font-weight: 800; text-transform: uppercase; }
-        .q-info h3 { margin: 2px 0 0 0; font-size: 13px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90px; }
-        .q-btn { 
-            background: #FFA500; width: 35px; height: 35px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center; text-decoration: none;
-            font-size: 16px; flex-shrink: 0;
+        .biz-name { text-align: center; color: #888; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+        
+        .page-header {
+            text-align: center;
+            color: #555;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
         }
 
-        .main-display {
-            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-            border: 1px solid rgba(255, 165, 0, 0.3);
-            border-radius: 30px; padding: 35px 25px; margin-bottom: 25px;
-            position: relative; overflow: hidden; margin-top: 15px;
+        /* Stats Row */
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-card {
+            background: #151515; border: 1px solid #222; border-radius: 20px;
+            padding: 20px; text-align: center;
         }
+        .stat-card h2 { margin: 0; color: #FFA500; font-size: 28px; }
+        .stat-card p { margin: 5px 0 0; color: #666; font-size: 10px; font-weight: 800; text-transform: uppercase; }
 
-        .status-pill {
-            display: inline-block; padding: 5px 12px; background: rgba(0, 255, 136, 0.1);
-            color: #00ff88; border-radius: 20px; font-size: 10px; font-weight: 800;
-            letter-spacing: 1px; text-transform: uppercase; margin-bottom: 15px;
+        /* Revenue Card */
+        .revenue-card {
+            background: linear-gradient(145deg, #111, #0a0a0a);
+            border: 1px solid #333; border-left: 4px solid #FFA500;
+            border-radius: 25px; padding: 25px; margin-bottom: 25px;
         }
+        .rev-line { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #888; }
+        .take-home { margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .take-home h3 { color: #00ff88; margin: 0; font-size: 18px; }
+        .take-home .amount { color: #FFA500; font-size: 32px; font-weight: 800; }
 
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        /* Action Grid */
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .action-btn {
-            background: #151515; border: 1px solid #333; border-radius: 24px;
-            padding: 30px 20px; text-decoration: none; text-align: center;
+            background: #222; color: white; border: none; border-radius: 15px;
+            padding: 20px; font-weight: 700; font-size: 14px; text-decoration: none;
+            text-align: center; border: 1px solid #333;
         }
-        .action-btn .icon { font-size: 28px; display: block; margin-bottom: 10px; }
-        .action-btn span { color: white; font-size: 14px; font-weight: 600; }
-
-        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 1999; transition: 0.4s; padding-top: 100px; border-right: 1px solid #333; }
-        .sidebar.active { left: 0; }
-        .sidebar a { padding: 20px 30px; color: white; text-decoration: none; display: block; border-bottom: 1px solid #1a1a1a; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1998; }
+        .btn-highlight { background: #FFA500; color: #000; border: none; }
     </style>
 </head>
 <body>
 
-    <div class="menu-trigger" onclick="toggleMenu()"><span>☰</span></div>
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-    
-    <div class="sidebar" id="sidebar">
-        <a href="index.html">🏠 Dashboard</a>
-        <a href="quote.html">📝 Create Quote</a>
-        <a href="expense.html">💸 Log Expense</a>
-        <a href="report.html">📊 Labour Report</a>
-        <a href="gallery.html">📸 Portfolio</a>
-        <a href="directory.html">👤 Customers</a>
-        <a href="setup.html">⚙️ Settings</a>
-        <a href="#" style="color: #ff4d4d;" onclick="manualLock()">🔒 Lock System</a>
-    </div>
-
     <div class="dashboard-container">
         <header>
             <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-            <div id="bizName" style="text-align: center; color: #FFF; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Admin Panel</div>
-            <div id="displayLoc" class="service-badge">Loading...</div>
+            <div id="bizName" class="biz-name">franklins</div>
+            <div class="page-header">Command Centre</div>
         </header>
 
-        <div class="quick-row">
-            <div id="quickDial" class="quick-card">
-                <div class="q-info">
-                    <p>Recent Call</p>
-                    <h3 id="lastContactName">-</h3>
-                </div>
-                <a href="#" id="lastContactLink" class="q-btn">📞</a>
+        <div class="stats-row">
+            <div class="stat-card">
+                <h2 id="activeJobs">0</h2>
+                <p>Active</p>
             </div>
-
-            <div id="quickQuote" class="quick-card">
-                <div class="q-info">
-                    <p>Last Quote</p>
-                    <h3 id="lastQuoteVal">£0.00</h3>
-                </div>
-                <a href="report.html" class="q-btn">📄</a>
+            <div class="stat-card">
+                <h2 id="doneJobs">0</h2>
+                <p>Done</p>
             </div>
         </div>
 
-        <div class="main-display">
-            <div class="status-pill">● Secure Session</div>
-            <p style="margin: 0; color: #888; font-size: 12px; font-weight: 600;">ESTIMATED NET PROFIT</p>
-            <h1 class="orange-glow" id="totalProfit" style="font-size: 52px; margin: 5px 0; color: #FFA500; letter-spacing: -2px;">£0.00</h1>
+        <div class="revenue-card">
+            <div class="rev-line"><span>Total Revenue</span><span class="white">£0.00</span></div>
+            <div class="rev-line"><span>Business Costs</span><span class="white">-£0.00</span></div>
+            <div class="rev-line" style="color:#ff4d4d;"><span>Tax Reserve (20%)</span><span>-£0.00</span></div>
+            
+            <div class="take-home">
+                <h3>Take Home:</h3>
+                <div class="amount" id="totalProfit">£0.00</div>
+            </div>
         </div>
 
         <div class="action-grid">
-            <a href="quote.html" class="action-btn">
-                <span class="icon">📝</span>
-                <span>New Quote</span>
-            </a>
-            <a href="expense.html" class="action-btn">
-                <span class="icon">💸</span>
-                <span>Expense</span>
-            </a>
-            <a href="directory.html" class="action-btn">
-                <span class="icon">👤</span>
-                <span>Clients</span>
-            </a>
-            <a href="gallery.html" class="action-btn">
-                <span class="icon">📸</span>
-                <span>Gallery</span>
-            </a>
+            <a href="quote.html" class="action-btn btn-highlight">New Quote</a>
+            <a href="expense.html" class="action-btn">Log Expense</a>
+            <a href="report.html" class="action-btn btn-highlight">Quotes</a>
+            <a href="expenses.html" class="action-btn">Expenses</a>
         </div>
     </div>
 
-    <script>
-        function toggleMenu() {
-            const sb = document.getElementById('sidebar');
-            const ov = document.getElementById('overlay');
-            sb.classList.toggle('active');
-            ov.style.display = sb.classList.contains('active') ? 'block' : 'none';
-        }
-
-        function manualLock() {
-            sessionStorage.removeItem('unlocked');
-            window.location.href = "lock.html";
-        }
-
-        window.onload = () => {
-            const biz = localStorage.getItem('companyName') || "Business Name";
-            const loc = localStorage.getItem('userLocation') || "Location Not Set";
-            document.getElementById('bizName').innerText = biz;
-            document.getElementById('displayLoc').innerText = "Service Area: " + loc;
-            
-            // Profit Data
-            const quotes = JSON.parse(localStorage.getItem('quoteHistory')) || [];
-            const expenses = JSON.parse(localStorage.getItem('expenseHistory')) || [];
-            const income = quotes.reduce((sum, q) => sum + parseFloat(q.total || 0), 0);
-            const costs = expenses.reduce((sum, e) => sum + parseFloat(e.amt || 0), 0);
-            const net = (income - costs) * 0.8;
-            document.getElementById('totalProfit').innerText = "£" + net.toLocaleString('en-GB', {minimumFractionDigits: 2});
-
-            // Quick Dial Data
-            const customers = JSON.parse(localStorage.getItem('directory')) || [];
-            if (customers.length > 0) {
-                const last = customers[customers.length - 1];
-                document.getElementById('lastContactName').innerText = last.name;
-                document.getElementById('lastContactLink').href = "tel:" + last.phone;
-                document.getElementById('quickDial').style.display = "flex";
-            }
-
-            // Quick Quote Data
-            if (quotes.length > 0) {
-                const lastQ = quotes[quotes.length - 1];
-                document.getElementById('lastQuoteVal').innerText = "£" + parseFloat(lastQ.total).toLocaleString('en-GB');
-                document.getElementById('quickQuote').style.display = "flex";
-            }
-        };
-    </script>
+    <script src="src/index.js"></script>
 </body>
 </html>
