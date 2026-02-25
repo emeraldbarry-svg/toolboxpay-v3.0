@@ -7,96 +7,121 @@
     <link rel="stylesheet" href="src/index.css">
     <script src="src/auth.js"></script>
     <style>
-        .page-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; }
+        .page-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; margin: 0 auto; }
         .logo-text { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 30px; }
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
 
-        /* High-Visibility Menu Button */
-        .menu-trigger {
-            position: fixed; top: 20px; left: 20px; width: 55px; height: 55px;
-            background: rgba(255, 165, 0, 0.15); border: 2px solid #FFA500;
-            border-radius: 15px; display: flex; justify-content: center;
-            align-items: center; z-index: 2000; backdrop-filter: blur(10px);
-        }
-        .menu-trigger span { font-size: 32px; color: #FFA500; }
-
-        .search-input { 
-            width: 100%; background: #1a1a1a; border: 2px solid #333; 
-            border-radius: 25px; padding: 15px 20px; color: white; 
-            font-size: 16px; outline: none; margin-top: 20px;
-        }
-        .search-input:focus { border-color: #FFA500; }
-
-        .customer-card { 
-            background: rgba(30, 30, 30, 0.6); border: 1px solid #333; 
-            border-radius: 20px; padding: 20px; margin-top: 15px; 
-            border-left: 5px solid #FFA500; 
+        .form-card {
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 30px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 1999; transition: 0.4s; padding-top: 100px; border-right: 1px solid #333; }
-        .sidebar.active { left: 0; }
-        .sidebar a { padding: 20px 30px; color: white; text-decoration: none; display: block; border-bottom: 1px solid #1a1a1a; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1998; }
+        .input-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 8px; margin-left: 5px; }
+        
+        .dir-input {
+            width: 100%; background: #1a1a1a; border: 1px solid #333;
+            border-radius: 15px; padding: 18px; color: white; font-size: 16px;
+            box-sizing: border-box; outline: none; transition: 0.3s;
+        }
+        .dir-input:focus { border-color: #FFA500; }
+
+        .button-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+        
+        /* Fixed Button Alignment */
+        .btn-dir {
+            width: 100%; 
+            padding: 18px; 
+            border-radius: 15px; 
+            font-weight: 800; 
+            font-size: 16px; 
+            border: none; 
+            cursor: pointer;
+            text-align: center;
+            box-sizing: border-box; /* Ensures padding doesn't push width out */
+        }
+        .btn-add { background: #FFA500; color: #000; }
+        .btn-back { background: #222; color: #fff; border: 1px solid #333; }
+
+        .customer-list { margin-top: 30px; }
+        .customer-item { 
+            background: #1a1a1a; padding: 15px; border-radius: 15px; 
+            margin-bottom: 10px; border-left: 4px solid #FFA500;
+            display: flex; justify-content: space-between; align-items: center;
+        }
     </style>
 </head>
 <body>
 
-    <div class="menu-trigger" onclick="toggleMenu()"><span>☰</span></div>
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-    <div class="sidebar" id="sidebar">
-        <a href="index.html">🏠 Dashboard</a>
-        <a href="quote.html">📝 Create Quote</a>
-        <a href="expense.html">💸 Log Expense</a>
-        <a href="report.html">📊 Labour Report</a>
-        <a href="gallery.html">📸 Portfolio</a>
-        <a href="directory.html">👤 Customers</a>
-    </div>
-
     <div class="page-container">
         <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-        
-        <div class="card-glass" style="padding: 25px;">
-            <h2 class="orange-glow" style="margin-top: 0; font-size: 18px;">New Client Record</h2>
-            <form id="customerForm">
-                <input type="text" id="cName" class="search-input" style="border-radius:15px; margin-top:10px;" placeholder="Full Name" required>
-                <input type="tel" id="cPhone" class="search-input" style="border-radius:15px; margin-top:10px;" placeholder="Phone Number">
-                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px; padding: 15px;">Save Client</button>
+
+        <div class="form-card">
+            <form id="dirForm">
+                <div class="input-group">
+                    <span class="form-label">Full Name</span>
+                    <input type="text" id="custName" class="dir-input" placeholder="e.g. David Smith" required>
+                </div>
+
+                <div class="input-group">
+                    <span class="form-label">Phone Number</span>
+                    <input type="tel" id="custPhone" class="dir-input" placeholder="07123 456 789" required>
+                </div>
+
+                <div class="input-group">
+                    <span class="form-label">Site Address</span>
+                    <input type="text" id="custAddr" class="dir-input" placeholder="e.g. 12 High St, Birmingham">
+                </div>
+
+                <div class="button-stack">
+                    <button type="submit" class="btn-dir btn-add">Add to Directory</button>
+                    <button type="button" onclick="window.location.href='index.html'" class="btn-dir btn-back">Back</button>
+                </div>
             </form>
         </div>
 
-        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search clients..." onkeyup="filter()">
-        <div id="customerList"></div>
+        <div class="customer-list" id="customerList">
+            </div>
     </div>
 
     <script>
-        function toggleMenu() {
-            const sb = document.getElementById('sidebar');
-            const ov = document.getElementById('overlay');
-            sb.classList.toggle('active');
-            ov.style.display = sb.classList.contains('active') ? 'block' : 'none';
-        }
+        const dirForm = document.getElementById('dirForm');
+        const listDiv = document.getElementById('customerList');
 
-        function render(f = '') {
-            const clients = JSON.parse(localStorage.getItem('tbClients')) || [];
-            const list = document.getElementById('customerList');
-            list.innerHTML = '';
-            clients.filter(c => c.name.toLowerCase().includes(f.toLowerCase())).reverse().forEach(c => {
-                list.innerHTML += `<div class="customer-card"><b class="orange" style="font-size:18px;">${c.name}</b><br><a href="tel:${c.phone}" style="color:#00ff88; text-decoration:none; font-size:14px; display:block; margin-top:10px;">📞 Call Client</a></div>`;
+        function loadCustomers() {
+            const customers = JSON.parse(localStorage.getItem('directory')) || [];
+            listDiv.innerHTML = '<h3 style="font-size:12px; color:#666; text-transform:uppercase; margin-bottom:15px;">Stored Contacts</h3>';
+            customers.forEach((c, index) => {
+                listDiv.innerHTML += `
+                    <div class="customer-item">
+                        <div>
+                            <div style="font-weight:bold;">${c.name}</div>
+                            <div style="font-size:12px; color:#888;">${c.phone}</div>
+                        </div>
+                        <a href="tel:${c.phone}" style="text-decoration:none; font-size:20px;">📞</a>
+                    </div>
+                `;
             });
         }
 
-        function filter() { render(document.getElementById('searchInput').value); }
-
-        document.getElementById('customerForm').onsubmit = (e) => {
+        dirForm.onsubmit = (e) => {
             e.preventDefault();
-            const clients = JSON.parse(localStorage.getItem('tbClients')) || [];
-            clients.push({ name: document.getElementById('cName').value, phone: document.getElementById('cPhone').value });
-            localStorage.setItem('tbClients', JSON.stringify(clients));
-            render();
-            e.target.reset();
+            const customers = JSON.parse(localStorage.getItem('directory')) || [];
+            customers.push({
+                name: document.getElementById('custName').value,
+                phone: document.getElementById('custPhone').value,
+                addr: document.getElementById('custAddr').value
+            });
+            localStorage.setItem('directory', JSON.stringify(customers));
+            dirForm.reset();
+            loadCustomers();
         };
-        render();
+
+        window.onload = loadCustomers;
     </script>
 </body>
 </html>
