@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Setup | Toolbox Pay</title>
+    <link rel="stylesheet" href="src/index.css">
+    <style>
+        .page-container { width: 95%; max-width: 450px; padding: 40px 20px; }
+        .logo-text { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 30px; }
+        .orange { color: #FFA500; }
+        .white { color: #FFFFFF; }
+        
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; margin-top: 20px; }
+        .input-glass { 
+            width: 100%; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 165, 0, 0.2); 
+            border-radius: 12px; 
+            padding: 15px; 
+            color: white; 
+            font-size: 16px; 
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+        .input-glass:focus { border-color: #FFA500; outline: none; background: rgba(255, 165, 0, 0.05); }
+        
+        .setup-step { margin-bottom: 30px; }
+        .hint { font-size: 12px; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+        <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
+        
+        <div class="card-glass" style="padding: 30px;">
+            <h2 style="margin-top: 0; font-size: 20px;" class="orange-glow">Business Profile</h2>
+            <p style="color: #888; font-size: 13px; margin-bottom: 25px;">Customise your app for your trade.</p>
+            
+            <form id="setupForm">
+                <div class="setup-step">
+                    <span class="form-label">Company Name</span>
+                    <input type="text" id="bizName" class="input-glass" placeholder="e.g. Harrison Plumbing" required>
+                    <p class="hint">This appears on your orange and white receipts.</p>
+                </div>
+
+                <div class="setup-step">
+                    <span class="form-label">Standard Labour Rate (£ / Hour)</span>
+                    <input type="number" id="labourRate" class="input-glass" placeholder="45.00" step="0.01" required>
+                </div>
+
+                <div class="setup-step">
+                    <span class="form-label">Default Tax Reserve (%)</span>
+                    <input type="number" id="taxRate" class="input-glass" placeholder="20" required>
+                    <p class="hint">Recommended: 20% for UK self-employed.</p>
+                </div>
+
+                <div class="setup-step">
+                    <span class="form-label">Privacy PIN (4 Digits)</span>
+                    <input type="password" id="userPin" class="input-glass" maxlength="4" placeholder="0000" required>
+                    <p class="hint">To lock your financial data from prying eyes.</p>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Save & Initialise App</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('setupForm').onsubmit = (e) => {
+            e.preventDefault();
+            
+            // Saving to local storage to get you moving immediately
+            localStorage.setItem('companyName', document.getElementById('bizName').value);
+            localStorage.setItem('labourRate', document.getElementById('labourRate').value);
+            localStorage.setItem('taxRate', document.getElementById('taxRate').value);
+            localStorage.setItem('userPin', document.getElementById('userPin').value);
+            
+            // Success redirect to the dashboard
+            window.location.href = "index.html";
+        };
+
+        // Pre-fill if data already exists
+        window.onload = () => {
+            if(localStorage.getItem('companyName')) document.getElementById('bizName').value = localStorage.getItem('companyName');
+            if(localStorage.getItem('labourRate')) document.getElementById('labourRate').value = localStorage.getItem('labourRate');
+            if(localStorage.getItem('taxRate')) document.getElementById('taxRate').value = localStorage.getItem('taxRate');
+        };
+    </script>
+</body>
+</html>
