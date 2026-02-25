@@ -5,85 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toolbox Pay | Command Centre</title>
     <link rel="stylesheet" href="src/index.css">
+    <script src="src/auth.js"></script>
     <style>
         .dashboard-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; }
         .logo-text { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 5px; }
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
         
-        /* High-Visibility Menu Button */
         .menu-trigger {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 55px;
-            height: 55px;
-            background: rgba(255, 165, 0, 0.15);
-            border: 2px solid #FFA500;
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            backdrop-filter: blur(10px);
+            position: fixed; top: 20px; left: 20px; width: 55px; height: 55px;
+            background: rgba(255, 165, 0, 0.15); border: 2px solid #FFA500;
+            border-radius: 15px; display: flex; justify-content: center;
+            align-items: center; z-index: 2000; backdrop-filter: blur(10px);
             box-shadow: 0 0 20px rgba(255, 165, 0, 0.3);
         }
         .menu-trigger span { font-size: 32px; color: #FFA500; }
 
-        /* Complex Visuals, Simple Reading */
         .main-display {
             background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
             border: 1px solid rgba(255, 165, 0, 0.3);
-            border-radius: 30px;
-            padding: 35px 25px;
-            margin-bottom: 25px;
-            position: relative;
-            overflow: hidden;
-        }
-        .main-display::after {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,165,0,0.05) 0%, transparent 70%);
-            pointer-events: none;
+            border-radius: 30px; padding: 35px 25px; margin-bottom: 25px;
+            position: relative; overflow: hidden;
         }
 
         .status-pill {
-            display: inline-block;
-            padding: 5px 12px;
-            background: rgba(0, 255, 136, 0.1);
-            color: #00ff88;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 15px;
+            display: inline-block; padding: 5px 12px; background: rgba(0, 255, 136, 0.1);
+            color: #00ff88; border-radius: 20px; font-size: 10px; font-weight: 800;
+            letter-spacing: 1px; text-transform: uppercase; margin-bottom: 15px;
         }
 
-        /* Large Action Grid */
         .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .action-btn {
-            background: #151515;
-            border: 1px solid #333;
-            border-radius: 24px;
-            padding: 30px 20px;
-            text-decoration: none;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-align: center;
+            background: #151515; border: 1px solid #333; border-radius: 24px;
+            padding: 30px 20px; text-decoration: none; text-align: center;
         }
-        .action-btn:active {
-            border-color: #FFA500;
-            background: rgba(255, 165, 0, 0.1);
-            transform: scale(0.95);
-        }
+        .action-btn:active { border-color: #FFA500; background: rgba(255, 165, 0, 0.1); }
         .action-btn .icon { font-size: 28px; display: block; margin-bottom: 10px; }
         .action-btn span { color: white; font-size: 14px; font-weight: 600; }
 
-        /* Sidebar & Overlay */
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 1999; transition: 0.4s; padding-top: 100px; border-right: 1px solid #333; }
         .sidebar.active { left: 0; }
         .sidebar a { padding: 20px 30px; color: white; text-decoration: none; display: block; border-bottom: 1px solid #1a1a1a; }
@@ -96,6 +55,9 @@
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     
     <div class="sidebar" id="sidebar">
+        <div style="padding: 0 30px 20px 30px; border-bottom: 1px solid #222;">
+            <div class="logo-text" style="font-size: 20px; text-align: left;"><span class="orange">toolbox</span><span class="white">pay</span></div>
+        </div>
         <a href="index.html">🏠 Dashboard</a>
         <a href="quote.html">📝 Create Quote</a>
         <a href="expense.html">💸 Log Expense</a>
@@ -103,22 +65,19 @@
         <a href="gallery.html">📸 Portfolio</a>
         <a href="directory.html">👤 Customers</a>
         <a href="setup.html">⚙️ Settings</a>
+        <a href="#" style="color: #ff4d4d; margin-top: 20px;" onclick="lockApp()">🔒 Lock App</a>
     </div>
 
     <div class="dashboard-container">
         <header style="margin-bottom: 40px;">
             <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-            <p id="bizName" style="text-align: center; color: #666; font-size: 11px; letter-spacing: 3px; text-transform: uppercase;">System Offline</p>
+            <p id="bizName" style="text-align: center; color: #666; font-size: 11px; letter-spacing: 3px; text-transform: uppercase;">Loading Profile...</p>
         </header>
 
         <div class="main-display">
-            <div class="status-pill">● System Active</div>
+            <div class="status-pill">● System Secure</div>
             <p style="margin: 0; color: #888; font-size: 12px; font-weight: 600;">NET BUSINESS PROFIT</p>
             <h1 class="orange-glow" id="totalProfit" style="font-size: 52px; margin: 5px 0; color: #FFA500; letter-spacing: -2px;">£0.00</h1>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                <span style="color: #666; font-size: 11px;">HMRC 20% TAX RESERVE</span>
-                <span id="taxReserve" style="color: #fff; font-weight: 700; font-size: 14px;">£0.00</span>
-            </div>
         </div>
 
         <div class="action-grid">
@@ -134,4 +93,39 @@
                 <span class="icon">👤</span>
                 <span>Clients</span>
             </a>
-            <a href
+            <a href="gallery.html" class="action-btn">
+                <span class="icon">📸</span>
+                <span>Gallery</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const sb = document.getElementById('sidebar');
+            const ov = document.getElementById('overlay');
+            sb.classList.toggle('active');
+            ov.style.display = sb.classList.contains('active') ? 'block' : 'none';
+        }
+
+        function lockApp() {
+            sessionStorage.removeItem('unlocked');
+            window.location.href = "lock.html";
+        }
+
+        window.onload = () => {
+            const biz = localStorage.getItem('companyName') || "Set Up Business";
+            document.getElementById('bizName').innerText = biz;
+            
+            const quotes = JSON.parse(localStorage.getItem('quoteHistory')) || [];
+            const expenses = JSON.parse(localStorage.getItem('expenseHistory')) || [];
+            
+            const income = quotes.reduce((sum, q) => sum + parseFloat(q.total || 0), 0);
+            const costs = expenses.reduce((sum, e) => sum + parseFloat(e.amt || 0), 0);
+            const net = (income - costs) * 0.8; // Simple 20% tax estimate
+
+            document.getElementById('totalProfit').innerText = "£" + net.toLocaleString('en-GB', {minimumFractionDigits: 2});
+        };
+    </script>
+</body>
+</html>
