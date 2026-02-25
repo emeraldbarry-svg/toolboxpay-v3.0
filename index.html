@@ -4,152 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toolbox Pay | Dashboard</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="src/index.css">
     <style>
-        body { background-color: #000; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: sans-serif; color: #fff; overflow-x: hidden; }
-        .card { background-color: #1a1a1a; border: 2px solid #FFA500; border-radius: 40px; padding: 40px 30px; text-align: center; max-width: 450px; width: 90%; margin: 20px; position: relative; }
+        /* Local overrides for layout */
+        .dashboard-container { width: 95%; max-width: 450px; padding: 40px 20px; }
+        .logo-text { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 5px; }
         .orange { color: #FFA500; }
+        .white { color: #FFFFFF; }
         
-        /* Privacy Blur Logic */
-        .blur-sensitive { filter: blur(8px); transition: 0.3s; cursor: pointer; }
-        .blur-sensitive.unlocked { filter: blur(0); }
+        .stat-card { 
+            background: linear-gradient(145deg, #1e1e1e, #141414);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #FFA500;
+        }
 
-        .menu-btn { position: absolute; left: 25px; top: 35px; font-size: 24px; cursor: pointer; color: #FFA500; z-index: 1001; }
-        .sidebar { position: fixed; top: 0; left: -250px; width: 250px; height: 100%; background: #111; transition: 0.3s; z-index: 1000; padding-top: 80px; box-shadow: 2px 0 10px rgba(0,0,0,0.5); border-right: 1px solid #333; }
-        .sidebar.active { left: 0; }
-        .sidebar a { padding: 15px 25px; text-decoration: none; font-size: 18px; color: #fff; display: block; border-bottom: 1px solid #222; }
-        .sidebar a:hover { background: #222; color: #FFA500; }
-        .menu-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; }
-
-        .welcome-header { border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; position: relative; }
-        
-        .status-tracker { display: flex; gap: 10px; margin-bottom: 20px; }
-        .status-box { flex: 1; background: #222; border-radius: 15px; padding: 15px; border: 1px solid #333; }
-        .status-count { font-size: 24px; font-weight: bold; display: block; }
-        .status-label { font-size: 10px; color: #888; text-transform: uppercase; }
-
-        .profit-card { background: #222; border-radius: 20px; padding: 25px; margin-bottom: 25px; border-left: 5px solid #FFA500; text-align: left; position: relative; overflow: hidden; }
-        .profit-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: #888; }
-        .spendable-total { font-size: 26px; font-weight: bold; color: #00ff88; margin-top: 5px; display: flex; justify-content: space-between; }
-
-        .btn { display: inline-block; background-color: #FFA500; color: #000; padding: 18px; border-radius: 15px; text-decoration: none; font-weight: bold; margin-top: 10px; font-size: 16px; width: 100%; box-sizing: border-box; border: none; cursor: pointer; text-align: center; }
-        .btn-secondary { background-color: #333; color: #fff; }
-        
-        .history-section { margin-top: 30px; text-align: left; }
-        .history-item { background: #222; border: 1px solid #333; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-
-        #unlockHint { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; color: #FFA500; font-weight: bold; pointer-events: none; }
+        .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        .nav-item { 
+            background: #1e1e1e; 
+            padding: 20px; 
+            border-radius: 18px; 
+            text-decoration: none; 
+            color: white; 
+            text-align: center;
+            border: 1px solid #333;
+            transition: 0.2s;
+        }
+        .nav-item:active { border-color: #FFA500; background: #252525; }
+        .nav-item i { display: block; font-size: 24px; margin-bottom: 8px; }
     </style>
 </head>
 <body>
 
-    <div class="menu-btn" onclick="toggleMenu()">☰</div>
-    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
-    <div class="sidebar" id="sidebar">
-        <a href="index.html">🏠 Dashboard</a>
-        <a href="quote.html">📝 New Quote</a>
-        <a href="expense.html">💸 Log Expense</a>
-        <a href="report.html">📊 Monthly Report</a>
-        <a href="gallery.html">📸 Project Gallery</a>
-        <a href="directory.html">👥 Customers</a>
-        <a href="setup.html">⚙️ Business Setup</a>
-    </div>
+    <div class="dashboard-container">
+        <header style="text-align: center; margin-bottom: 40px;">
+            <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
+            <p style="color: #888; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Business Command Centre</p>
+        </header>
 
-    <div class="card" id="main-content" style="display:none;">
-        <div class="welcome-header">
-            <div style="font-size: 24px; font-weight: bold;"><span class="orange">toolbox</span><span style="color:#fff;">pay</span></div>
-            <p id="comp-display" style="font-size: 13px; color: #888; margin-top: 5px;"></p>
-        </div>
-
-        <div class="status-tracker">
-            <div class="status-box"><span class="status-count orange" id="countProgress">0</span><span class="status-label">Active Jobs</span></div>
-            <div class="status-box"><span class="status-count" id="countComplete">0</span><span class="status-label">Finished</span></div>
-        </div>
-
-        <div class="profit-card" onclick="unlockFinance()">
-            <div id="financeContent" class="blur-sensitive">
-                <div class="profit-row"><span>Gross Income</span> <span id="summaryIncome" style="color: #fff;">£0.00</span></div>
-                <div class="profit-row"><span>Costs / Tax</span> <span id="taxReserve" style="color: #ff4d4d;">-£0.00</span></div>
-                <div class="spendable-total">Take Home: <span class="orange" id="summarySpendable">£0.00</span></div>
+        <div class="card-glass" style="padding: 25px; margin-bottom: 25px;">
+            <p style="margin: 0; color: #888; font-size: 12px; font-weight: 700;">TOTAL ESTIMATED PROFIT</p>
+            <h1 class="orange-glow" style="font-size: 48px; margin: 10px 0; color: #FFA500;">£4,820<span style="font-size: 20px; color: #fff; opacity: 0.5;">.00</span></h1>
+            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #aaa;">
+                <span>20% Tax Reserve: -£964.00</span>
+                <span style="color: #00ff88;">Ready to Pay</span>
             </div>
-            <div id="unlockHint">TAP TO UNLOCK</div>
-        </div>
-        
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <a href="quote.html" class="btn" style="margin-top:0;">New Quote</a>
-            <a href="expense.html" class="btn btn-secondary" style="margin-top:0;">Log Expense</a>
         </div>
 
-        <div class="history-section">
-            <h3 style="font-size:14px; color:#888; margin-bottom: 15px;">Recent Activity</h3>
-            <div id="historyList"></div>
+        <div class="nav-grid">
+            <a href="quote.html" class="nav-item">
+                <span class="orange" style="font-size: 20px;">+</span><br>New Quote
+            </a>
+            <a href="expense.html" class="nav-item">
+                <span class="orange" style="font-size: 20px;">£</span><br>Expenses
+            </a>
+            <a href="gallery.html" class="nav-item">
+                <span class="orange" style="font-size: 20px;">📸</span><br>Gallery
+            </a>
+            <a href="directory.html" class="nav-item">
+                <span class="orange" style="font-size: 20px;">👤</span><br>Customers
+            </a>
         </div>
+
+        <a href="report.html" class="btn-primary" style="display: block; text-align: center; margin-top: 25px; text-decoration: none;">
+            View Monthly Labour Report
+        </a>
     </div>
 
-    <script>
-        const savedCompany = localStorage.getItem('companyName');
-        const correctPin = localStorage.getItem('userPin') || "0000";
-
-        function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('active');
-            const overlay = document.getElementById('menuOverlay');
-            overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function unlockFinance() {
-            const entry = prompt("Enter your 4-digit PIN:");
-            if(entry === correctPin) {
-                document.getElementById('financeContent').classList.add('unlocked');
-                document.getElementById('unlockHint').style.display = 'none';
-            } else if (entry !== null) {
-                alert("Incorrect PIN");
-            }
-        }
-
-        if (!savedCompany) { 
-            window.location.href = "setup.html"; 
-        } else { 
-            document.getElementById('main-content').style.display = 'block'; 
-            document.getElementById('comp-display').innerText = savedCompany; 
-            updateSummaries(); 
-            renderHistory(); 
-        }
-
-        function updateSummaries() {
-            const quotes = JSON.parse(localStorage.getItem('quoteHistory')) || [];
-            const expenses = JSON.parse(localStorage.getItem('expenseHistory')) || [];
-            const taxRate = parseFloat(localStorage.getItem('taxRate')) || 20;
-            
-            const totalPaid = quotes.filter(q => q.status === 'Paid').reduce((sum, q) => sum + parseFloat(q.total), 0);
-            const totalExp = expenses.reduce((sum, e) => sum + parseFloat(e.amt), 0);
-            const netBeforeTax = totalPaid - totalExp;
-            const tax = netBeforeTax > 0 ? netBeforeTax * (taxRate / 100) : 0;
-
-            document.getElementById('summaryIncome').innerText = "£" + totalPaid.toFixed(2);
-            document.getElementById('taxReserve').innerText = "-£" + (totalExp + tax).toFixed(2);
-            document.getElementById('summarySpendable').innerText = "£" + Math.max(0, (netBeforeTax - tax)).toFixed(2);
-            
-            document.getElementById('countProgress').innerText = quotes.filter(q => q.workStatus === 'In Progress').length;
-            document.getElementById('countComplete').innerText = quotes.filter(q => q.workStatus === 'Complete').length;
-        }
-
-        function renderHistory() {
-            const quotes = JSON.parse(localStorage.getItem('quoteHistory')) || [];
-            const list = document.getElementById('historyList');
-            list.innerHTML = '';
-            
-            if(quotes.length === 0) {
-                list.innerHTML = '<p style="color:#444; font-size:13px;">No recent quotes or jobs.</p>';
-                return;
-            }
-
-            quotes.slice(-3).reverse().forEach(q => {
-                list.innerHTML += `<div class="history-item">
-                    <div><b>${q.name}</b><br><span style="font-size:11px; color:#888;">${q.date}</span></div>
-                    <div class="orange" style="font-weight:bold;">£${q.total}</div>
-                </div>`;
-            });
-        }
-    </script>
 </body>
 </html>
