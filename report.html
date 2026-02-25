@@ -4,50 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monthly Report | Toolbox Pay</title>
+    <link rel="stylesheet" href="src/index.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        body { background-color: #000; margin: 0; padding: 20px; font-family: sans-serif; color: #fff; display: flex; flex-direction: column; align-items: center; }
-        .report-card { background-color: #1a1a1a; border: 2px solid #FFA500; border-radius: 30px; padding: 30px; width: 100%; max-width: 600px; box-sizing: border-box; }
+        .page-container { width: 95%; max-width: 500px; padding: 40px 20px; }
+        .logo-text { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 30px; }
         .orange { color: #FFA500; }
-        .header { border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; text-align: center; }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
-        .stat-box { background: #222; padding: 15px; border-radius: 15px; border: 1px solid #333; }
-        .stat-val { font-size: 20px; font-weight: bold; display: block; margin-top: 5px; }
-        .stat-label { font-size: 11px; color: #888; text-transform: uppercase; }
-        .btn-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn { background: #FFA500; color: #000; border: none; padding: 12px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-        .btn-secondary { background: #333; color: #fff; text-decoration: none; padding: 12px; border-radius: 12px; font-size: 14px; }
+        .white { color: #FFFFFF; }
+
+        .report-header { border-bottom: 1px solid rgba(255, 165, 0, 0.2); padding-bottom: 15px; margin-bottom: 25px; }
+        .financial-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222; }
+        .financial-row:last-child { border-bottom: none; }
+        .label { color: #888; font-size: 14px; }
+        .value { font-weight: 700; color: #fff; }
+        
+        .summary-box { background: rgba(255, 165, 0, 0.1); border-radius: 15px; padding: 20px; margin-top: 25px; border: 1px solid rgba(255, 165, 0, 0.3); }
+        .btn-download { background: #fff; color: #000; width: 100%; margin-top: 20px; border-radius: 12px; padding: 15px; font-weight: bold; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div class="btn-group">
-        <button class="btn" onclick="html2pdf().from(document.getElementById('reportContent')).save()">📥 Download PDF</button>
-        <a href="index.html" class="btn-secondary">Dashboard</a>
-    </div>
-    <div class="report-card" id="reportContent">
-        <div class="header">
-            <div style="font-size: 24px; font-weight: bold;"><span class="orange">toolbox</span>pay</div>
-            <h2 id="bizHeader">Business Summary</h2>
+
+    <div class="page-container">
+        <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
+        
+        <div id="report-content" class="card-glass" style="padding: 30px;">
+            <div class="report-header">
+                <h2 style="margin: 0; font-size: 18px;" class="orange-glow">Business Labour Report</h2>
+                <p id="reportDate" style="font-size: 12px; color: #888; margin-top: 5px;"></p>
+            </div>
+
+            <div class="financial-row">
+                <span class="label">Total Gross Income</span>
+                <span class="value" id="grossIncome">£0.00</span>
+            </div>
+            <div class="financial-row">
+                <span class="label">Total Business Expenses</span>
+                <span class="value" id="totalExpenses" style="color: #ff4d4d;">-£0.00</span>
+            </div>
+            <div class="financial-row">
+                <span class="label">Taxable Profit</span>
+                <span class="value" id="taxableProfit">£0.00</span>
+            </div>
+
+            <div class="summary-box">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 12px; font-weight: bold; color: #FFA500;">20% HMRC ESTIMATE</span>
+                    <span id="taxDue" style="font-size: 18px; font-weight: 800; color: #FFA500;">£0.00</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; text-align: center;">
+                <h3 style="font-size: 24px; margin: 0; color: #00ff88;" id="netTakeHome">£0.00</h3>
+                <p style="font-size: 11px; color: #888; margin-top: 5px; text-transform: uppercase;">Estimated Take-Home Pay</p>
+            </div>
         </div>
-        <div class="stat-grid">
-            <div class="stat-box"><span class="stat-label">Income</span><span class="stat-val" id="totalIn" style="color:#00ff88;">£0.00</span></div>
-            <div class="stat-box"><span class="stat-label">Expenses</span><span class="stat-val" id="totalOut" style="color:#ff4d4d;">£0.00</span></div>
-            <div class="stat-box"><span class="stat-label">Tax Due</span><span class="stat-val orange" id="taxVal">£0.00</span></div>
-            <div class="stat-box"><span class="stat-label">Net Profit</span><span class="stat-val" id="netProfit">£0.00</span></div>
-        </div>
+
+        <button class="btn-download" onclick="downloadPDF()">📥 Download PDF for Accountant</button>
+        <a href="index.html" style="display: block; text-align: center; margin-top: 20px; color: #888; text-decoration: none; font-size: 14px;">← Back to Dashboard</a>
     </div>
+
     <script>
-        const quotes = JSON.parse(localStorage.getItem('quoteHistory')) || [];
-        const expenses = JSON.parse(localStorage.getItem('expenseHistory')) || [];
-        const taxRate = parseFloat(localStorage.getItem('taxRate')) || 20;
-        const totalIn = quotes.filter(q => q.status === 'Paid').reduce((s, q) => s + parseFloat(q.total), 0);
-        const totalOut = expenses.reduce((s, e) => s + parseFloat(e.amt), 0);
-        const net = totalIn - totalOut;
-        const tax = net > 0 ? net * (taxRate / 100) : 0;
-        document.getElementById('totalIn').innerText = "£" + totalIn.toFixed(2);
-        document.getElementById('totalOut').innerText = "£" + totalOut.toFixed(2);
-        document.getElementById('taxVal').innerText = "£" + tax.toFixed(2);
-        document.getElementById('netProfit').innerText = "£" + (net - tax).toFixed(2);
+        document.getElementById('reportDate').innerText = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+
+        function calculateReport() {
+            const quotes = JSON.parse(localStorage.getItem('quoteHistory')) || [];
+            const expenses = JSON.parse(localStorage.getItem('expenseHistory')) || [];
+            const taxRate = parseFloat(localStorage.getItem('taxRate')) || 20;
+
+            const income = quotes.filter(q => q.status === 'Paid').reduce((sum, q) => sum + parseFloat(q.total), 0);
+            const costs = expenses.reduce((sum, e) => sum + parseFloat(e.amt), 0);
+            const profit = income - costs;
+            const tax = profit > 0 ? (profit * (taxRate / 100)) : 0;
+
+            document.getElementById('grossIncome').innerText = "£" + income.toFixed(2);
+            document.getElementById('totalExpenses').innerText = "-£" + costs.toFixed(2);
+            document.getElementById('taxableProfit').innerText = "£" + profit.toFixed(2);
+            document.getElementById('taxDue').innerText = "£" + tax.toFixed(2);
+            document.getElementById('netTakeHome').innerText = "£" + (profit - tax).toFixed(2);
+        }
+
+        function downloadPDF() {
+            const element = document.getElementById('report-content');
+            const options = {
+                margin: 1,
+                filename: 'ToolboxPay-Report.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, backgroundColor: '#0A0A0A' },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(options).from(element).save();
+        }
+
+        calculateReport();
     </script>
 </body>
 </html>
