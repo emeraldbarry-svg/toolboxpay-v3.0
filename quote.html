@@ -37,8 +37,13 @@
         }
         .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 8px; }
 
-        #pdf-template { display: none; background: white; color: black; padding: 40px; font-family: sans-serif; }
-        .pdf-logo { font-size: 28px; font-weight: 900; color: #FFA500; margin-bottom: 10px; }
+        /* PDF Hidden Template */
+        #pdf-template { display: none; background: white; color: #1a1a1a; padding: 50px; font-family: 'Segoe UI', Arial, sans-serif; }
+        .pdf-header { border-bottom: 2px solid #FFA500; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .pdf-table { width: 100%; border-collapse: collapse; margin: 30px 0; }
+        .pdf-table th { text-align: left; padding: 12px; background: #f9f9f9; font-size: 12px; color: #666; }
+        .pdf-table td { padding: 15px 12px; border-bottom: 1px solid #eee; }
+        .terms-section { margin-top: 50px; padding: 20px; background: #fdfdfd; border: 1px solid #eee; border-radius: 8px; font-size: 10px; color: #777; line-height: 1.5; }
 
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 1999; transition: 0.4s; padding-top: 100px; border-right: 1px solid #333; }
         .sidebar.active { left: 0; }
@@ -64,34 +69,63 @@
         <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
 
         <div class="estimate-header">
-            <span style="font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase;">Live Estimate</span>
+            <span style="font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase;">Estimated Total</span>
             <div class="total-glow" id="displayTotal">£0.00</div>
         </div>
 
         <form id="quoteForm">
             <span class="form-label">Client Name</span>
-            <input type="text" id="custName" class="calc-input" placeholder="e.g. David Harrison" required>
+            <input type="text" id="custName" class="calc-input" placeholder="Enter name..." required>
             <span class="form-label">Labour (£)</span>
             <input type="number" id="labour" class="calc-input" placeholder="0.00" oninput="updateLiveTotal()" required>
             <span class="form-label">Materials (£)</span>
             <input type="number" id="materials" class="calc-input" placeholder="0.00" oninput="updateLiveTotal()">
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
-                <button type="button" onclick="generatePDF()" class="btn-primary" style="background: #333; border: 1px solid #555;">💾 Preview PDF</button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                <button type="button" onclick="generatePDF()" class="btn-primary" style="background: #333; border: 1px solid #555;">💾 PDF Quote</button>
                 <button type="submit" class="btn-primary">✅ Save Job</button>
             </div>
         </form>
     </div>
 
     <div id="pdf-template">
-        <div class="pdf-logo">toolbox<span style="color:black">pay</span></div>
-        <h1 style="font-size: 24px;">OFFICIAL QUOTE</h1>
-        <p id="pdf-date"></p>
-        <div id="pdf-client" style="font-size: 18px; font-weight: bold; margin-top: 20px;"></div>
-        <div style="margin-top: 30px; border-top: 2px solid #FFA500; padding-top: 10px;">
-            <p>Labour: <span id="pdf-labour"></span></p>
-            <p>Materials: <span id="pdf-materials"></span></p>
-            <h3>Total: <span id="pdf-total"></span></h3>
+        <div class="pdf-header">
+            <div>
+                <div style="font-size: 28px; font-weight: 900; color: #FFA500;">toolbox<span style="color:#1a1a1a">pay</span></div>
+                <div id="pdf-biz-name" style="font-weight: bold; margin-top: 5px; text-transform: uppercase; font-size: 14px;"></div>
+            </div>
+            <div style="text-align: right;">
+                <h2 style="margin: 0; color: #444;">QUOTE</h2>
+                <p id="pdf-date" style="margin: 5px 0; font-size: 12px; color: #888;"></p>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <div style="font-size: 10px; color: #888; text-transform: uppercase; font-weight: bold; margin-bottom: 5px;">Prepared For:</div>
+            <div id="pdf-client-name" style="font-size: 18px; font-weight: bold;"></div>
+        </div>
+
+        <table class="pdf-table">
+            <thead>
+                <tr><th>Description</th><th style="text-align: right;">Total</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Professional Labour & Services</td><td style="text-align: right;" id="pdf-labour-val">£0.00</td></tr>
+                <tr><td>Materials, Parts & Sundries</td><td style="text-align: right;" id="pdf-materials-val">£0.00</td></tr>
+                <tr style="font-size: 18px; font-weight: bold; color: #FFA500;">
+                    <td style="padding-top: 25px;">TOTAL ESTIMATE</td>
+                    <td style="padding-top: 25px; text-align: right;" id="pdf-total-val">£0.00</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="terms-section">
+            <b style="color: #444; text-transform: uppercase;">Terms & Conditions:</b><br>
+            1. This quote is valid for 30 days from the date shown above.<br>
+            2. Payment is due within 7 days of invoice unless otherwise agreed in writing.<br>
+            3. All materials remain the property of <span class="pdf-biz-name-insert">our business</span> until paid in full.<br>
+            4. Warranty covers <b>labour</b> and installation only; manufacturer warranties apply to parts.<br>
+            5. Final price may vary if unforeseen structural issues or additional work is requested.
         </div>
     </div>
 
@@ -110,18 +144,27 @@
         }
 
         function generatePDF() {
-            const client = document.getElementById('custName').value || "Valued Customer";
+            const bizName = localStorage.getItem('companyName') || "Your Business";
+            const client = document.getElementById('custName').value || "Client";
             const labour = parseFloat(document.getElementById('labour').value) || 0;
             const materials = parseFloat(document.getElementById('materials').value) || 0;
-            document.getElementById('pdf-client').innerText = client;
-            document.getElementById('pdf-labour').innerText = "£" + labour.toFixed(2);
-            document.getElementById('pdf-materials').innerText = "£" + materials.toFixed(2);
-            document.getElementById('pdf-total').innerText = "£" + (labour + materials).toFixed(2);
-            document.getElementById('pdf-date').innerText = new Date().toLocaleDateString('en-GB');
+            const total = (labour + materials).toFixed(2);
+
+            document.getElementById('pdf-biz-name').innerText = bizName;
+            document.querySelector('.pdf-biz-name-insert').innerText = bizName;
+            document.getElementById('pdf-client-name').innerText = client;
+            document.getElementById('pdf-labour-val').innerText = "£" + labour.toFixed(2);
+            document.getElementById('pdf-materials-val').innerText = "£" + materials.toFixed(2);
+            document.getElementById('pdf-total-val').innerText = "£" + total;
+            document.getElementById('pdf-date').innerText = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
             const element = document.getElementById('pdf-template');
             element.style.display = 'block';
-            html2pdf().from(element).save().then(() => element.style.display = 'none');
+            const opt = { margin: 0.5, filename: `Quote_${client}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 3 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
+            
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.style.display = 'none';
+            });
         }
 
         document.getElementById('quoteForm').onsubmit = (e) => {
