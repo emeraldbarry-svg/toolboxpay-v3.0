@@ -12,31 +12,38 @@
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
 
-        .setup-group { margin-bottom: 25px; }
-        .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .setup-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 8px; }
         .setup-input {
             width: 100%; background: #1a1a1a; border: 2px solid #333;
             border-radius: 15px; padding: 18px; color: white; font-size: 16px;
-            box-sizing: border-box; outline: none; transition: 0.3s;
+            box-sizing: border-box; outline: none;
         }
         .setup-input:focus { border-color: #FFA500; }
+        .setup-input:invalid { border-color: #552222; }
 
-        .info-box {
-            background: rgba(255, 165, 0, 0.05); border: 1px solid rgba(255, 165, 0, 0.2);
-            border-radius: 15px; padding: 15px; font-size: 12px; color: #aaa; margin-bottom: 30px;
+        /* Option 6 Strategy Overlay */
+        #welcomeOverlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); z-index: 3000; justify-content: center; align-items: center;
         }
+        .welcome-card {
+            width: 85%; max-width: 380px; background: #111; border: 2px solid #FFA500;
+            border-radius: 30px; padding: 40px 25px; text-align: center;
+            box-shadow: 0 0 40px rgba(255, 165, 0, 0.2);
+        }
+        .qr-placeholder {
+            width: 160px; height: 160px; background: white; margin: 25px auto;
+            border-radius: 15px; padding: 10px; display: flex; align-items: center; justify-content: center;
+        }
+        .qr-placeholder img { width: 100%; height: 100%; }
 
         .menu-trigger {
             position: fixed; top: 20px; left: 20px; width: 55px; height: 55px;
             background: rgba(255, 165, 0, 0.15); border: 2px solid #FFA500;
-            border-radius: 15px; display: flex; justify-content: center;
-            align-items: center; z-index: 2000; backdrop-filter: blur(10px);
+            border-radius: 15px; display: flex; justify-content: center; align-items: center; z-index: 2000;
         }
         .menu-trigger span { font-size: 32px; color: #FFA500; }
-
-        .backup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; border-top: 1px solid #222; padding-top: 30px; }
-        .btn-outline { background: transparent; border: 1px solid #444; color: #888; padding: 15px; border-radius: 15px; font-weight: 700; font-size: 12px; cursor: pointer; }
-        .btn-outline:active { border-color: #FFA500; color: #FFA500; }
 
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 1999; transition: 0.4s; padding-top: 100px; border-right: 1px solid #333; }
         .sidebar.active { left: 0; }
@@ -45,6 +52,21 @@
     </style>
 </head>
 <body>
+
+    <div id="welcomeOverlay">
+        <div class="welcome-card">
+            <div class="logo-text" style="font-size: 24px;"><span class="orange">toolbox</span><span class="white">pay</span></div>
+            <h2 id="welcomeHeader" style="color: white; font-size: 18px; margin: 20px 0; font-weight: 800;"></h2>
+            <p id="welcomeBody" style="color: #ccc; font-size: 14px; line-height: 1.6; margin: 15px 0;"></p>
+            
+            <div class="qr-placeholder">
+                <img id="qrImage" src="" alt="Scan to Share">
+            </div>
+            
+            <p style="color: #FFA500; font-size: 10px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;">Help a colleague protect their profit</p>
+            <button onclick="closeWelcome()" class="btn-primary" style="margin-top: 30px; width: 100%; padding: 18px; border-radius: 15px;">Open Dashboard</button>
+        </div>
+    </div>
 
     <div class="menu-trigger" onclick="toggleMenu()"><span>☰</span></div>
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
@@ -60,31 +82,36 @@
     </div>
 
     <div class="page-container">
-        <header style="margin-bottom: 40px;">
+        <header style="margin-bottom: 30px;">
             <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-            <p style="text-align: center; color: #666; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;">Business Configuration</p>
+            <p style="text-align: center; color: #666; font-size: 10px; letter-spacing: 2px; font-weight: 700;">ADMIN SETUP</p>
         </header>
 
         <form id="setupForm">
             <div class="setup-group">
-                <span class="form-label">Trading Name</span>
-                <input type="text" id="bizName" class="setup-input" placeholder="Business Name" required>
+                <span class="form-label">First Name</span>
+                <input type="text" id="adminName" class="setup-input" placeholder="e.g. John" required>
             </div>
 
             <div class="setup-group">
-                <span class="form-label">Security PIN (4 Digits)</span>
+                <span class="form-label">Trading Name</span>
+                <input type="text" id="bizName" class="setup-input" placeholder="e.g. JT Installations" required>
+            </div>
+
+            <div class="setup-group">
+                <span class="form-label">Geographical Location (Mandatory)</span>
+                <input type="text" id="geoLoc" class="setup-input" placeholder="e.g. Birmingham" required>
+            </div>
+
+            <div class="setup-group">
+                <span class="form-label">4-Digit PIN</span>
                 <input type="password" id="userPin" class="setup-input" placeholder="0000" maxlength="4" pattern="\d{4}" inputmode="numeric" required>
             </div>
 
-            <button type="submit" class="btn-primary" style="width: 100%; padding: 20px; border-radius: 20px;">Save Profile</button>
+            <button type="submit" class="btn-primary" style="width: 100%; padding: 20px; border-radius: 20px; font-weight: 800; margin-top: 10px;">
+                Secure My Profile
+            </button>
         </form>
-
-        <div class="backup-grid">
-            <button class="btn-outline" onclick="exportData()">📤 Backup Data</button>
-            <button class="btn-outline" onclick="document.getElementById('importFile').click()">📥 Restore Data</button>
-            <input type="file" id="importFile" style="display:none" onchange="importData(this)">
-        </div>
-        <p style="text-align: center; font-size: 10px; color: #444; margin-top: 15px;">Export a backup file to secure your records off-device.</p>
     </div>
 
     <script>
@@ -96,37 +123,35 @@
         }
 
         window.onload = () => {
+            document.getElementById('adminName').value = localStorage.getItem('adminName') || '';
             document.getElementById('bizName').value = localStorage.getItem('companyName') || '';
+            document.getElementById('geoLoc').value = localStorage.getItem('userLocation') || '';
             document.getElementById('userPin').value = localStorage.getItem('userPin') || '';
         };
 
         document.getElementById('setupForm').onsubmit = (e) => {
             e.preventDefault();
+            const name = document.getElementById('adminName').value;
+            const loc = document.getElementById('geoLoc').value;
+
+            localStorage.setItem('adminName', name);
             localStorage.setItem('companyName', document.getElementById('bizName').value);
+            localStorage.setItem('userLocation', loc);
             localStorage.setItem('userPin', document.getElementById('userPin').value);
-            alert('Settings Saved.');
-            window.location.href = "index.html";
+            sessionStorage.setItem('unlocked', 'true');
+
+            // Option 6 Profit Protector Message Logic
+            const landingLink = "https://toolboxpay.com/join"; 
+            document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${landingLink}`;
+            
+            document.getElementById('welcomeHeader').innerText = `Cheers for joining, ${name}.`;
+            document.getElementById('welcomeBody').innerHTML = `We're here to help you protect your profits across <b>${loc}</b>. Knowing your <b>labour</b> costs and tax reserve is a game-changer. If the app is helping you keep track of the pennies, why not tell a mate? It’s the easiest way to help them stop leaving money on the table. Scan below to share the secret.`;
+            
+            document.getElementById('welcomeOverlay').style.display = 'flex';
         };
 
-        function exportData() {
-            const data = JSON.stringify(localStorage);
-            const blob = new Blob([data], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `toolboxpay_backup_${new Date().toISOString().slice(0,10)}.json`;
-            a.click();
-        }
-
-        function importData(input) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                const data = JSON.parse(reader.result);
-                Object.keys(data).forEach(key => localStorage.setItem(key, data[key]));
-                alert('Restore Complete. The app will now reload.');
-                window.location.reload();
-            };
-            reader.readAsText(input.files[0]);
+        function closeWelcome() {
+            window.location.href = "index.html";
         }
     </script>
 </body>
