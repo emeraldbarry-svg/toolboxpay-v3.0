@@ -9,12 +9,10 @@
     <style>
         .page-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; margin: 0 auto; }
         
-        /* Logo Branding */
         .logo-text { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 5px; }
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
 
-        /* Page Heading */
         .page-header {
             text-align: center;
             color: #888;
@@ -31,6 +29,7 @@
             border-radius: 30px;
             padding: 30px 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
         }
 
         .input-group { margin-bottom: 20px; }
@@ -43,7 +42,13 @@
         }
         .dir-input:focus { border-color: #FFA500; }
 
-        /* Fixed Button Alignment and Symmetry */
+        .search-wrapper { margin-bottom: 20px; position: relative; }
+        .search-input {
+            width: 100%; background: #000; border: 1px solid #FFA500;
+            border-radius: 20px; padding: 15px 45px 15px 20px; color: white; 
+            font-size: 14px; box-sizing: border-box; outline: none;
+        }
+
         .button-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
         
         .btn-dir {
@@ -59,24 +64,22 @@
             transition: 0.2s;
         }
         .btn-add { background: #FFA500; color: #000; }
-        .btn-add:active { background: #e69500; transform: scale(0.98); }
-        
         .btn-back { background: #222; color: #fff; border: 1px solid #333; }
-        .btn-back:active { background: #333; transform: scale(0.98); }
 
-        .customer-list { margin-top: 30px; }
+        .customer-list { margin-top: 10px; }
         .customer-item { 
             background: #1a1a1a; padding: 15px; border-radius: 15px; 
             margin-bottom: 10px; border-left: 4px solid #FFA500;
             display: flex; justify-content: space-between; align-items: center;
         }
+        .no-results { text-align: center; color: #555; font-size: 13px; margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <div class="page-container">
         <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-        <div class="page-header">New Customer Details</div>
+        <div class="page-header">Customer Directory</div>
 
         <div class="form-card">
             <form id="dirForm">
@@ -102,8 +105,15 @@
             </form>
         </div>
 
-        <div class="customer-list" id="customerList">
+        <div id="listSection">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search contacts..." onkeyup="filterCustomers()">
+                <span style="position:absolute; right:15px; top:12px; font-size:18px;">🔍</span>
             </div>
+
+            <div class="customer-list" id="customerList">
+                </div>
+        </div>
     </div>
 
     <script>
@@ -112,20 +122,36 @@
 
         function loadCustomers() {
             const customers = JSON.parse(localStorage.getItem('directory')) || [];
-            if (customers.length > 0) {
-                listDiv.innerHTML = '<h3 style="font-size:12px; color:#666; text-transform:uppercase; margin-bottom:15px; text-align:center;">Your Contacts</h3>';
-                customers.forEach((c) => {
-                    listDiv.innerHTML += `
-                        <div class="customer-item">
-                            <div>
-                                <div style="font-weight:bold; color:#fff;">${c.name}</div>
-                                <div style="font-size:12px; color:#888;">${c.phone}</div>
-                            </div>
-                            <a href="tel:${c.phone}" style="text-decoration:none; font-size:20px;">📞</a>
-                        </div>
-                    `;
-                });
+            renderList(customers);
+        }
+
+        function renderList(list) {
+            if (list.length === 0) {
+                listDiv.innerHTML = '<div class="no-results">No contacts found.</div>';
+                return;
             }
+            listDiv.innerHTML = '';
+            list.forEach((c) => {
+                listDiv.innerHTML += `
+                    <div class="customer-item">
+                        <div>
+                            <div style="font-weight:bold; color:#fff;">${c.name}</div>
+                            <div style="font-size:12px; color:#888;">${c.phone}</div>
+                        </div>
+                        <a href="tel:${c.phone}" style="text-decoration:none; font-size:20px;">📞</a>
+                    </div>
+                `;
+            });
+        }
+
+        function filterCustomers() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const customers = JSON.parse(localStorage.getItem('directory')) || [];
+            const filtered = customers.filter(c => 
+                c.name.toLowerCase().includes(query) || 
+                c.phone.includes(query)
+            );
+            renderList(filtered);
         }
 
         dirForm.onsubmit = (e) => {
