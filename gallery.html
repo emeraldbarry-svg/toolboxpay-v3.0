@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Gallery | Toolbox Pay</title>
+    <title>Customer Directory | Toolbox Pay</title>
     <link rel="stylesheet" href="src/index.css">
     <style>
-        .page-container { width: 95%; max-width: 600px; padding: 60px 20px 40px 20px; }
+        .page-container { width: 95%; max-width: 450px; padding: 60px 20px 40px 20px; }
         .logo-text { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 30px; }
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
@@ -30,16 +30,22 @@
         }
         .menu-trigger span { font-size: 30px; color: #FFA500; }
 
+        /* Sidebar Styling */
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px); border-right: 1px solid rgba(255, 165, 0, 0.2); transition: 0.4s; z-index: 1999; padding-top: 80px; }
         .sidebar.active { left: 0; }
         .sidebar a { padding: 18px 30px; text-decoration: none; color: white; display: block; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1998; }
 
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-top: 20px; }
-        .gallery-item { background: #1a1a1a; border-radius: 15px; overflow: hidden; border: 1px solid rgba(255, 165, 0, 0.2); }
-        .gallery-img { width: 100%; height: 180px; object-fit: cover; display: block; }
-        .gallery-info { padding: 12px; }
-        .proj-name { font-size: 14px; font-weight: 700; color: #fff; }
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 8px; margin-top: 15px; }
+        .input-glass { width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 165, 0, 0.2); border-radius: 12px; padding: 15px; color: white; box-sizing: border-box; }
+        
+        /* Search Bar Styling */
+        .search-container { margin-top: 30px; position: relative; }
+        .search-input { width: 100%; background: #1a1a1a; border: 1px solid #333; border-radius: 25px; padding: 12px 20px; color: white; font-size: 14px; outline: none; transition: 0.3s; }
+        .search-input:focus { border-color: #FFA500; box-shadow: 0 0 10px rgba(255, 165, 0, 0.2); }
+
+        .customer-card { background: rgba(30, 30, 30, 0.6); border: 1px solid #333; border-radius: 15px; padding: 18px; margin-top: 15px; border-left: 4px solid #FFA500; transition: 0.3s; }
+        .customer-card:active { transform: scale(0.98); background: rgba(255, 165, 0, 0.05); }
     </style>
 </head>
 <body>
@@ -58,8 +64,25 @@
 
     <div class="page-container">
         <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-        <h2 class="orange-glow" style="font-size: 22px;">Project Gallery</h2>
-        <div id="galleryContainer" class="gallery-grid"></div>
+        
+        <div class="card-glass" style="padding: 25px;">
+            <h2 class="orange-glow" style="margin-top: 0; font-size: 18px;">Add New Client</h2>
+            <form id="customerForm">
+                <span class="form-label">Full Name</span>
+                <input type="text" id="cName" class="input-glass" placeholder="e.g. David Harrison" required>
+                <span class="form-label">Contact Number</span>
+                <input type="tel" id="cPhone" class="input-glass" placeholder="07700 900123">
+                <span class="form-label">Site Address</span>
+                <textarea id="cAddress" class="input-glass" style="height: 60px;" placeholder="Full address for site visits"></textarea>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px;">Save Client</button>
+            </form>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search customers..." onkeyup="filterCustomers()">
+        </div>
+
+        <div id="customerList" style="margin-top: 10px;"></div>
     </div>
 
     <script>
@@ -70,22 +93,55 @@
             ov.style.display = sb.classList.contains('active') ? 'block' : 'none';
         }
 
-        function renderGallery() {
-            const history = JSON.parse(localStorage.getItem('quoteHistory')) || [];
-            const container = document.getElementById('galleryContainer');
-            const completedJobs = history.filter(job => job.photo);
-            if (completedJobs.length === 0) {
-                container.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#444;">No project photos found.</p>';
+        const list = document.getElementById('customerList');
+
+        function render(filter = '') {
+            const clients = JSON.parse(localStorage.getItem('tbClients')) || [];
+            list.innerHTML = '';
+            
+            const filteredClients = clients.filter(c => 
+                c.name.toLowerCase().includes(filter.toLowerCase())
+            ).reverse();
+
+            if (filteredClients.length === 0) {
+                list.innerHTML = `<p style="text-align:center;color:#444;margin-top:20px;">No matching clients found.</p>`;
                 return;
             }
-            container.innerHTML = completedJobs.reverse().map(job => `
-                <div class="gallery-item">
-                    <img src="${job.photo}" class="gallery-img">
-                    <div class="gallery-info"><span class="proj-name">${job.name}</span></div>
-                </div>
-            `).join('');
+
+            filteredClients.forEach(c => {
+                list.innerHTML += `
+                    <div class="customer-card">
+                        <b class="orange" style="font-size: 18px;">${c.name}</b><br>
+                        <div style="margin: 8px 0; font-size: 13px; color: #ccc; line-height: 1.4;">📍 ${c.address || 'No address recorded'}</div>
+                        <div style="display: flex; gap: 15px; margin-top: 10px;">
+                            <a href="tel:${c.phone}" style="color: #00ff88; font-size: 12px; text-decoration: none; font-weight: bold;">📞 CALL</a>
+                            <a href="sms:${c.phone}" style="color: #FFA500; font-size: 12px; text-decoration: none; font-weight: bold;">💬 MESSAGE</a>
+                        </div>
+                    </div>
+                `;
+            });
         }
-        renderGallery();
+
+        function filterCustomers() {
+            const val = document.getElementById('searchInput').value;
+            render(val);
+        }
+
+        document.getElementById('customerForm').onsubmit = (e) => {
+            e.preventDefault();
+            const clients = JSON.parse(localStorage.getItem('tbClients')) || [];
+            clients.push({ 
+                name: document.getElementById('cName').value, 
+                phone: document.getElementById('cPhone').value, 
+                address: document.getElementById('cAddress').value 
+            });
+            localStorage.setItem('tbClients', JSON.stringify(clients));
+            document.getElementById('searchInput').value = ''; // Clear search
+            render();
+            e.target.reset();
+        };
+
+        render();
     </script>
 </body>
 </html>
