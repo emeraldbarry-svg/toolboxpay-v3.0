@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toolbox Pay | Command Centre</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="src/index.css">
+    <meta name="theme-color" content="#FFA500">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <script src="src/auth.js"></script>
     <style>
         .dashboard-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; }
@@ -12,7 +16,6 @@
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
         
-        /* High-Visibility Menu Button */
         .menu-trigger {
             position: fixed; top: 20px; left: 20px; width: 55px; height: 55px;
             background: rgba(255, 165, 0, 0.15); border: 2px solid #FFA500;
@@ -39,17 +42,13 @@
         .action-btn {
             background: #151515; border: 1px solid #333; border-radius: 24px;
             padding: 30px 20px; text-decoration: none; text-align: center;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .action-btn:active { border-color: #FFA500; background: rgba(255, 165, 0, 0.1); transform: scale(0.95); }
         .action-btn .icon { font-size: 28px; display: block; margin-bottom: 10px; }
         .action-btn span { color: white; font-size: 14px; font-weight: 600; }
 
-        /* Sidebar & Overlay */
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 1999; transition: 0.4s; padding-top: 100px; border-right: 1px solid #333; }
         .sidebar.active { left: 0; }
         .sidebar a { padding: 20px 30px; color: white; text-decoration: none; display: block; border-bottom: 1px solid #1a1a1a; }
-        .sidebar .lock-btn { color: #ff4d4d; font-weight: 700; border-top: 1px solid #222; margin-top: 20px; }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1998; }
     </style>
 </head>
@@ -59,9 +58,6 @@
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     
     <div class="sidebar" id="sidebar">
-        <div style="padding: 0 30px 20px 30px; border-bottom: 1px solid #222;">
-            <div class="logo-text" style="font-size: 20px; text-align: left;"><span class="orange">toolbox</span><span class="white">pay</span></div>
-        </div>
         <a href="index.html">🏠 Dashboard</a>
         <a href="quote.html">📝 Create Quote</a>
         <a href="expense.html">💸 Log Expense</a>
@@ -69,13 +65,13 @@
         <a href="gallery.html">📸 Portfolio</a>
         <a href="directory.html">👤 Customers</a>
         <a href="setup.html">⚙️ Settings</a>
-        <a href="#" class="lock-btn" onclick="manualLock()">🔒 Lock System</a>
+        <a href="#" style="color: #ff4d4d;" onclick="manualLock()">🔒 Lock System</a>
     </div>
 
     <div class="dashboard-container">
         <header style="margin-bottom: 40px;">
             <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-            <p id="bizName" style="text-align: center; color: #666; font-size: 11px; letter-spacing: 3px; text-transform: uppercase;">System Loading...</p>
+            <p id="bizName" style="text-align: center; color: #666; font-size: 11px; letter-spacing: 3px; text-transform: uppercase;">Profile Loading...</p>
         </header>
 
         <div class="main-display">
@@ -118,16 +114,13 @@
         }
 
         window.onload = () => {
-            const biz = localStorage.getItem('companyName') || "Set Up Business";
+            const biz = localStorage.getItem('companyName') || "Business Setup Required";
             document.getElementById('bizName').innerText = biz;
-            
             const quotes = JSON.parse(localStorage.getItem('quoteHistory')) || [];
             const expenses = JSON.parse(localStorage.getItem('expenseHistory')) || [];
-            
-            const totalIncome = quotes.reduce((sum, q) => sum + parseFloat(q.total || 0), 0);
-            const totalExpenses = expenses.reduce((sum, e) => sum + parseFloat(e.amt || 0), 0);
-            const net = (totalIncome - totalExpenses) * 0.8; // 20% tax reserve
-
+            const income = quotes.reduce((sum, q) => sum + parseFloat(q.total || 0), 0);
+            const costs = expenses.reduce((sum, e) => sum + parseFloat(e.amt || 0), 0);
+            const net = (income - costs) * 0.8;
             document.getElementById('totalProfit').innerText = "£" + net.toLocaleString('en-GB', {minimumFractionDigits: 2});
         };
     </script>
