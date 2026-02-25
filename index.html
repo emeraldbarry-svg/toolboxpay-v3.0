@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <script src="src/auth.js"></script>
     <style>
-        .dashboard-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; }
+        .dashboard-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; margin: 0 auto; }
         .logo-text { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 5px; }
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
@@ -30,11 +30,25 @@
             color: #888; text-transform: uppercase; letter-spacing: 2px; margin-top: -5px;
         }
 
+        /* Quick Dial Component */
+        .quick-dial-card {
+            display: none; background: #111; border: 1px solid #333; 
+            border-radius: 20px; padding: 15px; margin-top: 25px;
+            align-items: center; justify-content: space-between;
+        }
+        .dial-info p { margin: 0; font-size: 11px; color: #666; font-weight: 700; text-transform: uppercase; }
+        .dial-info h3 { margin: 2px 0 0 0; font-size: 16px; color: #fff; }
+        .dial-btn { 
+            background: #FFA500; width: 45px; height: 45px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; text-decoration: none;
+            font-size: 20px; box-shadow: 0 4px 10px rgba(255,165,0,0.3);
+        }
+
         .main-display {
             background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
             border: 1px solid rgba(255, 165, 0, 0.3);
             border-radius: 30px; padding: 35px 25px; margin-bottom: 25px;
-            position: relative; overflow: hidden; margin-top: 30px;
+            position: relative; overflow: hidden; margin-top: 15px;
         }
 
         .status-pill {
@@ -74,11 +88,19 @@
     </div>
 
     <div class="dashboard-container">
-        <header style="margin-bottom: 10px;">
+        <header>
             <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
             <div id="bizName" style="text-align: center; color: #FFF; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Admin Panel</div>
-            <div id="displayLoc" class="service-badge">Loading Location...</div>
+            <div id="displayLoc" class="service-badge">Loading...</div>
         </header>
+
+        <div id="quickDial" class="quick-dial-card">
+            <div class="dial-info">
+                <p>Recent Contact</p>
+                <h3 id="lastContactName">No Contacts</h3>
+            </div>
+            <a href="#" id="lastContactLink" class="dial-btn">📞</a>
+        </div>
 
         <div class="main-display">
             <div class="status-pill">● Secure Session</div>
@@ -122,18 +144,25 @@
         window.onload = () => {
             const biz = localStorage.getItem('companyName') || "Business Name";
             const loc = localStorage.getItem('userLocation') || "Location Not Set";
-            
             document.getElementById('bizName').innerText = biz;
             document.getElementById('displayLoc').innerText = "Service Area: " + loc;
             
+            // Profit Logic
             const quotes = JSON.parse(localStorage.getItem('quoteHistory')) || [];
             const expenses = JSON.parse(localStorage.getItem('expenseHistory')) || [];
             const income = quotes.reduce((sum, q) => sum + parseFloat(q.total || 0), 0);
             const costs = expenses.reduce((sum, e) => sum + parseFloat(e.amt || 0), 0);
-            
-            // Calculating net with 20% tax reserve
             const net = (income - costs) * 0.8;
             document.getElementById('totalProfit').innerText = "£" + net.toLocaleString('en-GB', {minimumFractionDigits: 2});
+
+            // Quick Dial Logic
+            const customers = JSON.parse(localStorage.getItem('directory')) || [];
+            if (customers.length > 0) {
+                const last = customers[customers.length - 1];
+                document.getElementById('lastContactName').innerText = last.name;
+                document.getElementById('lastContactLink').href = "tel:" + last.phone;
+                document.getElementById('quickDial').style.display = "flex";
+            }
         };
     </script>
 </body>
