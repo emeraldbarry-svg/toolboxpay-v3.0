@@ -12,6 +12,7 @@
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
         
+        /* High-Visibility Menu Button */
         .menu-trigger {
             position: fixed; top: 20px; left: 20px; width: 55px; height: 55px;
             background: rgba(255, 165, 0, 0.15); border: 2px solid #FFA500;
@@ -38,14 +39,17 @@
         .action-btn {
             background: #151515; border: 1px solid #333; border-radius: 24px;
             padding: 30px 20px; text-decoration: none; text-align: center;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .action-btn:active { border-color: #FFA500; background: rgba(255, 165, 0, 0.1); }
+        .action-btn:active { border-color: #FFA500; background: rgba(255, 165, 0, 0.1); transform: scale(0.95); }
         .action-btn .icon { font-size: 28px; display: block; margin-bottom: 10px; }
         .action-btn span { color: white; font-size: 14px; font-weight: 600; }
 
+        /* Sidebar & Overlay */
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 1999; transition: 0.4s; padding-top: 100px; border-right: 1px solid #333; }
         .sidebar.active { left: 0; }
         .sidebar a { padding: 20px 30px; color: white; text-decoration: none; display: block; border-bottom: 1px solid #1a1a1a; }
+        .sidebar .lock-btn { color: #ff4d4d; font-weight: 700; border-top: 1px solid #222; margin-top: 20px; }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1998; }
     </style>
 </head>
@@ -65,18 +69,18 @@
         <a href="gallery.html">📸 Portfolio</a>
         <a href="directory.html">👤 Customers</a>
         <a href="setup.html">⚙️ Settings</a>
-        <a href="#" style="color: #ff4d4d; margin-top: 20px;" onclick="lockApp()">🔒 Lock App</a>
+        <a href="#" class="lock-btn" onclick="manualLock()">🔒 Lock System</a>
     </div>
 
     <div class="dashboard-container">
         <header style="margin-bottom: 40px;">
             <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-            <p id="bizName" style="text-align: center; color: #666; font-size: 11px; letter-spacing: 3px; text-transform: uppercase;">Loading Profile...</p>
+            <p id="bizName" style="text-align: center; color: #666; font-size: 11px; letter-spacing: 3px; text-transform: uppercase;">System Loading...</p>
         </header>
 
         <div class="main-display">
-            <div class="status-pill">● System Secure</div>
-            <p style="margin: 0; color: #888; font-size: 12px; font-weight: 600;">NET BUSINESS PROFIT</p>
+            <div class="status-pill">● Secure Session</div>
+            <p style="margin: 0; color: #888; font-size: 12px; font-weight: 600;">ESTIMATED NET PROFIT</p>
             <h1 class="orange-glow" id="totalProfit" style="font-size: 52px; margin: 5px 0; color: #FFA500; letter-spacing: -2px;">£0.00</h1>
         </div>
 
@@ -108,7 +112,7 @@
             ov.style.display = sb.classList.contains('active') ? 'block' : 'none';
         }
 
-        function lockApp() {
+        function manualLock() {
             sessionStorage.removeItem('unlocked');
             window.location.href = "lock.html";
         }
@@ -120,9 +124,9 @@
             const quotes = JSON.parse(localStorage.getItem('quoteHistory')) || [];
             const expenses = JSON.parse(localStorage.getItem('expenseHistory')) || [];
             
-            const income = quotes.reduce((sum, q) => sum + parseFloat(q.total || 0), 0);
-            const costs = expenses.reduce((sum, e) => sum + parseFloat(e.amt || 0), 0);
-            const net = (income - costs) * 0.8; // Simple 20% tax estimate
+            const totalIncome = quotes.reduce((sum, q) => sum + parseFloat(q.total || 0), 0);
+            const totalExpenses = expenses.reduce((sum, e) => sum + parseFloat(e.amt || 0), 0);
+            const net = (totalIncome - totalExpenses) * 0.8; // 20% tax reserve
 
             document.getElementById('totalProfit').innerText = "£" + net.toLocaleString('en-GB', {minimumFractionDigits: 2});
         };
