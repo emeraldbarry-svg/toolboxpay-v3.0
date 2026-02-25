@@ -7,36 +7,29 @@
     <link rel="stylesheet" href="src/index.css">
     <script src="src/auth.js"></script>
     <style>
-        .page-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; }
+        .page-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; margin: 0 auto; }
         .logo-text { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 5px; }
         .orange { color: #FFA500; }
         .white { color: #FFFFFF; }
 
         .setup-group { margin-bottom: 20px; }
-        .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 8px; }
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 8px; margin-left: 5px; }
         .setup-input {
             width: 100%; background: #1a1a1a; border: 2px solid #333;
             border-radius: 15px; padding: 18px; color: white; font-size: 16px;
             box-sizing: border-box; outline: none;
         }
         .setup-input:focus { border-color: #FFA500; }
-        .setup-input:invalid { border-color: #552222; }
 
-        /* Option 6 Strategy Overlay */
-        #welcomeOverlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 3000; justify-content: center; align-items: center;
+        /* Data Protection Status */
+        .status-box {
+            background: #111; border: 1px solid #222; border-radius: 20px;
+            padding: 20px; margin-top: 30px; text-align: center;
         }
-        .welcome-card {
-            width: 85%; max-width: 380px; background: #111; border: 2px solid #FFA500;
-            border-radius: 30px; padding: 40px 25px; text-align: center;
-            box-shadow: 0 0 40px rgba(255, 165, 0, 0.2);
+        .status-pill {
+            display: inline-block; padding: 4px 12px; background: rgba(0, 255, 136, 0.1);
+            color: #00ff88; border-radius: 20px; font-size: 10px; font-weight: 800; margin-bottom: 10px;
         }
-        .qr-placeholder {
-            width: 160px; height: 160px; background: white; margin: 25px auto;
-            border-radius: 15px; padding: 10px; display: flex; align-items: center; justify-content: center;
-        }
-        .qr-placeholder img { width: 100%; height: 100%; }
 
         .menu-trigger {
             position: fixed; top: 20px; left: 20px; width: 55px; height: 55px;
@@ -52,21 +45,6 @@
     </style>
 </head>
 <body>
-
-    <div id="welcomeOverlay">
-        <div class="welcome-card">
-            <div class="logo-text" style="font-size: 24px;"><span class="orange">toolbox</span><span class="white">pay</span></div>
-            <h2 id="welcomeHeader" style="color: white; font-size: 18px; margin: 20px 0; font-weight: 800;"></h2>
-            <p id="welcomeBody" style="color: #ccc; font-size: 14px; line-height: 1.6; margin: 15px 0;"></p>
-            
-            <div class="qr-placeholder">
-                <img id="qrImage" src="" alt="Scan to Share">
-            </div>
-            
-            <p style="color: #FFA500; font-size: 10px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;">Help a colleague protect their profit</p>
-            <button onclick="closeWelcome()" class="btn-primary" style="margin-top: 30px; width: 100%; padding: 18px; border-radius: 15px;">Open Dashboard</button>
-        </div>
-    </div>
 
     <div class="menu-trigger" onclick="toggleMenu()"><span>☰</span></div>
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
@@ -84,34 +62,39 @@
     <div class="page-container">
         <header style="margin-bottom: 30px;">
             <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-            <p style="text-align: center; color: #666; font-size: 10px; letter-spacing: 2px; font-weight: 700;">ADMIN SETUP</p>
+            <p style="text-align: center; color: #666; font-size: 10px; letter-spacing: 2px;">BUSINESS SETTINGS</p>
         </header>
 
         <form id="setupForm">
             <div class="setup-group">
                 <span class="form-label">First Name</span>
-                <input type="text" id="adminName" class="setup-input" placeholder="e.g. John" required>
+                <input type="text" id="adminName" class="setup-input" required>
             </div>
 
             <div class="setup-group">
                 <span class="form-label">Trading Name</span>
-                <input type="text" id="bizName" class="setup-input" placeholder="e.g. JT Installations" required>
+                <input type="text" id="bizName" class="setup-input" required>
             </div>
 
             <div class="setup-group">
-                <span class="form-label">Geographical Location (Mandatory)</span>
-                <input type="text" id="geoLoc" class="setup-input" placeholder="e.g. Birmingham" required>
+                <span class="form-label">Geographical Location</span>
+                <input type="text" id="geoLoc" class="setup-input" required>
             </div>
 
             <div class="setup-group">
-                <span class="form-label">4-Digit PIN</span>
-                <input type="password" id="userPin" class="setup-input" placeholder="0000" maxlength="4" pattern="\d{4}" inputmode="numeric" required>
+                <span class="form-label">Security PIN</span>
+                <input type="password" id="userPin" class="setup-input" maxlength="4" required>
             </div>
 
-            <button type="submit" class="btn-primary" style="width: 100%; padding: 20px; border-radius: 20px; font-weight: 800; margin-top: 10px;">
-                Secure My Profile
-            </button>
+            <button type="submit" class="btn-primary" style="width: 100%; padding: 20px; border-radius: 20px;">Save Profile</button>
         </form>
+
+        <div class="status-box">
+            <div class="status-pill">System Protected</div>
+            <p style="font-size: 13px; color: #fff; margin-bottom: 5px;">Customer Directory Records</p>
+            <p id="contactCount" style="font-size: 18px; color: #FFA500; font-weight: 800;">0 Contacts Saved</p>
+            <p style="font-size: 10px; color: #444; margin-top: 10px; text-transform: uppercase;">Contacts are stored locally on this device</p>
+        </div>
     </div>
 
     <script>
@@ -127,32 +110,20 @@
             document.getElementById('bizName').value = localStorage.getItem('companyName') || '';
             document.getElementById('geoLoc').value = localStorage.getItem('userLocation') || '';
             document.getElementById('userPin').value = localStorage.getItem('userPin') || '';
+
+            const customers = JSON.parse(localStorage.getItem('directory')) || [];
+            document.getElementById('contactCount').innerText = `${customers.length} Contacts Saved`;
         };
 
         document.getElementById('setupForm').onsubmit = (e) => {
             e.preventDefault();
-            const name = document.getElementById('adminName').value;
-            const loc = document.getElementById('geoLoc').value;
-
-            localStorage.setItem('adminName', name);
+            localStorage.setItem('adminName', document.getElementById('adminName').value);
             localStorage.setItem('companyName', document.getElementById('bizName').value);
-            localStorage.setItem('userLocation', loc);
+            localStorage.setItem('userLocation', document.getElementById('geoLoc').value);
             localStorage.setItem('userPin', document.getElementById('userPin').value);
-            sessionStorage.setItem('unlocked', 'true');
-
-            // Option 6 Profit Protector Message Logic
-            const landingLink = "https://toolboxpay.com/join"; 
-            document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${landingLink}`;
-            
-            document.getElementById('welcomeHeader').innerText = `Cheers for joining, ${name}.`;
-            document.getElementById('welcomeBody').innerHTML = `We're here to help you protect your profits across <b>${loc}</b>. Knowing your <b>labour</b> costs and tax reserve is a game-changer. If the app is helping you keep track of the pennies, why not tell a mate? It’s the easiest way to help them stop leaving money on the table. Scan below to share the secret.`;
-            
-            document.getElementById('welcomeOverlay').style.display = 'flex';
-        };
-
-        function closeWelcome() {
+            alert('Business profile updated successfully.');
             window.location.href = "index.html";
-        }
+        };
     </script>
 </body>
 </html>
