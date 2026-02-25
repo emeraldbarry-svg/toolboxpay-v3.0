@@ -25,11 +25,16 @@
         }
         .menu-trigger span { font-size: 32px; color: #FFA500; }
 
+        .service-badge {
+            display: block; text-align: center; font-size: 10px; font-weight: 700;
+            color: #888; text-transform: uppercase; letter-spacing: 2px; margin-top: -5px;
+        }
+
         .main-display {
             background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
             border: 1px solid rgba(255, 165, 0, 0.3);
             border-radius: 30px; padding: 35px 25px; margin-bottom: 25px;
-            position: relative; overflow: hidden;
+            position: relative; overflow: hidden; margin-top: 30px;
         }
 
         .status-pill {
@@ -69,9 +74,10 @@
     </div>
 
     <div class="dashboard-container">
-        <header style="margin-bottom: 40px;">
+        <header style="margin-bottom: 10px;">
             <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-            <p id="bizName" style="text-align: center; color: #666; font-size: 11px; letter-spacing: 3px; text-transform: uppercase;">Profile Loading...</p>
+            <div id="bizName" style="text-align: center; color: #FFF; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Admin Panel</div>
+            <div id="displayLoc" class="service-badge">Loading Location...</div>
         </header>
 
         <div class="main-display">
@@ -114,12 +120,18 @@
         }
 
         window.onload = () => {
-            const biz = localStorage.getItem('companyName') || "Business Setup Required";
+            const biz = localStorage.getItem('companyName') || "Business Name";
+            const loc = localStorage.getItem('userLocation') || "Location Not Set";
+            
             document.getElementById('bizName').innerText = biz;
+            document.getElementById('displayLoc').innerText = "Service Area: " + loc;
+            
             const quotes = JSON.parse(localStorage.getItem('quoteHistory')) || [];
             const expenses = JSON.parse(localStorage.getItem('expenseHistory')) || [];
             const income = quotes.reduce((sum, q) => sum + parseFloat(q.total || 0), 0);
             const costs = expenses.reduce((sum, e) => sum + parseFloat(e.amt || 0), 0);
+            
+            // Calculating net with 20% tax reserve
             const net = (income - costs) * 0.8;
             document.getElementById('totalProfit').innerText = "£" + net.toLocaleString('en-GB', {minimumFractionDigits: 2});
         };
