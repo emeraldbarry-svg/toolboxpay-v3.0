@@ -34,9 +34,11 @@
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); }
         
-        .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; border-left: 3px solid var(--toolbox-orange); }
+        .material-row, .client-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; border-left: 3px solid var(--toolbox-orange); }
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
         
+        select.input-area { appearance: none; cursor: pointer; }
+
         @media print { .no-print { display: none !important; } }
     </style>
 </head>
@@ -63,6 +65,19 @@
         </section>
 
         <section class="card">
+            <span class="label-text">Client Selection</span>
+            <select id="clientSelect" class="input-area mb-4 w-full" onchange="selectClient()">
+                <option value="">-- Choose Saved Client --</option>
+            </select>
+            
+            <div class="no-print">
+                <input type="text" id="newClientName" class="input-area mb-2 text-sm" placeholder="New Client Name">
+                <input type="text" id="newClientAddr" class="input-area mb-4 text-xs" placeholder="Client Address/Contact">
+                <button onclick="saveClient()" class="w-full py-2 border border-[#FF9500] text-[#FF9500] font-black rounded-xl text-xs uppercase tracking-widest">Add to Database</button>
+            </div>
+        </section>
+
+        <section class="card">
             <span class="label-text">From:</span>
             <input type="text" id="bizName" class="input-area mb-2 text-sm" placeholder="Your Business Name" oninput="saveDetails()">
             <input type="text" id="bankDetails" class="input-area text-xs" placeholder="Bank Details" oninput="saveDetails()">
@@ -75,11 +90,11 @@
             <span class="label-text">Labour <span class="curr-sym">£</span></span>
             <input type="number" id="labour" class="input-area mb-6" placeholder="0" oninput="runCalc()">
             
-            <span class="label-text">Materials</span>
+            <span class="label-text">Materials List</span>
             <div id="materialList" class="mb-4"></div>
             <div class="flex gap-2 no-print mb-6">
-                <input type="text" id="matName" class="input-area" placeholder="Item">
-                <input type="number" id="matPrice" class="input-area w-24" placeholder="0">
+                <input type="text" id="matName" class="input-area text-sm" placeholder="Item">
+                <input type="number" id="matPrice" class="input-area w-24 text-sm" placeholder="0">
                 <button onclick="addMaterial()" class="bg-[#FF9500] text-black font-black w-12 rounded-xl">+</button>
             </div>
 
@@ -108,12 +123,40 @@
     <script>
         let currentSymbol = '£';
         let materialsArr = [];
+        let clientsArr = JSON.parse(localStorage.getItem('toolboxClients')) || [];
 
         function initApp() {
             const savedCurr = localStorage.getItem('toolboxCurr') || '£';
             const radioToClick = document.querySelector(`input[value="${savedCurr}"]`);
             if(radioToClick) { radioToClick.checked = true; updateCurrency(savedCurr); }
             loadDetails();
+            updateClientDropdown();
+        }
+
+        function saveClient() {
+            const name = document.getElementById('newClientName').value;
+            const addr = document.getElementById('newClientAddr').value;
+            if(name) {
+                clientsArr.push({ name, addr });
+                localStorage.setItem('toolboxClients', JSON.stringify(clientsArr));
+                document.getElementById('newClientName').value = '';
+                document.getElementById('newClientAddr').value = '';
+                updateClientDropdown();
+            }
+        }
+
+        function updateClientDropdown() {
+            const select = document.getElementById('clientSelect');
+            select.innerHTML = '<option value="">-- Choose Saved Client --</option>' + 
+                clientsArr.map((c, i) => `<option value="${i}">${c.name}</option>`).join('');
+        }
+
+        function selectClient() {
+            const index = document.getElementById('clientSelect').value;
+            if(index !== "") {
+                const client = clientsArr[index];
+                document.getElementById('workDesc').value = `Job for: ${client.name}\n${client.addr}\n\n---\n`;
+            }
         }
 
         function updateCurrency(sym) {
@@ -140,8 +183,8 @@
             const list = document.getElementById('materialList');
             list.innerHTML = materialsArr.map((m, i) => `
                 <div class="material-row">
-                    <span class="flex-grow font-bold text-sm">${m.name}</span>
-                    <span class="text-[#FF9500] font-black">${currentSymbol}${m.price.toFixed(2)}</span>
+                    <span class="flex-grow font-bold text-xs">${m.name}</span>
+                    <span class="text-[#FF9500] font-black text-sm">${currentSymbol}${m.price.toFixed(2)}</span>
                     <button onclick="removeMat(${i})" class="text-red-500 ml-2 font-black">✕</button>
                 </div>
             `).join('');
@@ -163,18 +206,14 @@
             const lab = parseFloat(document.getElementById('labour').value) || 0;
             const matTotal = materialsArr.reduce((sum, m) => sum + m.price, 0);
             const subtotal = lab + matTotal;
-            
             const isVatOn = document.getElementById('vatOn').checked;
             const taxAmount = isVatOn ? (subtotal * 0.2) : 0;
             const total = subtotal + taxAmount;
-
             const taxRow = document.getElementById('taxDisplay');
             if(isVatOn) {
                 taxRow.classList.remove('hidden');
                 document.getElementById('dispTax').innerText = `${currentSymbol}${taxAmount.toFixed(2)}`;
-            } else {
-                taxRow.classList.add('hidden');
-            }
+            } else { taxRow.classList.add('hidden'); }
             document.getElementById('dispTotal').innerText = `${currentSymbol}${total.toFixed(2)}`;
         }
     </script>
