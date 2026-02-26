@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Record Work</title>
+    <title>Toolbox Pay | New Record</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --t-orange: #FF9500; --t-midnight: #141D36; }
-        
-        /* GLOBAL RESET TO KILL THE GHOST BOX */
         * { border: none !important; box-shadow: none !important; outline: none !important; }
         
         body { 
             background-color: var(--t-midnight); 
             color: #FFFFFF; 
-            font-family: 'Inter', sans-serif; 
+            font-family: sans-serif; 
             margin: 0; 
             padding: 20px; 
             display: flex; 
@@ -22,177 +20,94 @@
             align-items: center;
         }
 
-        .forced-new-shell { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
+        .app-shell { width: 100%; max-width: 480px; }
 
-        /* BRANDING: RAW TEXT ONLY - NO BORDERS */
-        .branding-v5 { text-align: center; padding: 40px 0 10px 0; background: transparent !important; }
-        .logo-v5 { font-size: 46px; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase; line-height: 1; margin: 0; }
-        .sub-v5 { font-size: 11px; font-weight: 900; color: var(--t-orange); letter-spacing: 0.5em; text-transform: uppercase; margin-top: 15px; }
+        /* BRANDING - NO BOXES */
+        .brand-area { text-align: center; padding: 40px 0; }
+        .t-bold { font-size: 42px; font-weight: 900; color: var(--t-orange); text-transform: uppercase; }
+        .p-white { font-size: 42px; font-weight: 900; color: #FFFFFF; text-transform: uppercase; }
 
-        /* TOP: INPUT AREA */
-        .input-card-v5 {
-            background: rgba(30, 41, 59, 0.4);
-            border-radius: 28px !important;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .lbl-v5 { font-size: 10px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
-        
-        .box-v5 {
-            background: #0F172A !important; 
-            border: 1px solid rgba(255,255,255,0.05) !important;
-            border-radius: 16px !important; 
-            color: #FFFFFF; 
-            padding: 18px; 
-            width: 100%;
-            font-size: 16px;
-        }
-
-        /* MIC BUTTON */
-        .mic-v5 {
-            width: 85px; height: 85px; border-radius: 50% !important;
-            background: rgba(255, 149, 0, 0.05) !important;
-            border: 3px solid var(--t-orange) !important;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 34px; cursor: pointer; margin: 10px auto;
-        }
-        .mic-v5.active {
-            background: var(--t-orange) !important;
-            color: #000;
-            box-shadow: 0 0 40px rgba(255, 149, 0, 0.3) !important;
-        }
-
-        .notes-v5 {
-            background: #0F172A !important; 
-            border-radius: 20px !important; 
+        /* INPUTS AT TOP */
+        .input-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
             padding: 20px;
-            min-height: 110px; 
-            font-size: 16px; 
-            color: #94A3B8;
-            border-left: 5px solid var(--t-orange) !important;
+            margin-bottom: 20px;
         }
 
-        /* BOTTOM: PRICE */
-        .price-card-v5 {
-            background: #1E293B !important;
-            border: 2px solid var(--t-orange) !important;
-            border-radius: 30px !important;
-            padding: 35px 20px;
-            text-align: center;
-        }
-        .text-v5 { 
-            font-size: 72px; 
-            font-weight: 900; 
-            color: #FFFFFF; 
-            line-height: 1; 
-            display: flex; 
-            justify-content: center; 
-        }
-        .sym-v5 { font-size: 32px; margin-top: 10px; margin-right: 5px; color: var(--t-orange); }
-
-        .btn-v5 { background: var(--t-orange) !important; color: #000 !important; font-weight: 900; text-transform: uppercase; padding: 25px; border-radius: 22px !important; width: 100%; border: none; font-size: 18px; cursor: pointer; margin-top: 10px; }
+        .label { font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; margin-bottom: 10px; display: block; }
         
-        .nav-v5 { 
-            color: #475569; 
-            font-weight: 900; 
-            text-transform: uppercase; 
-            font-size: 11px; 
-            text-decoration: underline !important; 
-            margin-top: 25px; 
-            display: block; 
-            text-align: center; 
+        .field {
+            background: #0F172A; 
+            border-radius: 12px; 
+            color: #FFFFFF; 
+            padding: 15px; 
+            width: 100%;
+            margin-bottom: 20px;
         }
+
+        /* PRICE AT BOTTOM */
+        .price-card {
+            background: #1E293B;
+            border: 2px solid var(--t-orange) !important;
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .price-text { font-size: 60px; font-weight: 900; }
+
+        .btn-action { background: var(--t-orange); color: #000; font-weight: 900; padding: 20px; border-radius: 15px; width: 100%; font-size: 18px; cursor: pointer; }
+        
+        .nav-exit { color: #64748B; text-decoration: underline; display: block; text-align: center; margin-top: 30px; font-size: 12px; font-weight: 700; }
     </style>
 </head>
 <body>
 
-    <div class="forced-new-shell">
-        <div class="branding-v5">
-            <h1 class="logo-v5"><span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span></h1>
-            <p class="sub-v5">Record Work</p>
+    <div class="app-shell">
+        <div class="brand-area">
+            <span class="t-bold">TOOLBOX</span><span class="p-white">PAY</span>
         </div>
 
-        <section class="input-card-v5">
-            <div>
-                <span class="lbl-v5">Customer / Site</span>
-                <input type="text" class="box-v5" placeholder="Client or site details">
+        <div class="input-card">
+            <span class="label">Customer / Site</span>
+            <input type="text" class="field" placeholder="Client name">
+
+            <div style="text-align: center; padding: 20px;">
+                <button id="mic" onclick="toggleMic()" style="font-size: 40px; background: none; border: 2px solid #FF9500 !important; border-radius: 50%; width: 80px; height: 80px;">🎙️</button>
+                <p class="label" style="margin-top: 10px;">Tap to Record Labour</p>
             </div>
 
-            <div class="text-center">
-                <div id="micBtn" onclick="runMic()" class="mic-v5">🎙️</div>
-                <span id="micStatus" class="lbl-v5" style="margin-top: 5px;">Tap to Record Labour</span>
-            </div>
+            <span class="label">Job Notes</span>
+            <div id="notes" class="field" style="min-height: 100px; color: #94A3B8;">...waiting</div>
+        </div>
 
-            <div>
-                <span class="lbl-v5">Job Notes</span>
-                <div id="jobNotes" class="notes-v5">...listening for input</div>
-            </div>
-        </section>
+        <div class="price-card">
+            <span class="label" style="color: #FF9500;">Total to Charge</span>
+            <div class="price-text">£<span id="total">0.00</span></div>
+        </div>
 
-        <section class="price-card-v5">
-            <span class="lbl-v5" style="color: var(--t-orange)">Total to Charge</span>
-            <div class="text-v5">
-                <span class="sym-v5">£</span><span id="pVal">0.00</span>
-            </div>
-        </section>
+        <button class="btn-action">Finalise & Collect</button>
 
-        <button class="btn-v5">Finalise & Collect Pay</button>
-
-        <a href="dashboard.html" class="nav-v5">Return to Dashboard</a>
+        <a href="dashboard.html" class="nav-exit">RETURN TO DASHBOARD</a>
     </div>
 
     <script>
-        let rec;
-        let isOn = false;
-        let timer;
-
+        let rec; let active = false;
         if ('webkitSpeechRecognition' in window) {
             rec = new webkitSpeechRecognition();
-            rec.continuous = true;
-            rec.interimResults = true;
-            rec.lang = 'en-GB';
-
+            rec.continuous = true; rec.interimResults = true; rec.lang = 'en-GB';
             rec.onresult = (e) => {
-                clearTimeout(timer);
-                let txt = '';
-                for (let i = e.resultIndex; i < e.results.length; ++i) {
-                    txt += e.results[i][0].transcript;
-                }
-                document.getElementById('jobNotes').innerText = txt;
-                document.getElementById('jobNotes').style.color = "#FFFFFF";
-
-                const nums = txt.match(/\d+/g);
-                if (nums) {
-                    document.getElementById('pVal').innerText = parseFloat(nums[nums.length - 1]).toFixed(2);
-                }
-                timer = setTimeout(() => { if(isOn) endMic(); }, 15000);
+                let t = '';
+                for (let i = e.resultIndex; i < e.results.length; ++i) t += e.results[i][0].transcript;
+                document.getElementById('notes').innerText = t;
+                const n = t.match(/\d+/g);
+                if (n) document.getElementById('total').innerText = parseFloat(n[n.length-1]).toFixed(2);
             };
-            rec.onend = () => { if(isOn) rec.start(); };
         }
-
-        function runMic() {
-            const b = document.getElementById('micBtn');
-            const s = document.getElementById('micStatus');
-            if (!isOn) {
-                rec.start();
-                isOn = true;
-                b.classList.add('active');
-                s.innerText = "Listening...";
-                s.style.color = "#FF9500";
-            } else {
-                endMic();
-            }
-        }
-
-        function endMic() {
-            rec.stop();
-            isOn = false;
-            document.getElementById('micBtn').classList.remove('active');
-            document.getElementById('micStatus').innerText = "Tap to Record Labour";
-            document.getElementById('micStatus').style.color = "#64748b";
+        function toggleMic() {
+            if(!active) { rec.start(); active = true; document.getElementById('mic').style.background = "#FF9500"; }
+            else { rec.stop(); active = false; document.getElementById('mic').style.background = "none"; }
         }
     </script>
 </body>
