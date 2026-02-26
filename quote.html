@@ -3,190 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toolbox Pay v3.0 | 60 Second Quote System</title>
+    <title>Toolbox Pay v3.0 | Professional Quote Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg-deep: #05070A;
-            --bg-panel: #0B0E14;
-            --industrial-orange: #FF9500;
-            --border-slate: #1E232D;
-        }
-        body { 
-            background-color: var(--bg-deep); 
-            color: #FFFFFF; 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; 
-        }
-        .nav-pane {
-            background-color: var(--bg-panel);
-            border-bottom: 2px solid var(--industrial-orange);
-            height: 65px; display: flex; align-items: center; padding: 0 24px; justify-content: space-between; flex-shrink: 0;
-        }
-        .workspace { display: flex; flex: 1; overflow: hidden; }
-        .config-sidebar {
-            width: 400px; padding: 24px; border-right: 1px solid var(--border-slate); overflow-y: auto; background: #080A0F;
-        }
-        .industrial-input {
-            background: #11141B; border: 1px solid var(--border-slate); border-radius: 4px; color: white;
-            padding: 12px; width: 100%; outline: none; font-size: 13px; margin-bottom: 16px;
-        }
-        .info-label {
-            font-size: 10px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 5px;
-        }
-        .invoice-paper {
-            background: white; color: #1a1a1a; width: 100%; max-width: 800px; min-height: 1100px;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.6); padding: 80px 60px; margin: 40px auto; display: flex; flex-direction: column;
-        }
-        @media print {
-            body * { visibility: hidden; }
-            #invoiceSheet, #invoiceSheet * { visibility: visible; }
-            #invoiceSheet { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; margin: 0; }
-        }
+        :root { --toolbox-orange: #FF9500; }
+        body { background-color: #05070A; color: #FFFFFF; font-family: 'Inter', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        .sidebar { width: 400px; background: #0B0E14; border-right: 1px solid #1E232D; padding: 24px; overflow-y: auto; flex-shrink: 0; }
+        .industrial-input { background: #11141B; border: 1px solid #1E232D; border-radius: 4px; color: white; padding: 12px; width: 100%; margin-bottom: 16px; outline: none; font-size: 13px; border-left: 2px solid transparent; transition: 0.2s; }
+        .industrial-input:focus { border-left-color: var(--toolbox-orange); background: #161A22; }
+        .invoice-paper { background: white; color: #1a1a1a; width: 100%; max-width: 800px; min-height: 1050px; padding: 80px 60px; margin: 20px auto; box-shadow: 0 40px 80px rgba(0,0,0,0.6); position: relative; }
+        .label { font-size: 10px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 5px; }
+        .orange-text { color: #FF9500; }
     </style>
 </head>
 <body>
 
-    <nav class="nav-pane">
-        <div class="flex items-center gap-2">
-            <span class="font-black text-xl tracking-tighter uppercase">
-                <span class="text-[#FF9500]">TOOLBOX</span>PAY 
-            </span>
+    <nav class="h-16 border-b-2 border-[#FF9500] bg-[#0B0E14] flex items-center justify-between px-6 flex-shrink-0">
+        <div class="font-black text-xl uppercase tracking-tighter">
+            <span class="orange-text">TOOLBOX</span>PAY
         </div>
-        <button onclick="window.print()" class="bg-[#FF9500] text-black px-6 py-2 rounded font-black text-xs uppercase shadow-lg shadow-orange-500/20">Print Invoice</button>
+        <div class="flex gap-4">
+            <span class="text-[10px] font-black text-slate-500 uppercase self-center tracking-widest">Version 3.0</span>
+            <button onclick="window.print()" class="bg-[#FF9500] text-black px-6 py-2 rounded font-black text-xs uppercase shadow-lg shadow-orange-500/20 hover:bg-orange-400 transition-all">Print Document</button>
+        </div>
     </nav>
 
-    <div class="workspace">
-        <aside class="config-sidebar">
-            <h2 class="text-orange-500 font-black text-sm uppercase mb-6">Quote Setup</h2>
+    <div class="flex flex-1 overflow-hidden">
+        <aside class="sidebar">
+            <h2 class="orange-text font-black text-xs uppercase mb-6 tracking-widest">Configuration</h2>
             
-            <span class="info-label">Customer Name</span>
-            <input type="text" id="custName" class="industrial-input" value="emerald barry">
+            <span class="label">Customer Name</span>
+            <input type="text" id="custName" class="industrial-input" value="Emerald Barry">
 
-            <span class="info-label">Work Description (AI Engine)</span>
-            <textarea id="workDesc" class="industrial-input" style="min-height: 140px;" placeholder="e.g. 25 labour 33 pounds for parts"></textarea>
+            <span class="label">Work Description (AI v3 Engine)</span>
+            <textarea id="workDesc" class="industrial-input h-40" placeholder="e.g. 25 labour and 33 for parts..."></textarea>
 
             <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <span class="info-label">Labour (£)</span>
-                    <input type="number" id="labourCost" class="industrial-input" value="0">
-                </div>
-                <div>
-                    <span class="info-label">Parts (£)</span>
-                    <input type="number" id="partsCost" class="industrial-input" value="0">
-                </div>
+                <div><span class="label">Labour (£)</span><input type="number" id="labour" class="industrial-input" value="0"></div>
+                <div><span class="label">Parts (£)</span><input type="number" id="parts" class="industrial-input" value="0"></div>
             </div>
 
-            <div class="mt-8 pt-8 border-t border-slate-800">
-                <span class="info-label">Business Details</span>
-                <input type="text" id="bizName" class="industrial-input" value="TOOLBOX PAY LTD">
+            <div class="pt-6 mt-6 border-t border-slate-800">
+                <span class="label">Bank Details</span>
                 <input type="text" id="bankSort" class="industrial-input" placeholder="Sort Code" value="00-00-00">
-                <input type="text" id="bankAcc" class="industrial-input" placeholder="Account No" value="00000000">
+                <input type="text" id="bankAcc" class="industrial-input" placeholder="Account Number" value="00000000">
             </div>
         </aside>
 
-        <main class="flex-1 bg-[#020305] overflow-y-auto p-12 flex justify-center">
-            <div class="invoice-paper" id="invoiceSheet"></div>
+        <main class="flex-1 bg-[#020305] overflow-y-auto p-10 flex justify-center">
+            <div id="invoice" class="invoice-paper"></div>
         </main>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const el = {
-                custName: document.getElementById('custName'),
-                workDesc: document.getElementById('workDesc'),
-                labourCost: document.getElementById('labourCost'),
-                partsCost: document.getElementById('partsCost'),
-                bizName: document.getElementById('bizName'),
-                bankSort: document.getElementById('bankSort'),
-                bankAcc: document.getElementById('bankAcc'),
-                invoiceSheet: document.getElementById('invoiceSheet')
-            };
+        function update() {
+            const descInput = document.getElementById('workDesc').value;
+            const descUpper = descInput.toUpperCase();
+            let labVal = parseFloat(document.getElementById('labour').value) || 0;
+            let partVal = parseFloat(document.getElementById('parts').value) || 0;
 
-            const VAT_RATE = 0.20;
+            // v3 Extraction Logic - Finds numbers before "LABOUR" or "PARTS"
+            const labMatch = descUpper.match(/(\d+(?:\.\d+)?)\s*LABOUR/);
+            if(labMatch && labVal === 0) labVal = parseFloat(labMatch[1]);
+            
+            const partMatch = descUpper.match(/(\d+(?:\.\d+)?)\s*(?:POUNDS\s*)?FOR\s*PARTS/);
+            if(partMatch && partVal === 0) partVal = parseFloat(partMatch[1]);
 
-            function update() {
-                let text = el.workDesc.value.toUpperCase();
-                let cleanDesc = el.workDesc.value.toUpperCase();
+            const sub = labVal + partVal;
+            const vat = sub * 0.20;
+            const total = sub + vat;
 
-                // EXTRACTION FIX: Matches "[Number] LABOUR" or "LABOUR [Number]"
-                const labMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:POUNDS?|£)?\s*LABOUR|LABOUR\s*(?:AT|IS|OF|FOR)?\s*(?:£|POUNDS?)?\s*(\d+(?:\.\d+)?)/i);
-                if (labMatch) {
-                    el.labourCost.value = labMatch[1] || labMatch[2];
-                    cleanDesc = cleanDesc.replace(labMatch[0], "");
-                }
+            document.getElementById('invoice').innerHTML = `
+                <div class="flex justify-between items-start mb-20">
+                    <div>
+                        <h1 class="text-3xl font-black uppercase leading-none"><span class="orange-text">TOOLBOX</span>PAY</h1>
+                        <div class="mt-2 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Professional Site Quotes</div>
+                    </div>
+                    <div class="text-right">
+                        <h2 class="text-5xl font-light text-slate-200 uppercase tracking-tighter leading-none">Quote</h2>
+                        <div class="text-[10px] font-black text-slate-400 mt-4 uppercase tracking-widest">Date: ${new Date().toLocaleDateString('en-GB')}</div>
+                    </div>
+                </div>
 
-                // EXTRACTION FIX: Matches "[Number] POUNDS FOR PARTS"
-                const partMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:POUNDS?|£)?\s*(?:PARTS|TOOLS|MATERIALS)|(?:PARTS|TOOLS|MATERIALS)\s*(?:AT|IS|OF|FOR|ON)?\s*(?:£|POUNDS?)?\s*(\d+(?:\.\d+)?)/i);
-                if (partMatch) {
-                    el.partsCost.value = partMatch[1] || partMatch[2];
-                    cleanDesc = cleanDesc.replace(partMatch[0], "");
-                }
+                <div class="mb-16 border-l-4 border-[#FF9500] pl-8 py-3 bg-slate-50">
+                    <div class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Prepared For:</div>
+                    <div class="text-2xl font-bold text-slate-900 uppercase tracking-tight">${document.getElementById('custName').value}</div>
+                </div>
 
-                const l = parseFloat(el.labourCost.value) || 0;
-                const p = parseFloat(el.partsCost.value) || 0;
-                const sub = l + p;
-                const vat = sub * VAT_RATE;
-                const tot = sub + vat;
+                <div class="min-h-[280px] border-b border-slate-100 pb-10">
+                    <div class="text-[9px] font-black text-slate-300 uppercase mb-5 border-b pb-2 tracking-widest">Description of Works</div>
+                    <div class="text-[15px] font-medium uppercase leading-loose text-slate-700 whitespace-pre-wrap">${descInput || 'Awaiting description...'}</div>
+                </div>
 
-                el.invoiceSheet.innerHTML = `
-                    <div class="flex justify-between items-start mb-16">
-                        <div>
-                            <h1 class="text-2xl font-black uppercase"><span class="text-[#FF9500]">TOOLBOX</span>PAY</h1>
-                            <div class="mt-4 text-[11px] font-bold text-slate-500 uppercase">${el.bizName.value}</div>
-                        </div>
-                        <div class="text-right">
-                            <h2 class="text-4xl font-light text-slate-100 uppercase tracking-tighter">Invoice</h2>
-                            <div class="text-[10px] font-black text-slate-400 mt-2">DATE: ${new Date().toLocaleDateString('en-GB')}</div>
+                <div class="mt-12 space-y-5">
+                    <div class="flex justify-between text-base uppercase font-bold border-b border-slate-50 pb-5">
+                        <span class="text-slate-400">Labour & Services</span>
+                        <span class="text-slate-900">£${labVal.toFixed(2)}</span>
+                    </div>
+                    <div class="flex justify-between text-base uppercase font-bold border-b border-slate-50 pb-5">
+                        <span class="text-slate-400">Parts & Materials</span>
+                        <span class="text-slate-900">£${partVal.toFixed(2)}</span>
+                    </div>
+                </div>
+
+                <div class="mt-24 flex justify-end">
+                    <div class="w-80">
+                        <div class="flex justify-between text-[11px] mb-4 font-bold text-slate-400 uppercase tracking-widest"><span>Net Subtotal</span><span>£${sub.toFixed(2)}</span></div>
+                        <div class="flex justify-between text-[11px] mb-10 font-bold text-slate-400 uppercase tracking-widest border-b-2 border-slate-50 pb-6"><span>VAT (20.0%)</span><span>£${vat.toFixed(2)}</span></div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[11px] font-black uppercase text-slate-400 tracking-widest">Total Payable</span>
+                            <span class="text-5xl font-black orange-text tracking-tighter">£${total.toFixed(2)}</span>
                         </div>
                     </div>
+                </div>
 
-                    <div class="mb-16 border-l-4 border-[#FF9500] pl-8 py-2">
-                        <div class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Invoice To:</div>
-                        <div class="text-lg font-bold text-slate-900 uppercase">${el.custName.value}</div>
+                <div class="absolute bottom-16 left-[60px] right-[60px] pt-12 border-t border-slate-100 flex justify-between items-end">
+                    <div>
+                        <div class="text-[9px] font-black text-slate-300 uppercase mb-4 tracking-widest">Payment Destination</div>
+                        <div class="text-[12px] font-bold uppercase text-slate-900">Sort Code: ${document.getElementById('bankSort').value}</div>
+                        <div class="text-[12px] font-bold uppercase text-slate-900">Account: ${document.getElementById('bankAcc').value}</div>
                     </div>
-
-                    <div class="flex-1">
-                        <div class="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-4 border-b pb-2">Description of Works</div>
-                        <div class="text-[13px] font-medium text-slate-800 uppercase mb-20 min-h-[160px] leading-relaxed">${cleanDesc.trim() || 'AWAITING NOTES...'}</div>
-                        
-                        <div class="space-y-4">
-                            <div class="flex justify-between text-base border-b border-slate-100 pb-4">
-                                <span class="text-slate-400 font-bold uppercase">Professional Labour</span>
-                                <span class="font-bold">£${l.toFixed(2)}</span>
-                            </div>
-                            <div class="flex justify-between text-base border-b border-slate-100 pb-4">
-                                <span class="text-slate-400 font-bold uppercase">Materials & Parts</span>
-                                <span class="font-bold">£${p.toFixed(2)}</span>
-                            </div>
-                        </div>
+                    <div class="text-right">
+                        <div class="text-[10px] font-bold uppercase text-slate-400">Thank you for your business.</div>
                     </div>
-
-                    <div class="mt-24 flex justify-end">
-                        <div class="w-72">
-                            <div class="flex justify-between text-[11px] mb-3 font-bold text-slate-400 uppercase"><span>Subtotal</span><span>£${sub.toFixed(2)}</span></div>
-                            <div class="flex justify-between text-[11px] mb-8 font-bold text-slate-400 uppercase border-b-2 border-slate-100 pb-5"><span>VAT (20%)</span><span>£${vat.toFixed(2)}</span></div>
-                            <div class="flex justify-between items-center"><span class="text-[11px] font-black uppercase text-slate-400">Total Due</span><span class="text-5xl font-black text-[#FF9500]">£${tot.toFixed(2)}</span></div>
-                        </div>
-                    </div>
-
-                    <div class="mt-auto pt-12 grid grid-cols-2 gap-12 border-t border-slate-100 pb-4">
-                        <div>
-                            <div class="text-[9px] font-black text-slate-300 uppercase mb-4 tracking-widest">Bank Details</div>
-                            <div class="text-[11px] font-bold uppercase">SORT: ${el.bankSort.value}<br>ACC: ${el.bankAcc.value}</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-[11px] font-bold uppercase">Payment due on receipt.</div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            [el.custName, el.workDesc, el.labourCost, el.partsCost, el.bizName, el.bankSort, el.bankAcc].forEach(input => {
-                input.addEventListener('input', update);
-            });
-            update();
-        });
+                </div>
+            `;
+        }
+        document.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', update));
+        update();
     </script>
 </body>
 </html>
