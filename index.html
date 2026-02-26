@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Job Settlement</title>
+    <title>Toolbox Pay | Command Centre</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
@@ -13,130 +13,172 @@
             font-family: 'Inter', sans-serif; 
             margin: 0; 
             padding: 15px; 
-            box-sizing: border-box; 
             display: flex;
             flex-direction: column;
             align-items: center;
         }
         
-        .main-container { 
-            width: 100%; 
-            max-width: 480px; 
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
         
         .card { 
             background: #1E293B; 
             border: 1px solid rgba(255,255,255,0.05); 
             border-radius: 20px; 
             padding: 24px; 
-            width: 100%; 
-            box-sizing: border-box; 
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-        }
-        
-        .display-box { 
-            background: #0F172A;
-            border: 3px solid var(--toolbox-orange); 
         }
         
         .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
         
-        .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; transition: 0.3s; }
+        .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); background: #020617; }
         
-        /* MATERIAL LIST STYLING */
-        .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; }
-        .material-name { flex-grow: 1; font-size: 14px; color: #FFFFFF; font-weight: 600; }
-        .material-cost { font-weight: 800; color: var(--toolbox-orange); }
-        
-        /* BUTTONS */
-        .add-btn { background: var(--toolbox-orange); color: #000; font-size: 28px; font-weight: 900; width: 54px; height: 54px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.1s; }
-        .add-btn:active { transform: scale(0.95); }
-        
-        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 14px rgba(255, 149, 0, 0.4); transition: 0.1s; }
-        .btn-main:active { transform: scale(0.98); opacity: 0.9; }
-        
-        .btn-sub { background: rgba(0,0,0,0.3); color: #94A3B8; font-weight: 700; text-transform: uppercase; padding: 16px; border-radius: 12px; width: 100%; border: none; margin-top: 12px; font-size: 11px; cursor: pointer; }
-        .btn-outline { background: transparent; border: 2px solid var(--toolbox-orange); color: var(--toolbox-orange); font-weight: 900; text-transform: uppercase; padding: 18px; border-radius: 14px; width: 100%; margin-top: 12px; cursor: pointer; }
-
         /* CURRENCY TABS FIX */
-        .currency-container { display: flex; gap: 8px; background: #0F172A; padding: 6px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); }
-        .currency-tab { flex: 1; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 900; color: #94A3B8; cursor: pointer; border: none; background: transparent; transition: 0.2s all ease; }
-        .currency-tab.active { background: var(--toolbox-orange); color: #000; box-shadow: 0 4px 10px rgba(255, 149, 0, 0.3); }
-        .currency-tab:active { transform: scale(0.95); }
-
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white; color: black; padding: 20px; display: block; }
-            .card { background: white; border: 1px solid #eee; box-shadow: none; color: black; margin-bottom: 20px; }
-            .input-area { background: white; border: none; color: black; padding: 5px; }
-            #dispTakeHome { color: black !important; }
-            header h1 span { color: black !important; }
-            .label-text { color: #666 !important; }
+        .currency-container { display: flex; background: #0F172A; padding: 5px; border-radius: 15px; gap: 5px; }
+        .currency-tab { 
+            flex: 1; padding: 15px; border-radius: 12px; font-size: 14px; font-weight: 900; 
+            color: #FFFFFF; cursor: pointer; border: none; background: transparent; 
+            transition: all 0.2s ease-in-out;
         }
+        .currency-tab:hover { background: rgba(255,149,0,0.1); }
+        .currency-tab.active { background: var(--toolbox-orange); color: #000; box-shadow: 0 5px 15px rgba(255, 149, 0, 0.4); }
+
+        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        .btn-main:active { transform: scale(0.96); }
+
+        .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; }
+        
+        @media print { .no-print { display: none !important; } }
     </style>
 </head>
 <body onload="initApp()">
+
     <header class="text-center pt-10 pb-6">
         <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
             <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
         </h1>
         <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[16px] uppercase mb-1">COMMAND CENTRE</div>
-        <div class="text-slate-500 font-bold tracking-[0.5em] text-[10px] uppercase no-print">WORKER PORTAL</div>
     </header>
 
     <div class="main-container">
         <section class="card no-print">
             <span class="label-text">Select Currency</span>
             <div class="currency-container">
-                <button id="tab-GBP" class="currency-tab active" onclick="updateCurrency('£')">GBP £</button>
-                <button id="tab-EUR" class="currency-tab" onclick="updateCurrency('€')">EUR €</button>
-                <button id="tab-USD" class="currency-tab" onclick="updateCurrency('$')">USD $</button>
+                <button id="btn-GBP" class="currency-tab active" onclick="updateCurrency('£', 'btn-GBP')">GBP £</button>
+                <button id="btn-EUR" class="currency-tab" onclick="updateCurrency('€', 'btn-EUR')">EUR €</button>
+                <button id="btn-USD" class="currency-tab" onclick="updateCurrency('$', 'btn-USD')">USD $</button>
             </div>
         </section>
 
         <section class="card">
-            <div class="flex gap-4 mb-6">
-                <div class="flex-1">
-                    <span class="label-text">Date:</span>
-                    <input type="date" id="quoteDate" class="input-area font-bold text-sm">
-                </div>
-                <div class="flex-1">
-                    <span class="label-text">Job Ref:</span>
-                    <input type="text" id="jobRef" class="input-area font-bold text-sm" readonly>
-                </div>
-            </div>
-
             <span class="label-text">Quote For:</span>
             <input type="text" id="clientName" class="input-area mb-6 font-bold" placeholder="Customer Name / Address">
             
             <span class="label-text">From:</span>
             <input type="text" id="bizName" class="input-area mb-2 text-sm" placeholder="Your Business Name" oninput="saveDetails()">
-            <input type="text" id="taxRef" class="input-area mb-2 text-xs" placeholder="UTR or VAT Number" oninput="saveDetails()">
-            <input type="text" id="bankDetails" class="input-area text-xs" placeholder="Bank Details" oninput="saveDetails()">
+            <input type="text" id="bankDetails" class="input-area text-xs" placeholder="Sort: 00-00-00 | Acc: 00000000" oninput="saveDetails()">
         </section>
 
         <section class="card">
             <span class="label-text">Work Description</span>
             <textarea id="workDesc" class="input-area h-24 mb-6" placeholder="Describe the work done..."></textarea>
             
-            <div class="flex gap-4 mb-6">
-                <div class="flex-[2]">
-                    <span class="label-text">Labour <span class="curr-sym">£</span></span>
-                    <input type="number" id="labour" class="input-area" placeholder="0" oninput="runCalc()">
-                </div>
-                <div class="flex-1">
-                    <span class="label-text">Tax %</span>
-                    <input type="number" id="taxRate" class="input-area text-center" value="20" oninput="runCalc()">
-                </div>
-            </div>
+            <span class="label-text">Labour <span class="curr-sym">£</span></span>
+            <input type="number" id="labour" class="input-area mb-6" placeholder="0" oninput="runCalc()">
             
             <span class="label-text">Materials</span>
             <div id="materialList" class="mb-4"></div>
-            
-            <div class="flex gap-2 mb-6 no-print">
+            <div class="flex gap-2 no-print mb-6">
                 <input type="text" id="matName" class="input-area" placeholder="Item name">
-                <input type="number" id="matPrice" class="input-area w-24" placeholder="
+                <input type="number" id="matPrice" class="input-area w-24" placeholder="£">
+                <button onclick="addMaterial()" class="bg-[#FF9500] text-black font-black w-14 rounded-xl">+</button>
+            </div>
+
+            <span class="label-text">Additional Costs (Fuel/Tools) <span class="curr-sym">£</span></span>
+            <input type="number" id="expenses" class="input-area" placeholder="0" oninput="runCalc()">
+        </section>
+
+        <section class="card border-2 border-[#FF9500] bg-[#0F172A]">
+            <div class="flex justify-between items-center mb-4">
+                <span class="label-text mb-0">Total Balance Due:</span>
+                <span id="dispTakeHome" class="text-4xl font-black text-[#FF9500]">£0.00</span>
+            </div>
+            <button onclick="window.print()" class="btn-main">SHARE VIA WHATSAPP / PDF</button>
+            <button onclick="resetApp()" class="w-full text-slate-500 font-bold text-[10px] mt-4 uppercase tracking-widest">Clear Everything</button>
+        </section>
+    </div>
+
+    <script>
+        let materialsArr = [];
+        let currentSymbol = '£';
+
+        function initApp() {
+            const savedCurr = localStorage.getItem('toolboxCurr') || '£';
+            const savedBtn = localStorage.getItem('toolboxBtnId') || 'btn-GBP';
+            updateCurrency(savedCurr, savedBtn);
+            loadDetails();
+        }
+
+        function updateCurrency(sym, btnId) {
+            currentSymbol = sym;
+            localStorage.setItem('toolboxCurr', sym);
+            localStorage.setItem('toolboxBtnId', btnId);
+
+            // 1. Reset all tabs
+            document.querySelectorAll('.currency-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 2. Activate clicked tab
+            const activeBtn = document.getElementById(btnId);
+            if(activeBtn) activeBtn.classList.add('active');
+
+            // 3. Update all symbol displays
+            document.querySelectorAll('.curr-sym').forEach(el => el.innerText = sym);
+            
+            runCalc();
+        }
+
+        function saveDetails() {
+            localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
+            localStorage.setItem('toolboxBank', document.getElementById('bankDetails').value);
+        }
+
+        function loadDetails() {
+            document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
+            document.getElementById('bankDetails').value = localStorage.getItem('toolboxBank') || '';
+        }
+
+        function addMaterial() {
+            const name = document.getElementById('matName').value;
+            const price = parseFloat(document.getElementById('matPrice').value) || 0;
+            if (name && price > 0) {
+                materialsArr.push({ name, price });
+                document.getElementById('matName').value = '';
+                document.getElementById('matPrice').value = '';
+                renderMaterials();
+                runCalc();
+            }
+        }
+
+        function renderMaterials() {
+            const list = document.getElementById('materialList');
+            list.innerHTML = materialsArr.map((m, i) => `
+                <div class="material-row">
+                    <span class="flex-grow font-bold">${m.name}</span>
+                    <span class="text-[#FF9500] font-black">${currentSymbol}${m.price.toFixed(2)}</span>
+                    <button onclick="removeMat(${i})" class="text-red-500 ml-2">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function removeMat(i) {
+            materialsArr.splice(i, 1);
+            renderMaterials();
+            runCalc();
+        }
+
+        function runCalc() {
+            const lab = parseFloat(document.getElementById('labour').value) || 0;
+            const matTotal = materialsArr.reduce((sum, m) => sum + m.price, 0);
+            const exp = parseFloat(document.getElementById('expenses').value) ||
