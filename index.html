@@ -6,10 +6,10 @@
     <title>Toolbox Pay | Job Settlement</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --toolbox-orange: #FF9500; --bg-main: #B0A4A2; }
+        :root { --toolbox-orange: #FF9500; --bg-main: #2E2929; }
         body { 
             background-color: var(--bg-main); 
-            color: #1E293B; 
+            color: #FFFFFF; 
             font-family: 'Inter', sans-serif; 
             margin: 0; 
             padding: 15px; 
@@ -28,57 +28,61 @@
         }
         
         .card { 
-            background: #948A88; /* Slightly darker than BG for depth */
-            border: 1px solid rgba(0,0,0,0.1); 
+            background: #3B3535; 
+            border: 1px solid rgba(255,255,255,0.05); 
             border-radius: 20px; 
             padding: 24px; 
             width: 100%; 
             box-sizing: border-box; 
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
         .display-box { 
-            background: #F1F5F9;
+            background: #252121;
             border: 3px solid var(--toolbox-orange); 
-            box-shadow: 0 10px 40px rgba(255, 149, 0, 0.2); 
         }
         
-        .label-text { font-size: 10px; font-weight: 900; color: #444; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
+        .label-text { font-size: 10px; font-weight: 900; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
         
-        .input-area { background: #E5E1E0; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; color: #1E293B; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; transition: 0.3s; }
-        .input-area:focus { border-left-color: var(--toolbox-orange); background: #FFFFFF; }
+        .input-area { background: #252121; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; transition: 0.3s; }
+        .input-area:focus { border-left-color: var(--toolbox-orange); background: #1E1A1A; }
         
-        .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(255,255,255,0.2); padding: 12px; border-radius: 10px; }
-        .material-name { flex-grow: 1; font-size: 14px; color: #1E293B; font-weight: 600; }
+        .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; }
+        .material-name { flex-grow: 1; font-size: 14px; color: #FFFFFF; font-weight: 600; }
         .material-cost { font-weight: 800; color: var(--toolbox-orange); }
         
-        .add-btn { background: var(--toolbox-orange); color: #000; font-size: 28px; font-weight: 900; width: 54px; height: 54px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-        .add-btn:active { transform: scale(0.95); }
+        .add-btn { background: var(--toolbox-orange); color: #000; font-size: 28px; font-weight: 900; width: 54px; height: 54px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
-        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 14px rgba(255, 149, 0, 0.3); }
-        .btn-sub { background: rgba(0,0,0,0.1); color: #444; font-weight: 700; text-transform: uppercase; padding: 16px; border-radius: 12px; width: 100%; border: none; margin-top: 12px; font-size: 11px; cursor: pointer; }
+        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 14px rgba(255, 149, 0, 0.4); }
+        .btn-sub { background: rgba(0,0,0,0.3); color: #9CA3AF; font-weight: 700; text-transform: uppercase; padding: 16px; border-radius: 12px; width: 100%; border: none; margin-top: 12px; font-size: 11px; cursor: pointer; }
 
+        /* Print styles to make the PDF look like a clean invoice */
         @media print {
-            .no-print { display: none; }
-            body { background: white; color: black; padding: 0; }
-            .card { border: 1px solid #eee; box-shadow: none; color: black; }
+            .no-print { display: none !important; }
+            body { background: white; color: black; padding: 20px; display: block; }
+            .main-container { max-width: 100%; }
+            .card { background: white; border: 1px solid #eee; box-shadow: none; color: black; margin-bottom: 20px; }
+            .input-area { background: white; border: none; color: black; padding: 5px; font-size: 14px; }
+            .display-box { border: 2px solid black; }
+            #dispTakeHome { color: black !important; }
+            header h1 span { color: black !important; }
         }
     </style>
 </head>
 <body>
-    <header class="text-center py-10 no-print">
+    <header class="text-center py-10">
         <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
-            <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
+            <span style="color: #FF9500;">TOOLBOX</span><span id="pay-logo" style="color: #FFFFFF;">PAY</span>
         </h1>
         <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[16px] uppercase mb-1">JOB SETTLEMENT</div>
-        <div class="text-slate-700 font-bold tracking-[0.5em] text-[10px] uppercase">WORKER PORTAL</div>
+        <div class="text-gray-500 font-bold tracking-[0.5em] text-[10px] uppercase no-print">WORKER PORTAL</div>
     </header>
 
     <div class="main-container">
         <section class="card">
-            <span class="label-text">Your Business & Bank Details</span>
-            <input type="text" id="bizName" class="input-area mb-3" placeholder="Business Name" value="[Your Business Name]">
-            <input type="text" id="bankDetails" class="input-area" placeholder="Sort Code & Account Number" value="Sort: 00-00-00 | Acc: 00000000">
+            <span class="label-text">From:</span>
+            <input type="text" id="bizName" class="input-area mb-1 font-bold" placeholder="Business Name" value="[Your Business Name]">
+            <input type="text" id="bankDetails" class="input-area text-sm" placeholder="Bank Details" value="Sort: 00-00-00 | Acc: 00000000">
         </section>
 
         <section class="card">
@@ -88,7 +92,7 @@
             <span class="label-text">Labour £</span>
             <input type="number" id="labour" class="input-area mb-6" placeholder="0" oninput="runCalc()">
             
-            <span class="label-text">Materials (Add individual items)</span>
+            <span class="label-text">Materials</span>
             <div id="materialList" class="mb-4"></div>
             
             <div class="flex gap-2 mb-6 no-print">
@@ -97,31 +101,31 @@
                 <button onclick="addMaterial()" class="add-btn">+</button>
             </div>
             
-            <span class="label-text">Costs (Fuel/Tools) £</span>
+            <span class="label-text">Additional Costs (Fuel/Tools) £</span>
             <input type="number" id="expenses" class="input-area" placeholder="0" oninput="runCalc()">
             
-            <button onclick="window.print()" class="btn-main no-print">PRINT INVOICE</button>
+            <button onclick="window.print()" class="btn-main no-print">SHARE VIA WHATSAPP / PDF</button>
             <button onclick="resetApp()" class="btn-sub no-print">CLEAR EVERYTHING</button>
         </section>
 
         <section class="card display-box">
             <div class="space-y-6 mb-10">
                 <div class="flex justify-between items-center">
-                    <span class="text-slate-600 font-bold uppercase tracking-widest text-[11px]">Total Money In</span>
+                    <span class="text-gray-400 font-bold uppercase tracking-widest text-[11px]">Subtotal (Labour + Materials)</span>
                     <span id="dispRevenue" class="text-xl font-black">£0.00</span>
                 </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-red-600 font-bold uppercase tracking-widest text-[11px]">Tax To Save (20%)</span>
-                    <span id="dispTax" class="text-xl font-black text-red-600">-£0.00</span>
+                <div class="flex justify-between items-center no-print">
+                    <span class="text-red-500 font-bold uppercase tracking-widest text-[11px]">Tax Provision (20%)</span>
+                    <span id="dispTax" class="text-xl font-black text-red-500">-£0.00</span>
                 </div>
-                <div class="flex justify-between items-center border-b border-slate-300 pb-6">
-                    <span class="text-orange-600 font-bold uppercase tracking-widest text-[11px]">Your Costs</span>
-                    <span id="dispExpenses" class="text-xl font-black text-orange-600">-£0.00</span>
+                <div class="flex justify-between items-center border-b border-gray-700 pb-6">
+                    <span class="text-orange-400 font-bold uppercase tracking-widest text-[11px]">Total Expenses</span>
+                    <span id="dispExpenses" class="text-xl font-black text-orange-400">-£0.00</span>
                 </div>
             </div>
             
             <div class="text-center">
-                <span class="text-emerald-700 font-black uppercase tracking-tighter text-[11px] block mb-2">Total Take Home:</span>
+                <span class="text-emerald-400 font-black uppercase tracking-tighter text-[11px] block mb-2">Total Take Home:</span>
                 <span id="dispTakeHome" class="text-7xl font-black" style="color: #FF9500;">£0.00</span>
             </div>
         </section>
@@ -148,7 +152,7 @@
                 <div class="material-row">
                     <span class="material-name">${m.name}</span>
                     <span class="material-cost">£${m.price.toFixed(2)}</span>
-                    <button onclick="removeMat(${index})" class="text-red-700 font-black ml-4 px-2 no-print">✕</button>
+                    <button onclick="removeMat(${index})" class="text-red-500 font-black ml-4 px-2 no-print">✕</button>
                 </div>
             `).join('');
         }
@@ -169,7 +173,7 @@
             
             document.getElementById('dispRevenue').innerText = `£${totalRevenue.toFixed(2)}`;
             document.getElementById('dispTax').innerText = `-£${taxAmount.toFixed(2)}`;
-            document.getElementById('dispExpenses').innerText = `-£${exp.toFixed(2)}`;
+            document.getElementById('dispExpenses').innerText = `-£${(matTotal + exp).toFixed(2)}`;
             document.getElementById('dispTakeHome').innerText = `£${takeHome.toFixed(2)}`;
         }
 
