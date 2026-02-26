@@ -33,15 +33,21 @@
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); background: #020617; }
         
-        /* THE REINFORCED TABS */
+        /* CURRENCY TAB FIX */
         .currency-container { display: flex; background: #0F172A; padding: 6px; border-radius: 16px; gap: 6px; border: 1px solid rgba(255,255,255,0.05); }
         .currency-tab { 
             flex: 1; padding: 16px; border-radius: 12px; font-size: 13px; font-weight: 900; 
-            color: #94A3B8; cursor: pointer; border: none; background: transparent; 
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #94A3B8 !important; cursor: pointer; border: none; background: transparent; 
+            transition: all 0.2s ease;
             -webkit-tap-highlight-color: transparent;
+            text-align: center;
         }
-        .currency-tab.active { background: var(--toolbox-orange) !important; color: #000 !important; box-shadow: 0 4px 12px rgba(255, 149, 0, 0.4); }
+        /* This forces the orange highlight on any active tab */
+        .currency-tab.active { 
+            background-color: var(--toolbox-orange) !important; 
+            color: #000000 !important; 
+            box-shadow: 0 4px 12px rgba(255, 149, 0, 0.4); 
+        }
 
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; transition: 0.2s; }
         .btn-main:active { transform: scale(0.97); }
@@ -64,9 +70,9 @@
         <section class="card no-print">
             <span class="label-text">Select Currency</span>
             <div class="currency-container">
-                <button class="currency-tab active" data-sym="£" onclick="handleCurrencyClick(this)">GBP £</button>
-                <button class="currency-tab" data-sym="€" onclick="handleCurrencyClick(this)">EUR €</button>
-                <button class="currency-tab" data-sym="$" onclick="handleCurrencyClick(this)">USD $</button>
+                <button class="currency-tab active" data-sym="£" onclick="applyCurrency(this)">GBP £</button>
+                <button class="currency-tab" data-sym="€" onclick="applyCurrency(this)">EUR €</button>
+                <button class="currency-tab" data-sym="$" onclick="applyCurrency(this)">USD $</button>
             </div>
         </section>
 
@@ -91,10 +97,10 @@
             <div class="flex gap-2 no-print mb-6">
                 <input type="text" id="matName" class="input-area" placeholder="Item name">
                 <input type="number" id="matPrice" class="input-area w-24" placeholder="0">
-                <button onclick="addMaterial()" class="bg-[#FF9500] text-black font-black w-14 rounded-xl active:scale-90 transition-transform">+</button>
+                <button onclick="addMaterial()" class="bg-[#FF9500] text-black font-black w-14 rounded-xl">+</button>
             </div>
 
-            <span class="label-text">Additional Costs (Fuel/Tools) <span class="curr-sym">£</span></span>
+            <span class="label-text">Additional Costs <span class="curr-sym">£</span></span>
             <input type="number" id="expenses" class="input-area" placeholder="0" oninput="runCalc()">
         </section>
 
@@ -113,5 +119,32 @@
         let currentSymbol = '£';
 
         function initApp() {
-            // Load persistent data
             const savedCurr = localStorage.getItem('toolboxCurr') || '£';
+            const tabs = document.querySelectorAll('.currency-tab');
+            tabs.forEach(tab => {
+                if(tab.getAttribute('data-sym') === savedCurr) {
+                    applyCurrency(tab);
+                }
+            });
+            loadDetails();
+        }
+
+        function applyCurrency(element) {
+            // Remove active state from all
+            document.querySelectorAll('.currency-tab').forEach(t => t.classList.remove('active'));
+            
+            // Apply to clicked
+            element.classList.add('active');
+            
+            // Global Update
+            currentSymbol = element.getAttribute('data-sym');
+            localStorage.setItem('toolboxCurr', currentSymbol);
+            
+            // Update UI Labels
+            document.querySelectorAll('.curr-sym').forEach(el => el.innerText = currentSymbol);
+            
+            runCalc();
+        }
+
+        function saveDetails() {
+            localStorage.setItem('toolboxBizName',
