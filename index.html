@@ -2,97 +2,70 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Command Centre</title>
-    <link rel="stylesheet" href="src/index.css">
-    <script src="src/auth.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toolbox Pay v3.0 | Command Centre</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .dashboard-container { width: 95%; max-width: 450px; padding: 40px 20px; margin: 0 auto; }
-        .logo-text { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 5px; }
-        .orange { color: #FFA500; }
-        .white { color: #FFFFFF; }
-        
-        .biz-name { text-align: center; color: #888; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
-        
-        .page-header {
-            text-align: center;
-            color: #555;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 25px;
-        }
-
-        /* Stats Row */
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .stat-card {
-            background: #151515; border: 1px solid #222; border-radius: 20px;
-            padding: 20px; text-align: center;
-        }
-        .stat-card h2 { margin: 0; color: #FFA500; font-size: 28px; }
-        .stat-card p { margin: 5px 0 0; color: #666; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-
-        /* Revenue Card */
-        .revenue-card {
-            background: linear-gradient(145deg, #111, #0a0a0a);
-            border: 1px solid #333; border-left: 4px solid #FFA500;
-            border-radius: 25px; padding: 25px; margin-bottom: 25px;
-        }
-        .rev-line { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #888; }
-        .take-home { margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .take-home h3 { color: #00ff88; margin: 0; font-size: 18px; }
-        .take-home .amount { color: #FFA500; font-size: 32px; font-weight: 800; }
-
-        /* Action Grid */
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .action-btn {
-            background: #222; color: white; border: none; border-radius: 15px;
-            padding: 20px; font-weight: 700; font-size: 14px; text-decoration: none;
-            text-align: center; border: 1px solid #333;
-        }
-        .btn-highlight { background: #FFA500; color: #000; border: none; }
+        :root { --toolbox-orange: #FF9500; }
+        body { background-color: #05070A; color: #FFFFFF; font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+        .sidebar { width: 400px; background: #0B0E14; border-right: 1px solid #1E232D; padding: 24px; flex-shrink: 0; }
+        .industrial-input { background: #11141B; border: 1px solid #1E232D; border-radius: 8px; color: white; padding: 12px; width: 100%; margin-bottom: 16px; outline: none; font-size: 14px; border-left: 3px solid transparent; transition: 0.3s; }
+        .industrial-input:focus { border-left-color: var(--toolbox-orange); background: #161A22; }
+        .main-display { background: #0B0E14; border: 1px solid #FF9500; border-radius: 24px; padding: 40px; margin-top: 24px; }
+        .label { font-size: 12px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-bottom: 8px; }
+        .orange-text { color: #FF9500; }
+        .btn-orange { background: #FF9500; color: #000; font-weight: 900; text-transform: uppercase; padding: 16px; border-radius: 12px; transition: 0.3s; width: 100%; }
     </style>
 </head>
-<body>
+<body class="p-6">
+    <header class="flex flex-col items-center mb-10">
+        <h1 class="text-4xl font-black uppercase tracking-tighter"><span class="orange-text">toolbox</span>pay</h1>
+        <div class="text-slate-500 font-bold tracking-[0.3em] text-xs mt-2 uppercase">Command Centre</div>
+    </header>
 
-    <div class="dashboard-container">
-        <header>
-            <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-            <div id="bizName" class="biz-name">franklins</div>
-            <div class="page-header">Command Centre</div>
-        </header>
-
-        <div class="stats-row">
-            <div class="stat-card">
-                <h2 id="activeJobs">0</h2>
-                <p>Active</p>
+    <div class="flex gap-8 max-w-6xl mx-auto w-full flex-1">
+        <aside class="sidebar rounded-3xl border border-[#1E232D]">
+            <span class="label">Work Description</span>
+            <textarea id="workDesc" class="industrial-input h-32" placeholder="e.g. 500 labour..."></textarea>
+            <div class="grid grid-cols-2 gap-4">
+                <div><span class="label">Labour £</span><input type="number" id="labour" class="industrial-input" value="0"></div>
+                <div><span class="label">Parts £</span><input type="number" id="parts" class="industrial-input" value="0"></div>
             </div>
-            <div class="stat-card">
-                <h2 id="doneJobs">0</h2>
-                <p>Done</p>
-            </div>
-        </div>
+            <button onclick="window.print()" class="btn-orange mt-4">Print Document</button>
+        </aside>
 
-        <div class="revenue-card">
-            <div class="rev-line"><span>Total Revenue</span><span class="white">£0.00</span></div>
-            <div class="rev-line"><span>Business Costs</span><span class="white">-£0.00</span></div>
-            <div class="rev-line" style="color:#ff4d4d;"><span>Tax Reserve (20%)</span><span>-£0.00</span></div>
-            
-            <div class="take-home">
-                <h3>Take Home:</h3>
-                <div class="amount" id="totalProfit">£0.00</div>
+        <main class="flex-1">
+            <div class="main-display">
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-sm">Total Revenue</span>
+                    <span id="dispRevenue" class="text-2xl font-black">£0.00</span>
+                </div>
+                <div class="flex justify-between items-center mb-12 border-b border-slate-800 pb-6">
+                    <span class="text-red-500 font-bold uppercase tracking-widest text-sm">Tax Reserve (20%)</span>
+                    <span id="dispTax" class="text-2xl font-black text-red-500">-£0.00</span>
+                </div>
+                <div class="flex justify-between items-center pt-4">
+                    <span class="text-[#00FF88] font-black uppercase tracking-tighter text-xl">Take Home:</span>
+                    <span id="dispTakeHome" class="text-6xl font-black orange-text">£0.00</span>
+                </div>
             </div>
-        </div>
-
-        <div class="action-grid">
-            <a href="quote.html" class="action-btn btn-highlight">New Quote</a>
-            <a href="expense.html" class="action-btn">Log Expense</a>
-            <a href="report.html" class="action-btn btn-highlight">Quotes</a>
-            <a href="expenses.html" class="action-btn">Expenses</a>
-        </div>
+        </main>
     </div>
 
-    <script src="src/index.js"></script>
+    <script>
+        function update() {
+            const desc = document.getElementById('workDesc').value.toUpperCase();
+            let lab = parseFloat(document.getElementById('labour').value) || 0;
+            let part = parseFloat(document.getElementById('parts').value) || 0;
+            const labMatch = desc.match(/(\d+)\s*LABOUR/);
+            if(labMatch && lab === 0) lab = parseFloat(labMatch[1]);
+            const rev = lab + part;
+            const tax = rev * 0.20;
+            document.getElementById('dispRevenue').innerText = `£${rev.toFixed(2)}`;
+            document.getElementById('dispTax').innerText = `-£${tax.toFixed(2)}`;
+            document.getElementById('dispTakeHome').innerText = `£${(rev - tax).toFixed(2)}`;
+        }
+        document.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', update));
+    </script>
 </body>
 </html>
