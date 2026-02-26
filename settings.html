@@ -21,6 +21,7 @@
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); }
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        .btn-nav { text-align: center; color: #94A3B8; font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 0.1em; text-decoration: none; padding: 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; margin-top: 10px; }
     </style>
 </head>
 <body onload="loadSettings()">
@@ -58,7 +59,7 @@
         </section>
 
         <button onclick="saveSettings()" class="btn-main">Save Profile</button>
-        <a href="index.html" class="text-center text-slate-500 font-bold text-xs uppercase tracking-widest mt-4">← Back to Calculator</a>
+        <a href="dashboard.html" class="btn-nav">← Back to Dashboard</a>
     </div>
 
     <script>
@@ -69,7 +70,7 @@
             localStorage.setItem('toolboxSort', document.getElementById('sortCode').value);
             localStorage.setItem('toolboxAcc', document.getElementById('accNum').value);
             alert("Profile Saved!");
-            window.location.href = 'index.html';
+            window.location.href = 'dashboard.html';
         }
 
         function loadSettings() {
