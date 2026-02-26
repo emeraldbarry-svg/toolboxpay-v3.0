@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Toolbox Pay | Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
+        body { 
+            background-color: var(--bg-midnight); 
+            color: #FFFFFF; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; padding: 15px; 
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
+        .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); }
+        .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
+        
+        .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
+        .input-area:focus { border-left-color: var(--toolbox-orange); }
+        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
+    </style>
+</head>
+<body onload="loadSettings()">
+
+    <header class="text-center pt-10 pb-6">
+        <h1 class="text-3xl font-black uppercase tracking-tighter mb-1">
+            <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">SETTINGS</span>
+        </h1>
+        <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[10px] uppercase mb-1">PROFILE & BANK DETAILS</div>
+    </header>
+
+    <div class="main-container">
+        <section class="card">
+            <span class="label-text">Trading Name</span>
+            <input type="text" id="bizName" class="input-area mb-6 w-full" placeholder="e.g. J. Smith Plumbing">
+            
+            <span class="label-text">Labour Rate / Specialising In</span>
+            <input type="text" id="specialising" class="input-area w-full" placeholder="e.g. Emergency Repairs">
+        </section>
+
+        <section class="card">
+            <span class="label-text">Bank Name</span>
+            <input type="text" id="bankName" class="input-area mb-6 w-full" placeholder="e.g. Barclays">
+            
+            <div class="flex gap-4">
+                <div class="flex-grow">
+                    <span class="label-text">Sort Code</span>
+                    <input type="text" id="sortCode" class="input-area w-full" placeholder="00-00-00">
+                </div>
+                <div class="flex-grow">
+                    <span class="label-text">Account Number</span>
+                    <input type="text" id="accNum" class="input-area w-full" placeholder="12345678">
+                </div>
+            </div>
+        </section>
+
+        <button onclick="saveSettings()" class="btn-main">Save Profile</button>
+        <a href="index.html" class="text-center text-slate-500 font-bold text-xs uppercase tracking-widest mt-4">← Back to Calculator</a>
+    </div>
+
+    <script>
+        function saveSettings() {
+            localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
+            localStorage.setItem('toolboxSpecial', document.getElementById('specialising').value);
+            localStorage.setItem('toolboxBankName', document.getElementById('bankName').value);
+            localStorage.setItem('toolboxSort', document.getElementById('sortCode').value);
+            localStorage.setItem('toolboxAcc', document.getElementById('accNum').value);
+            alert("Profile Saved!");
+            window.location.href = 'index.html';
+        }
+
+        function loadSettings() {
+            document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
+            document.getElementById('specialising').value = localStorage.getItem('toolboxSpecial') || '';
+            document.getElementById('bankName').value = localStorage.getItem('toolboxBankName') || '';
+            document.getElementById('sortCode').value = localStorage.getItem('toolboxSort') || '';
+            document.getElementById('accNum').value = localStorage.getItem('toolboxAcc') || '';
+        }
+    </script>
+</body>
+</html>
