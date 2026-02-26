@@ -47,7 +47,6 @@
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); background: #020617; }
         
-        /* Material rows styling */
         .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; }
         .material-name { flex-grow: 1; font-size: 14px; color: #FFFFFF; font-weight: 600; }
         .material-cost { font-weight: 800; color: var(--toolbox-orange); }
@@ -109,9 +108,6 @@
             
             <span class="label-text">Additional Costs (Fuel/Tools) £</span>
             <input type="number" id="expenses" class="input-area" placeholder="0" oninput="runCalc()">
-            
-            <button onclick="window.print()" class="btn-main no-print">SHARE VIA WHATSAPP / PDF</button>
-            <button onclick="resetApp()" class="btn-sub no-print">CLEAR EVERYTHING</button>
         </section>
 
         <section class="card display-box">
@@ -135,13 +131,20 @@
                 <span id="dispTakeHome" class="text-7xl font-black" style="color: #FF9500;">£0.00</span>
             </div>
         </section>
+
+        <section class="card">
+            <span class="label-text">Notes / Terms / Thanks:</span>
+            <textarea id="footerNotes" class="input-area h-20 text-xs" placeholder="e.g. Thanks for your business! Please pay within 7 days." oninput="saveDetails()"></textarea>
+            
+            <button onclick="window.print()" class="btn-main no-print">SHARE VIA WHATSAPP / PDF</button>
+            <button onclick="resetApp()" class="btn-sub no-print">CLEAR EVERYTHING</button>
+        </section>
     </div>
 
     <script>
         let materialsArr = [];
 
         function initApp() {
-            // Set default date to today
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('quoteDate').value = today;
             loadDetails();
@@ -150,11 +153,13 @@
         function saveDetails() {
             localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
             localStorage.setItem('toolboxBank', document.getElementById('bankDetails').value);
+            localStorage.setItem('toolboxFooter', document.getElementById('footerNotes').value);
         }
 
         function loadDetails() {
             document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
             document.getElementById('bankDetails').value = localStorage.getItem('toolboxBank') || '';
+            document.getElementById('footerNotes').value = localStorage.getItem('toolboxFooter') || '';
         }
 
         function addMaterial() {
@@ -202,7 +207,8 @@
 
         function resetApp() {
             document.querySelectorAll('input, textarea').forEach(el => {
-                if(el.id !== 'bizName' && el.id !== 'bankDetails' && el.id !== 'quoteDate') el.value = '';
+                const preserved = ['bizName', 'bankDetails', 'quoteDate', 'footerNotes'];
+                if(!preserved.includes(el.id)) el.value = '';
             });
             materialsArr = [];
             renderMaterials();
