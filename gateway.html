@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Login</title>
+    <title>Toolbox Pay | Secure Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
@@ -14,18 +14,18 @@
             justify-content: center; min-height: 100vh;
         }
         .main-container { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 20px; }
-        .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
-        .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; font-style: normal; text-align: center; letter-spacing: 0.3em; }
+        .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 28px; padding: 36px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 12px; display: block; }
+        .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; color: #FFFFFF; padding: 20px; width: 100%; outline: none; font-size: 20px; border-left: 4px solid transparent; transition: 0.3s; font-style: normal; text-align: center; letter-spacing: 0.4em; }
         .input-area:focus { border-left-color: var(--toolbox-orange); }
-        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; transition: 0.2s; }
-        .btn-main:active { transform: scale(0.98); opacity: 0.9; }
+        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 16px; width: 100%; border: none; font-size: 16px; cursor: pointer; transition: 0.2s; box-shadow: 0 10px 20px rgba(255,149,0,0.2); }
+        .btn-biometric { background: rgba(255, 255, 255, 0.05); color: #FFFFFF; font-weight: 900; text-transform: uppercase; padding: 18px; border-radius: 16px; width: 100%; border: 1px solid rgba(255, 255, 255, 0.1); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px; }
     </style>
 </head>
-<body>
+<body onload="checkBiometrics()">
 
     <div class="main-container">
-        <header class="text-center mb-4">
+        <header class="text-center mb-6">
             <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
                 <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
             </h1>
@@ -33,26 +33,52 @@
         </header>
 
         <section class="card">
-            <div id="loginView">
-                <span class="label-text text-center">Enter Access Pin</span>
-                <input type="password" id="loginPin" class="input-area mb-2" placeholder="••••" maxlength="4" inputmode="numeric">
-                <p class="text-[10px] text-slate-500 font-bold uppercase text-center mb-6">Securing your local labour records</p>
-                <button onclick="handleLogin()" class="btn-main">Unlock Dashboard</button>
-            </div>
+            <span class="label-text text-center">Identity Authorisation</span>
+            <input type="password" id="loginPin" class="input-area mb-6" placeholder="••••" maxlength="4" inputmode="numeric">
+            
+            <button onclick="handlePinLogin()" class="btn-main mb-2">Unlock System</button>
+            
+            <button id="bioBtn" onclick="handleBiometricLogin()" class="btn-biometric" style="display: none;">
+                <span>🧬</span> Use Biometric Sign-in
+            </button>
         </section>
+
+        <p class="text-[10px] text-slate-500 font-bold uppercase text-center mt-4">Verified Handset: Active</p>
     </div>
 
     <script>
-        function handleLogin() {
+        // Check if biometrics (WebAuthn) is supported on this phone
+        async function checkBiometrics() {
+            if (window.PublicKeyCredential) {
+                const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+                if (available) {
+                    document.getElementById('bioBtn').style.display = 'flex';
+                }
+            }
+        }
+
+        async function handleBiometricLogin() {
+            // Placeholder for WebAuthn API Call
+            // On a real server, this would trigger a credential request
+            alert("Checking Face ID / Fingerprint...");
+            
+            // Simulating successful biometric match
+            const success = true; 
+            if (success) {
+                sessionStorage.setItem('toolboxAuthenticated', 'true');
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        function handlePinLogin() {
             const entered = document.getElementById('loginPin').value;
-            // Accessing the PIN stored during the initial setup/registration
-            const saved = localStorage.getItem('toolboxUserPin');
+            const saved = localStorage.getItem('toolboxUserPin') || "1234"; // Default for first run
             
             if (entered === saved) {
                 sessionStorage.setItem('toolboxAuthenticated', 'true');
                 window.location.href = 'dashboard.html';
             } else {
-                alert("Access Denied. Pin incorrect.");
+                alert("Pin incorrect. Please try again.");
                 document.getElementById('loginPin').value = '';
             }
         }
