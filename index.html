@@ -47,6 +47,7 @@
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); background: #020617; }
         
+        /* Material rows styling */
         .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; }
         .material-name { flex-grow: 1; font-size: 14px; color: #FFFFFF; font-weight: 600; }
         .material-cost { font-weight: 800; color: var(--toolbox-orange); }
@@ -66,7 +67,7 @@
         }
     </style>
 </head>
-<body onload="loadDetails()">
+<body onload="initApp()">
     <header class="text-center py-10">
         <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
             <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
@@ -77,6 +78,11 @@
 
     <div class="main-container">
         <section class="card">
+            <div class="mb-6">
+                <span class="label-text">Quote Date:</span>
+                <input type="date" id="quoteDate" class="input-area font-bold">
+            </div>
+
             <span class="label-text">Quote For:</span>
             <input type="text" id="clientName" class="input-area mb-6 font-bold" placeholder="Customer Name / Address">
             
@@ -134,6 +140,13 @@
     <script>
         let materialsArr = [];
 
+        function initApp() {
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('quoteDate').value = today;
+            loadDetails();
+        }
+
         function saveDetails() {
             localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
             localStorage.setItem('toolboxBank', document.getElementById('bankDetails').value);
@@ -189,7 +202,7 @@
 
         function resetApp() {
             document.querySelectorAll('input, textarea').forEach(el => {
-                if(el.id !== 'bizName' && el.id !== 'bankDetails') el.value = '';
+                if(el.id !== 'bizName' && el.id !== 'bankDetails' && el.id !== 'quoteDate') el.value = '';
             });
             materialsArr = [];
             renderMaterials();
