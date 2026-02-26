@@ -8,8 +8,8 @@
     <style>
         :root { --toolbox-orange: #FF9500; }
         body { 
-            background-color: #05070A; 
-            color: #FFFFFF; 
+            background-color: #F1F5F9; /* Light Slate Grey background */
+            color: #1E293B; 
             font-family: 'Inter', sans-serif; 
             margin: 0; 
             padding: 15px; 
@@ -28,101 +28,113 @@
         }
         
         .card { 
-            background: #0B0E14; 
-            border: 1px solid #1E232D; 
+            background: #FFFFFF; 
+            border: 1px solid #E2E8F0; 
             border-radius: 20px; 
             padding: 24px; 
             width: 100%; 
             box-sizing: border-box; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         
         .display-box { 
-            border: 2px solid var(--toolbox-orange); 
-            box-shadow: 0 10px 40px rgba(255, 149, 0, 0.15); 
+            background: #FFFFFF;
+            border: 3px solid var(--toolbox-orange); 
+            box-shadow: 0 10px 40px rgba(255, 149, 0, 0.1); 
         }
         
-        .label-text { font-size: 10px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
+        .label-text { font-size: 10px; font-weight: 900; color: #64748B; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
         
-        .input-area { background: #11141B; border: 1px solid #1E232D; border-radius: 12px; color: white; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; transition: 0.3s; }
-        .input-area:focus { border-left-color: var(--toolbox-orange); background: #161A22; }
+        .input-area { background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 12px; color: #1E293B; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid #CBD5E1; box-sizing: border-box; transition: 0.3s; }
+        .input-area:focus { border-left-color: var(--toolbox-orange); background: #FFFFFF; border-color: var(--toolbox-orange); }
         
-        /* Material List Styling */
-        .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: #161A22; padding: 8px; border-radius: 10px; }
-        .material-name { flex-grow: 1; font-size: 14px; color: #94A3B8; }
+        .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: #F1F5F9; padding: 12px; border-radius: 10px; border: 1px solid #E2E8F0; }
+        .material-name { flex-grow: 1; font-size: 14px; color: #1E293B; font-weight: 600; }
         .material-cost { font-weight: 800; color: var(--toolbox-orange); }
         
-        .add-btn { background: var(--toolbox-orange); color: black; font-size: 24px; font-weight: 900; width: 54px; height: 54px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .add-btn { background: var(--toolbox-orange); color: white; font-size: 28px; font-weight: 900; width: 54px; height: 54px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3); }
+        .add-btn:active { transform: scale(0.95); }
         
-        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 20px; }
-        .btn-sub { background: #1E232D; color: #64748B; font-weight: 700; text-transform: uppercase; padding: 16px; border-radius: 12px; width: 100%; border: none; margin-top: 12px; font-size: 11px; cursor: pointer; }
+        .btn-main { background: var(--toolbox-orange); color: white; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 14px rgba(255, 149, 0, 0.4); }
+        .btn-sub { background: #E2E8F0; color: #64748B; font-weight: 700; text-transform: uppercase; padding: 16px; border-radius: 12px; width: 100%; border: none; margin-top: 12px; font-size: 11px; cursor: pointer; }
+
+        @media print {
+            .no-print { display: none; }
+            body { background: white; color: black; padding: 0; }
+            .card { border: 1px solid #eee; box-shadow: none; }
+        }
     </style>
 </head>
 <body>
-    <header class="text-center py-10">
+    <header class="text-center py-10 no-print">
         <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
-            <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
+            <span style="color: #FF9500;">TOOLBOX</span><span style="color: #1E293B;">PAY</span>
         </h1>
         <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[16px] uppercase mb-1">JOB SETTLEMENT</div>
-        <div class="text-slate-600 font-bold tracking-[0.5em] text-[10px] uppercase">WORKER PORTAL</div>
+        <div class="text-slate-500 font-bold tracking-[0.5em] text-[10px] uppercase">WORKER PORTAL</div>
     </header>
 
     <div class="main-container">
         <section class="card">
+            <span class="label-text">Your Business & Bank Details</span>
+            <input type="text" id="bizName" class="input-area mb-3" placeholder="Business Name" value="[Your Business Name]">
+            <input type="text" id="bankDetails" class="input-area" placeholder="Sort Code & Account Number" value="Sort: 00-00-00 | Acc: 00000000">
+        </section>
+
+        <section class="card">
             <span class="label-text">Job Description</span>
-            <textarea id="workDesc" class="input-area h-24 mb-6" placeholder="Describe the work..."></textarea>
+            <textarea id="workDesc" class="input-area h-24 mb-6" placeholder="Describe the work done..."></textarea>
             
             <span class="label-text">Labour £</span>
             <input type="number" id="labour" class="input-area mb-6" placeholder="0" oninput="runCalc()">
             
             <span class="label-text">Materials (Add individual items)</span>
-            <div id="materialList" class="mb-4">
-                </div>
+            <div id="materialList" class="mb-4"></div>
             
-            <div class="flex gap-2 mb-6">
+            <div class="flex gap-2 mb-6 no-print">
                 <input type="text" id="matName" class="input-area" placeholder="Item name">
                 <input type="number" id="matPrice" class="input-area w-24" placeholder="£">
                 <button onclick="addMaterial()" class="add-btn">+</button>
             </div>
             
-            <span class="label-text">Other Costs (Fuel/Tools) £</span>
+            <span class="label-text">Costs (Fuel/Tools) £</span>
             <input type="number" id="expenses" class="input-area" placeholder="0" oninput="runCalc()">
             
-            <button onclick="window.print()" class="btn-main">PRINT INVOICE</button>
-            <button onclick="resetApp()" class="btn-sub">CLEAR EVERYTHING</button>
+            <button onclick="window.print()" class="btn-main no-print">PRINT INVOICE</button>
+            <button onclick="resetApp()" class="btn-sub no-print">CLEAR EVERYTHING</button>
         </section>
 
         <section class="card display-box">
             <div class="space-y-6 mb-10">
                 <div class="flex justify-between items-center">
-                    <span class="text-slate-400 font-bold uppercase tracking-widest text-[11px]">Total Money In</span>
+                    <span class="text-slate-500 font-bold uppercase tracking-widest text-[11px]">Total Money In</span>
                     <span id="dispRevenue" class="text-xl font-black">£0.00</span>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-red-500 font-bold uppercase tracking-widest text-[11px]">Tax To Save (20%)</span>
-                    <span id="dispTax" class="text-xl font-black text-red-500">-£0.00</span>
+                    <span class="text-red-600 font-bold uppercase tracking-widest text-[11px]">Tax To Save (20%)</span>
+                    <span id="dispTax" class="text-xl font-black text-red-600">-£0.00</span>
                 </div>
-                <div class="flex justify-between items-center border-b border-slate-800 pb-6">
-                    <span class="text-orange-300 font-bold uppercase tracking-widest text-[11px]">Your Costs</span>
-                    <span id="dispExpenses" class="text-xl font-black text-orange-300">-£0.00</span>
+                <div class="flex justify-between items-center border-b border-slate-200 pb-6">
+                    <span class="text-orange-600 font-bold uppercase tracking-widest text-[11px]">Your Costs</span>
+                    <span id="dispExpenses" class="text-xl font-black text-orange-600">-£0.00</span>
                 </div>
             </div>
             
             <div class="text-center">
-                <span class="text-[#00FF88] font-black uppercase tracking-tighter text-[11px] block mb-2">Total Take Home:</span>
+                <span class="text-emerald-600 font-black uppercase tracking-tighter text-[11px] block mb-2">Total Take Home:</span>
                 <span id="dispTakeHome" class="text-7xl font-black" style="color: #FF9500;">£0.00</span>
             </div>
         </section>
     </div>
 
     <script>
-        let materials = [];
+        let materialsArr = [];
 
         function addMaterial() {
             const name = document.getElementById('matName').value;
             const price = parseFloat(document.getElementById('matPrice').value) || 0;
-            
             if (name && price > 0) {
-                materials.push({ name, price });
+                materialsArr.push({ name, price });
                 document.getElementById('matName').value = '';
                 document.getElementById('matPrice').value = '';
                 renderMaterials();
@@ -132,26 +144,25 @@
 
         function renderMaterials() {
             const list = document.getElementById('materialList');
-            list.innerHTML = materials.map((m, index) => `
+            list.innerHTML = materialsArr.map((m, index) => `
                 <div class="material-row">
                     <span class="material-name">${m.name}</span>
                     <span class="material-cost">£${m.price.toFixed(2)}</span>
-                    <button onclick="removeMat(${index})" class="text-red-500 font-black ml-2">✕</button>
+                    <button onclick="removeMat(${index})" class="text-red-500 font-black ml-4 px-2 no-print">✕</button>
                 </div>
             `).join('');
         }
 
         function removeMat(index) {
-            materials.splice(index, 1);
+            materialsArr.splice(index, 1);
             renderMaterials();
             runCalc();
         }
 
         function runCalc() {
             const lab = parseFloat(document.getElementById('labour').value) || 0;
-            const matTotal = materials.reduce((sum, m) => sum + m.price, 0);
+            const matTotal = materialsArr.reduce((sum, m) => sum + m.price, 0);
             const exp = parseFloat(document.getElementById('expenses').value) || 0;
-
             const totalRevenue = lab + matTotal;
             const taxAmount = totalRevenue * 0.20;
             const takeHome = totalRevenue - taxAmount - exp;
@@ -163,8 +174,10 @@
         }
 
         function resetApp() {
-            document.querySelectorAll('input, textarea').forEach(el => el.value = '');
-            materials = [];
+            document.querySelectorAll('input, textarea').forEach(el => {
+                if(el.id !== 'bizName' && el.id !== 'bankDetails') el.value = '';
+            });
+            materialsArr = [];
             renderMaterials();
             runCalc();
         }
