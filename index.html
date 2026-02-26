@@ -3,84 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay v3.0 | Command Centre</title>
+    <title>Toolbox Pay v4.0 | Fresh Build</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; }
-        body { background-color: #05070A; color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 15px; box-sizing: border-box; }
+        body { background-color: #05070A; color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; box-sizing: border-box; }
         
-        /* THE ALIGNMENT FIX: Forced Vertical Stack for Mobile */
-        .app-stack { display: block; width: 100%; max-width: 500px; margin: 0 auto; }
+        /* FRESH VERTICAL LAYOUT */
+        .app-container { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
 
-        .card { background: #0B0E14; border: 1px solid #1E232D; border-radius: 20px; padding: 20px; width: 100%; box-sizing: border-box; margin-bottom: 20px; }
-        .totals-display { border: 2px solid #FF9500; min-height: 350px; display: flex; flex-direction: column; justify-content: space-between; }
+        .card { background: #0B0E14; border: 1px solid #1E232D; border-radius: 24px; padding: 25px; width: 100%; box-sizing: border-box; }
+        .result-card { border: 2px solid #FF9500; min-height: 380px; display: flex; flex-direction: column; justify-content: space-between; }
 
-        /* Large Touch Inputs */
-        .label { font-size: 11px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-bottom: 8px; }
-        .input-field { background: #11141B; border: 1px solid #1E232D; border-radius: 12px; color: white; padding: 16px; width: 100%; margin-bottom: 12px; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; display: block; }
-        .input-field:focus { border-left-color: var(--toolbox-orange); }
+        /* Industrial Input Style */
+        .field-label { font-size: 10px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px; display: block; }
+        .input-box { background: #11141B; border: 1px solid #1E232D; border-radius: 14px; color: white; padding: 18px; width: 100%; margin-bottom: 15px; outline: none; font-size: 16px; border-left: 5px solid transparent; box-sizing: border-box; transition: 0.2s; }
+        .input-box:focus { border-left-color: var(--toolbox-orange); background: #161A22; }
 
-        .btn-orange { background: #FF9500; color: #000; font-weight: 900; text-transform: uppercase; padding: 18px; border-radius: 12px; width: 100%; border: none; font-size: 14px; cursor: pointer; margin-top: 10px; }
-        .btn-reset { background: #1E232D; color: #64748B; font-weight: 700; text-transform: uppercase; padding: 14px; border-radius: 12px; width: 100%; border: none; margin-top: 10px; }
+        /* Clean Branding Buttons */
+        .btn-pay { background: #FF9500; color: #000; font-weight: 900; text-transform: uppercase; padding: 20px; border-radius: 14px; width: 100%; border: none; font-size: 15px; cursor: pointer; margin-top: 10px; }
+        .btn-secondary { background: #1E232D; color: #64748B; font-weight: 700; text-transform: uppercase; padding: 15px; border-radius: 14px; width: 100%; border: none; margin-top: 15px; font-size: 12px; }
 
-        /* Tablet/Desktop only: Side-by-Side */
+        /* Desktop View: Side-by-Side only for very wide screens */
         @media (min-width: 1024px) {
-            .app-stack { display: flex; max-width: 1100px; gap: 30px; align-items: flex-start; }
-            .stack-item-input { width: 400px; flex-shrink: 0; }
-            .stack-item-output { flex: 1; }
+            .app-container { flex-direction: row; max-width: 1100px; align-items: stretch; }
+            .input-section { width: 450px; }
+            .result-section { flex: 1; }
         }
     </style>
 </head>
 <body>
-    <header class="text-center py-6">
-        <h1 class="text-3xl font-black uppercase tracking-tighter">
+    <header class="text-center py-10">
+        <h1 class="text-4xl font-black uppercase tracking-tighter">
             <span style="color: #FF9500;">toolbox</span><span style="color: #FFFFFF;">pay</span>
         </h1>
-        <div class="text-slate-600 font-bold tracking-[0.3em] text-[9px] uppercase mt-1">Command Centre</div>
+        <div class="text-slate-500 font-bold tracking-[0.5em] text-[10px] mt-2 uppercase">Command Centre</div>
     </header>
 
-    <div class="app-stack">
-        <div class="stack-item-input">
+    <div class="app-container">
+        <div class="input-section">
             <div class="card">
-                <span class="label">Work Description</span>
-                <textarea id="workDesc" class="input-field h-28" placeholder="e.g. 500 labour..."></textarea>
+                <span class="field-label">Work Description</span>
+                <textarea id="workDesc" class="input-box h-32" placeholder="e.g. 500 labour..."></textarea>
                 
-                <div class="flex gap-3">
-                    <div class="flex-1">
-                        <span class="label">Labour £</span>
-                        <input type="number" id="labour" class="input-field" placeholder="0">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <span class="field-label">Labour £</span>
+                        <input type="number" id="labour" class="input-box" placeholder="0">
                     </div>
-                    <div class="flex-1">
-                        <span class="label">Parts £</span>
-                        <input type="number" id="parts" class="input-field" placeholder="0">
+                    <div>
+                        <span class="field-label">Parts £</span>
+                        <input type="number" id="parts" class="input-box" placeholder="0">
                     </div>
                 </div>
 
-                <span class="label">Expenses £</span>
-                <input type="number" id="expenses" class="input-field" placeholder="0">
+                <span class="field-label">Expenses (Fuel/Tools) £</span>
+                <input type="number" id="expenses" class="input-box" placeholder="0">
                 
-                <button onclick="window.print()" class="btn-orange">Print Document</button>
-                <button onclick="clearForm()" class="btn-reset">Clear All Data</button>
+                <button onclick="window.print()" class="btn-pay">Print Document</button>
+                <button onclick="resetApp()" class="btn-secondary">Clear All Data</button>
             </div>
         </div>
 
-        <div class="stack-item-output">
-            <div class="card totals-display shadow-2xl">
-                <div>
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Total Revenue</span>
-                        <span id="dispRevenue" class="text-xl font-black">£0.00</span>
+        <div class="result-section">
+            <div class="card result-card">
+                <div class="space-y-10">
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400 font-bold uppercase tracking-widest text-[11px]">Gross Revenue</span>
+                        <span id="dispRevenue" class="text-2xl font-black">£0.00</span>
                     </div>
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-red-500 font-bold uppercase tracking-widest text-[10px]">Tax Reserve (20%)</span>
-                        <span id="dispTax" class="text-xl font-black text-red-500">-£0.00</span>
+                    <div class="flex justify-between items-center">
+                        <span class="text-red-500 font-bold uppercase tracking-widest text-[11px]">Tax Reserve (20%)</span>
+                        <span id="dispTax" class="text-2xl font-black text-red-500">-£0.00</span>
                     </div>
-                    <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-6">
-                        <span class="text-orange-300 font-bold uppercase tracking-widest text-[10px]">Expenses</span>
-                        <span id="dispExpenses" class="text-xl font-black text-orange-300">-£0.00</span>
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-10">
+                        <span class="text-orange-300 font-bold uppercase tracking-widest text-[11px]">Material/Running Costs</span>
+                        <span id="dispExpenses" class="text-2xl font-black text-orange-300">-£0.00</span>
                     </div>
                 </div>
 
-                <div class="text-center">
-                    <span class="text-[#00FF88] font-black uppercase tracking-tighter text-[10px] block mb-1">Net Profit (Take Home):</span>
-                    <span id="dispTakeHome" class="text-6xl font-black" style="color: #FF9500;">£0.00
+                <div class="text-center py-4">
+                    <span class="text-[#00FF88] font-black uppercase tracking-tighter text-[11px] block mb-2">Net Profit (Take Home):</span>
+                    <span id="dispTakeHome" class="text-8xl font-black" style="color: #FF9500;">£0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const desc = document.getElementById('workDesc').value.toUpperCase();
+            let lab = parseFloat(document.getElementById('labour').value) || 0;
+            let part = parseFloat(document.getElementById('parts').value) || 0;
+            let exp = parseFloat(document.getElementById('expenses').value) || 0;
+
+            // British English Labour Detection
+            const labMatch = desc.match(/(\d+)\s*LABOUR/);
+            if(labMatch && lab === 0) lab = parseFloat(labMatch[1]);
+            
+            const revenue = lab + part;
+            const tax = revenue * 0.20;
+            const profit = revenue - tax - exp;
+            
+            document.getElementById('dispRevenue').innerText = `£${revenue.toFixed(2)}`;
+            document.getElementById('dispTax').innerText = `-£${tax.toFixed(2)}`;
+            document.getElementById('dispExpenses').innerText = `-£${exp.toFixed(2)}`;
+            document.getElementById('dispTakeHome').innerText = `£${profit.toFixed(2)}`;
+        }
+
+        function resetApp() {
+            document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+            calculate();
+        }
+
+        document.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', calculate));
+    </script>
+</body>
+</html>
