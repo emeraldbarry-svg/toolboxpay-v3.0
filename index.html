@@ -18,7 +18,7 @@
         .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); }
         .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
         
-        /* RADIO TOGGLE LOGIC */
+        /* DYNAMIC TOGGLES */
         .toggle-group { display: flex; background: #0F172A; padding: 6px; border-radius: 18px; gap: 6px; position: relative; }
         .toggle-group input { position: absolute; opacity: 0; width: 0; height: 0; }
         .toggle-label { 
@@ -95,63 +95,5 @@
                 <span id="dispTax" class="text-sm font-bold text-slate-400">£0.00</span>
             </div>
             <div class="flex justify-between items-center mb-4">
-                <span class="label-text mb-0">Total Due:</span>
+                <span class="label-text mb-0">Total Balance Due:</span>
                 <span id="dispTotal" class="text-4xl font-black text-[#FF9500]">£0.00</span>
-            </div>
-            <button onclick="window.print()" class="btn-main">SHARE SETTLEMENT</button>
-        </section>
-    </div>
-
-    <script>
-        let currentSymbol = '£';
-
-        function initApp() {
-            const savedCurr = localStorage.getItem('toolboxCurr') || '£';
-            const radioToClick = document.querySelector(`input[value="${savedCurr}"]`);
-            if(radioToClick) {
-                radioToClick.checked = true;
-                updateCurrency(savedCurr);
-            }
-            loadDetails();
-        }
-
-        function updateCurrency(sym) {
-            currentSymbol = sym;
-            localStorage.setItem('toolboxCurr', sym);
-            document.querySelectorAll('.curr-sym').forEach(el => el.innerText = sym);
-            runCalc();
-        }
-
-        function saveDetails() {
-            localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
-            localStorage.setItem('toolboxBank', document.getElementById('bankDetails').value);
-        }
-
-        function loadDetails() {
-            document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
-            document.getElementById('bankDetails').value = localStorage.getItem('toolboxBank') || '';
-        }
-
-        function runCalc() {
-            const lab = parseFloat(document.getElementById('labour').value) || 0;
-            const exp = parseFloat(document.getElementById('expenses').value) || 0;
-            const subtotal = lab + exp;
-            
-            const isVatOn = document.getElementById('vatOn').checked;
-            const taxAmount = isVatOn ? (subtotal * 0.2) : 0;
-            const total = subtotal + taxAmount;
-
-            // Update Displays
-            const taxRow = document.getElementById('taxDisplay');
-            if(isVatOn) {
-                taxRow.classList.remove('hidden');
-                document.getElementById('dispTax').innerText = `${currentSymbol}${taxAmount.toFixed(2)}`;
-            } else {
-                taxRow.classList.add('hidden');
-            }
-
-            document.getElementById('dispTotal').innerText = `${currentSymbol}${total.toFixed(2)}`;
-        }
-    </script>
-</body>
-</html>
