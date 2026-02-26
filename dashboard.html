@@ -24,33 +24,30 @@
             border-radius: 12px; display: flex; align-items: center; 
             justify-content: center; color: var(--toolbox-orange); font-size: 20px;
         }
-        .stat-card { background: #0F172A; border-radius: 20px; padding: 20px; border-bottom: 4px solid var(--toolbox-orange); }
-        .btn-help { color: #94A3B8; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; text-align: center; margin-top: 10px; }
+        /* Help Assistant Styles */
+        #help-widget { position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px; background: var(--toolbox-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 100; border: 3px solid #141D36; }
+        #help-box { position: fixed; bottom: 95px; right: 25px; width: 320px; max-height: 450px; background: #1E293B; border-radius: 24px; border: 1px solid rgba(255,149,0,0.3); display: none; flex-direction: column; overflow: hidden; z-index: 101; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .help-header { background: var(--toolbox-orange); color: #000; padding: 20px; font-weight: 900; text-transform: uppercase; font-size: 14px; letter-spacing: 0.1em; }
+        .help-content { flex-grow: 1; padding: 20px; font-size: 14px; color: #cbd5e1; overflow-y: auto; line-height: 1.6; }
+        .help-option { background: rgba(255,149,0,0.1); padding: 12px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-weight: 700; color: var(--toolbox-orange); font-size: 12px; text-transform: uppercase; }
+        .help-option:hover { border-color: var(--toolbox-orange); background: rgba(255,149,0,0.2); }
     </style>
 </head>
-<body onload="checkSetup(); loadStats();">
+<body onload="checkSetup();">
 
     <header class="text-center pt-6 pb-8">
         <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
             <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
         </h1>
-        <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[12px] uppercase">COMMAND CENTRE</div>
+        <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[12px] uppercase">Command Centre</div>
     </header>
 
     <div class="main-container w-full">
-        <div class="stat-card flex justify-between items-center mb-2">
-            <div>
-                <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest">System Status</div>
-                <div id="jobCount" class="text-2xl font-black text-white">Ready for Work</div>
-            </div>
-            <div id="statusLabel" class="text-xl font-black text-[#FF9500]">ACTIVE</div>
-        </div>
-
         <a href="index.html" class="nav-card">
             <div class="icon-box">➕</div>
             <div>
                 <div class="font-black text-white uppercase text-sm tracking-tight">New Settlement</div>
-                <div class="text-xs text-slate-400">Calculate labour & costs</div>
+                <div class="text-xs text-slate-400">Calculate labour and costs</div>
             </div>
         </a>
 
@@ -58,7 +55,7 @@
             <div class="icon-box">👥</div>
             <div>
                 <div class="font-black text-white uppercase text-sm tracking-tight">Client Database</div>
-                <div class="text-xs text-slate-400">Manage your customers</div>
+                <div class="text-xs text-slate-400">Manage saved customers</div>
             </div>
         </a>
 
@@ -66,15 +63,7 @@
             <div class="icon-box">📸</div>
             <div>
                 <div class="font-black text-white uppercase text-sm tracking-tight">Job Evidence</div>
-                <div class="text-xs text-slate-400">Before & after photographs</div>
-            </div>
-        </a>
-
-        <a href="history.html" class="nav-card">
-            <div class="icon-box">📜</div>
-            <div>
-                <div class="font-black text-white uppercase text-sm tracking-tight">Job History</div>
-                <div class="text-xs text-slate-400">View past settlements</div>
+                <div class="text-xs text-slate-400">Before and after photographs</div>
             </div>
         </a>
 
@@ -82,27 +71,43 @@
             <div class="icon-box">⚙️</div>
             <div>
                 <div class="font-black text-white uppercase text-sm tracking-tight">Business Profile</div>
-                <div class="text-xs text-slate-400">Edit Bank & Identity</div>
+                <div class="text-xs text-slate-400">Settings and QR code</div>
             </div>
         </a>
+    </div>
 
-        <a href="help.html" class="btn-help">Need help? Read the Quick Start Guide</a>
+    <div id="help-widget" onclick="toggleHelp()">❓</div>
+    <div id="help-box">
+        <div class="help-header">Toolbox Pay Support</div>
+        <div class="help-content" id="helpDisplay">
+            <p class="mb-4 font-bold text-white">How can I assist you today?</p>
+            <div class="help-option" onclick="getHelp('settle')">How to create a settlement?</div>
+            <div class="help-option" onclick="getHelp('bank')">Updating my bank details?</div>
+            <div class="help-option" onclick="getHelp('photos')">Where are my photos saved?</div>
+            <div class="help-option" onclick="getHelp('domain')">About www.toolboxpay.com</div>
+        </div>
     </div>
 
     <script>
         function checkSetup() {
-            const setupComplete = localStorage.getItem('toolboxSetupComplete');
-            if (setupComplete !== 'true') {
-                window.location.href = 'setup.html';
-            }
+            if (localStorage.getItem('toolboxSetupComplete') !== 'true') window.location.href = 'setup.html';
         }
 
-        function loadStats() {
-            const history = JSON.parse(localStorage.getItem('toolboxHistory')) || [];
-            if(history.length > 0) {
-                document.getElementById('jobCount').innerText = `${history.length} Jobs Logged`;
-                document.getElementById('statusLabel').innerText = history[history.length - 1].total;
-            }
+        function toggleHelp() {
+            const box = document.getElementById('help-box');
+            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function getHelp(topic) {
+            const display = document.getElementById('helpDisplay');
+            let response = "";
+            
+            if(topic === 'settle') response = "Select 'New Settlement', enter your labour and materials, then hit 'Generate'. This creates a PDF and opens your email automatically.";
+            if(topic === 'bank') response = "Go to 'Business Profile'. Update your Sort Code and Account Number, then click 'Save & Lock'. These are stored locally on your phone.";
+            if(topic === 'photos') response = "Photos are stored in your phone's browser memory (IndexedDB). They never leave your device unless you share them.";
+            if(topic === 'domain') response = "www.toolboxpay.com is your official app home. Use your unique QR code to share your profile with clients instantly.";
+
+            display.innerHTML = `<div class='animate-pulse mb-4 text-white font-bold'>Support response:</div><p class='text-sm text-slate-300'>${response}</p><button onclick='location.reload()' class='mt-6 text-[10px] uppercase font-black text-[#FF9500]'>← Back to topics</button>`;
         }
     </script>
 </body>
