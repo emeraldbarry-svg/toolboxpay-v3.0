@@ -3,27 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Command Centre v4.0</title>
+    <title>Toolbox Pay | Command Centre v4.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; }
-        body { background-color: #05070A; color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; box-sizing: border-box; }
+        body { background-color: #05070A; color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 15px; box-sizing: border-box; }
         
-        .main-wrapper { display: flex; flex-direction: column; gap: 24px; width: 100%; max-width: 480px; margin: 0 auto; }
-        .card { background: #0B0E14; border: 1px solid #1E232D; border-radius: 24px; padding: 24px; width: 100%; box-sizing: border-box; }
-        .display-box { border: 2px solid var(--toolbox-orange); box-shadow: 0 10px 30px rgba(255, 149, 0, 0.1); }
+        /* THE VERTICAL TOWER FIX */
+        .main-wrapper { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 16px; 
+            width: 100%; 
+            max-width: 500px; 
+            margin: 0 auto; 
+        }
         
-        .label-text { font-size: 10px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px; display: block; }
-        .input-area { background: #11141B; border: 1px solid #1E232D; border-radius: 14px; color: white; padding: 18px; width: 100%; margin-bottom: 16px; outline: none; font-size: 16px; border-left: 5px solid transparent; box-sizing: border-box; transition: 0.3s; }
+        .card { 
+            background: #0B0E14; 
+            border: 1px solid #1E232D; 
+            border-radius: 20px; 
+            padding: 20px; 
+            width: 100%; 
+            box-sizing: border-box; 
+        }
+        
+        .display-box { 
+            border: 2px solid var(--toolbox-orange); 
+            box-shadow: 0 10px 40px rgba(255, 149, 0, 0.15); 
+        }
+        
+        /* Inputs & Labels */
+        .label-text { font-size: 10px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
+        .input-area { background: #11141B; border: 1px solid #1E232D; border-radius: 12px; color: white; padding: 16px; width: 100%; margin-bottom: 12px; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); background: #161A22; }
         
-        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 20px; border-radius: 14px; width: 100%; border: none; font-size: 15px; cursor: pointer; transition: transform 0.1s; }
-        .btn-main:active { transform: scale(0.98); }
-        .btn-sub { background: #1E232D; color: #64748B; font-weight: 700; text-transform: uppercase; padding: 15px; border-radius: 14px; width: 100%; border: none; margin-top: 15px; font-size: 11px; cursor: pointer; }
+        /* Buttons */
+        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        .btn-sub { background: #1E232D; color: #64748B; font-weight: 700; text-transform: uppercase; padding: 16px; border-radius: 12px; width: 100%; border: none; margin-top: 12px; font-size: 11px; cursor: pointer; }
     </style>
 </head>
 <body>
-    <header class="text-center py-12">
+    <header class="text-center py-8">
         <h1 class="text-4xl font-black uppercase tracking-tighter">
             <span style="color: #FF9500;">toolbox</span><span style="color: #FFFFFF;">pay</span>
         </h1>
@@ -35,6 +56,75 @@
             <span class="label-text">Work Description</span>
             <textarea id="workDesc" class="input-area h-32" placeholder="e.g. 500 labour..."></textarea>
             
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <span class="
+                    <span class="label-text">Labour £</span>
+                    <input type="number" id="labour" class="input-area" placeholder="0">
+                </div>
+                <div>
+                    <span class="label-text">Parts £</span>
+                    <input type="number" id="parts" class="input-area" placeholder="0">
+                </div>
+            </div>
+            
+            <span class="label-text">Expenses (Fuel/Tools) £</span>
+            <input type="number" id="expenses" class="input-area" placeholder="0">
+            
+            <button onclick="window.print()" class="btn-main">Print Document</button>
+            <button onclick="resetApp()" class="btn-sub">Clear All Data</button>
+        </section>
+
+        <section class="card display-box">
+            <div class="space-y-6 mb-8">
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-[11px]">Gross Revenue</span>
+                    <span id="dispRevenue" class="text-xl font-black">£0.00</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-red-500 font-bold uppercase tracking-widest text-[11px]">Tax Reserve (20%)</span>
+                    <span id="dispTax" class="text-xl font-black text-red-500">-£0.00</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-slate-800 pb-6">
+                    <span class="text-orange-300 font-bold uppercase tracking-widest text-[11px]">Total Expenses</span>
+                    <span id="dispExpenses" class="text-xl font-black text-orange-300">-£0.00</span>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <span class="text-[#00FF88] font-black uppercase tracking-tighter text-[11px] block mb-2">Net Profit (Take Home):</span>
+                <span id="dispTakeHome" class="text-6xl font-black" style="color: #FF9500;">£0.00</span>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function runCalc() {
+            const desc = document.getElementById('workDesc').value.toUpperCase();
+            let lab = parseFloat(document.getElementById('labour').value) || 0;
+            let part = parseFloat(document.getElementById('parts').value) || 0;
+            let exp = parseFloat(document.getElementById('expenses').value) || 0;
+
+            const labMatch = desc.match(/(\d+)\s*LABOUR/);
+            if(labMatch && lab === 0) lab = parseFloat(labMatch[1]);
+            
+            const totalRevenue = lab + part;
+            const taxAmount = totalRevenue * 0.20;
+            const takeHome = totalRevenue - taxAmount - exp;
+            
+            document.getElementById('dispRevenue').innerText = `£${totalRevenue.toFixed(2)}`;
+            document.getElementById('dispTax').innerText = `-£${taxAmount.toFixed(2)}`;
+            document.getElementById('dispExpenses').innerText = `-£${exp.toFixed(2)}`;
+            document.getElementById('dispTakeHome').innerText = `£${takeHome.toFixed(2)}`;
+        }
+
+        function resetApp() {
+            document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+            runCalc();
+        }
+
+        document.querySelectorAll('input, textarea').forEach(el => {
+            el.addEventListener('input', runCalc);
+        });
+    </script>
+</body>
+</html>
