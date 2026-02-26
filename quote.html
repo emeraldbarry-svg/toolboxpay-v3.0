@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toolbox Pay | v3.0</title>
+    <title>Toolbox Pay v3.0 | 60 Second Quote System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
@@ -22,7 +22,6 @@
             flex-direction: column; 
             overflow: hidden; 
         }
-        /* FIXED ORANGE HEADER */
         .nav-pane {
             background-color: var(--bg-panel);
             border-bottom: 2px solid var(--industrial-orange);
@@ -63,7 +62,6 @@
             display: block;
             margin-bottom: 5px;
         }
-        /* INVOICE PAPER LOOK */
         .invoice-paper {
             background: white;
             color: #1a1a1a;
@@ -99,13 +97,13 @@
             <h2 class="text-orange-500 font-black text-sm uppercase mb-6">Invoice Setup</h2>
             
             <span class="info-label">Customer Name</span>
-            <input type="text" id="custName" class="industrial-input" placeholder="e.g. Emerald Barry">
+            <input type="text" id="custName" class="industrial-input" value="MR EMERALD BARRY">
 
             <span class="info-label">Site Address</span>
-            <textarea id="custAddr" class="industrial-input" rows="3" placeholder="Address..."></textarea>
+            <textarea id="custAddr" class="industrial-input" rows="3">83 WINDSOR ROAD&#10;WELLINGBOROUGH</textarea>
 
             <span class="info-label">Work Description (AI Assistant)</span>
-            <textarea id="workDesc" class="industrial-input" style="min-height: 140px;" placeholder="e.g. 100 labour and 50 parts"></textarea>
+            <textarea id="workDesc" class="industrial-input" style="min-height: 140px;" placeholder="e.g. 25 labour 33 pounds for parts"></textarea>
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -119,56 +117,55 @@
             </div>
 
             <div class="mt-8 pt-8 border-t border-slate-800">
-                <span class="info-label">Your Business Name</span>
-                <input type="text" id="bizName" class="industrial-input">
+                <span class="info-label">Business Details</span>
+                <input type="text" id="bizName" class="industrial-input" placeholder="Your Business Name">
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <span class="info-label">Sort Code</span>
-                        <input type="text" id="bankSort" class="industrial-input" placeholder="00-00-00">
-                    </div>
-                    <div>
-                        <span class="info-label">Account No</span>
-                        <input type="text" id="bankAcc" class="industrial-input" placeholder="00000000">
-                    </div>
+                    <input type="text" id="bankSort" class="industrial-input" placeholder="Sort Code" value="00-00-00">
+                    <input type="text" id="bankAcc" class="industrial-input" placeholder="Account No" value="00000000">
                 </div>
             </div>
         </aside>
 
         <main class="flex-1 bg-[#020305] overflow-y-auto p-12 flex justify-center">
-            <div class="invoice-paper" id="invoiceSheet">
-                </div>
+            <div class="invoice-paper" id="invoiceSheet"></div>
         </main>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const inputs = ['custName', 'custAddr', 'workDesc', 'labourCost', 'partsCost', 'bizName', 'bankSort', 'bankAcc'];
-            const el = {};
-            inputs.forEach(id => el[id] = document.getElementById(id));
-            el.invoiceSheet = document.getElementById('invoiceSheet');
+            const el = {
+                custName: document.getElementById('custName'),
+                custAddr: document.getElementById('custAddr'),
+                workDesc: document.getElementById('workDesc'),
+                labourCost: document.getElementById('labourCost'),
+                partsCost: document.getElementById('partsCost'),
+                bizName: document.getElementById('bizName'),
+                bankSort: document.getElementById('bankSort'),
+                bankAcc: document.getElementById('bankAcc'),
+                invoiceSheet: document.getElementById('invoiceSheet')
+            };
 
             const VAT_RATE = 0.20;
 
-            function update() {
+            function updateInvoice() {
                 let text = el.workDesc.value.toUpperCase();
-                let scrubbed = el.workDesc.value.toUpperCase();
+                let cleanDesc = el.workDesc.value.toUpperCase();
 
-                // 1. LABOUR EXTRACTION
-                const labMatch = text.match(/(?:£?\s*(\d+(?:\.\d+)?)\s*(?:POUNDS?|£)?\s*LABOUR)|(?:LABOUR\s*(?:AT|IS|OF|FOR)?\s*(?:£|POUNDS?)?\s*(\d+(?:\.\d+)?))/i);
+                // IMPROVED EXTRACTION ENGINE
+                // Finds numbers associated with Labour or Parts regardless of order
+                const labMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:POUNDS?|£)?\s*LABOUR|LABOUR\s*(?:AT|IS|OF|FOR)?\s*(?:£|POUNDS?)?\s*(\d+(?:\.\d+)?)/i);
                 if (labMatch) {
                     el.labourCost.value = labMatch[1] || labMatch[2];
-                    scrubbed = scrubbed.replace(labMatch[0], "");
+                    cleanDesc = cleanDesc.replace(labMatch[0], "");
                 }
 
-                // 2. PARTS EXTRACTION
-                const partMatch = text.match(/(?:£?\s*(\d+(?:\.\d+)?)\s*(?:POUNDS?|£)?\s*(?:PARTS|TOOLS|MATERIALS))|(?:(?:PARTS|TOOLS|MATERIALS)\s*(?:AT|IS|OF|FOR)?\s*(?:£|POUNDS?)?\s*(\d+(?:\.\d+)?))/i);
+                const partMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:POUNDS?|£)?\s*(?:PARTS|MATERIALS|TOOLS|ITEMS)|(?:PARTS|MATERIALS|TOOLS|ITEMS)\s*(?:AT|IS|OF|FOR)?\s*(?:£|POUNDS?)?\s*(\d+(?:\.\d+)?)/i);
                 if (partMatch) {
                     el.partsCost.value = partMatch[1] || partMatch[2];
-                    scrubbed = scrubbed.replace(partMatch[0], "");
+                    cleanDesc = cleanDesc.replace(partMatch[0], "");
                 }
 
-                // Formatting Cleanup
-                scrubbed = scrubbed.replace(/AT A COST OF|TOTALING|COSTING|AND|PLUS|FOR/gi, "").replace(/\s\s+/g, ' ').trim();
+                cleanDesc = cleanDesc.replace(/AT A COST OF|TOTALING|COSTING|AND|PLUS|FOR/gi, "").replace(/\s\s+/g, ' ').trim();
 
                 const lab = parseFloat(el.labourCost.value) || 0;
                 const prt = parseFloat(el.partsCost.value) || 0;
@@ -176,7 +173,6 @@
                 const vat = sub * VAT_RATE;
                 const tot = sub + vat;
 
-                // 3. RENDER INVOICE
                 el.invoiceSheet.innerHTML = `
                     <div class="flex justify-between items-start mb-20">
                         <div>
@@ -185,11 +181,11 @@
                         </div>
                         <div class="text-right">
                             <h2 class="text-4xl font-light text-slate-100 uppercase tracking-tighter">Invoice</h2>
-                            <div class="text-[10px] font-black text-slate-400 mt-2 uppercase">${new Date().toLocaleDateString('en-GB')}</div>
+                            <div class="text-[10px] font-black text-slate-400 mt-2 uppercase">DATE: ${new Date().toLocaleDateString('en-GB')}</div>
                         </div>
                     </div>
 
-                    <div class="mb-16 border-l-4 border-[#FF9500] pl-8 py-2 bg-slate-50">
+                    <div class="mb-16 border-l-4 border-[#FF9500] pl-8 py-2">
                         <div class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Invoice To:</div>
                         <div class="text-lg font-bold text-slate-900 uppercase tracking-tight">${el.custName.value || '---'}</div>
                         <div class="text-[11px] text-slate-600 uppercase mt-1 leading-relaxed">${el.custAddr.value.replace(/\n/g, '<br>') || '---'}</div>
@@ -197,15 +193,15 @@
 
                     <div class="flex-1">
                         <div class="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-4 border-b pb-2">Description of Works</div>
-                        <div class="text-[13px] font-medium text-slate-800 leading-relaxed uppercase mb-20 min-h-[160px]">${scrubbed || 'Awaiting Job Notes...'}</div>
+                        <div class="text-[13px] font-medium text-slate-800 leading-relaxed uppercase mb-20 min-h-[160px]">${cleanDesc || 'AWAITING NOTES...'}</div>
                         
                         <div class="space-y-4">
                             <div class="flex justify-between text-base border-b border-slate-100 pb-4">
-                                <span class="text-slate-400 font-bold uppercase tracking-tight">Professional Labour</span>
+                                <span class="text-slate-400 font-bold uppercase">Professional Labour</span>
                                 <span class="font-bold">£${lab.toFixed(2)}</span>
                             </div>
                             <div class="flex justify-between text-base border-b border-slate-100 pb-4">
-                                <span class="text-slate-400 font-bold uppercase tracking-tight">Materials & Parts</span>
+                                <span class="text-slate-400 font-bold uppercase">Materials & Parts</span>
                                 <span class="font-bold">£${prt.toFixed(2)}</span>
                             </div>
                         </div>
@@ -222,18 +218,20 @@
                     <div class="mt-auto pt-12 grid grid-cols-2 gap-12 border-t border-slate-100 pb-4">
                         <div>
                             <div class="text-[9px] font-black text-slate-300 uppercase mb-4 tracking-widest">Bank Details</div>
-                            <div class="text-[11px] font-bold uppercase">SORT CODE: ${el.bankSort.value || '00-00-00'}<br>ACCOUNT: ${el.bankAcc.value || '00000000'}</div>
+                            <div class="text-[11px] font-bold uppercase">SORT CODE: ${el.bankSort.value}<br>ACCOUNT: ${el.bankAcc.value}</div>
                         </div>
                         <div class="text-right">
                             <div class="text-[9px] font-black text-slate-300 uppercase mb-4 tracking-widest">Terms</div>
-                            <div class="text-[11px] font-bold uppercase">Payment due on receipt.<br>Thank you for your custom.</div>
+                            <div class="text-[11px] font-bold uppercase">Payment due on receipt.</div>
                         </div>
                     </div>
                 `;
             }
 
-            inputs.forEach(id => el[id].addEventListener('input', update));
-            update();
+            Object.values(el).forEach(input => {
+                if(input && input.addEventListener) input.addEventListener('input', updateInvoice);
+            });
+            updateInvoice();
         });
     </script>
 </body>
