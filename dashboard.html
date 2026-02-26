@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Dashboard Preview</title>
+    <title>Toolbox Pay | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
@@ -18,16 +18,17 @@
             border-radius: 20px; padding: 24px; display: flex; align-items: center; 
             gap: 20px; text-decoration: none; transition: 0.3s;
         }
-        .nav-card:hover { border-color: var(--toolbox-orange); }
+        .nav-card:active { transform: scale(0.98); background: #2d3a4f; }
         .icon-box { 
             width: 50px; height: 50px; background: rgba(255,149,0,0.1); 
             border-radius: 12px; display: flex; align-items: center; 
             justify-content: center; color: var(--toolbox-orange); font-size: 24px;
         }
         .stat-card { background: #0F172A; border-radius: 20px; padding: 20px; border-bottom: 4px solid var(--toolbox-orange); }
+        .btn-help { color: #94A3B8; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; text-align: center; margin-top: 10px; }
     </style>
 </head>
-<body>
+<body onload="checkSetup(); loadStats();">
 
     <header class="text-center pt-10 pb-10">
         <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
@@ -40,16 +41,16 @@
         <div class="stat-card flex justify-between items-center">
             <div>
                 <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest">System Status</div>
-                <div class="text-2xl font-black text-white italic">Ready for Work</div>
+                <div id="jobCount" class="text-2xl font-black text-white">Ready for Work</div>
             </div>
-            <div class="text-xl font-black text-[#FF9500]">ACTIVE</div>
+            <div id="statusLabel" class="text-xl font-black text-[#FF9500]">ACTIVE</div>
         </div>
 
         <a href="index.html" class="nav-card">
             <div class="icon-box">➕</div>
             <div>
                 <div class="font-black text-white uppercase text-sm tracking-tight">New Settlement</div>
-                <div class="text-xs text-slate-400">Add labour and materials</div>
+                <div class="text-xs text-slate-400">Calculate labour & costs</div>
             </div>
         </a>
 
@@ -57,7 +58,7 @@
             <div class="icon-box">👥</div>
             <div>
                 <div class="font-black text-white uppercase text-sm tracking-tight">Client Database</div>
-                <div class="text-xs text-slate-400">Manage your saved customers</div>
+                <div class="text-xs text-slate-400">Manage your customers</div>
             </div>
         </a>
 
@@ -65,7 +66,7 @@
             <div class="icon-box">📜</div>
             <div>
                 <div class="font-black text-white uppercase text-sm tracking-tight">Job History</div>
-                <div class="text-xs text-slate-400">View past logged settlements</div>
+                <div class="text-xs text-slate-400">View past settlements</div>
             </div>
         </a>
 
@@ -73,12 +74,28 @@
             <div class="icon-box">⚙️</div>
             <div>
                 <div class="font-black text-white uppercase text-sm tracking-tight">Business Profile</div>
-                <div class="text-xs text-slate-400">Update bank & trading details</div>
+                <div class="text-xs text-slate-400">Edit Bank & Identity</div>
             </div>
         </a>
-        
-        <a href="help.html" class="text-center text-slate-500 font-bold text-[10px] uppercase tracking-widest mt-4">View Quick Start Guide</a>
+
+        <a href="help.html" class="btn-help">Need help? Read the Quick Start Guide</a>
     </div>
 
+    <script>
+        function checkSetup() {
+            const setupComplete = localStorage.getItem('toolboxSetupComplete');
+            if (setupComplete !== 'true') {
+                window.location.href = 'setup.html';
+            }
+        }
+
+        function loadStats() {
+            const history = JSON.parse(localStorage.getItem('toolboxHistory')) || [];
+            if(history.length > 0) {
+                document.getElementById('jobCount').innerText = `${history.length} Jobs Logged`;
+                document.getElementById('statusLabel').innerText = history[history.length - 1].total;
+            }
+        }
+    </script>
 </body>
 </html>
