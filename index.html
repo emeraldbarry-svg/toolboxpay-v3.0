@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | New Record</title>
+    <title>Toolbox Pay | Command Centre</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --t-orange: #FF9500; --t-midnight: #141D36; }
-        * { border: none !important; box-shadow: none !important; outline: none !important; }
+        :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
         
         body { 
-            background-color: var(--t-midnight); 
+            background-color: var(--bg-midnight); 
             color: #FFFFFF; 
-            font-family: sans-serif; 
+            font-family: 'Inter', sans-serif; 
             margin: 0; 
             padding: 20px; 
             display: flex; 
@@ -20,95 +19,77 @@
             align-items: center;
         }
 
-        .app-shell { width: 100%; max-width: 480px; }
+        .main-wrapper { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* BRANDING - NO BOXES */
-        .brand-area { text-align: center; padding: 40px 0; }
-        .t-bold { font-size: 42px; font-weight: 900; color: var(--t-orange); text-transform: uppercase; }
-        .p-white { font-size: 42px; font-weight: 900; color: #FFFFFF; text-transform: uppercase; }
+        .branding-section { text-align: center; padding: 40px 0 20px 0; }
+        .logo-toolbox { font-size: 46px; font-weight: 900; color: var(--toolbox-orange); text-transform: uppercase; letter-spacing: -0.05em; }
+        .logo-pay { font-size: 46px; font-weight: 900; color: #FFFFFF; text-transform: uppercase; letter-spacing: -0.05em; }
+        .sub-header { font-size: 11px; font-weight: 900; color: #94A3B8; letter-spacing: 0.3em; text-transform: uppercase; margin-top: 5px; }
 
-        /* INPUTS AT TOP */
-        .input-card {
-            background: rgba(255, 255, 255, 0.05);
+        .menu-item {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 149, 0, 0.3);
             border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-decoration: none;
+            color: inherit;
         }
 
-        .label { font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; margin-bottom: 10px; display: block; }
-        
-        .field {
-            background: #0F172A; 
-            border-radius: 12px; 
-            color: #FFFFFF; 
-            padding: 15px; 
-            width: 100%;
-            margin-bottom: 20px;
+        .menu-item:hover { transform: translateY(-2px); border-color: var(--toolbox-orange); }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 149, 0, 0.1);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
         }
 
-        /* PRICE AT BOTTOM */
-        .price-card {
-            background: #1E293B;
-            border: 2px solid var(--t-orange) !important;
-            border-radius: 24px;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .price-text { font-size: 60px; font-weight: 900; }
-
-        .btn-action { background: var(--t-orange); color: #000; font-weight: 900; padding: 20px; border-radius: 15px; width: 100%; font-size: 18px; cursor: pointer; }
-        
-        .nav-exit { color: #64748B; text-decoration: underline; display: block; text-align: center; margin-top: 30px; font-size: 12px; font-weight: 700; }
+        .text-group { display: flex; flex-direction: column; }
+        .item-title { font-size: 18px; font-weight: 900; text-transform: uppercase; color: #FFFFFF; }
+        .item-desc { font-size: 12px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-top: 2px; }
     </style>
 </head>
 <body>
 
-    <div class="app-shell">
-        <div class="brand-area">
-            <span class="t-bold">TOOLBOX</span><span class="p-white">PAY</span>
+    <div class="main-wrapper">
+        <div class="branding-section">
+            <span class="logo-toolbox">TOOLBOX</span><span class="logo-pay">PAY</span>
+            <p class="sub-header">Command Centre</p>
         </div>
 
-        <div class="input-card">
-            <span class="label">Customer / Site</span>
-            <input type="text" class="field" placeholder="Client name">
-
-            <div style="text-align: center; padding: 20px;">
-                <button id="mic" onclick="toggleMic()" style="font-size: 40px; background: none; border: 2px solid #FF9500 !important; border-radius: 50%; width: 80px; height: 80px;">🎙️</button>
-                <p class="label" style="margin-top: 10px;">Tap to Record Labour</p>
+        <a href="index.html" class="menu-item">
+            <div class="icon-box">💰</div>
+            <div class="text-group">
+                <span class="item-title">New Settlement</span>
+                <span class="item-desc">Calculate labour & costs</span>
             </div>
+        </a>
 
-            <span class="label">Job Notes</span>
-            <div id="notes" class="field" style="min-height: 100px; color: #94A3B8;">...waiting</div>
-        </div>
+        <a href="profile.html" class="menu-item">
+            <div class="icon-box">⚒️</div>
+            <div class="text-group">
+                <span class="item-title">Business Profile</span>
+                <span class="item-desc">Bank details & QR code</span>
+            </div>
+        </a>
 
-        <div class="price-card">
-            <span class="label" style="color: #FF9500;">Total to Charge</span>
-            <div class="price-text">£<span id="total">0.00</span></div>
-        </div>
-
-        <button class="btn-action">Finalise & Collect</button>
-
-        <a href="dashboard.html" class="nav-exit">RETURN TO DASHBOARD</a>
+        <a href="lock.html" class="menu-item">
+            <div class="icon-box">🔒</div>
+            <div class="text-group">
+                <span class="item-title">Lock System</span>
+                <span class="item-desc">Secure local records</span>
+            </div>
+        </a>
     </div>
 
-    <script>
-        let rec; let active = false;
-        if ('webkitSpeechRecognition' in window) {
-            rec = new webkitSpeechRecognition();
-            rec.continuous = true; rec.interimResults = true; rec.lang = 'en-GB';
-            rec.onresult = (e) => {
-                let t = '';
-                for (let i = e.resultIndex; i < e.results.length; ++i) t += e.results[i][0].transcript;
-                document.getElementById('notes').innerText = t;
-                const n = t.match(/\d+/g);
-                if (n) document.getElementById('total').innerText = parseFloat(n[n.length-1]).toFixed(2);
-            };
-        }
-        function toggleMic() {
-            if(!active) { rec.start(); active = true; document.getElementById('mic').style.background = "#FF9500"; }
-            else { rec.stop(); active = false; document.getElementById('mic').style.background = "none"; }
-        }
-    </script>
 </body>
 </html>
