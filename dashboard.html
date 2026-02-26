@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Dashboard</title>
+    <title>Toolbox Pay | Command Centre</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
@@ -11,10 +11,11 @@
             background-color: var(--bg-midnight); color: #FFFFFF; 
             font-family: 'Inter', sans-serif; margin: 0; padding: 15px; 
             display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
         }
         .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 16px; }
         
-        /* PROMINENT NAV CARDS */
+        /* LARGER MENU BUTTONS */
         .nav-card { 
             background: #1E293B; 
             border: 2px solid rgba(255, 149, 0, 0.3); 
@@ -23,110 +24,94 @@
             display: flex; 
             align-items: center; 
             gap: 20px; 
-            text-decoration: none; 
-            transition: all 0.2s ease-in-out;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            transition: 0.2s;
         }
-        .nav-card:active { 
-            transform: scale(0.96); 
-            background: #2d3a4f; 
-            border-color: var(--toolbox-orange);
-            box-shadow: 0 0 20px rgba(255, 149, 0, 0.2);
-        }
+        .nav-card:active { transform: scale(0.97); background: #26344d; }
+        
         .icon-box { 
-            width: 60px; height: 60px; 
+            width: 65px; height: 65px; 
             background: rgba(255, 149, 0, 0.15); 
-            border-radius: 16px; 
+            border-radius: 18px; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             color: var(--toolbox-orange); 
-            font-size: 28px;
-            border: 1px solid rgba(255, 149, 0, 0.2);
+            font-size: 32px; 
         }
-        .nav-text-main { font-weight: 900; color: #FFFFFF; text-transform: uppercase; font-size: 16px; letter-spacing: -0.02em; line-height: 1.2; }
-        .nav-text-sub { font-size: 13px; color: #94A3B8; font-weight: 500; margin-top: 2px; }
+        .nav-text-main { font-weight: 900; color: #FFFFFF; text-transform: uppercase; font-size: 17px; letter-spacing: -0.02em; }
+        .nav-text-sub { font-size: 13px; color: #94A3B8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
 
-        /* HELP WIDGET */
-        #help-widget { position: fixed; bottom: 30px; right: 25px; width: 65px; height: 65px; background: var(--toolbox-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 100; border: 4px solid var(--bg-midnight); }
-        #help-box { position: fixed; bottom: 105px; right: 25px; width: 330px; max-height: 500px; background: #1E293B; border-radius: 28px; border: 2px solid var(--toolbox-orange); display: none; flex-direction: column; overflow: hidden; z-index: 101; box-shadow: 0 25px 50px rgba(0,0,0,0.7); }
+        /* OVERRIDE BUTTON FOR PREVIEW */
+        .override-panel {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px dashed var(--toolbox-orange);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
     </style>
 </head>
-<body onload="checkSetup();">
+<body onload="checkSystemAccess()">
 
-    <header class="text-center pt-8 pb-10">
-        <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
-            <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
-        </h1>
-        <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[12px] uppercase">Command Centre</div>
-    </header>
+    <div class="main-container">
+        <div id="overrideNotice" class="override-panel">
+            <p class="text-[10px] font-black uppercase text-[#FF9500] mb-2">System Initialisation Required</p>
+            <button onclick="forceAccess()" class="bg-[#FF9500] text-black text-[10px] font-black px-4 py-2 rounded uppercase">Force System Access</button>
+        </div>
 
-    <div class="main-container w-full">
+        <header class="text-center pt-8 pb-10">
+            <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
+                <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
+            </h1>
+            <div style="color: #94A3B8;" class="font-black tracking-[0.4em] text-[10px] uppercase">Command Centre</div>
+        </header>
+
         <a href="index.html" class="nav-card">
-            <div class="icon-box">➕</div>
+            <div class="icon-box">💰</div>
             <div>
                 <div class="nav-text-main">New Settlement</div>
-                <div class="nav-text-sub">Calculate labour & materials</div>
-            </div>
-        </a>
-
-        <a href="clients.html" class="nav-card">
-            <div class="icon-box">👥</div>
-            <div>
-                <div class="nav-text-main">Client Database</div>
-                <div class="nav-text-sub">Manage your customer list</div>
-            </div>
-        </a>
-
-        <a href="photos.html" class="nav-card">
-            <div class="icon-box">📸</div>
-            <div>
-                <div class="nav-text-main">Job Evidence</div>
-                <div class="nav-text-sub">Before & after photographs</div>
-            </div>
-        </a>
-
-        <a href="history.html" class="nav-card">
-            <div class="icon-box">📜</div>
-            <div>
-                <div class="nav-text-main">Job History</div>
-                <div class="nav-text-sub">Review past settlements</div>
+                <div class="nav-text-sub">Calculate labour & costs</div>
             </div>
         </a>
 
         <a href="setup.html" class="nav-card">
-            <div class="icon-box">⚙️</div>
+            <div class="icon-box">⚒️</div>
             <div>
                 <div class="nav-text-main">Business Profile</div>
                 <div class="nav-text-sub">Bank details & QR Code</div>
             </div>
         </a>
-    </div>
 
-    <div id="help-widget" onclick="toggleHelp()">❓</div>
-    <div id="help-box">
-        <div class="bg-[#FF9500] text-black p-5 font-black uppercase text-sm tracking-widest">Toolbox Support</div>
-        <div class="p-6 overflow-y-auto bg-[#1E293B]" id="helpDisplay">
-            <p class="mb-4 font-bold text-white text-lg">Need a hand?</p>
-            <div class="bg-black/20 p-4 rounded-xl mb-3 cursor-pointer border border-white/5 hover:border-[#FF9500]" onclick="getHelp('settle')">Creating Settlements</div>
-            <div class="bg-black/20 p-4 rounded-xl mb-3 cursor-pointer border border-white/5 hover:border-[#FF9500]" onclick="getHelp('domain')">Your Domain Settings</div>
-        </div>
+        <a href="gateway.html" onclick="logout()" class="nav-card opacity-60">
+            <div class="icon-box">🔒</div>
+            <div>
+                <div class="nav-text-main">Lock System</div>
+                <div class="nav-text-sub">Secure local records</div>
+            </div>
+        </a>
     </div>
 
     <script>
-        function checkSetup() {
-            if (localStorage.getItem('toolboxSetupComplete') !== 'true') window.location.href = 'setup.html';
+        function checkSystemAccess() {
+            const auth = sessionStorage.getItem('toolboxAuthenticated');
+            if (auth === 'true') {
+                document.getElementById('overrideNotice').style.display = 'none';
+            }
         }
 
-        function toggleHelp() {
-            const box = document.getElementById('help-box');
-            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+        function forceAccess() {
+            // Force authentication and set a default PIN
+            sessionStorage.setItem('toolboxAuthenticated', 'true');
+            localStorage.setItem('toolboxUserPin', '1234');
+            localStorage.setItem('toolboxSetupComplete', 'true');
+            alert("System Initialised. Default PIN set to 1234.");
+            location.reload();
         }
 
-        function getHelp(topic) {
-            const display = document.getElementById('helpDisplay');
-            let txt = topic === 'settle' ? "Tap 'New Settlement' to start. Add your labour costs and materials. Use the 🎤 icon to dictate descriptions to save time." : "Your app is live at www.toolboxpay.com. Link your bank details in 'Business Profile' to update your settlement forms.";
-            display.innerHTML = `<p class='text-slate-300 leading-relaxed'>${txt}</p><button onclick='location.reload()' class='mt-8 font-black text-[#FF9500] uppercase text-xs tracking-widest'>← Back</button>`;
+        function logout() {
+            sessionStorage.removeItem('toolboxAuthenticated');
         }
     </script>
 </body>
