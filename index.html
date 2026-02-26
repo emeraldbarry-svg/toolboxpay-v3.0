@@ -7,27 +7,27 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; }
-        body { background-color: #05070A; color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 12px; box-sizing: border-box; }
+        body { background-color: #05070A; color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 15px; box-sizing: border-box; }
         
-        /* FORCE VERTICAL STACK ONLY */
-        .stack-wrapper { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 500px; margin: 0 auto; }
+        /* THE ALIGNMENT FIX: Forced Vertical Stack for Mobile */
+        .app-stack { display: block; width: 100%; max-width: 500px; margin: 0 auto; }
 
-        .card { background: #0B0E14; border: 1px solid #1E232D; border-radius: 20px; padding: 20px; width: 100%; box-sizing: border-box; }
-        .display-box { border: 2px solid #FF9500; min-height: 320px; display: flex; flex-direction: column; justify-content: space-between; }
+        .card { background: #0B0E14; border: 1px solid #1E232D; border-radius: 20px; padding: 20px; width: 100%; box-sizing: border-box; margin-bottom: 20px; }
+        .totals-display { border: 2px solid #FF9500; min-height: 350px; display: flex; flex-direction: column; justify-content: space-between; }
 
-        /* Large, readable text and inputs */
+        /* Large Touch Inputs */
         .label { font-size: 11px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-bottom: 8px; }
-        .input-field { background: #11141B; border: 1px solid #1E232D; border-radius: 12px; color: white; padding: 16px; width: 100%; margin-bottom: 12px; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; }
+        .input-field { background: #11141B; border: 1px solid #1E232D; border-radius: 12px; color: white; padding: 16px; width: 100%; margin-bottom: 12px; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; display: block; }
         .input-field:focus { border-left-color: var(--toolbox-orange); }
 
-        .btn-orange { background: #FF9500; color: #000; font-weight: 900; text-transform: uppercase; padding: 18px; border-radius: 12px; width: 100%; border: none; font-size: 14px; margin-top: 10px; cursor: pointer; }
-        .btn-clear { background: #1E232D; color: #64748B; font-weight: 700; text-transform: uppercase; padding: 14px; border-radius: 12px; width: 100%; border: none; margin-top: 10px; }
+        .btn-orange { background: #FF9500; color: #000; font-weight: 900; text-transform: uppercase; padding: 18px; border-radius: 12px; width: 100%; border: none; font-size: 14px; cursor: pointer; margin-top: 10px; }
+        .btn-reset { background: #1E232D; color: #64748B; font-weight: 700; text-transform: uppercase; padding: 14px; border-radius: 12px; width: 100%; border: none; margin-top: 10px; }
 
-        /* Desktop side-by-side ONLY for very large screens */
+        /* Tablet/Desktop only: Side-by-Side */
         @media (min-width: 1024px) {
-            .stack-wrapper { flex-direction: row; max-width: 1100px; align-items: flex-start; }
-            .side-panel { width: 400px; }
-            .main-panel { flex: 1; }
+            .app-stack { display: flex; max-width: 1100px; gap: 30px; align-items: flex-start; }
+            .stack-item-input { width: 400px; flex-shrink: 0; }
+            .stack-item-output { flex: 1; }
         }
     </style>
 </head>
@@ -39,33 +39,33 @@
         <div class="text-slate-600 font-bold tracking-[0.3em] text-[9px] uppercase mt-1">Command Centre</div>
     </header>
 
-    <div class="stack-wrapper">
-        <div class="side-panel">
+    <div class="app-stack">
+        <div class="stack-item-input">
             <div class="card">
                 <span class="label">Work Description</span>
-                <textarea id="workDesc" class="input-field h-28 w-full" placeholder="e.g. 500 labour..."></textarea>
+                <textarea id="workDesc" class="input-field h-28" placeholder="e.g. 500 labour..."></textarea>
                 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
+                <div class="flex gap-3">
+                    <div class="flex-1">
                         <span class="label">Labour £</span>
-                        <input type="number" id="labour" class="input-field w-full" placeholder="0">
+                        <input type="number" id="labour" class="input-field" placeholder="0">
                     </div>
-                    <div>
+                    <div class="flex-1">
                         <span class="label">Parts £</span>
-                        <input type="number" id="parts" class="input-field w-full" placeholder="0">
+                        <input type="number" id="parts" class="input-field" placeholder="0">
                     </div>
                 </div>
 
-                <span class="label">Expenses (Fuel/Tools) £</span>
-                <input type="number" id="expenses" class="input-field w-full" placeholder="0">
+                <span class="label">Expenses £</span>
+                <input type="number" id="expenses" class="input-field" placeholder="0">
                 
                 <button onclick="window.print()" class="btn-orange">Print Document</button>
-                <button onclick="clearAll()" class="btn-clear">Clear Form</button>
+                <button onclick="clearForm()" class="btn-reset">Clear All Data</button>
             </div>
         </div>
 
-        <div class="main-panel">
-            <div class="card display-box">
+        <div class="stack-item-output">
+            <div class="card totals-display shadow-2xl">
                 <div>
                     <div class="flex justify-between items-center mb-6">
                         <span class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Total Revenue</span>
@@ -81,40 +81,6 @@
                     </div>
                 </div>
 
-                <div class="text-center pt-4">
+                <div class="text-center">
                     <span class="text-[#00FF88] font-black uppercase tracking-tighter text-[10px] block mb-1">Net Profit (Take Home):</span>
-                    <span id="dispTakeHome" class="text-6xl font-black" style="color: #FF9500;">£0.00</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function update() {
-            const desc = document.getElementById('workDesc').value.toUpperCase();
-            let lab = parseFloat(document.getElementById('labour').value) || 0;
-            let part = parseFloat(document.getElementById('parts').value) || 0;
-            let exp = parseFloat(document.getElementById('expenses').value) || 0;
-
-            const labMatch = desc.match(/(\d+)\s*LABOUR/);
-            if(labMatch && lab === 0) lab = parseFloat(labMatch[1]);
-            
-            const rev = lab + part;
-            const tax = rev * 0.20;
-            const net = rev - tax - exp;
-            
-            document.getElementById('dispRevenue').innerText = `£${rev.toFixed(2)}`;
-            document.getElementById('dispTax').innerText = `-£${tax.toFixed(2)}`;
-            document.getElementById('dispExpenses').innerText = `-£${exp.toFixed(2)}`;
-            document.getElementById('dispTakeHome').innerText = `£${net.toFixed(2)}`;
-        }
-
-        function clearAll() {
-            document.querySelectorAll('input, textarea').forEach(el => el.value = '');
-            update();
-        }
-
-        document.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', update));
-    </script>
-</body>
-</html>
+                    <span id="dispTakeHome" class="text-6xl font-black" style="color: #FF9500;">£0.00
