@@ -3,132 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Settlement</title>
+    <title>Toolbox Pay | New Settlement</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
-        body { background-color: var(--bg-midnight); color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        body { 
+            background-color: var(--bg-midnight); color: #FFFFFF; 
+            font-family: 'Inter', sans-serif; margin: 0; padding: 20px; 
+            display: flex; flex-direction: column; align-items: center;
+        }
         .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
-        .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; position: relative; }
-        .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
-        .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; font-style: normal; }
-        .input-area:focus { border-left-color: var(--toolbox-orange); }
-        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; }
-        .mic-btn { position: absolute; right: 35px; bottom: 35px; background: rgba(255,149,0,0.2); color: var(--toolbox-orange); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .mic-active { animation: pulse 1.5s infinite; background: var(--toolbox-orange); color: black; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,149,0,0.7); } 70% { box-shadow: 0 0 0 10px rgba(255,149,0,0); } 100% { box-shadow: 0 0 0 0 rgba(255,149,0,0); } }
+        .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 12px; display: block; }
+        
+        /* VOICE BUTTON */
+        .voice-btn {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: rgba(255, 149, 0, 0.1);
+            border: 2px solid var(--toolbox-orange);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px; cursor: pointer; transition: 0.3s;
+            margin: 0 auto; position: relative;
+        }
+        .voice-btn.recording {
+            background: var(--toolbox-orange);
+            color: #000;
+            box-shadow: 0 0 30px rgba(255, 149, 0, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 149, 0, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(255, 149, 0, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 149, 0, 0); }
+        }
+
+        .output-box { 
+            background: #0F172A; border-radius: 16px; padding: 20px; 
+            min-height: 120px; font-size: 16px; line-height: 1.6;
+            border-left: 4px solid var(--toolbox-orange);
+        }
+        .nav-link { color: #94A3B8; font-weight: 900; text-transform: uppercase; font-size: 11px; text-decoration: none; text-align: center; margin-top: 20px; }
     </style>
 </head>
-<body onload="initApp()">
+<body>
 
     <div class="main-container">
-        <header class="text-center pt-6 no-print">
-            <h1 class="text-4xl font-black uppercase tracking-tighter">
-                <span style="color: #FF9500;">TOOLBOX</span>PAY
+        <header class="text-center pt-6">
+            <h1 class="text-4xl font-black uppercase tracking-tighter mb-1">
+                <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
             </h1>
+            <div style="color: #94A3B8;" class="font-black tracking-[0.3em] text-[10px] uppercase">Labour Dictation</div>
         </header>
 
-        <section class="card">
-            <span class="label-text">Job Description</span>
-            <textarea id="workDesc" class="input-area h-32" placeholder="Tap mic to dictate details..."></textarea>
-            <button class="mic-btn" onclick="startDictation('workDesc')">🎤</button>
+        <section class="card text-center">
+            <span class="label-text">Tap to start dictating</span>
+            <div id="micBtn" onclick="toggleDictation()" class="voice-btn mb-6">🎙️</div>
+            <div id="statusText" class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Microphone Ready</div>
         </section>
 
         <section class="card">
-            <span class="label-text">Labour £</span>
-            <input type="number" id="labour" class="input-area mb-4" oninput="runCalc()">
-            
-            <span class="label-text">Add Material</span>
-            <div class="flex gap-2 mb-4">
-                <div class="relative flex-grow">
-                    <input type="text" id="matName" class="input-area text-sm" placeholder="e.g. Copper Pipe">
-                    <button class="mic-btn" style="right: 10px; bottom: 10px; width: 30px; height: 30px; font-size: 14px;" onclick="startDictation('matName')">🎤</button>
-                </div>
-                <input type="number" id="matPrice" class="input-area w-24 text-sm" placeholder="Price">
-            </div>
-            <button onclick="addMaterial()" class="btn-main py-3 text-xs">Add Item</button>
-            <div id="materialList" class="mt-4"></div>
+            <span class="label-text">Recognised Labour Entry</span>
+            <div id="dictationOutput" class="output-box">...waiting for voice input</div>
         </section>
 
-        <section class="card border-4 border-[#FF9500] bg-[#0F172A]">
-            <div class="flex justify-between items-center mb-4">
-                <span class="label-text mb-0 text-white">Total Due:</span>
-                <span id="dispTotal" class="text-4xl font-black text-[#FF9500]">£0.00</span>
-            </div>
-            <button onclick="saveAndPrint()" class="btn-main">Generate Settlement</button>
-        </section>
-        
-        <a href="dashboard.html" class="text-center text-slate-500 font-bold text-xs uppercase tracking-widest mt-2">← Back to Dashboard</a>
+        <a href="dashboard.html" class="nav-link">← Return to Dashboard</a>
     </div>
 
     <script>
-        let materialsArr = [];
+        let recognition;
+        let isRecording = false;
+        let silenceTimer;
 
-        function startDictation(elementId) {
-            if (!('webkitSpeechRecognition' in window)) {
-                alert("Voice dictation is not supported on this browser.");
-                return;
-            }
-
-            const recognition = new webkitSpeechRecognition();
-            const btn = event.currentTarget;
-            
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true; // Keeps the mic on
+            recognition.interimResults = true;
             recognition.lang = 'en-GB';
-            recognition.onstart = () => btn.classList.add('mic-active');
-            
+
             recognition.onresult = (event) => {
-                let text = event.results[0][0].transcript;
-                // BRITISH ENGLISH LOGIC
-                text = text.replace(/labor/gi, 'labour')
-                           .replace(/specializing/gi, 'specialising')
-                           .replace(/color/gi, 'colour')
-                           .replace(/center/gi, 'centre');
-                
-                document.getElementById(elementId).value += (document.getElementById(elementId).value ? ' ' : '') + text;
-                btn.classList.remove('mic-active');
+                resetSilenceTimer();
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    transcript += event.results[i][0].transcript;
+                }
+                document.getElementById('dictationOutput').innerText = transcript;
             };
 
-            recognition.onerror = () => btn.classList.remove('mic-active');
-            recognition.onend = () => btn.classList.remove('mic-active');
-            
-            recognition.start();
+            recognition.onend = () => {
+                if (isRecording) {
+                    recognition.start(); // Auto-restart if it drops unexpectedly
+                }
+            };
         }
 
-        function initApp() {
-            const biz = localStorage.getItem('toolboxBizName') || 'Your Business';
-            document.getElementById('dispTotal').innerText = "£0.00";
-        }
+        function toggleDictation() {
+            const btn = document.getElementById('micBtn');
+            const status = document.getElementById('statusText');
 
-        function addMaterial() {
-            const name = document.getElementById('matName').value;
-            const price = parseFloat(document.getElementById('matPrice').value) || 0;
-            if (name && price > 0) {
-                materialsArr.push({ name, price });
-                document.getElementById('matName').value = '';
-                document.getElementById('matPrice').value = '';
-                renderMaterials();
-                runCalc();
+            if (!isRecording) {
+                recognition.start();
+                isRecording = true;
+                btn.classList.add('recording');
+                status.innerText = "Listening...";
+                status.style.color = "#FF9500";
+                resetSilenceTimer();
+            } else {
+                stopDictation();
             }
         }
 
-        function renderMaterials() {
-            const list = document.getElementById('materialList');
-            list.innerHTML = materialsArr.map((m, i) => `
-                <div class="flex justify-between bg-black/20 p-3 rounded-lg mb-2 text-xs font-bold border-l-2 border-[#FF9500]">
-                    <span>${m.name}</span>
-                    <span class="text-[#FF9500]">£${m.price.toFixed(2)}</span>
-                </div>
-            `).join('');
+        function stopDictation() {
+            recognition.stop();
+            isRecording = false;
+            document.getElementById('micBtn').classList.remove('recording');
+            document.getElementById('statusText').innerText = "Microphone Ready";
+            document.getElementById('statusText').style.color = "#94A3B8";
+            clearTimeout(silenceTimer);
         }
 
-        function runCalc() {
-            const lab = parseFloat(document.getElementById('labour').value) || 0;
-            const matTotal = materialsArr.reduce((sum, m) => sum + m.price, 0);
-            document.getElementById('dispTotal').innerText = `£${(lab + matTotal).toFixed(2)}`;
-        }
-
-        function saveAndPrint() {
-            window.print();
+        function resetSilenceTimer() {
+            clearTimeout(silenceTimer);
+            // Auto-stop after 15 seconds of no speech
+            silenceTimer = setTimeout(() => {
+                if (isRecording) {
+                    stopDictation();
+                    alert("Dictation paused due to 15 seconds of silence.");
+                }
+            }, 15000);
         }
     </script>
 </body>
