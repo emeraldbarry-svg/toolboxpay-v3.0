@@ -3,27 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Command Centre v4.1</title>
+    <title>Toolbox Pay | Command Centre v4.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; }
-        body { background-color: #05070A; color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 15px; box-sizing: border-box; }
+        body { 
+            background-color: #05070A; 
+            color: #FFFFFF; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 15px; 
+            box-sizing: border-box; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         
-        /* THE VERTICAL TOWER FIX */
-        .main-wrapper { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 16px; 
+        /* THE ABSOLUTE TOWER FIX */
+        .main-container { 
             width: 100%; 
-            max-width: 500px; 
-            margin: 0 auto; 
+            max-width: 480px; /* Limits width to keep it looking like a mobile app even on desktop */
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
         
         .card { 
             background: #0B0E14; 
             border: 1px solid #1E232D; 
             border-radius: 20px; 
-            padding: 20px; 
+            padding: 24px; 
             width: 100%; 
             box-sizing: border-box; 
         }
@@ -33,30 +42,29 @@
             box-shadow: 0 10px 40px rgba(255, 149, 0, 0.15); 
         }
         
-        /* Inputs & Labels */
+        /* Inputs & Typography */
         .label-text { font-size: 10px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
-        .input-area { background: #11141B; border: 1px solid #1E232D; border-radius: 12px; color: white; padding: 16px; width: 100%; margin-bottom: 12px; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; transition: 0.3s; }
+        .input-area { background: #11141B; border: 1px solid #1E232D; border-radius: 12px; color: white; padding: 18px; width: 100%; margin-bottom: 12px; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); background: #161A22; }
         
-        /* Buttons */
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
         .btn-sub { background: #1E232D; color: #64748B; font-weight: 700; text-transform: uppercase; padding: 16px; border-radius: 12px; width: 100%; border: none; margin-top: 12px; font-size: 11px; cursor: pointer; }
     </style>
 </head>
 <body>
-    <header class="text-center py-8">
+    <header class="text-center py-10">
         <h1 class="text-4xl font-black uppercase tracking-tighter">
-            <span style="color: #FF9500;">toolbox</span><span style="color: #FFFFFF;">pay</span>
+            <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
         </h1>
         <div class="text-slate-500 font-bold tracking-[0.4em] text-[10px] mt-2 uppercase">Command Centre</div>
     </header>
 
-    <main class="main-wrapper">
+    <div class="main-container">
         <section class="card">
             <span class="label-text">Work Description</span>
             <textarea id="workDesc" class="input-area h-32" placeholder="e.g. 500 labour..."></textarea>
             
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-2 gap-4">
                 <div>
                     <span class="label-text">Labour £</span>
                     <input type="number" id="labour" class="input-area" placeholder="0">
@@ -70,14 +78,14 @@
             <span class="label-text">Expenses (Fuel/Tools) £</span>
             <input type="number" id="expenses" class="input-area" placeholder="0">
             
-            <button onclick="window.print()" class="btn-main">Print Document</button>
-            <button onclick="resetApp()" class="btn-sub">Clear All Data</button>
+            <button onclick="window.print()" class="btn-main">PRINT DOCUMENT</button>
+            <button onclick="resetApp()" class="btn-sub">CLEAR ALL DATA</button>
         </section>
 
         <section class="card display-box">
-            <div class="space-y-6 mb-8">
+            <div class="space-y-6 mb-10">
                 <div class="flex justify-between items-center">
-                    <span class="text-slate-400 font-bold uppercase tracking-widest text-[11px]">Gross Revenue</span>
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-[11px]">Total Revenue</span>
                     <span id="dispRevenue" class="text-xl font-black">£0.00</span>
                 </div>
                 <div class="flex justify-between items-center">
@@ -85,17 +93,17 @@
                     <span id="dispTax" class="text-xl font-black text-red-500">-£0.00</span>
                 </div>
                 <div class="flex justify-between items-center border-b border-slate-800 pb-6">
-                    <span class="text-orange-300 font-bold uppercase tracking-widest text-[11px]">Total Expenses</span>
+                    <span class="text-orange-300 font-bold uppercase tracking-widest text-[11px]">Expenses</span>
                     <span id="dispExpenses" class="text-xl font-black text-orange-300">-£0.00</span>
                 </div>
             </div>
             
             <div class="text-center">
                 <span class="text-[#00FF88] font-black uppercase tracking-tighter text-[11px] block mb-2">Net Profit (Take Home):</span>
-                <span id="dispTakeHome" class="text-6xl font-black" style="color: #FF9500;">£0.00</span>
+                <span id="dispTakeHome" class="text-7xl font-black" style="color: #FF9500;">£0.00</span>
             </div>
         </section>
-    </main>
+    </div>
 
     <script>
         function runCalc() {
