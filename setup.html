@@ -21,7 +21,7 @@
         .input-area:focus { border-left-color: var(--toolbox-orange); }
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 16px; width: 100%; border: none; font-size: 16px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(255,149,0,0.3); }
         .btn-main:active { transform: scale(0.98); }
-        .nav-link { color: #94A3B8; font-weight: 900; text-transform: uppercase; font-size: 11px; letter-spacing: 0.1em; text-decoration: none; text-align: center; margin-top: 10px; transition: 0.3s; }
+        .nav-link { color: #94A3B8; font-weight: 900; text-transform: uppercase; font-size: 11px; letter-spacing: 0.1em; text-decoration: none; text-align: center; margin-top: 10px; transition: 0.3s; display: block; width: 100%; }
         .nav-link:hover { color: #FFFFFF; }
         .qr-wrapper { background: white; padding: 20px; border-radius: 20px; display: flex; justify-content: center; margin-top: 15px; }
     </style>
@@ -43,6 +43,9 @@
             <span class="label-text">Your Business Name</span>
             <input type="text" id="bizName" class="input-area mb-6" placeholder="e.g. Smith & Co. Electrical">
             
+            <span class="label-text">Specialising In</span>
+            <input type="text" id="specialising" class="input-area mb-6" placeholder="e.g. Kitchen Refurbishments">
+            
             <button onclick="saveAndQR()" class="btn-main">Save & Generate QR Code</button>
         </section>
 
@@ -56,13 +59,14 @@
     </div>
 
     <script>
-        // Security Check
+        // Check authentication
         if (sessionStorage.getItem('toolboxAuthenticated') !== 'true') {
             window.location.href = 'gateway.html';
         }
 
         function initSetup() {
             document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
+            document.getElementById('specialising').value = localStorage.getItem('toolboxSpecial') || '';
             if(localStorage.getItem('toolboxSetupComplete') === 'true') {
                 generateQRCode();
             }
@@ -70,9 +74,11 @@
 
         function saveAndQR() {
             const biz = document.getElementById('bizName').value;
+            const spec = document.getElementById('specialising').value;
             if(!biz) return alert("Please enter your business name.");
             
             localStorage.setItem('toolboxBizName', biz);
+            localStorage.setItem('toolboxSpecial', spec);
             localStorage.setItem('toolboxSetupComplete', 'true');
             generateQRCode();
             alert("Settings successfully locked.");
