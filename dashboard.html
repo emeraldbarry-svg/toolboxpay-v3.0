@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Toolbox Pay | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
+        body { 
+            background-color: var(--bg-midnight); color: #FFFFFF; 
+            font-family: 'Inter', sans-serif; margin: 0; padding: 20px; 
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 15px; }
+        .nav-card { 
+            background: #1E293B; border: 1px solid rgba(255,255,255,0.05); 
+            border-radius: 20px; padding: 24px; display: flex; align-items: center; 
+            gap: 20px; text-decoration: none; transition: 0.3s;
+        }
+        .nav-card:active { transform: scale(0.98); background: #2d3a4f; }
+        .icon-box { 
+            width: 50px; height: 50px; background: rgba(255,149,0,0.1); 
+            border-radius: 12px; display: flex; align-items: center; 
+            justify-content: center; color: var(--toolbox-orange); font-size: 24px;
+        }
+        .stat-card { background: #0F172A; border-radius: 20px; padding: 20px; border-bottom: 4px solid var(--toolbox-orange); }
+    </style>
+</head>
+<body onload="loadStats()">
+
+    <header class="text-center pt-10 pb-10">
+        <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
+            <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
+        </h1>
+        <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[12px] uppercase">DASHBOARD</div>
+    </header>
+
+    <div class="main-container">
+        <div class="stat-card flex justify-between items-center">
+            <div>
+                <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Recent Activity</div>
+                <div id="jobCount" class="text-2xl font-black text-white">0 Jobs Logged</div>
+            </div>
+            <div id="lastTotal" class="text-xl font-black text-[#FF9500]">£0.00</div>
+        </div>
+
+        <a href="index.html" class="nav-card">
+            <div class="icon-box">➕</div>
+            <div>
+                <div class="font-black text-white uppercase text-sm tracking-tight">New Settlement</div>
+                <div class="text-xs text-slate-400">Calculate labour & costs</div>
+            </div>
+        </a>
+
+        <a href="clients.html" class="nav-card">
+            <div class="icon-box">👥</div>
+            <div>
+                <div class="font-black text-white uppercase text-sm tracking-tight">Client Database</div>
+                <div class="text-xs text-slate-400">Manage your customers</div>
+            </div>
+        </a>
+
+        <a href="history.html" class="nav-card">
+            <div class="icon-box">📜</div>
+            <div>
+                <div class="font-black text-white uppercase text-sm tracking-tight">Job History</div>
+                <div class="text-xs text-slate-400">View past settlements</div>
+            </div>
+        </a>
+
+        <a href="settings.html" class="nav-card">
+            <div class="icon-box">⚙️</div>
+            <div>
+                <div class="font-black text-white uppercase text-sm tracking-tight">Settings</div>
+                <div class="text-xs text-slate-400">Bank & Business details</div>
+            </div>
+        </a>
+    </div>
+
+    <script>
+        function loadStats() {
+            const history = JSON.parse(localStorage.getItem('toolboxHistory')) || [];
+            document.getElementById('jobCount').innerText = `${history.length} Jobs Logged`;
+            if(history.length > 0) {
+                document.getElementById('lastTotal').innerText = history[history.length - 1].total;
+            }
+        }
+    </script>
+</body>
+</html>
