@@ -7,39 +7,31 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
-        body { 
-            background-color: var(--bg-midnight); color: #FFFFFF; 
-            font-family: 'Inter', sans-serif; margin: 0; padding: 20px; 
-            display: flex; flex-direction: column; align-items: center;
-        }
+        body { background-color: var(--bg-midnight); color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 15px; }
         .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; }
         .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
-        .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; margin-bottom: 12px; }
+        .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; font-style: normal; }
+        .input-area:focus { border-left-color: var(--toolbox-orange); }
+        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 18px; border-radius: 14px; width: 100%; border: none; cursor: pointer; }
         .client-item { background: #0F172A; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--toolbox-orange); display: flex; justify-content: space-between; align-items: center; }
-        .btn-add { background: var(--toolbox-orange); color: #000; font-weight: 900; width: 100%; padding: 15px; border-radius: 12px; text-transform: uppercase; margin-top: 10px; }
     </style>
 </head>
 <body onload="renderClients()">
-
-    <header class="text-center pt-10 pb-6">
-        <h1 class="text-3xl font-black uppercase tracking-tighter mb-1">
-            <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">CLIENTS</span>
-        </h1>
-        <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[10px] uppercase">DATABASE</div>
-    </header>
-
     <div class="main-container">
+        <header class="text-center py-6">
+            <h1 class="text-3xl font-black uppercase tracking-tighter"><span style="color: #FF9500;">CLIENT</span> DATABASE</h1>
+        </header>
+
         <section class="card">
-            <span class="label-text">Add New Client</span>
-            <input type="text" id="cName" class="input-area" placeholder="Full Name / Company">
-            <textarea id="cAddr" class="input-area h-20" placeholder="Address / Contact Details"></textarea>
-            <button onclick="addClient()" class="btn-add">Add to Database</button>
+            <span class="label-text">Client Name</span>
+            <input type="text" id="cName" class="input-area mb-4" placeholder="Full Name">
+            <span class="label-text">Address</span>
+            <textarea id="cAddr" class="input-area mb-4 h-20" placeholder="Street, City, Postcode"></textarea>
+            <button onclick="addClient()" class="btn-main">Add to Database</button>
         </section>
 
-        <div id="clientList">
-            </div>
-
+        <div id="clientList" class="mt-4"></div>
         <a href="dashboard.html" class="text-center text-slate-500 font-bold text-xs uppercase tracking-widest mt-4">← Back to Dashboard</a>
     </div>
 
@@ -47,32 +39,31 @@
         function addClient() {
             const name = document.getElementById('cName').value;
             const addr = document.getElementById('cAddr').value;
-            if(name) {
-                const clients = JSON.parse(localStorage.getItem('toolboxClients')) || [];
-                clients.push({ name, addr });
-                localStorage.setItem('toolboxClients', JSON.stringify(clients));
-                document.getElementById('cName').value = '';
-                document.getElementById('cAddr').value = '';
-                renderClients();
-            }
+            if(!name || !addr) return alert("Please fill both fields.");
+            const clients = JSON.parse(localStorage.getItem('toolboxClients')) || [];
+            clients.push({ name, addr });
+            localStorage.setItem('toolboxClients', JSON.stringify(clients));
+            document.getElementById('cName').value = '';
+            document.getElementById('cAddr').value = '';
+            renderClients();
         }
 
         function renderClients() {
-            const clients = JSON.parse(localStorage.getItem('toolboxClients')) || [];
             const list = document.getElementById('clientList');
+            const clients = JSON.parse(localStorage.getItem('toolboxClients')) || [];
             list.innerHTML = clients.map((c, i) => `
                 <div class="client-item">
                     <div>
-                        <div class="font-black text-white">${c.name}</div>
-                        <div class="text-[10px] text-slate-500 uppercase">${c.addr.substring(0, 30)}...</div>
+                        <div class="font-black text-sm uppercase">${c.name}</div>
+                        <div class="text-[10px] text-slate-400">${c.addr.substring(0,25)}...</div>
                     </div>
-                    <button onclick="deleteClient(${i})" class="text-red-500 font-black">✕</button>
+                    <button onclick="deleteClient(${i})" class="text-red-500 font-black text-xs">REMOVE</button>
                 </div>
             `).join('');
         }
 
         function deleteClient(i) {
-            const clients = JSON.parse(localStorage.getItem('toolboxClients')) || [];
+            const clients = JSON.parse(localStorage.getItem('toolboxClients'));
             clients.splice(i, 1);
             localStorage.setItem('toolboxClients', JSON.stringify(clients));
             renderClients();
