@@ -18,16 +18,15 @@
         .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); }
         .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
         
-        /* THE BULLETPROOF RADIO TOGGLE */
-        .currency-toggle-group { display: flex; background: #0F172A; padding: 6px; border-radius: 18px; gap: 6px; position: relative; }
-        .currency-toggle-group input { position: absolute; opacity: 0; width: 0; height: 0; }
-        .currency-label { 
+        /* RADIO TOGGLE LOGIC */
+        .toggle-group { display: flex; background: #0F172A; padding: 6px; border-radius: 18px; gap: 6px; position: relative; }
+        .toggle-group input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .toggle-label { 
             flex: 1; padding: 16px; border-radius: 14px; font-size: 14px; font-weight: 900; 
             color: #94A3B8; cursor: pointer; text-align: center; transition: 0.2s all ease;
             -webkit-tap-highlight-color: transparent;
         }
-        /* CSS State change - This cannot fail as it's browser-native */
-        input:checked + .currency-label { 
+        input:checked + .toggle-label { 
             background-color: var(--toolbox-orange) !important; 
             color: #000000 !important; 
             box-shadow: 0 4px 15px rgba(255, 149, 0, 0.5);
@@ -52,15 +51,15 @@
     <div class="main-container">
         <section class="card no-print">
             <span class="label-text">Select Currency</span>
-            <div class="currency-toggle-group">
+            <div class="toggle-group">
                 <input type="radio" id="gbp" name="currency" value="£" onchange="updateCurrency('£')" checked>
-                <label for="gbp" class="currency-label">GBP £</label>
+                <label for="gbp" class="toggle-label">GBP £</label>
 
                 <input type="radio" id="eur" name="currency" value="€" onchange="updateCurrency('€')">
-                <label for="eur" class="currency-label">EUR €</label>
+                <label for="eur" class="toggle-label">EUR €</label>
 
                 <input type="radio" id="usd" name="currency" value="$" onchange="updateCurrency('$')">
-                <label for="usd" class="currency-label">USD $</label>
+                <label for="usd" class="toggle-label">USD $</label>
             </div>
         </section>
 
@@ -78,3 +77,81 @@
             <input type="number" id="labour" class="input-area mb-6" placeholder="0" oninput="runCalc()">
             
             <span class="label-text">Additional Costs <span class="curr-sym">£</span></span>
+            <input type="number" id="expenses" class="input-area mb-6" placeholder="0" oninput="runCalc()">
+
+            <span class="label-text">Add 20% VAT?</span>
+            <div class="toggle-group">
+                <input type="radio" id="vatOff" name="vat" value="0" onchange="runCalc()" checked>
+                <label for="vatOff" class="toggle-label">NO VAT</label>
+
+                <input type="radio" id="vatOn" name="vat" value="0.2" onchange="runCalc()">
+                <label for="vatOn" class="toggle-label">+ 20% VAT</label>
+            </div>
+        </section>
+
+        <section class="card border-2 border-[#FF9500] bg-[#0F172A]">
+            <div id="taxDisplay" class="flex justify-between items-center mb-2 hidden">
+                <span class="label-text mb-0">VAT (20%):</span>
+                <span id="dispTax" class="text-sm font-bold text-slate-400">£0.00</span>
+            </div>
+            <div class="flex justify-between items-center mb-4">
+                <span class="label-text mb-0">Total Due:</span>
+                <span id="dispTotal" class="text-4xl font-black text-[#FF9500]">£0.00</span>
+            </div>
+            <button onclick="window.print()" class="btn-main">SHARE SETTLEMENT</button>
+        </section>
+    </div>
+
+    <script>
+        let currentSymbol = '£';
+
+        function initApp() {
+            const savedCurr = localStorage.getItem('toolboxCurr') || '£';
+            const radioToClick = document.querySelector(`input[value="${savedCurr}"]`);
+            if(radioToClick) {
+                radioToClick.checked = true;
+                updateCurrency(savedCurr);
+            }
+            loadDetails();
+        }
+
+        function updateCurrency(sym) {
+            currentSymbol = sym;
+            localStorage.setItem('toolboxCurr', sym);
+            document.querySelectorAll('.curr-sym').forEach(el => el.innerText = sym);
+            runCalc();
+        }
+
+        function saveDetails() {
+            localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
+            localStorage.setItem('toolboxBank', document.getElementById('bankDetails').value);
+        }
+
+        function loadDetails() {
+            document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
+            document.getElementById('bankDetails').value = localStorage.getItem('toolboxBank') || '';
+        }
+
+        function runCalc() {
+            const lab = parseFloat(document.getElementById('labour').value) || 0;
+            const exp = parseFloat(document.getElementById('expenses').value) || 0;
+            const subtotal = lab + exp;
+            
+            const isVatOn = document.getElementById('vatOn').checked;
+            const taxAmount = isVatOn ? (subtotal * 0.2) : 0;
+            const total = subtotal + taxAmount;
+
+            // Update Displays
+            const taxRow = document.getElementById('taxDisplay');
+            if(isVatOn) {
+                taxRow.classList.remove('hidden');
+                document.getElementById('dispTax').innerText = `${currentSymbol}${taxAmount.toFixed(2)}`;
+            } else {
+                taxRow.classList.add('hidden');
+            }
+
+            document.getElementById('dispTotal').innerText = `${currentSymbol}${total.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
