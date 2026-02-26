@@ -53,7 +53,7 @@
                 <span class="text-[#FF9500]">TOOLBOX</span>PAY 
             </span>
         </div>
-        <button onclick="window.print()" class="bg-[#FF9500] text-black px-6 py-2 rounded font-black text-xs uppercase shadow-lg shadow-orange-500/20">Print Quote</button>
+        <button onclick="window.print()" class="bg-[#FF9500] text-black px-6 py-2 rounded font-black text-xs uppercase shadow-lg shadow-orange-500/20">Print Invoice</button>
     </nav>
 
     <div class="workspace">
@@ -78,10 +78,10 @@
             </div>
 
             <div class="mt-8 pt-8 border-t border-slate-800">
-                <span class="info-label">Your Details</span>
+                <span class="info-label">Business Details</span>
                 <input type="text" id="bizName" class="industrial-input" value="TOOLBOX PAY LTD">
-                <input type="text" id="bankSort" class="industrial-input" value="00-00-00">
-                <input type="text" id="bankAcc" class="industrial-input" value="00000000">
+                <input type="text" id="bankSort" class="industrial-input" placeholder="Sort Code" value="00-00-00">
+                <input type="text" id="bankAcc" class="industrial-input" placeholder="Account No" value="00000000">
             </div>
         </aside>
 
@@ -106,23 +106,21 @@
             const VAT_RATE = 0.20;
 
             function update() {
-                let raw = el.workDesc.value.toUpperCase();
-                let display = el.workDesc.value.toUpperCase();
+                let text = el.workDesc.value.toUpperCase();
+                let cleanDesc = el.workDesc.value.toUpperCase();
 
-                // 1. IMPROVED LABOUR EXTRACTION
-                // Matches "25 LABOUR" or "LABOUR 25"
-                const labMatch = raw.match(/(\d+(?:\.\d+)?)\s*(?:POUNDS?|£)?\s*LABOUR|LABOUR\s*(?:AT|IS|OF|FOR)?\s*(?:£|POUNDS?)?\s*(\d+(?:\.\d+)?)/i);
+                // EXTRACTION FIX: Matches "[Number] LABOUR" or "LABOUR [Number]"
+                const labMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:POUNDS?|£)?\s*LABOUR|LABOUR\s*(?:AT|IS|OF|FOR)?\s*(?:£|POUNDS?)?\s*(\d+(?:\.\d+)?)/i);
                 if (labMatch) {
                     el.labourCost.value = labMatch[1] || labMatch[2];
-                    display = display.replace(labMatch[0], "");
+                    cleanDesc = cleanDesc.replace(labMatch[0], "");
                 }
 
-                // 2. IMPROVED PARTS EXTRACTION
-                // Matches "33 POUNDS FOR PARTS" or "PARTS £33"
-                const partMatch = raw.match(/(\d+(?:\.\d+)?)\s*(?:POUNDS?|£)?\s*(?:PARTS|TOOLS|MATERIALS)|(?:PARTS|TOOLS|MATERIALS)\s*(?:AT|IS|OF|FOR|ON)?\s*(?:£|POUNDS?)?\s*(\d+(?:\.\d+)?)/i);
+                // EXTRACTION FIX: Matches "[Number] POUNDS FOR PARTS"
+                const partMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:POUNDS?|£)?\s*(?:PARTS|TOOLS|MATERIALS)|(?:PARTS|TOOLS|MATERIALS)\s*(?:AT|IS|OF|FOR|ON)?\s*(?:£|POUNDS?)?\s*(\d+(?:\.\d+)?)/i);
                 if (partMatch) {
                     el.partsCost.value = partMatch[1] || partMatch[2];
-                    display = display.replace(partMatch[0], "");
+                    cleanDesc = cleanDesc.replace(partMatch[0], "");
                 }
 
                 const l = parseFloat(el.labourCost.value) || 0;
@@ -143,23 +141,21 @@
                         </div>
                     </div>
 
-                    <div class="mb-16 border-l-4 border-[#FF9500] pl-8 py-2 bg-slate-50">
-                        <div class="text-[9px] font-black text-slate-400 uppercase mb-2 tracking-widest">Invoice To:</div>
-                        <div class="text-lg font-bold text-slate-900 uppercase">${el.custName.value || '---'}</div>
+                    <div class="mb-16 border-l-4 border-[#FF9500] pl-8 py-2">
+                        <div class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Invoice To:</div>
+                        <div class="text-lg font-bold text-slate-900 uppercase">${el.custName.value}</div>
                     </div>
 
                     <div class="flex-1">
-                        <div class="text-[9px] font-black text-slate-300 uppercase mb-4 border-b pb-2 tracking-widest">Work Description</div>
-                        <div class="text-[13px] font-medium text-slate-800 uppercase mb-20 min-h-[160px] leading-relaxed">
-                            ${display.trim() || 'Awaiting entry...'}
-                        </div>
+                        <div class="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-4 border-b pb-2">Description of Works</div>
+                        <div class="text-[13px] font-medium text-slate-800 uppercase mb-20 min-h-[160px] leading-relaxed">${cleanDesc.trim() || 'AWAITING NOTES...'}</div>
                         
                         <div class="space-y-4">
-                            <div class="flex justify-between text-base border-b pb-4">
+                            <div class="flex justify-between text-base border-b border-slate-100 pb-4">
                                 <span class="text-slate-400 font-bold uppercase">Professional Labour</span>
                                 <span class="font-bold">£${l.toFixed(2)}</span>
                             </div>
-                            <div class="flex justify-between text-base border-b pb-4">
+                            <div class="flex justify-between text-base border-b border-slate-100 pb-4">
                                 <span class="text-slate-400 font-bold uppercase">Materials & Parts</span>
                                 <span class="font-bold">£${p.toFixed(2)}</span>
                             </div>
@@ -169,15 +165,12 @@
                     <div class="mt-24 flex justify-end">
                         <div class="w-72">
                             <div class="flex justify-between text-[11px] mb-3 font-bold text-slate-400 uppercase"><span>Subtotal</span><span>£${sub.toFixed(2)}</span></div>
-                            <div class="flex justify-between text-[11px] mb-8 font-bold text-slate-400 uppercase border-b-2 pb-5"><span>VAT (20%)</span><span>£${vat.toFixed(2)}</span></div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-[11px] font-black uppercase text-slate-400">Total Due</span>
-                                <span class="text-5xl font-black text-[#FF9500]">£${tot.toFixed(2)}</span>
-                            </div>
+                            <div class="flex justify-between text-[11px] mb-8 font-bold text-slate-400 uppercase border-b-2 border-slate-100 pb-5"><span>VAT (20%)</span><span>£${vat.toFixed(2)}</span></div>
+                            <div class="flex justify-between items-center"><span class="text-[11px] font-black uppercase text-slate-400">Total Due</span><span class="text-5xl font-black text-[#FF9500]">£${tot.toFixed(2)}</span></div>
                         </div>
                     </div>
 
-                    <div class="mt-auto pt-12 grid grid-cols-2 border-t">
+                    <div class="mt-auto pt-12 grid grid-cols-2 gap-12 border-t border-slate-100 pb-4">
                         <div>
                             <div class="text-[9px] font-black text-slate-300 uppercase mb-4 tracking-widest">Bank Details</div>
                             <div class="text-[11px] font-bold uppercase">SORT: ${el.bankSort.value}<br>ACC: ${el.bankAcc.value}</div>
@@ -189,7 +182,6 @@
                 `;
             }
 
-            // Update on any typing
             [el.custName, el.workDesc, el.labourCost, el.partsCost, el.bizName, el.bankSort, el.bankAcc].forEach(input => {
                 input.addEventListener('input', update);
             });
