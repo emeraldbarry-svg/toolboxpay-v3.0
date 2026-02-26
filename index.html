@@ -18,7 +18,6 @@
         .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); }
         .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
         
-        /* DYNAMIC RADIO TOGGLES */
         .toggle-group { display: flex; background: #0F172A; padding: 6px; border-radius: 18px; gap: 6px; position: relative; }
         .toggle-group input { position: absolute; opacity: 0; width: 0; height: 0; }
         .toggle-label { 
@@ -34,6 +33,8 @@
 
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); }
+        
+        .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; border-left: 3px solid var(--toolbox-orange); }
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
         
         @media print { .no-print { display: none !important; } }
@@ -54,10 +55,8 @@
             <div class="toggle-group">
                 <input type="radio" id="gbp" name="currency" value="£" onchange="updateCurrency('£')" checked>
                 <label for="gbp" class="toggle-label">GBP £</label>
-
                 <input type="radio" id="eur" name="currency" value="€" onchange="updateCurrency('€')">
                 <label for="eur" class="toggle-label">EUR €</label>
-
                 <input type="radio" id="usd" name="currency" value="$" onchange="updateCurrency('$')">
                 <label for="usd" class="toggle-label">USD $</label>
             </div>
@@ -66,7 +65,7 @@
         <section class="card">
             <span class="label-text">From:</span>
             <input type="text" id="bizName" class="input-area mb-2 text-sm" placeholder="Your Business Name" oninput="saveDetails()">
-            <input type="text" id="bankDetails" class="input-area text-xs" placeholder="Sort Code & Account Number" oninput="saveDetails()">
+            <input type="text" id="bankDetails" class="input-area text-xs" placeholder="Bank Details" oninput="saveDetails()">
         </section>
 
         <section class="card">
@@ -76,14 +75,18 @@
             <span class="label-text">Labour <span class="curr-sym">£</span></span>
             <input type="number" id="labour" class="input-area mb-6" placeholder="0" oninput="runCalc()">
             
-            <span class="label-text">Additional Costs <span class="curr-sym">£</span></span>
-            <input type="number" id="expenses" class="input-area mb-6" placeholder="0" oninput="runCalc()">
+            <span class="label-text">Materials</span>
+            <div id="materialList" class="mb-4"></div>
+            <div class="flex gap-2 no-print mb-6">
+                <input type="text" id="matName" class="input-area" placeholder="Item">
+                <input type="number" id="matPrice" class="input-area w-24" placeholder="0">
+                <button onclick="addMaterial()" class="bg-[#FF9500] text-black font-black w-12 rounded-xl">+</button>
+            </div>
 
-            <span class="label-text">VAT (Standard 20%)</span>
+            <span class="label-text">VAT (20%)</span>
             <div class="toggle-group">
                 <input type="radio" id="vatOff" name="vat" value="0" onchange="runCalc()" checked>
                 <label for="vatOff" class="toggle-label">NO VAT</label>
-
                 <input type="radio" id="vatOn" name="vat" value="0.2" onchange="runCalc()">
                 <label for="vatOn" class="toggle-label">+ 20% VAT</label>
             </div>
@@ -104,14 +107,12 @@
 
     <script>
         let currentSymbol = '£';
+        let materialsArr = [];
 
         function initApp() {
             const savedCurr = localStorage.getItem('toolboxCurr') || '£';
             const radioToClick = document.querySelector(`input[value="${savedCurr}"]`);
-            if(radioToClick) {
-                radioToClick.checked = true;
-                updateCurrency(savedCurr);
-            }
+            if(radioToClick) { radioToClick.checked = true; updateCurrency(savedCurr); }
             loadDetails();
         }
 
@@ -119,8 +120,34 @@
             currentSymbol = sym;
             localStorage.setItem('toolboxCurr', sym);
             document.querySelectorAll('.curr-sym').forEach(el => el.innerText = sym);
+            renderMaterials();
             runCalc();
         }
+
+        function addMaterial() {
+            const name = document.getElementById('matName').value;
+            const price = parseFloat(document.getElementById('matPrice').value) || 0;
+            if (name && price > 0) {
+                materialsArr.push({ name, price });
+                document.getElementById('matName').value = '';
+                document.getElementById('matPrice').value = '';
+                renderMaterials();
+                runCalc();
+            }
+        }
+
+        function renderMaterials() {
+            const list = document.getElementById('materialList');
+            list.innerHTML = materialsArr.map((m, i) => `
+                <div class="material-row">
+                    <span class="flex-grow font-bold text-sm">${m.name}</span>
+                    <span class="text-[#FF9500] font-black">${currentSymbol}${m.price.toFixed(2)}</span>
+                    <button onclick="removeMat(${i})" class="text-red-500 ml-2 font-black">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function removeMat(i) { materialsArr.splice(i, 1); renderMaterials(); runCalc(); }
 
         function saveDetails() {
             localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
@@ -134,8 +161,8 @@
 
         function runCalc() {
             const lab = parseFloat(document.getElementById('labour').value) || 0;
-            const exp = parseFloat(document.getElementById('expenses').value) || 0;
-            const subtotal = lab + exp;
+            const matTotal = materialsArr.reduce((sum, m) => sum + m.price, 0);
+            const subtotal = lab + matTotal;
             
             const isVatOn = document.getElementById('vatOn').checked;
             const taxAmount = isVatOn ? (subtotal * 0.2) : 0;
@@ -148,7 +175,6 @@
             } else {
                 taxRow.classList.add('hidden');
             }
-
             document.getElementById('dispTotal').innerText = `${currentSymbol}${total.toFixed(2)}`;
         }
     </script>
