@@ -27,7 +27,7 @@
         .stat-card { background: #0F172A; border-radius: 20px; padding: 20px; border-bottom: 4px solid var(--toolbox-orange); }
     </style>
 </head>
-<body onload="loadStats()">
+<body onload="checkSetup(); loadStats();">
 
     <header class="text-center pt-10 pb-10">
         <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
@@ -69,16 +69,23 @@
             </div>
         </a>
 
-        <a href="settings.html" class="nav-card">
+        <a href="setup.html" class="nav-card">
             <div class="icon-box">⚙️</div>
             <div>
-                <div class="font-black text-white uppercase text-sm tracking-tight">Settings</div>
-                <div class="text-xs text-slate-400">Bank & Business details</div>
+                <div class="font-black text-white uppercase text-sm tracking-tight">Business Profile</div>
+                <div class="text-xs text-slate-400">Edit Bank & Identity</div>
             </div>
         </a>
     </div>
 
     <script>
+        function checkSetup() {
+            const setupComplete = localStorage.getItem('toolboxSetupComplete');
+            if (setupComplete !== 'true') {
+                window.location.href = 'setup.html';
+            }
+        }
+
         function loadStats() {
             const history = JSON.parse(localStorage.getItem('toolboxHistory')) || [];
             document.getElementById('jobCount').innerText = `${history.length} Jobs Logged`;
