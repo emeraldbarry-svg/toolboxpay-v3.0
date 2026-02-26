@@ -8,7 +8,7 @@
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
         
-        /* THE CACHE-BREAKER: NEW CLASS NAMES TO FORCE RE-LOAD */
+        /* THE CACHE-BREAKER: FORCING A BLANK SLATE */
         body { 
             background-color: var(--bg-midnight); 
             color: #FFFFFF; 
@@ -20,16 +20,16 @@
             align-items: center;
         }
 
-        .main-app-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
+        .final-render-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* BRANDING - ABSOLUTELY NO BORDERS OR BOXES */
-        .brand-header-new { 
+        /* BRANDING - NO BORDERS, NO BOXES, NO BACKGROUNDS */
+        .brand-zone-v4 { 
             text-align: center; 
             padding: 40px 0 10px 0; 
-            background: transparent !important; 
             border: none !important;
+            background: transparent !important;
         }
-        .brand-title-new { 
+        .brand-logo-main { 
             font-size: 46px; 
             font-weight: 900; 
             letter-spacing: -0.05em; 
@@ -37,7 +37,7 @@
             line-height: 1; 
             margin: 0;
         }
-        .brand-tag-new { 
+        .brand-subtitle-v4 { 
             font-size: 11px; 
             font-weight: 900; 
             color: var(--toolbox-orange); 
@@ -46,8 +46,8 @@
             margin-top: 15px; 
         }
 
-        /* JOB INPUT SECTION - AT THE TOP */
-        .work-details-card {
+        /* TOP SECTION: CUSTOMER & VOICE */
+        .job-entry-card {
             background: rgba(30, 41, 59, 0.4);
             border-radius: 28px;
             padding: 25px;
@@ -56,9 +56,9 @@
             gap: 15px;
         }
 
-        .label-micro { font-size: 10px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
+        .micro-label { font-size: 10px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
         
-        .clean-input {
+        .clean-field {
             background: #0F172A; 
             border: 1px solid rgba(255,255,255,0.05);
             border-radius: 16px; 
@@ -69,21 +69,20 @@
             outline: none;
         }
 
-        /* VOICE INTERFACE */
-        .mic-trigger-sphere {
+        .mic-sphere-v4 {
             width: 85px; height: 85px; border-radius: 50%;
             background: rgba(255, 149, 0, 0.05);
             border: 3px solid var(--toolbox-orange);
             display: flex; align-items: center; justify-content: center;
             font-size: 34px; cursor: pointer; margin: 10px auto;
         }
-        .mic-trigger-sphere.recording {
+        .mic-sphere-v4.active {
             background: var(--toolbox-orange);
             color: #000;
             box-shadow: 0 0 40px rgba(255, 149, 0, 0.3);
         }
 
-        .notes-display-area {
+        .transcript-area-v4 {
             background: #0F172A; 
             border-radius: 20px; 
             padding: 20px;
@@ -93,15 +92,15 @@
             border-left: 5px solid var(--toolbox-orange);
         }
 
-        /* PRICE DISPLAY - AT THE BOTTOM */
-        .final-charge-box {
+        /* BOTTOM SECTION: PRICE */
+        .total-charge-card {
             background: #1E293B;
             border: 2px solid var(--toolbox-orange);
             border-radius: 30px;
             padding: 35px 20px;
             text-align: center;
         }
-        .price-text-massive { 
+        .giant-price-text { 
             font-size: 72px; 
             font-weight: 900; 
             color: #FFFFFF; 
@@ -109,11 +108,11 @@
             display: flex; 
             justify-content: center; 
         }
-        .pound-sign-orange { font-size: 32px; margin-top: 10px; margin-right: 5px; color: var(--toolbox-orange); font-weight: 800; }
+        .pound-symbol-v4 { font-size: 32px; margin-top: 10px; margin-right: 5px; color: var(--toolbox-orange); font-weight: 800; }
 
-        .btn-pay-now { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 25px; border-radius: 22px; width: 100%; border: none; font-size: 18px; cursor: pointer; margin-top: 10px; }
+        .btn-pay-v4 { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 25px; border-radius: 22px; width: 100%; border: none; font-size: 18px; cursor: pointer; margin-top: 10px; }
         
-        .nav-back-home { 
+        .return-footer { 
             color: #475569; 
             font-weight: 900; 
             text-transform: uppercase; 
@@ -127,46 +126,46 @@
 </head>
 <body>
 
-    <div class="main-app-container">
-        <div class="brand-header-new">
-            <h1 class="brand-title-new">
+    <div class="final-render-container">
+        <div class="brand-zone-v4">
+            <h1 class="brand-logo-main">
                 <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
             </h1>
-            <p class="brand-tag-new">Record Work</p>
+            <p class="brand-subtitle-v4">Record Work</p>
         </div>
 
-        <section class="work-details-card">
+        <section class="job-entry-card">
             <div>
-                <span class="label-micro">Customer / Site</span>
-                <input type="text" class="clean-input" placeholder="Enter customer name or site">
+                <span class="micro-label">Customer / Site</span>
+                <input type="text" class="clean-field" placeholder="Client name or site address">
             </div>
 
             <div class="text-center">
-                <div id="micBtn" onclick="toggleVoice()" class="mic-trigger-sphere">🎙️</div>
-                <span id="micStatus" class="label-micro" style="margin-top: 5px;">Tap to Record Labour</span>
+                <div id="micBtn" onclick="toggleMic()" class="mic-sphere-v4">🎙️</div>
+                <span id="micLabel" class="micro-label" style="margin-top: 5px;">Tap to Record Labour</span>
             </div>
 
             <div>
-                <span class="label-micro">Job Notes</span>
-                <div id="notesBox" class="notes-display-area">...listening for work details</div>
+                <span class="micro-label">Job Notes</span>
+                <div id="notesBox" class="transcript-area-v4">...listening for work details</div>
             </div>
         </section>
 
-        <section class="final-charge-box">
-            <span class="label-micro" style="color: var(--toolbox-orange)">Total to Charge</span>
-            <div class="price-text-massive">
-                <span class="pound-sign-orange">£</span><span id="livePrice">0.00</span>
+        <section class="total-charge-card">
+            <span class="micro-label" style="color: var(--toolbox-orange)">Total to Charge</span>
+            <div class="giant-price-text">
+                <span class="pound-symbol-v4">£</span><span id="finalPrice">0.00</span>
             </div>
         </section>
 
-        <button class="btn-pay-now">Finalise & Collect Pay</button>
+        <button class="btn-pay-v4">Finalise & Collect Pay</button>
 
-        <a href="dashboard.html" class="nav-back-home">Return to Dashboard</a>
+        <a href="dashboard.html" class="return-footer">Return to Dashboard</a>
     </div>
 
     <script>
         let rec;
-        let isRec = false;
+        let active = false;
         let timer;
 
         if ('webkitSpeechRecognition' in window) {
@@ -177,42 +176,42 @@
 
             rec.onresult = (e) => {
                 clearTimeout(timer);
-                let txt = '';
+                let speech = '';
                 for (let i = e.resultIndex; i < e.results.length; ++i) {
-                    txt += e.results[i][0].transcript;
+                    speech += e.results[i][0].transcript;
                 }
-                document.getElementById('notesBox').innerText = txt;
+                document.getElementById('notesBox').innerText = speech;
                 document.getElementById('notesBox').style.color = "#FFFFFF";
 
-                const nums = txt.match(/\d+/g);
-                if (nums) {
-                    document.getElementById('livePrice').innerText = parseFloat(nums[nums.length - 1]).toFixed(2);
+                const digits = speech.match(/\d+/g);
+                if (digits) {
+                    document.getElementById('finalPrice').innerText = parseFloat(digits[digits.length - 1]).toFixed(2);
                 }
-                timer = setTimeout(() => { if(isRec) stopVoice(); }, 15000);
+                timer = setTimeout(() => { if(active) stopMic(); }, 15000);
             };
-            rec.onend = () => { if(isRec) rec.start(); };
+            rec.onend = () => { if(active) rec.start(); };
         }
 
-        function toggleVoice() {
+        function toggleMic() {
             const b = document.getElementById('micBtn');
-            const s = document.getElementById('micStatus');
-            if (!isRec) {
+            const l = document.getElementById('micLabel');
+            if (!active) {
                 rec.start();
-                isRec = true;
-                b.classList.add('recording');
-                s.innerText = "Listening...";
-                s.style.color = "#FF9500";
+                active = true;
+                b.classList.add('active');
+                l.innerText = "Listening...";
+                l.style.color = "#FF9500";
             } else {
-                stopVoice();
+                stopMic();
             }
         }
 
-        function stopVoice() {
+        function stopMic() {
             rec.stop();
-            isRec = false;
-            document.getElementById('micBtn').classList.remove('recording');
-            document.getElementById('micStatus').innerText = "Tap to Record Labour";
-            document.getElementById('micStatus').style.color = "#64748b";
+            active = false;
+            document.getElementById('micBtn').classList.remove('active');
+            document.getElementById('micLabel').innerText = "Tap to Record Labour";
+            document.getElementById('micLabel').style.color = "#64748b";
         }
     </script>
 </body>
