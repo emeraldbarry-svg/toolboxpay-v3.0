@@ -30,27 +30,27 @@
         
         .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
         
-        /* THE DYNAMIC TABS */
-        .currency-container { display: flex; background: #0F172A; padding: 6px; border-radius: 18px; gap: 8px; }
+        /* THE DYNAMIC TABS - REBUILT */
+        .currency-container { display: flex; background: #0F172A; padding: 6px; border-radius: 18px; gap: 8px; border: 1px solid rgba(255,255,255,0.05); }
         .currency-tab { 
             flex: 1; padding: 18px; border-radius: 14px; font-size: 14px; font-weight: 900; 
-            color: #94A3B8; cursor: pointer; border: none; background: transparent; 
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #94A3B8 !important; cursor: pointer; border: none; background: transparent; 
+            transition: 0.2s all ease;
             -webkit-tap-highlight-color: transparent;
         }
-        /* High-priority active state */
+        /* Forced high-priority active state */
         .currency-tab.active-choice { 
             background-color: var(--toolbox-orange) !important; 
             color: #000000 !important; 
             box-shadow: 0 4px 15px rgba(255, 149, 0, 0.5);
-            transform: scale(1.02);
         }
 
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); }
 
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
-        
+        .btn-main:active { transform: scale(0.97); }
+
         @media print { .no-print { display: none !important; } }
     </style>
 </head>
@@ -74,9 +74,12 @@
         </section>
 
         <section class="card">
+            <span class="label-text">Quote For:</span>
+            <input type="text" id="clientName" class="input-area mb-6 font-bold" placeholder="Customer Name / Address">
+            
             <span class="label-text">From:</span>
             <input type="text" id="bizName" class="input-area mb-2 text-sm" placeholder="Your Business Name" oninput="saveDetails()">
-            <input type="text" id="bankDetails" class="input-area text-xs" placeholder="Sort: 00-00-00 | Acc: 00000000" oninput="saveDetails()">
+            <input type="text" id="bankDetails" class="input-area text-xs" placeholder="Sort Code & Account Number" oninput="saveDetails()">
         </section>
 
         <section class="card">
@@ -115,13 +118,37 @@
                 btn.classList.remove('active-choice');
             });
 
-            // Forcefully highlight selected button
+            // Forcefully highlight selection
             const selected = document.getElementById(btnId);
             if(selected) {
                 selected.classList.add('active-choice');
             }
 
-            // Global update
+            // Sync symbols
             currentSymbol = sym;
             localStorage.setItem('toolboxCurr', sym);
-            localStorage.setItem('
+            localStorage.setItem('toolboxTabId', btnId);
+            document.querySelectorAll('.curr-sym').forEach(el => el.innerText = sym);
+            
+            runCalc();
+        }
+
+        function saveDetails() {
+            localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
+            localStorage.setItem('toolboxBank', document.getElementById('bankDetails').value);
+        }
+
+        function loadDetails() {
+            document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
+            document.getElementById('bankDetails').value = localStorage.getItem('toolboxBank') || '';
+        }
+
+        function runCalc() {
+            const lab = parseFloat(document.getElementById('labour').value) || 0;
+            const exp = parseFloat(document.getElementById('expenses').value) || 0;
+            const total = lab + exp;
+            document.getElementById('dispTotal').innerText = `${currentSymbol}${total.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
