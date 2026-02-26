@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -8,84 +7,83 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; }
-        body { background-color: #05070A; color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 15px; box-sizing: border-box; }
+        body { background-color: #05070A; color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 12px; box-sizing: border-box; }
         
-        /* THE ULTIMATE MOBILE FIX: Simple Vertical Stacking Only */
-        .container-box { width: 100%; max-width: 450px; margin: 0 auto; display: block; }
+        /* FORCE VERTICAL STACK ONLY */
+        .stack-wrapper { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 500px; margin: 0 auto; }
 
-        .card { background: #0B0E14; border: 1px solid #1E232D; border-radius: 20px; padding: 20px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
-        .totals-card { border: 2px solid #FF9500; min-height: 300px; display: flex; flex-direction: column; justify-content: space-between; }
+        .card { background: #0B0E14; border: 1px solid #1E232D; border-radius: 20px; padding: 20px; width: 100%; box-sizing: border-box; }
+        .display-box { border: 2px solid #FF9500; min-height: 320px; display: flex; flex-direction: column; justify-content: space-between; }
 
-        /* Input Styling */
-        .field-label { font-size: 11px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 8px; display: block; }
-        .input-box { background: #11141B; border: 1px solid #1E232D; border-radius: 12px; color: white; padding: 16px; width: 100%; margin-bottom: 12px; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; box-sizing: border-box; }
-        .input-box:focus { border-left-color: var(--toolbox-orange); }
+        /* Large, readable text and inputs */
+        .label { font-size: 11px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-bottom: 8px; }
+        .input-field { background: #11141B; border: 1px solid #1E232D; border-radius: 12px; color: white; padding: 16px; width: 100%; margin-bottom: 12px; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; }
+        .input-field:focus { border-left-color: var(--toolbox-orange); }
 
-        /* Buttons */
-        .btn-orange { background: #FF9500; color: #000; font-weight: 900; text-transform: uppercase; padding: 18px; border-radius: 14px; width: 100%; border: none; font-size: 15px; margin-top: 10px; cursor: pointer; }
-        .btn-clear { background: #1E232D; color: #94A3B8; font-weight: 700; text-transform: uppercase; padding: 14px; border-radius: 14px; width: 100%; border: none; margin-top: 10px; font-size: 12px; }
+        .btn-orange { background: #FF9500; color: #000; font-weight: 900; text-transform: uppercase; padding: 18px; border-radius: 12px; width: 100%; border: none; font-size: 14px; margin-top: 10px; cursor: pointer; }
+        .btn-clear { background: #1E232D; color: #64748B; font-weight: 700; text-transform: uppercase; padding: 14px; border-radius: 12px; width: 100%; border: none; margin-top: 10px; }
 
-        /* Only allow desktop side-by-side on very wide screens */
+        /* Desktop side-by-side ONLY for very large screens */
         @media (min-width: 1024px) {
-            .container-box { max-width: 1100px; display: flex; gap: 30px; align-items: start; }
-            .section-input { width: 400px; flex-shrink: 0; }
-            .section-output { flex-grow: 1; }
+            .stack-wrapper { flex-direction: row; max-width: 1100px; align-items: flex-start; }
+            .side-panel { width: 400px; }
+            .main-panel { flex: 1; }
         }
     </style>
 </head>
 <body>
-    <header class="text-center py-8">
-        <h1 class="text-4xl font-black uppercase tracking-tighter">
+    <header class="text-center py-6">
+        <h1 class="text-3xl font-black uppercase tracking-tighter">
             <span style="color: #FF9500;">toolbox</span><span style="color: #FFFFFF;">pay</span>
         </h1>
-        <div class="text-slate-500 font-bold tracking-[0.4em] text-[10px] mt-2 uppercase">Command Centre</div>
+        <div class="text-slate-600 font-bold tracking-[0.3em] text-[9px] uppercase mt-1">Command Centre</div>
     </header>
 
-    <div class="container-box">
-        <div class="section-input">
+    <div class="stack-wrapper">
+        <div class="side-panel">
             <div class="card">
-                <span class="field-label">Work Description</span>
-                <textarea id="workDesc" class="input-box h-32" placeholder="e.g. 500 labour..."></textarea>
+                <span class="label">Work Description</span>
+                <textarea id="workDesc" class="input-field h-28 w-full" placeholder="e.g. 500 labour..."></textarea>
                 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <span class="field-label">Labour £</span>
-                        <input type="number" id="labour" class="input-box" placeholder="0">
+                        <span class="label">Labour £</span>
+                        <input type="number" id="labour" class="input-field w-full" placeholder="0">
                     </div>
                     <div>
-                        <span class="field-label">Parts £</span>
-                        <input type="number" id="parts" class="input-box" placeholder="0">
+                        <span class="label">Parts £</span>
+                        <input type="number" id="parts" class="input-field w-full" placeholder="0">
                     </div>
                 </div>
 
-                <span class="field-label">Expenses (Fuel/Tools) £</span>
-                <input type="number" id="expenses" class="input-box" placeholder="0">
+                <span class="label">Expenses (Fuel/Tools) £</span>
+                <input type="number" id="expenses" class="input-field w-full" placeholder="0">
                 
                 <button onclick="window.print()" class="btn-orange">Print Document</button>
-                <button onclick="resetData()" class="btn-clear">Clear All Data</button>
+                <button onclick="clearAll()" class="btn-clear">Clear Form</button>
             </div>
         </div>
 
-        <div class="section-output">
-            <div class="card totals-card">
-                <div class="space-y-6">
-                    <div class="flex justify-between items-center">
-                        <span class="text-slate-400 font-bold uppercase tracking-widest text-[11px]">Total Revenue</span>
-                        <span id="dispRevenue" class="text-2xl font-black">£0.00</span>
+        <div class="main-panel">
+            <div class="card display-box">
+                <div>
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Total Revenue</span>
+                        <span id="dispRevenue" class="text-xl font-black">£0.00</span>
                     </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-red-500 font-bold uppercase tracking-widest text-[11px]">Tax Reserve (20%)</span>
-                        <span id="dispTax" class="text-2xl font-black text-red-500">-£0.00</span>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-red-500 font-bold uppercase tracking-widest text-[10px]">Tax Reserve (20%)</span>
+                        <span id="dispTax" class="text-xl font-black text-red-500">-£0.00</span>
                     </div>
-                    <div class="flex justify-between items-center border-b border-slate-800 pb-6">
-                        <span class="text-orange-300 font-bold uppercase tracking-widest text-[11px]">Expenses</span>
-                        <span id="dispExpenses" class="text-2xl font-black text-orange-300">-£0.00</span>
+                    <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-6">
+                        <span class="text-orange-300 font-bold uppercase tracking-widest text-[10px]">Expenses</span>
+                        <span id="dispExpenses" class="text-xl font-black text-orange-300">-£0.00</span>
                     </div>
                 </div>
 
-                <div class="text-center pt-8">
-                    <span class="text-[#00FF88] font-black uppercase tracking-tighter text-[11px] block mb-2">Net Profit (Take Home):</span>
-                    <span id="dispTakeHome" class="text-7xl font-black" style="color: #FF9500;">£0.00</span>
+                <div class="text-center pt-4">
+                    <span class="text-[#00FF88] font-black uppercase tracking-tighter text-[10px] block mb-1">Net Profit (Take Home):</span>
+                    <span id="dispTakeHome" class="text-6xl font-black" style="color: #FF9500;">£0.00</span>
                 </div>
             </div>
         </div>
@@ -98,7 +96,6 @@
             let part = parseFloat(document.getElementById('parts').value) || 0;
             let exp = parseFloat(document.getElementById('expenses').value) || 0;
 
-            // British English auto-detect
             const labMatch = desc.match(/(\d+)\s*LABOUR/);
             if(labMatch && lab === 0) lab = parseFloat(labMatch[1]);
             
@@ -112,7 +109,7 @@
             document.getElementById('dispTakeHome').innerText = `£${net.toFixed(2)}`;
         }
 
-        function resetData() {
+        function clearAll() {
             document.querySelectorAll('input, textarea').forEach(el => el.value = '');
             update();
         }
