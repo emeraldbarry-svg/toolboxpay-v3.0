@@ -55,6 +55,7 @@
         
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 14px rgba(255, 149, 0, 0.4); }
         .btn-sub { background: rgba(0,0,0,0.3); color: #94A3B8; font-weight: 700; text-transform: uppercase; padding: 16px; border-radius: 12px; width: 100%; border: none; margin-top: 12px; font-size: 11px; cursor: pointer; }
+        .btn-outline { background: transparent; border: 2px solid var(--toolbox-orange); color: var(--toolbox-orange); font-weight: 900; text-transform: uppercase; padding: 18px; border-radius: 14px; width: 100%; margin-top: 12px; cursor: pointer; }
 
         @media print {
             .no-print { display: none !important; }
@@ -135,9 +136,10 @@
 
         <section class="card">
             <span class="label-text">Notes / Terms / Thanks:</span>
-            <textarea id="footerNotes" class="input-area h-20 text-xs mb-4" placeholder="e.g. Thanks for your business! Please pay within 7 days." oninput="saveDetails()"></textarea>
+            <textarea id="footerNotes" class="input-area h-20 text-xs mb-6" placeholder="e.g. Thanks for your business!" oninput="saveDetails()"></textarea>
             
             <button onclick="window.print()" class="btn-main no-print">SHARE VIA WHATSAPP / PDF</button>
+            <button onclick="shareEmail()" class="btn-outline no-print">SHARE VIA EMAIL</button>
             <button onclick="resetApp()" class="btn-sub no-print">CLEAR EVERYTHING</button>
         </section>
     </div>
@@ -149,54 +151,3 @@
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('quoteDate').value = today;
             loadDetails();
-        }
-
-        function saveDetails() {
-            localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
-            localStorage.setItem('toolboxTaxRef', document.getElementById('taxRef').value);
-            localStorage.setItem('toolboxBank', document.getElementById('bankDetails').value);
-            localStorage.setItem('toolboxFooter', document.getElementById('footerNotes').value);
-        }
-
-        function loadDetails() {
-            document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
-            document.getElementById('taxRef').value = localStorage.getItem('toolboxTaxRef') || '';
-            document.getElementById('bankDetails').value = localStorage.getItem('toolboxBank') || '';
-            document.getElementById('footerNotes').value = localStorage.getItem('toolboxFooter') || '';
-        }
-
-        function addMaterial() {
-            const name = document.getElementById('matName').value;
-            const price = parseFloat(document.getElementById('matPrice').value) || 0;
-            if (name && price > 0) {
-                materialsArr.push({ name, price });
-                document.getElementById('matName').value = '';
-                document.getElementById('matPrice').value = '';
-                renderMaterials();
-                runCalc();
-            }
-        }
-
-        function renderMaterials() {
-            const list = document.getElementById('materialList');
-            list.innerHTML = materialsArr.map((m, index) => `
-                <div class="material-row">
-                    <span class="material-name">${m.name}</span>
-                    <span class="material-cost">£${m.price.toFixed(2)}</span>
-                    <button onclick="removeMat(${index})" class="text-red-500 font-black ml-4 px-2 no-print">✕</button>
-                </div>
-            `).join('');
-        }
-
-        function removeMat(index) {
-            materialsArr.splice(index, 1);
-            renderMaterials();
-            runCalc();
-        }
-
-        function runCalc() {
-            const lab = parseFloat(document.getElementById('labour').value) || 0;
-            const matTotal = materialsArr.reduce((sum, m) => sum + m.price, 0);
-            const exp = parseFloat(document.getElementById('expenses').value) || 0;
-            const totalRevenue = lab + matTotal;
-            const taxAmount = totalRevenue
