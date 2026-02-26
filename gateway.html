@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Gateway</title>
+    <title>Toolbox Pay | Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
@@ -20,75 +20,34 @@
         .input-area:focus { border-left-color: var(--toolbox-orange); }
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; transition: 0.2s; }
         .btn-main:active { transform: scale(0.98); opacity: 0.9; }
-        .toggle-text { font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; text-align: center; margin-top: 20px; cursor: pointer; }
     </style>
 </head>
-<body onload="checkAuthStatus()">
+<body>
 
     <div class="main-container">
         <header class="text-center mb-4">
             <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
                 <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
             </h1>
-            <div id="gatewayStatus" style="color: #FF9500;" class="font-black tracking-[0.4em] text-[10px] uppercase">Secure Gateway</div>
+            <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[10px] uppercase">Secure Gateway</div>
         </header>
 
-        <section class="card" id="authCard">
+        <section class="card">
             <div id="loginView">
                 <span class="label-text text-center">Enter Access Pin</span>
-                <input type="password" id="loginPin" class="input-area mb-6" placeholder="••••" maxlength="4" inputmode="numeric">
+                <input type="password" id="loginPin" class="input-area mb-2" placeholder="••••" maxlength="4" inputmode="numeric">
+                <p class="text-[10px] text-slate-500 font-bold uppercase text-center mb-6">Securing your local labour records</p>
                 <button onclick="handleLogin()" class="btn-main">Unlock Dashboard</button>
             </div>
-
-            <div id="signupView" style="display: none;">
-                <span class="label-text text-center">Create Security Pin</span>
-                <input type="password" id="signupPin" class="input-area mb-2" placeholder="••••" maxlength="4" inputmode="numeric">
-                <p class="text-[10px] text-slate-500 font-bold uppercase text-center mb-6">This secures your local labour records</p>
-                <button onclick="handleSignup()" class="btn-main">Initialise Account</button>
-            </div>
         </section>
-
-        <div id="toggleBtn" class="toggle-text" onclick="toggleView()">Need to create an account?</div>
     </div>
 
     <script>
-        function checkAuthStatus() {
-            const hasAccount = localStorage.getItem('toolboxUserPin');
-            if (!hasAccount) {
-                showSignup();
-            }
-        }
-
-        function toggleView() {
-            const isLogin = document.getElementById('loginView').style.display !== 'none';
-            if (isLogin) showSignup(); else showLogin();
-        }
-
-        function showSignup() {
-            document.getElementById('loginView').style.display = 'none';
-            document.getElementById('signupView').style.display = 'block';
-            document.getElementById('gatewayStatus').innerText = "System Registration";
-            document.getElementById('toggleBtn').innerText = "Already have an account? Login";
-        }
-
-        function showLogin() {
-            document.getElementById('loginView').style.display = 'block';
-            document.getElementById('signupView').style.display = 'none';
-            document.getElementById('gatewayStatus').innerText = "Secure Gateway";
-            document.getElementById('toggleBtn').innerText = "Need to create an account? Sign-up";
-        }
-
-        function handleSignup() {
-            const pin = document.getElementById('signupPin').value;
-            if (pin.length < 4) return alert("Security Pin must be 4 digits.");
-            localStorage.setItem('toolboxUserPin', pin);
-            alert("Security initialized. Please login.");
-            showLogin();
-        }
-
         function handleLogin() {
             const entered = document.getElementById('loginPin').value;
+            // Accessing the PIN stored during the initial setup/registration
             const saved = localStorage.getItem('toolboxUserPin');
+            
             if (entered === saved) {
                 sessionStorage.setItem('toolboxAuthenticated', 'true');
                 window.location.href = 'dashboard.html';
