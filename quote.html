@@ -9,7 +9,7 @@
         :root { --toolbox-orange: #FF9500; }
         body { background-color: #05070A; color: #FFFFFF; font-family: 'Inter', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .sidebar { width: 400px; background: #0B0E14; border-right: 1px solid #1E232D; padding: 24px; overflow-y: auto; flex-shrink: 0; }
-        .industrial-input { background: #11141B; border: 1px solid #1E232D; border-radius: 4px; color: white; padding: 12px; width: 100%; margin-bottom: 16px; outline: none; font-size: 13px; border-left: 2px solid transparent; transition: 0.2s; }
+        .industrial-input { background: #11141B; border: 1px solid #1E232D; border-radius: 4px; color: white; padding: 12px; width: 100%; margin-bottom: 16px; outline: none; font-size: 13px; border-left: 2px solid transparent; }
         .industrial-input:focus { border-left-color: var(--toolbox-orange); background: #161A22; }
         .invoice-paper { background: white; color: #1a1a1a; width: 100%; max-width: 800px; min-height: 1050px; padding: 80px 60px; margin: 20px auto; box-shadow: 0 40px 80px rgba(0,0,0,0.6); position: relative; }
         .label { font-size: 10px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 5px; }
@@ -20,22 +20,22 @@
 
     <nav class="h-16 border-b-2 border-[#FF9500] bg-[#0B0E14] flex items-center justify-between px-6 flex-shrink-0">
         <div class="font-black text-xl uppercase tracking-tighter">
-            <span class="orange-text">TOOLBOX</span>PAY
+            <span class="orange-text">toolbox</span>pay
         </div>
         <div class="flex gap-4">
-            <span class="text-[10px] font-black text-slate-500 uppercase self-center tracking-widest">Version 3.0</span>
+            <span class="text-[10px] font-black text-slate-500 uppercase self-center tracking-widest">v3.0 Stable</span>
             <button onclick="window.print()" class="bg-[#FF9500] text-black px-6 py-2 rounded font-black text-xs uppercase shadow-lg shadow-orange-500/20 hover:bg-orange-400 transition-all">Print Document</button>
         </div>
     </nav>
 
     <div class="flex flex-1 overflow-hidden">
         <aside class="sidebar">
-            <h2 class="orange-text font-black text-xs uppercase mb-6 tracking-widest">Configuration</h2>
+            <h2 class="orange-text font-black text-xs uppercase mb-6 tracking-widest">Input Control</h2>
             
             <span class="label">Customer Name</span>
             <input type="text" id="custName" class="industrial-input" value="Emerald Barry">
 
-            <span class="label">Work Description (AI v3 Engine)</span>
+            <span class="label">Description (AI v3 Extraction)</span>
             <textarea id="workDesc" class="industrial-input h-40" placeholder="e.g. 25 labour and 33 for parts..."></textarea>
 
             <div class="grid grid-cols-2 gap-4">
@@ -45,8 +45,8 @@
 
             <div class="pt-6 mt-6 border-t border-slate-800">
                 <span class="label">Bank Details</span>
-                <input type="text" id="bankSort" class="industrial-input" placeholder="Sort Code" value="00-00-00">
-                <input type="text" id="bankAcc" class="industrial-input" placeholder="Account Number" value="00000000">
+                <input type="text" id="bankSort" class="industrial-input" value="00-00-00">
+                <input type="text" id="bankAcc" class="industrial-input" value="00000000">
             </div>
         </aside>
 
@@ -62,10 +62,11 @@
             let labVal = parseFloat(document.getElementById('labour').value) || 0;
             let partVal = parseFloat(document.getElementById('parts').value) || 0;
 
-            // v3 Extraction Logic - Finds numbers before "LABOUR" or "PARTS"
+            // v3 Extraction - Matches "25 LABOUR"
             const labMatch = descUpper.match(/(\d+(?:\.\d+)?)\s*LABOUR/);
             if(labMatch && labVal === 0) labVal = parseFloat(labMatch[1]);
             
+            // v3 Extraction - Matches "33 FOR PARTS"
             const partMatch = descUpper.match(/(\d+(?:\.\d+)?)\s*(?:POUNDS\s*)?FOR\s*PARTS/);
             if(partMatch && partVal === 0) partVal = parseFloat(partMatch[1]);
 
@@ -76,7 +77,7 @@
             document.getElementById('invoice').innerHTML = `
                 <div class="flex justify-between items-start mb-20">
                     <div>
-                        <h1 class="text-3xl font-black uppercase leading-none"><span class="orange-text">TOOLBOX</span>PAY</h1>
+                        <h1 class="text-3xl font-black uppercase leading-none"><span class="orange-text">toolbox</span>pay</h1>
                         <div class="mt-2 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Professional Site Quotes</div>
                     </div>
                     <div class="text-right">
@@ -92,7 +93,7 @@
 
                 <div class="min-h-[280px] border-b border-slate-100 pb-10">
                     <div class="text-[9px] font-black text-slate-300 uppercase mb-5 border-b pb-2 tracking-widest">Description of Works</div>
-                    <div class="text-[15px] font-medium uppercase leading-loose text-slate-700 whitespace-pre-wrap">${descInput || 'Awaiting description...'}</div>
+                    <div class="text-[15px] font-medium uppercase leading-loose text-slate-700 whitespace-pre-wrap">${descInput || 'Awaiting input...'}</div>
                 </div>
 
                 <div class="mt-12 space-y-5">
@@ -124,7 +125,7 @@
                         <div class="text-[12px] font-bold uppercase text-slate-900">Account: ${document.getElementById('bankAcc').value}</div>
                     </div>
                     <div class="text-right">
-                        <div class="text-[10px] font-bold uppercase text-slate-400">Thank you for your business.</div>
+                        <div class="text-[10px] font-bold uppercase text-slate-400">Toolbox Pay Ltd. Registered in the UK.</div>
                     </div>
                 </div>
             `;
