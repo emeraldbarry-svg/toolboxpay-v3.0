@@ -115,12 +115,96 @@
             <span class="label-text">Work Description</span>
             <textarea id="workDesc" class="input-area h-24 mb-6" placeholder="Describe the work done..."></textarea>
             
-            <span class="label-text">Labour <span class="curr-sym">£</span></span>
-            <input type="number" id="labour" class="input-area mb-6" placeholder="0" oninput="runCalc()">
+            <div class="flex gap-4 mb-6">
+                <div class="flex-[2]">
+                    <span class="label-text">Labour <span class="curr-sym">£</span></span>
+                    <input type="number" id="labour" class="input-area" placeholder="0" oninput="runCalc()">
+                </div>
+                <div class="flex-1">
+                    <span class="label-text">Tax %</span>
+                    <input type="number" id="taxRate" class="input-area text-center" value="20" oninput="runCalc()">
+                </div>
+            </div>
             
             <span class="label-text">Materials</span>
             <div id="materialList" class="mb-4"></div>
             
             <div class="flex gap-2 mb-6 no-print">
                 <input type="text" id="matName" class="input-area" placeholder="Item name">
-                <input type="number" id="matPrice" class="
+                <input type="number" id="matPrice" class="input-area w-24" placeholder="0">
+                <button onclick="addMaterial()" class="add-btn">+</button>
+            </div>
+            
+            <span class="label-text">Additional Costs <span class="curr-sym">£</span></span>
+            <input type="number" id="expenses" class="input-area" placeholder="0" oninput="runCalc()">
+        </section>
+
+        <section class="card display-box">
+            <div class="space-y-6 mb-10">
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-[11px]">Subtotal (Labour + Mats)</span>
+                    <span id="dispRevenue" class="text-xl font-black">£0.00</span>
+                </div>
+                <div class="flex justify-between items-center no-print">
+                    <span class="text-red-500 font-bold uppercase tracking-widest text-[11px]">Tax Provision (<span id="taxLabel">20</span>%)</span>
+                    <span id="dispTax" class="text-xl font-black text-red-500">-£0.00</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-slate-700 pb-6">
+                    <span class="text-orange-400 font-bold uppercase tracking-widest text-[11px]">Total Expenses</span>
+                    <span id="dispExpenses" class="text-xl font-black text-orange-400">-£0.00</span>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <span class="text-emerald-400 font-black uppercase tracking-tighter text-[11px] block mb-2">Total Balance Due:</span>
+                <span id="dispTakeHome" class="text-7xl font-black" style="color: #FF9500;">£0.00</span>
+            </div>
+        </section>
+
+        <section class="card">
+            <span class="label-text">Notes / Terms / Thanks:</span>
+            <textarea id="footerNotes" class="input-area h-20 text-xs mb-6" placeholder="e.g. Thanks for your business!" oninput="saveDetails()"></textarea>
+            
+            <button onclick="window.print()" class="btn-main no-print">SHARE VIA WHATSAPP / PDF</button>
+            <button onclick="shareEmail()" class="btn-outline no-print">SHARE VIA EMAIL</button>
+            <button onclick="resetApp()" class="btn-sub no-print">CLEAR EVERYTHING</button>
+        </section>
+    </div>
+
+    <script>
+        let materialsArr = [];
+        let currSym = '£';
+
+        function generateRef() {
+            const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
+            const rand = Math.floor(1000 + Math.random() * 9000);
+            return `REF-${dateStr}-${rand}`;
+        }
+
+        function initApp() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('quoteDate').value = today;
+            document.getElementById('jobRef').value = generateRef();
+            const savedCurr = localStorage.getItem('toolboxCurr') || '£';
+            setCurrency(savedCurr);
+            loadDetails();
+        }
+
+        function setCurrency(sym) {
+            currSym = sym;
+            localStorage.setItem('toolboxCurr', sym);
+            document.querySelectorAll('.curr-sym').forEach(el => el.innerText = sym);
+            document.querySelectorAll('.currency-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText.includes(sym));
+            });
+            runCalc();
+        }
+
+        function saveDetails() {
+            localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
+            localStorage.setItem('toolboxTaxRef', document.getElementById('taxRef').value);
+            localStorage.setItem('toolboxBank', document.getElementById('bankDetails').value);
+            localStorage.setItem('toolboxFooter', document.getElementById('footerNotes').value);
+        }
+
+        function load
