@@ -7,37 +7,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
-        body { 
-            background-color: var(--bg-midnight); 
-            color: #FFFFFF; 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; padding: 15px; 
-            display: flex; flex-direction: column; align-items: center;
-        }
+        body { background-color: var(--bg-midnight); color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
         .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); }
         .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
-        
         .toggle-group { display: flex; background: #0F172A; padding: 6px; border-radius: 18px; gap: 6px; position: relative; }
         .toggle-group input { position: absolute; opacity: 0; width: 0; height: 0; }
-        .toggle-label { 
-            flex: 1; padding: 16px; border-radius: 14px; font-size: 14px; font-weight: 900; 
-            color: #94A3B8; cursor: pointer; text-align: center; transition: 0.2s all ease;
-            -webkit-tap-highlight-color: transparent;
-        }
-        input:checked + .toggle-label { 
-            background-color: var(--toolbox-orange) !important; 
-            color: #000000 !important; 
-            box-shadow: 0 4px 15px rgba(255, 149, 0, 0.5);
-        }
-
+        .toggle-label { flex: 1; padding: 16px; border-radius: 14px; font-size: 14px; font-weight: 900; color: #94A3B8; cursor: pointer; text-align: center; transition: 0.2s all ease; -webkit-tap-highlight-color: transparent; }
+        input:checked + .toggle-label { background-color: var(--toolbox-orange) !important; color: #000000 !important; box-shadow: 0 4px 15px rgba(255, 149, 0, 0.5); }
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); }
         .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; border-left: 3px solid var(--toolbox-orange); }
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
-        
-        @media print { .no-print { display: none !important; } .print-only { display: block !important; } }
-        .print-only { display: none; }
+        @media print { .no-print { display: none !important; } }
     </style>
 </head>
 <body onload="initApp()">
@@ -47,14 +29,17 @@
             <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
         </h1>
         <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[12px] uppercase mb-1">COMMAND CENTRE</div>
-        <a href="settings.html" class="no-print text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-700 pb-1">Edit Bank Details</a>
+        <div class="flex justify-center gap-4 no-print mt-2">
+            <a href="settings.html" class="text-[9px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-700 pb-1">Profile</a>
+            <a href="history.html" class="text-[9px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-700 pb-1">Job Log</a>
+        </div>
     </header>
 
     <div class="main-container">
         <div class="card">
             <span class="label-text">From:</span>
             <div id="displayBiz" class="text-xl font-black text-white">Your Business</div>
-            <div id="displayBank" class="text-xs text-slate-400 font-mono mt-1">Setup bank details in settings</div>
+            <div id="displayBank" class="text-xs text-slate-400 font-mono mt-1">Bank details not set</div>
         </div>
 
         <section class="card no-print">
@@ -66,7 +51,7 @@
 
         <section class="card">
             <span class="label-text">Work Description</span>
-            <textarea id="workDesc" class="input-area h-24 mb-6" placeholder="Details of the job..."></textarea>
+            <textarea id="workDesc" class="input-area h-24 mb-6" placeholder="Job details..."></textarea>
             
             <span class="label-text">Labour <span class="curr-sym">£</span></span>
             <input type="number" id="labour" class="input-area mb-6" placeholder="0" oninput="runCalc()">
@@ -97,14 +82,13 @@
                 <span class="label-text mb-0 text-white">Total Balance Due:</span>
                 <span id="dispTotal" class="text-4xl font-black text-[#FF9500]">£0.00</span>
             </div>
-            <button onclick="window.print()" class="btn-main">SHARE SETTLEMENT</button>
+            <button onclick="saveAndPrint()" class="btn-main">SAVE & SHARE</button>
         </section>
     </div>
 
     <script>
         let currentSymbol = '£';
         let materialsArr = [];
-        let clientsArr = JSON.parse(localStorage.getItem('toolboxClients')) || [];
 
         function initApp() {
             loadProfile();
@@ -174,6 +158,22 @@
                 document.getElementById('dispTax').innerText = `${currentSymbol}${taxAmount.toFixed(2)}`;
             } else { taxRow.classList.add('hidden'); }
             document.getElementById('dispTotal').innerText = `${currentSymbol}${total.toFixed(2)}`;
+        }
+
+        function saveAndPrint() {
+            const history = JSON.parse(localStorage.getItem('toolboxHistory')) || [];
+            const select = document.getElementById('clientSelect');
+            const clientName = select.options[select.selectedIndex].text;
+            const totalVal = document.getElementById('dispTotal').innerText;
+            
+            history.push({
+                date: new Date().toLocaleDateString('en-GB'),
+                client: clientName === "-- No Client Selected --" ? "Cash Client" : clientName,
+                total: totalVal
+            });
+            
+            localStorage.setItem('toolboxHistory', JSON.stringify(history));
+            window.print();
         }
     </script>
 </body>
