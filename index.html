@@ -64,6 +64,7 @@
             .input-area { background: white; border: none; color: black; padding: 5px; }
             #dispTakeHome { color: black !important; }
             header h1 span { color: black !important; }
+            .label-text { color: #666 !important; }
         }
     </style>
 </head>
@@ -78,9 +79,15 @@
 
     <div class="main-container">
         <section class="card">
-            <div class="mb-6">
-                <span class="label-text">Quote Date:</span>
-                <input type="date" id="quoteDate" class="input-area font-bold">
+            <div class="flex gap-4 mb-6">
+                <div class="flex-1">
+                    <span class="label-text">Date:</span>
+                    <input type="date" id="quoteDate" class="input-area font-bold text-sm">
+                </div>
+                <div class="flex-1">
+                    <span class="label-text">Job Ref:</span>
+                    <input type="text" id="jobRef" class="input-area font-bold text-sm" readonly>
+                </div>
             </div>
 
             <span class="label-text">Quote For:</span>
@@ -119,35 +126,4 @@
                     <span id="dispRevenue" class="text-xl font-black">£0.00</span>
                 </div>
                 <div class="flex justify-between items-center no-print">
-                    <span class="text-red-500 font-bold uppercase tracking-widest text-[11px]">Tax Provision (20%)</span>
-                    <span id="dispTax" class="text-xl font-black text-red-500">-£0.00</span>
-                </div>
-                <div class="flex justify-between items-center border-b border-slate-700 pb-6">
-                    <span class="text-orange-400 font-bold uppercase tracking-widest text-[11px]">Total Expenses</span>
-                    <span id="dispExpenses" class="text-xl font-black text-orange-400">-£0.00</span>
-                </div>
-            </div>
-            
-            <div class="text-center">
-                <span class="text-emerald-400 font-black uppercase tracking-tighter text-[11px] block mb-2">Total Balance Due:</span>
-                <span id="dispTakeHome" class="text-7xl font-black" style="color: #FF9500;">£0.00</span>
-            </div>
-        </section>
-
-        <section class="card">
-            <span class="label-text">Notes / Terms / Thanks:</span>
-            <textarea id="footerNotes" class="input-area h-20 text-xs mb-6" placeholder="e.g. Thanks for your business!" oninput="saveDetails()"></textarea>
-            
-            <button onclick="window.print()" class="btn-main no-print">SHARE VIA WHATSAPP / PDF</button>
-            <button onclick="shareEmail()" class="btn-outline no-print">SHARE VIA EMAIL</button>
-            <button onclick="resetApp()" class="btn-sub no-print">CLEAR EVERYTHING</button>
-        </section>
-    </div>
-
-    <script>
-        let materialsArr = [];
-
-        function initApp() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('quoteDate').value = today;
-            loadDetails();
+                    <span class
