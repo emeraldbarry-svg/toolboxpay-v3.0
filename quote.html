@@ -22,27 +22,20 @@
         <div class="font-black text-xl uppercase tracking-tighter">
             <span class="orange-text">toolbox</span>pay
         </div>
-        <div class="flex gap-4">
-            <span class="text-[10px] font-black text-slate-500 uppercase self-center tracking-widest">v3.0 Stable</span>
-            <button onclick="window.print()" class="bg-[#FF9500] text-black px-6 py-2 rounded font-black text-xs uppercase shadow-lg shadow-orange-500/20 hover:bg-orange-400 transition-all">Print Document</button>
-        </div>
+        <button onclick="window.print()" class="bg-[#FF9500] text-black px-6 py-2 rounded font-black text-xs uppercase shadow-lg shadow-orange-500/20 hover:bg-orange-400 transition-all">Print Quote</button>
     </nav>
 
     <div class="flex flex-1 overflow-hidden">
         <aside class="sidebar">
-            <h2 class="orange-text font-black text-xs uppercase mb-6 tracking-widest">Input Control</h2>
-            
+            <h2 class="orange-text font-black text-xs uppercase mb-6 tracking-widest">Configuration</h2>
             <span class="label">Customer Name</span>
             <input type="text" id="custName" class="industrial-input" value="Emerald Barry">
-
-            <span class="label">Description (AI v3 Extraction)</span>
+            <span class="label">Work Description (AI v3 Extraction)</span>
             <textarea id="workDesc" class="industrial-input h-40" placeholder="e.g. 25 labour and 33 for parts..."></textarea>
-
             <div class="grid grid-cols-2 gap-4">
                 <div><span class="label">Labour (£)</span><input type="number" id="labour" class="industrial-input" value="0"></div>
                 <div><span class="label">Parts (£)</span><input type="number" id="parts" class="industrial-input" value="0"></div>
             </div>
-
             <div class="pt-6 mt-6 border-t border-slate-800">
                 <span class="label">Bank Details</span>
                 <input type="text" id="bankSort" class="industrial-input" value="00-00-00">
@@ -62,11 +55,8 @@
             let labVal = parseFloat(document.getElementById('labour').value) || 0;
             let partVal = parseFloat(document.getElementById('parts').value) || 0;
 
-            // v3 Extraction - Matches "25 LABOUR"
             const labMatch = descUpper.match(/(\d+(?:\.\d+)?)\s*LABOUR/);
             if(labMatch && labVal === 0) labVal = parseFloat(labMatch[1]);
-            
-            // v3 Extraction - Matches "33 FOR PARTS"
             const partMatch = descUpper.match(/(\d+(?:\.\d+)?)\s*(?:POUNDS\s*)?FOR\s*PARTS/);
             if(partMatch && partVal === 0) partVal = parseFloat(partMatch[1]);
 
@@ -78,24 +68,21 @@
                 <div class="flex justify-between items-start mb-20">
                     <div>
                         <h1 class="text-3xl font-black uppercase leading-none"><span class="orange-text">toolbox</span>pay</h1>
-                        <div class="mt-2 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Professional Site Quotes</div>
+                        <div class="mt-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Professional Site Quotes</div>
                     </div>
                     <div class="text-right">
                         <h2 class="text-5xl font-light text-slate-200 uppercase tracking-tighter leading-none">Quote</h2>
-                        <div class="text-[10px] font-black text-slate-400 mt-4 uppercase tracking-widest">Date: ${new Date().toLocaleDateString('en-GB')}</div>
+                        <div class="text-[10px] font-black text-slate-400 mt-4 uppercase">Date: ${new Date().toLocaleDateString('en-GB')}</div>
                     </div>
                 </div>
-
                 <div class="mb-16 border-l-4 border-[#FF9500] pl-8 py-3 bg-slate-50">
                     <div class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Prepared For:</div>
                     <div class="text-2xl font-bold text-slate-900 uppercase tracking-tight">${document.getElementById('custName').value}</div>
                 </div>
-
                 <div class="min-h-[280px] border-b border-slate-100 pb-10">
                     <div class="text-[9px] font-black text-slate-300 uppercase mb-5 border-b pb-2 tracking-widest">Description of Works</div>
-                    <div class="text-[15px] font-medium uppercase leading-loose text-slate-700 whitespace-pre-wrap">${descInput || 'Awaiting input...'}</div>
+                    <div class="text-[15px] font-medium uppercase leading-loose text-slate-700 whitespace-pre-wrap">${descInput || 'Awaiting description...'}</div>
                 </div>
-
                 <div class="mt-12 space-y-5">
                     <div class="flex justify-between text-base uppercase font-bold border-b border-slate-50 pb-5">
                         <span class="text-slate-400">Labour & Services</span>
@@ -106,7 +93,6 @@
                         <span class="text-slate-900">£${partVal.toFixed(2)}</span>
                     </div>
                 </div>
-
                 <div class="mt-24 flex justify-end">
                     <div class="w-80">
                         <div class="flex justify-between text-[11px] mb-4 font-bold text-slate-400 uppercase tracking-widest"><span>Net Subtotal</span><span>£${sub.toFixed(2)}</span></div>
@@ -117,15 +103,10 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="absolute bottom-16 left-[60px] right-[60px] pt-12 border-t border-slate-100 flex justify-between items-end">
                     <div>
                         <div class="text-[9px] font-black text-slate-300 uppercase mb-4 tracking-widest">Payment Destination</div>
-                        <div class="text-[12px] font-bold uppercase text-slate-900">Sort Code: ${document.getElementById('bankSort').value}</div>
-                        <div class="text-[12px] font-bold uppercase text-slate-900">Account: ${document.getElementById('bankAcc').value}</div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-[10px] font-bold uppercase text-slate-400">Toolbox Pay Ltd. Registered in the UK.</div>
+                        <div class="text-[12px] font-bold uppercase text-slate-900">Sort Code: ${document.getElementById('bankSort').value} | Account: ${document.getElementById('bankAcc').value}</div>
                     </div>
                 </div>
             `;
