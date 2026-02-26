@@ -86,7 +86,8 @@
             <input type="text" id="clientName" class="input-area mb-6 font-bold" placeholder="Customer Name / Address">
             
             <span class="label-text">From:</span>
-            <input type="text" id="bizName" class="input-area mb-3 text-sm" placeholder="Your Business Name" oninput="saveDetails()">
+            <input type="text" id="bizName" class="input-area mb-2 text-sm" placeholder="Your Business Name" oninput="saveDetails()">
+            <input type="text" id="taxRef" class="input-area mb-2 text-xs" placeholder="UTR or VAT Number" oninput="saveDetails()">
             <input type="text" id="bankDetails" class="input-area text-xs" placeholder="Bank Details" oninput="saveDetails()">
         </section>
 
@@ -134,7 +135,7 @@
 
         <section class="card">
             <span class="label-text">Notes / Terms / Thanks:</span>
-            <textarea id="footerNotes" class="input-area h-20 text-xs" placeholder="e.g. Thanks for your business! Please pay within 7 days." oninput="saveDetails()"></textarea>
+            <textarea id="footerNotes" class="input-area h-20 text-xs mb-4" placeholder="e.g. Thanks for your business! Please pay within 7 days." oninput="saveDetails()"></textarea>
             
             <button onclick="window.print()" class="btn-main no-print">SHARE VIA WHATSAPP / PDF</button>
             <button onclick="resetApp()" class="btn-sub no-print">CLEAR EVERYTHING</button>
@@ -152,12 +153,14 @@
 
         function saveDetails() {
             localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
+            localStorage.setItem('toolboxTaxRef', document.getElementById('taxRef').value);
             localStorage.setItem('toolboxBank', document.getElementById('bankDetails').value);
             localStorage.setItem('toolboxFooter', document.getElementById('footerNotes').value);
         }
 
         function loadDetails() {
             document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
+            document.getElementById('taxRef').value = localStorage.getItem('toolboxTaxRef') || '';
             document.getElementById('bankDetails').value = localStorage.getItem('toolboxBank') || '';
             document.getElementById('footerNotes').value = localStorage.getItem('toolboxFooter') || '';
         }
@@ -196,24 +199,4 @@
             const matTotal = materialsArr.reduce((sum, m) => sum + m.price, 0);
             const exp = parseFloat(document.getElementById('expenses').value) || 0;
             const totalRevenue = lab + matTotal;
-            const taxAmount = totalRevenue * 0.20;
-            const takeHome = totalRevenue - taxAmount - exp;
-            
-            document.getElementById('dispRevenue').innerText = `£${totalRevenue.toFixed(2)}`;
-            document.getElementById('dispTax').innerText = `-£${taxAmount.toFixed(2)}`;
-            document.getElementById('dispExpenses').innerText = `-£${(matTotal + exp).toFixed(2)}`;
-            document.getElementById('dispTakeHome').innerText = `£${takeHome.toFixed(2)}`;
-        }
-
-        function resetApp() {
-            document.querySelectorAll('input, textarea').forEach(el => {
-                const preserved = ['bizName', 'bankDetails', 'quoteDate', 'footerNotes'];
-                if(!preserved.includes(el.id)) el.value = '';
-            });
-            materialsArr = [];
-            renderMaterials();
-            runCalc();
-        }
-    </script>
-</body>
-</html>
+            const taxAmount = totalRevenue
