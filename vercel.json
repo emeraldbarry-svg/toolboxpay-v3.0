@@ -7,6 +7,6 @@
   "installCommand": null,
   "outputDirectory": ".",
   "rewrites": [
-    { "source": "/", "destination": "/quote.html" }
+    { "source": "/", "destination": "/index.html" }
   ]
 }
