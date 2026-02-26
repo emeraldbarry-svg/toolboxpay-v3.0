@@ -7,8 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
-        
-        /* CACHE-BREAKER: FORCED RESET */
         * { border: none !important; box-shadow: none !important; outline: none !important; }
 
         body { 
@@ -20,101 +18,105 @@
             display: flex; 
             flex-direction: column; 
             align-items: center;
+            min-height: 100vh;
         }
 
-        .dashboard-v2-shell { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 12px; }
+        .dashboard-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 100px; }
 
-        /* BRANDING: TOOLBOX (Orange) PAY (White) */
-        .branding-v2 { text-align: center; padding: 30px 0 15px 0; background: transparent !important; }
-        .t-orange { font-size: 42px; font-weight: 900; color: var(--toolbox-orange); text-transform: uppercase; letter-spacing: -0.05em; }
-        .p-white { font-size: 42px; font-weight: 900; color: #FFFFFF; text-transform: uppercase; letter-spacing: -0.05em; }
-        .tagline-v2 { font-size: 10px; font-weight: 900; color: #94A3B8; letter-spacing: 0.3em; text-transform: uppercase; margin-top: 5px; }
+        /* BRANDING */
+        .brand-zone { text-align: center; padding: 30px 0 15px 0; }
+        .t-org { font-size: 42px; font-weight: 900; color: var(--toolbox-orange); text-transform: uppercase; }
+        .p-wht { font-size: 42px; font-weight: 900; color: #FFFFFF; text-transform: uppercase; }
+        .tag-line { font-size: 10px; font-weight: 900; color: #94A3B8; letter-spacing: 0.3em; text-transform: uppercase; margin-top: 5px; }
 
-        /* THE 5-TAB MENU SYSTEM */
-        .nav-grid-item {
+        /* MENU ITEMS */
+        .nav-card {
             background: rgba(30, 41, 59, 0.4);
             border: 1px solid rgba(255, 149, 0, 0.2) !important;
             border-radius: 20px !important;
-            padding: 20px;
+            padding: 18px;
             display: flex;
             align-items: center;
-            gap: 18px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            gap: 15px;
             text-decoration: none;
             color: inherit;
+            transition: 0.2s;
         }
+        .nav-card:hover { border-color: var(--toolbox-orange) !important; background: rgba(30, 41, 59, 0.6); }
 
-        .nav-grid-item:hover { 
-            transform: scale(1.02); 
-            border-color: var(--toolbox-orange) !important; 
-            background: rgba(30, 41, 59, 0.6); 
-        }
+        .icon-sq { width: 50px; height: 50px; background: rgba(255, 149, 0, 0.1); border-radius: 14px !important; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+        .title-txt { font-size: 15px; font-weight: 900; text-transform: uppercase; }
+        .desc-txt { font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase; }
 
-        .icon-square {
-            width: 52px;
-            height: 52px;
-            background: rgba(255, 149, 0, 0.1);
-            border-radius: 14px !important;
+        /* PERSISTENT CHAT WIDGET */
+        .chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--toolbox-orange);
+            border-radius: 50% !important;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 149, 0, 0.3) !important;
+            z-index: 9999;
         }
-
-        .info-stack { display: flex; flex-direction: column; }
-        .title-text { font-size: 16px; font-weight: 900; text-transform: uppercase; color: #FFFFFF; }
-        .desc-text { font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-top: 2px; }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-v2-shell">
-        <div class="branding-v2">
-            <span class="t-orange">TOOLBOX</span><span class="p-white">PAY</span>
-            <p class="tagline-v2">Command Centre</p>
+    <div class="dashboard-container">
+        <div class="brand-zone">
+            <span class="t-org">TOOLBOX</span><span class="p-wht">PAY</span>
+            <p class="tag-line">Command Centre</p>
         </div>
 
-        <a href="index.html" class="nav-grid-item">
-            <div class="icon-square">💰</div>
-            <div class="info-stack">
-                <span class="title-text">New Settlement</span>
-                <span class="desc-text">Calculate labour & costs</span>
+        <a href="index.html" class="nav-card">
+            <div class="icon-sq">💰</div>
+            <div>
+                <div class="title-txt">New Settlement</div>
+                <div class="desc-txt">Calculate labour & costs</div>
             </div>
         </a>
 
-        <a href="photos.html" class="nav-grid-item">
-            <div class="icon-square">📸</div>
-            <div class="info-stack">
-                <span class="title-text">Photos & Evidence</span>
-                <span class="desc-text">Site photos & documentation</span>
+        <a href="photos.html" class="nav-card">
+            <div class="icon-sq">📸</div>
+            <div>
+                <div class="title-txt">Photos & Evidence</div>
+                <div class="desc-txt">Site images & records</div>
             </div>
         </a>
 
-        <a href="history.html" class="nav-grid-item">
-            <div class="icon-square">📜</div>
-            <div class="info-stack">
-                <span class="title-text">Job History</span>
-                <span class="desc-text">View previous work records</span>
+        <a href="history.html" class="nav-card">
+            <div class="icon-sq">📜</div>
+            <div>
+                <div class="title-txt">Job History</div>
+                <div class="desc-txt">Archive of previous work</div>
             </div>
         </a>
 
-        <a href="profile.html" class="nav-grid-item">
-            <div class="icon-square">⚒️</div>
-            <div class="info-stack">
-                <span class="title-text">Business Profile</span>
-                <span class="desc-text">Bank details & QR code</span>
+        <a href="profile.html" class="nav-card">
+            <div class="icon-sq">⚒️</div>
+            <div>
+                <div class="title-txt">Business Profile</div>
+                <div class="desc-txt">Bank details & QR Code</div>
             </div>
         </a>
 
-        <a href="lock.html" class="nav-grid-item">
-            <div class="icon-square">🔒</div>
-            <div class="info-stack">
-                <span class="title-text">Lock System</span>
-                <span class="desc-text">Secure local records</span>
+        <a href="lock.html" class="nav-card">
+            <div class="icon-sq">🔒</div>
+            <div>
+                <div class="title-txt">Lock System</div>
+                <div class="desc-txt">Secure your local data</div>
             </div>
         </a>
     </div>
+
+    <div class="chat-widget" onclick="alert('Support Chat Opening...')">💬</div>
 
 </body>
 </html>
