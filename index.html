@@ -8,13 +8,8 @@
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
         
-        /* FORCE REMOVAL OF ALL BORDERS FROM HEADER */
-        #top-branding, #top-branding * { 
-            border: none !important; 
-            box-shadow: none !important; 
-            background: transparent !important;
-            outline: none !important;
-        }
+        /* THE CACHE-BUSTER: NO BORDERS ALLOWED ON LOGO */
+        #v2-clean-layout * { border: none !important; box-shadow: none !important; outline: none !important; }
         
         body { 
             background-color: var(--bg-midnight); 
@@ -27,75 +22,86 @@
             align-items: center;
         }
 
-        .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
+        .main-wrapper { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* RAW BRANDING */
-        #top-branding { text-align: center; padding: 40px 0 10px 0; }
-        .logo-main { font-size: 46px; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase; line-height: 1; margin: 0; }
-        .logo-sub { font-size: 11px; font-weight: 900; color: var(--toolbox-orange); letter-spacing: 0.5em; text-transform: uppercase; margin-top: 15px; }
+        /* BORDERLESS BRANDING */
+        #v2-clean-layout { text-align: center; padding: 40px 0 10px 0; background: transparent !important; }
+        .brand-text { font-size: 46px; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase; line-height: 1; margin: 0; }
+        .brand-sub { font-size: 11px; font-weight: 900; color: var(--toolbox-orange); letter-spacing: 0.5em; text-transform: uppercase; margin-top: 15px; }
 
-        /* CARD ELEMENTS */
-        .ui-card {
+        /* INPUT SECTIONS */
+        .content-card {
             background: rgba(30, 41, 59, 0.4);
-            border-radius: 28px;
+            border-radius: 28px !important;
             padding: 25px;
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
-        .label-text { font-size: 10px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
+        .tiny-label { font-size: 10px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
         
-        .input-field {
-            background: #0F172A; 
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 16px; 
+        .flat-input {
+            background: #0F172A !important; 
+            border: 1px solid rgba(255,255,255,0.05) !important;
+            border-radius: 16px !important; 
             color: #FFFFFF; 
             padding: 18px; 
             width: 100%;
             font-size: 16px;
         }
 
-        /* VOICE MIC */
-        .mic-btn {
-            width: 85px; height: 85px; border-radius: 50%;
-            background: rgba(255, 149, 0, 0.05);
-            border: 3px solid var(--toolbox-orange);
+        /* MIC CONTROLS */
+        .mic-sphere {
+            width: 85px; height: 85px; border-radius: 50% !important;
+            background: rgba(255, 149, 0, 0.05) !important;
+            border: 3px solid var(--toolbox-orange) !important;
             display: flex; align-items: center; justify-content: center;
             font-size: 34px; cursor: pointer; margin: 10px auto;
         }
-        .mic-btn.active { background: var(--toolbox-orange); color: #000; box-shadow: 0 0 40px rgba(255, 149, 0, 0.3); }
+        .mic-sphere.listening {
+            background: var(--toolbox-orange) !important;
+            color: #000;
+            box-shadow: 0 0 40px rgba(255, 149, 0, 0.3) !important;
+        }
 
-        .notes-box {
-            background: #0F172A; 
-            border-radius: 20px; 
+        .transcript-box {
+            background: #0F172A !important; 
+            border-radius: 20px !important; 
             padding: 20px;
             min-height: 110px; 
             font-size: 16px; 
             color: #94A3B8;
-            border-left: 5px solid var(--toolbox-orange);
+            border-left: 5px solid var(--toolbox-orange) !important;
         }
 
-        /* PRICE BOX AT BOTTOM */
-        .price-summary-box {
-            background: #1E293B;
-            border: 2px solid var(--toolbox-orange);
-            border-radius: 30px;
+        /* BOTTOM TOTAL */
+        .charge-summary {
+            background: #1E293B !important;
+            border: 2px solid var(--toolbox-orange) !important;
+            border-radius: 30px !important;
             padding: 35px 20px;
             text-align: center;
         }
-        .price-val { font-size: 72px; font-weight: 900; color: #FFFFFF; line-height: 1; display: flex; justify-content: center; }
-        .currency-symbol { font-size: 32px; margin-top: 10px; margin-right: 5px; color: var(--toolbox-orange); }
+        .large-price { 
+            font-size: 72px; 
+            font-weight: 900; 
+            color: #FFFFFF; 
+            line-height: 1; 
+            display: flex; 
+            justify-content: center; 
+        }
+        .currency-unit { font-size: 32px; margin-top: 10px; margin-right: 5px; color: var(--toolbox-orange); }
 
-        .btn-action { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 25px; border-radius: 22px; width: 100%; border: none; font-size: 18px; cursor: pointer; margin-top: 10px; }
+        .btn-collect { background: var(--toolbox-orange) !important; color: #000 !important; font-weight: 900; text-transform: uppercase; padding: 25px; border-radius: 22px !important; width: 100%; border: none; font-size: 18px; cursor: pointer; margin-top: 10px; }
         
-        .dashboard-return { 
+        .nav-footer { 
             color: #475569; 
             font-weight: 900; 
             text-transform: uppercase; 
             font-size: 11px; 
-            text-decoration: underline; 
-            margin: 20px 0; 
+            text-decoration: underline !important; 
+            margin-top: 25px; 
             display: block; 
             text-align: center; 
         }
@@ -103,90 +109,90 @@
 </head>
 <body>
 
-    <div class="main-container">
-        <div id="top-branding">
-            <h1 class="logo-main"><span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span></h1>
-            <p class="logo-sub">Record Work</p>
+    <div class="main-wrapper">
+        <div id="v2-clean-layout">
+            <h1 class="brand-text"><span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span></h1>
+            <p class="brand-sub">Record Work</p>
         </div>
 
-        <section class="ui-card">
+        <section class="content-card">
             <div>
-                <span class="label-text">Customer / Site</span>
-                <input type="text" class="input-field" placeholder="Client or job location">
+                <span class="tiny-label">Customer / Site</span>
+                <input type="text" class="flat-input" placeholder="Client or address">
             </div>
 
             <div class="text-center">
-                <div id="voiceMic" onclick="toggleVoice()" class="mic-btn">🎙️</div>
-                <span id="voiceLabel" class="label-text" style="margin-top: 5px;">Tap to Record Labour</span>
+                <div id="micIcon" onclick="startMic()" class="mic-sphere">🎙️</div>
+                <span id="micStatus" class="tiny-label" style="margin-top: 5px;">Tap to Record Labour</span>
             </div>
 
             <div>
-                <span class="label-text">Job Notes</span>
-                <div id="liveNotes" class="notes-box">...waiting for input</div>
+                <span class="tiny-label">Job Notes</span>
+                <div id="liveText" class="transcript-box">...listening for input</div>
             </div>
         </section>
 
-        <section class="price-summary-box">
-            <span class="label-text" style="color: var(--toolbox-orange)">Total to Charge</span>
-            <div class="price-val">
-                <span class="currency-symbol">£</span><span id="liveTotal">0.00</span>
+        <section class="charge-summary">
+            <span class="tiny-label" style="color: var(--toolbox-orange)">Total to Charge</span>
+            <div class="large-price">
+                <span class="currency-unit">£</span><span id="finalVal">0.00</span>
             </div>
         </section>
 
-        <button class="btn-action">Finalise & Collect</button>
+        <button class="btn-collect">Finalise & Collect</button>
 
-        <a href="dashboard.html" class="dashboard-return">Return to Dashboard</a>
+        <a href="dashboard.html" class="nav-footer">Return to Dashboard</a>
     </div>
 
     <script>
-        let recognition;
-        let isRecording = false;
-        let stopWait;
+        let rec;
+        let isActive = false;
+        let autoStop;
 
         if ('webkitSpeechRecognition' in window) {
-            recognition = new webkitSpeechRecognition();
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            recognition.lang = 'en-GB';
+            rec = new webkitSpeechRecognition();
+            rec.continuous = true;
+            rec.interimResults = true;
+            rec.lang = 'en-GB';
 
-            recognition.onresult = (event) => {
-                clearTimeout(stopWait);
-                let finalStr = '';
-                for (let i = event.resultIndex; i < event.results.length; ++i) {
-                    finalStr += event.results[i][0].transcript;
+            rec.onresult = (e) => {
+                clearTimeout(autoStop);
+                let speech = '';
+                for (let i = e.resultIndex; i < e.results.length; ++i) {
+                    speech += e.results[i][0].transcript;
                 }
-                document.getElementById('liveNotes').innerText = finalStr;
-                document.getElementById('liveNotes').style.color = "#FFFFFF";
+                document.getElementById('liveText').innerText = speech;
+                document.getElementById('liveText').style.color = "#FFFFFF";
 
-                const digits = finalStr.match(/\d+/g);
-                if (digits) {
-                    document.getElementById('liveTotal').innerText = parseFloat(digits[digits.length - 1]).toFixed(2);
+                const numbers = speech.match(/\d+/g);
+                if (numbers) {
+                    document.getElementById('finalVal').innerText = parseFloat(numbers[numbers.length - 1]).toFixed(2);
                 }
-                stopWait = setTimeout(() => { if(isRecording) stopRecording(); }, 15000);
+                autoStop = setTimeout(() => { if(isActive) stopMic(); }, 15000);
             };
-            recognition.onend = () => { if(isRecording) recognition.start(); };
+            rec.onend = () => { if(isActive) rec.start(); };
         }
 
-        function toggleVoice() {
-            const m = document.getElementById('voiceMic');
-            const l = document.getElementById('voiceLabel');
-            if (!isRecording) {
-                recognition.start();
-                isRecording = true;
-                m.classList.add('active');
-                l.innerText = "Listening...";
-                l.style.color = "#FF9500";
+        function startMic() {
+            const m = document.getElementById('micIcon');
+            const s = document.getElementById('micStatus');
+            if (!isActive) {
+                rec.start();
+                isActive = true;
+                m.classList.add('listening');
+                s.innerText = "Listening...";
+                s.style.color = "#FF9500";
             } else {
-                stopRecording();
+                stopMic();
             }
         }
 
-        function stopRecording() {
-            recognition.stop();
-            isRecording = false;
-            document.getElementById('voiceMic').classList.remove('active');
-            document.getElementById('voiceLabel').innerText = "Tap to Record Labour";
-            document.getElementById('voiceLabel').style.color = "#64748b";
+        function stopMic() {
+            rec.stop();
+            isActive = false;
+            document.getElementById('micIcon').classList.remove('listening');
+            document.getElementById('micStatus').innerText = "Tap to Record Labour";
+            document.getElementById('micStatus').style.color = "#64748b";
         }
     </script>
 </body>
