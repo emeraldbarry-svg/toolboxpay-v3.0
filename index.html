@@ -42,10 +42,18 @@
         }
         
         .label-text { font-size: 10px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
-        .input-area { background: #11141B; border: 1px solid #1E232D; border-radius: 12px; color: white; padding: 18px; width: 100%; margin-bottom: 12px; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; transition: 0.3s; }
+        
+        .input-area { background: #11141B; border: 1px solid #1E232D; border-radius: 12px; color: white; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); background: #161A22; }
         
-        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        /* Material List Styling */
+        .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: #161A22; padding: 8px; border-radius: 10px; }
+        .material-name { flex-grow: 1; font-size: 14px; color: #94A3B8; }
+        .material-cost { font-weight: 800; color: var(--toolbox-orange); }
+        
+        .add-btn { background: var(--toolbox-orange); color: black; font-size: 24px; font-weight: 900; width: 54px; height: 54px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        
+        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 20px; }
         .btn-sub { background: #1E232D; color: #64748B; font-weight: 700; text-transform: uppercase; padding: 16px; border-radius: 12px; width: 100%; border: none; margin-top: 12px; font-size: 11px; cursor: pointer; }
     </style>
 </head>
@@ -60,22 +68,24 @@
 
     <div class="main-container">
         <section class="card">
-            <span class="label-text">What was the job?</span>
-            <textarea id="workDesc" class="input-area h-32" placeholder="Describe the work..."></textarea>
+            <span class="label-text">Job Description</span>
+            <textarea id="workDesc" class="input-area h-24 mb-6" placeholder="Describe the work..."></textarea>
             
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <span class="label-text">Labour £</span>
-                    <input type="number" id="labour" class="input-area" placeholder="0">
+            <span class="label-text">Labour £</span>
+            <input type="number" id="labour" class="input-area mb-6" placeholder="0" oninput="runCalc()">
+            
+            <span class="label-text">Materials (Add individual items)</span>
+            <div id="materialList" class="mb-4">
                 </div>
-                <div>
-                    <span class="label-text">Parts £</span>
-                    <input type="number" id="parts" class="input-area" placeholder="0">
-                </div>
+            
+            <div class="flex gap-2 mb-6">
+                <input type="text" id="matName" class="input-area" placeholder="Item name">
+                <input type="number" id="matPrice" class="input-area w-24" placeholder="£">
+                <button onclick="addMaterial()" class="add-btn">+</button>
             </div>
             
-            <span class="label-text">Costs (Fuel/Tools) £</span>
-            <input type="number" id="expenses" class="input-area" placeholder="0">
+            <span class="label-text">Other Costs (Fuel/Tools) £</span>
+            <input type="number" id="expenses" class="input-area" placeholder="0" oninput="runCalc()">
             
             <button onclick="window.print()" class="btn-main">PRINT INVOICE</button>
             <button onclick="resetApp()" class="btn-sub">CLEAR EVERYTHING</button>
@@ -105,16 +115,44 @@
     </div>
 
     <script>
-        function runCalc() {
-            const desc = document.getElementById('workDesc').value.toUpperCase();
-            let lab = parseFloat(document.getElementById('labour').value) || 0;
-            let part = parseFloat(document.getElementById('parts').value) || 0;
-            let exp = parseFloat(document.getElementById('expenses').value) || 0;
+        let materials = [];
 
-            const labMatch = desc.match(/(\d+)\s*LABOUR/);
-            if(labMatch && lab === 0) lab = parseFloat(labMatch[1]);
+        function addMaterial() {
+            const name = document.getElementById('matName').value;
+            const price = parseFloat(document.getElementById('matPrice').value) || 0;
             
-            const totalRevenue = lab + part;
+            if (name && price > 0) {
+                materials.push({ name, price });
+                document.getElementById('matName').value = '';
+                document.getElementById('matPrice').value = '';
+                renderMaterials();
+                runCalc();
+            }
+        }
+
+        function renderMaterials() {
+            const list = document.getElementById('materialList');
+            list.innerHTML = materials.map((m, index) => `
+                <div class="material-row">
+                    <span class="material-name">${m.name}</span>
+                    <span class="material-cost">£${m.price.toFixed(2)}</span>
+                    <button onclick="removeMat(${index})" class="text-red-500 font-black ml-2">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function removeMat(index) {
+            materials.splice(index, 1);
+            renderMaterials();
+            runCalc();
+        }
+
+        function runCalc() {
+            const lab = parseFloat(document.getElementById('labour').value) || 0;
+            const matTotal = materials.reduce((sum, m) => sum + m.price, 0);
+            const exp = parseFloat(document.getElementById('expenses').value) || 0;
+
+            const totalRevenue = lab + matTotal;
             const taxAmount = totalRevenue * 0.20;
             const takeHome = totalRevenue - taxAmount - exp;
             
@@ -126,12 +164,10 @@
 
         function resetApp() {
             document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+            materials = [];
+            renderMaterials();
             runCalc();
         }
-
-        document.querySelectorAll('input, textarea').forEach(el => {
-            el.addEventListener('input', runCalc);
-        });
     </script>
 </body>
 </html>
