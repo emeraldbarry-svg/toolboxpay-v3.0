@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Toolbox Pay | System Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
+        body { background-color: var(--bg-midnight); color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+        .logo-box { width: 280px; height: 120px; border: 2px solid rgba(255, 149, 0, 0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(30, 41, 59, 0.5); border-radius: 4px; margin-bottom: 30px; }
+        .logo-text { font-size: 38px; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase; line-height: 1; }
+        .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 32px; width: 100%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
+        .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; font-style: normal; }
+        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="logo-box">
+        <div class="logo-text"><span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span></div>
+    </div>
+    <section class="card">
+        <span class="label-text">Full Name</span>
+        <input type="text" id="userName" class="input-area mb-4" placeholder="e.g. David Harrison">
+        <span class="label-text">Professional Email</span>
+        <input type="email" id="userEmail" class="input-area mb-8" placeholder="name@company.co.uk">
+        <button onclick="window.location.href='gateway.html'" class="btn-main">Verify Account</button>
+    </section>
+</body>
+</html>
