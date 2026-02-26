@@ -7,19 +7,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
-        body { 
-            background-color: var(--bg-midnight); 
-            color: #FFFFFF; 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; padding: 15px; 
-            display: flex; flex-direction: column; align-items: center;
-        }
+        body { background-color: var(--bg-midnight); color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
         .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); }
         .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
-        
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); }
+        .toggle-group { display: flex; background: #0F172A; padding: 6px; border-radius: 18px; gap: 6px; position: relative; }
+        .toggle-group input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .toggle-label { flex: 1; padding: 16px; border-radius: 14px; font-size: 14px; font-weight: 900; color: #94A3B8; cursor: pointer; text-align: center; transition: 0.2s all ease; }
+        input:checked + .toggle-label { background-color: var(--toolbox-orange) !important; color: #000000 !important; box-shadow: 0 4px 15px rgba(255, 149, 0, 0.5); }
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
         .btn-nav { text-align: center; color: #94A3B8; font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 0.1em; text-decoration: none; padding: 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; margin-top: 10px; }
     </style>
@@ -30,22 +27,32 @@
         <h1 class="text-3xl font-black uppercase tracking-tighter mb-1">
             <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">SETTINGS</span>
         </h1>
-        <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[10px] uppercase mb-1">PROFILE & BANK DETAILS</div>
+        <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[10px] uppercase mb-1">PROFILE & PREFERENCES</div>
     </header>
 
     <div class="main-container">
         <section class="card">
+            <span class="label-text">Default Currency</span>
+            <div class="toggle-group">
+                <input type="radio" id="gbp" name="currency" value="£" checked>
+                <label for="gbp" class="toggle-label">GBP £</label>
+                <input type="radio" id="eur" name="currency" value="€">
+                <label for="eur" class="toggle-label">EUR €</label>
+                <input type="radio" id="usd" name="currency" value="$">
+                <label for="usd" class="toggle-label">USD $</label>
+            </div>
+        </section>
+
+        <section class="card">
             <span class="label-text">Trading Name</span>
             <input type="text" id="bizName" class="input-area mb-6 w-full" placeholder="e.g. J. Smith Plumbing">
-            
-            <span class="label-text">Labour Rate / Specialising In</span>
+            <span class="label-text">Specialising In</span>
             <input type="text" id="specialising" class="input-area w-full" placeholder="e.g. Emergency Repairs">
         </section>
 
         <section class="card">
             <span class="label-text">Bank Name</span>
             <input type="text" id="bankName" class="input-area mb-6 w-full" placeholder="e.g. Barclays">
-            
             <div class="flex gap-4">
                 <div class="flex-grow">
                     <span class="label-text">Sort Code</span>
@@ -64,16 +71,20 @@
 
     <script>
         function saveSettings() {
+            const selectedCurr = document.querySelector('input[name="currency"]:checked').value;
+            localStorage.setItem('toolboxCurr', selectedCurr);
             localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
             localStorage.setItem('toolboxSpecial', document.getElementById('specialising').value);
             localStorage.setItem('toolboxBankName', document.getElementById('bankName').value);
             localStorage.setItem('toolboxSort', document.getElementById('sortCode').value);
             localStorage.setItem('toolboxAcc', document.getElementById('accNum').value);
-            alert("Profile Saved!");
+            alert("Profile & Currency Saved!");
             window.location.href = 'dashboard.html';
         }
 
         function loadSettings() {
+            const savedCurr = localStorage.getItem('toolboxCurr') || '£';
+            document.querySelector(`input[value="${savedCurr}"]`).checked = true;
             document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
             document.getElementById('specialising').value = localStorage.getItem('toolboxSpecial') || '';
             document.getElementById('bankName').value = localStorage.getItem('toolboxBankName') || '';
