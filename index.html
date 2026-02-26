@@ -47,19 +47,26 @@
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); background: #020617; }
         
+        /* MATERIAL LIST STYLING */
         .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; }
         .material-name { flex-grow: 1; font-size: 14px; color: #FFFFFF; font-weight: 600; }
         .material-cost { font-weight: 800; color: var(--toolbox-orange); }
         
-        .add-btn { background: var(--toolbox-orange); color: #000; font-size: 28px; font-weight: 900; width: 54px; height: 54px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        /* BUTTONS */
+        .add-btn { background: var(--toolbox-orange); color: #000; font-size: 28px; font-weight: 900; width: 54px; height: 54px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.1s; }
+        .add-btn:active { transform: scale(0.95); }
         
-        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 14px rgba(255, 149, 0, 0.4); }
+        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 14px rgba(255, 149, 0, 0.4); transition: 0.1s; }
+        .btn-main:active { transform: scale(0.98); opacity: 0.9; }
+        
         .btn-sub { background: rgba(0,0,0,0.3); color: #94A3B8; font-weight: 700; text-transform: uppercase; padding: 16px; border-radius: 12px; width: 100%; border: none; margin-top: 12px; font-size: 11px; cursor: pointer; }
         .btn-outline { background: transparent; border: 2px solid var(--toolbox-orange); color: var(--toolbox-orange); font-weight: 900; text-transform: uppercase; padding: 18px; border-radius: 14px; width: 100%; margin-top: 12px; cursor: pointer; }
 
-        .currency-toggle { display: flex; gap: 4px; background: #0F172A; padding: 4px; border-radius: 10px; position: relative; z-index: 50; }
-        .currency-btn { flex: 1; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 900; color: #94A3B8; cursor: pointer; border: none; background: transparent; transition: 0.2s; }
-        .currency-btn.active { background: var(--toolbox-orange); color: #000; }
+        /* CURRENCY TABS FIX */
+        .currency-container { display: flex; gap: 8px; background: #0F172A; padding: 6px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); }
+        .currency-tab { flex: 1; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 900; color: #94A3B8; cursor: pointer; border: none; background: transparent; transition: 0.2s all ease; }
+        .currency-tab.active { background: var(--toolbox-orange); color: #000; box-shadow: 0 4px 10px rgba(255, 149, 0, 0.3); }
+        .currency-tab:active { transform: scale(0.95); }
 
         @media print {
             .no-print { display: none !important; }
@@ -73,23 +80,24 @@
     </style>
 </head>
 <body onload="initApp()">
-    <header class="text-center py-10">
+    <header class="text-center pt-10 pb-6">
         <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
             <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
         </h1>
         <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[16px] uppercase mb-1">COMMAND CENTRE</div>
-        <div class="text-slate-500 font-bold tracking-[0.5em] text-[10px] uppercase no-print mb-8">WORKER PORTAL</div>
-        
-        <div class="main-container no-print px-4">
-            <div class="currency-toggle">
-                <button id="btnGBP" class="currency-btn active" onclick="setCurrency('£')">GBP £</button>
-                <button id="btnEUR" class="currency-btn" onclick="setCurrency('€')">EUR €</button>
-                <button id="btnUSD" class="currency-btn" onclick="setCurrency('$')">USD $</button>
-            </div>
-        </div>
+        <div class="text-slate-500 font-bold tracking-[0.5em] text-[10px] uppercase no-print">WORKER PORTAL</div>
     </header>
 
     <div class="main-container">
+        <section class="card no-print">
+            <span class="label-text">Select Currency</span>
+            <div class="currency-container">
+                <button id="tab-GBP" class="currency-tab active" onclick="updateCurrency('£')">GBP £</button>
+                <button id="tab-EUR" class="currency-tab" onclick="updateCurrency('€')">EUR €</button>
+                <button id="tab-USD" class="currency-tab" onclick="updateCurrency('$')">USD $</button>
+            </div>
+        </section>
+
         <section class="card">
             <div class="flex gap-4 mb-6">
                 <div class="flex-1">
@@ -131,164 +139,4 @@
             
             <div class="flex gap-2 mb-6 no-print">
                 <input type="text" id="matName" class="input-area" placeholder="Item name">
-                <input type="number" id="matPrice" class="input-area w-24" placeholder="0">
-                <button onclick="addMaterial()" class="add-btn">+</button>
-            </div>
-            
-            <span class="label-text">Additional Costs <span class="curr-sym">£</span></span>
-            <input type="number" id="expenses" class="input-area" placeholder="0" oninput="runCalc()">
-        </section>
-
-        <section class="card display-box">
-            <div class="space-y-6 mb-10">
-                <div class="flex justify-between items-center">
-                    <span class="text-slate-400 font-bold uppercase tracking-widest text-[11px]">Subtotal (Labour + Mats)</span>
-                    <span id="dispRevenue" class="text-xl font-black">£0.00</span>
-                </div>
-                <div class="flex justify-between items-center no-print">
-                    <span class="text-red-500 font-bold uppercase tracking-widest text-[11px]">Tax Provision (<span id="taxLabel">20</span>%)</span>
-                    <span id="dispTax" class="text-xl font-black text-red-500">-£0.00</span>
-                </div>
-                <div class="flex justify-between items-center border-b border-slate-700 pb-6">
-                    <span class="text-orange-400 font-bold uppercase tracking-widest text-[11px]">Total Expenses</span>
-                    <span id="dispExpenses" class="text-xl font-black text-orange-400">-£0.00</span>
-                </div>
-            </div>
-            
-            <div class="text-center">
-                <span class="text-emerald-400 font-black uppercase tracking-tighter text-[11px] block mb-2">Total Balance Due:</span>
-                <span id="dispTakeHome" class="text-7xl font-black" style="color: #FF9500;">£0.00</span>
-            </div>
-        </section>
-
-        <section class="card">
-            <span class="label-text">Notes / Terms / Thanks:</span>
-            <textarea id="footerNotes" class="input-area h-20 text-xs mb-6" placeholder="e.g. Thanks for your business!" oninput="saveDetails()"></textarea>
-            
-            <button onclick="window.print()" class="btn-main no-print">SHARE VIA WHATSAPP / PDF</button>
-            <button onclick="shareEmail()" class="btn-outline no-print">SHARE VIA EMAIL</button>
-            <button onclick="resetApp()" class="btn-sub no-print">CLEAR EVERYTHING</button>
-        </section>
-    </div>
-
-    <script>
-        let materialsArr = [];
-        let currSym = '£';
-
-        function generateRef() {
-            const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
-            const rand = Math.floor(1000 + Math.random() * 9000);
-            return `REF-${dateStr}-${rand}`;
-        }
-
-        function initApp() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('quoteDate').value = today;
-            document.getElementById('jobRef').value = generateRef();
-            const savedCurr = localStorage.getItem('toolboxCurr') || '£';
-            setCurrency(savedCurr);
-            loadDetails();
-        }
-
-        function setCurrency(sym) {
-            currSym = sym;
-            localStorage.setItem('toolboxCurr', sym);
-            
-            // Update Symbols in Labels
-            document.querySelectorAll('.curr-sym').forEach(el => el.innerText = sym);
-            
-            // Update Active Class on Buttons
-            document.querySelectorAll('.currency-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.innerText.includes(sym)) btn.classList.add('active');
-            });
-            
-            runCalc();
-        }
-
-        function saveDetails() {
-            localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
-            localStorage.setItem('toolboxTaxRef', document.getElementById('taxRef').value);
-            localStorage.setItem('toolboxBank', document.getElementById('bankDetails').value);
-            localStorage.setItem('toolboxFooter', document.getElementById('footerNotes').value);
-        }
-
-        function loadDetails() {
-            document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
-            document.getElementById('taxRef').value = localStorage.getItem('toolboxTaxRef') || '';
-            document.getElementById('bankDetails').value = localStorage.getItem('toolboxBank') || '';
-            document.getElementById('footerNotes').value = localStorage.getItem('toolboxFooter') || '';
-        }
-
-        function addMaterial() {
-            const name = document.getElementById('matName').value;
-            const price = parseFloat(document.getElementById('matPrice').value) || 0;
-            if (name && price > 0) {
-                materialsArr.push({ name, price });
-                document.getElementById('matName').value = '';
-                document.getElementById('matPrice').value = '';
-                renderMaterials();
-                runCalc();
-            }
-        }
-
-        function renderMaterials() {
-            const list = document.getElementById('materialList');
-            list.innerHTML = materialsArr.map((m, index) => `
-                <div class="material-row">
-                    <span class="material-name">${m.name}</span>
-                    <span class="material-cost">${currSym}${m.price.toFixed(2)}</span>
-                    <button onclick="removeMat(${index})" class="text-red-500 font-black ml-4 px-2 no-print">✕</button>
-                </div>
-            `).join('');
-        }
-
-        function removeMat(index) {
-            materialsArr.splice(index, 1);
-            renderMaterials();
-            runCalc();
-        }
-
-        function runCalc() {
-            const lab = parseFloat(document.getElementById('labour').value) || 0;
-            const rate = parseFloat(document.getElementById('taxRate').value) || 0;
-            const matTotal = materialsArr.reduce((sum, m) => sum + m.price, 0);
-            const exp = parseFloat(document.getElementById('expenses').value) || 0;
-            
-            const totalRevenue = lab + matTotal;
-            const taxAmount = totalRevenue * (rate / 100);
-            const takeHome = totalRevenue - taxAmount - exp;
-            
-            document.getElementById('taxLabel').innerText = rate;
-            document.getElementById('dispRevenue').innerText = `${currSym}${totalRevenue.toFixed(2)}`;
-            document.getElementById('dispTax').innerText = `-${currSym}${taxAmount.toFixed(2)}`;
-            document.getElementById('dispExpenses').innerText = `-${currSym}${(matTotal + exp).toFixed(2)}`;
-            document.getElementById('dispTakeHome').innerText = `${currSym}${takeHome.toFixed(2)}`;
-        }
-
-        function shareEmail() {
-            const biz = document.getElementById('bizName').value;
-            const ref = document.getElementById('jobRef').value;
-            const total = document.getElementById('dispTakeHome').innerText;
-            const desc = document.getElementById('workDesc').value;
-            const bank = document.getElementById('bankDetails').value;
-            
-            const subject = encodeURIComponent(`${ref} - Job Settlement - ${biz}`);
-            const body = encodeURIComponent(`Job Reference: ${ref}\n\nJob Description:\n${desc}\n\nTotal Balance Due: ${total}\n\nPayment Details:\n${bank}\n\nSent via Toolbox Pay`);
-            
-            window.location.href = `mailto:?subject=${subject}&body=${body}`;
-        }
-
-        function resetApp() {
-            document.querySelectorAll('input, textarea').forEach(el => {
-                const preserved = ['bizName', 'taxRef', 'bankDetails', 'footerNotes', 'taxRate'];
-                if(!preserved.includes(el.id)) el.value = '';
-            });
-            document.getElementById('jobRef').value = generateRef();
-            materialsArr = [];
-            renderMaterials();
-            runCalc();
-        }
-    </script>
-</body>
-</html>
+                <input type="number" id="matPrice" class="input-area w-24" placeholder="
