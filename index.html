@@ -57,6 +57,10 @@
         .btn-sub { background: rgba(0,0,0,0.3); color: #94A3B8; font-weight: 700; text-transform: uppercase; padding: 16px; border-radius: 12px; width: 100%; border: none; margin-top: 12px; font-size: 11px; cursor: pointer; }
         .btn-outline { background: transparent; border: 2px solid var(--toolbox-orange); color: var(--toolbox-orange); font-weight: 900; text-transform: uppercase; padding: 18px; border-radius: 14px; width: 100%; margin-top: 12px; cursor: pointer; }
 
+        .currency-toggle { display: flex; gap: 4px; background: #0F172A; padding: 4px; border-radius: 10px; }
+        .currency-btn { flex: 1; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 900; color: #94A3B8; cursor: pointer; border: none; background: transparent; transition: 0.2s; }
+        .currency-btn.active { background: var(--toolbox-orange); color: #000; }
+
         @media print {
             .no-print { display: none !important; }
             body { background: white; color: black; padding: 20px; display: block; }
@@ -74,7 +78,15 @@
             <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
         </h1>
         <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[16px] uppercase mb-1">COMMAND CENTRE</div>
-        <div class="text-slate-500 font-bold tracking-[0.5em] text-[10px] uppercase no-print">WORKER PORTAL</div>
+        <div class="text-slate-500 font-bold tracking-[0.5em] text-[10px] uppercase no-print mb-4">WORKER PORTAL</div>
+        
+        <div class="main-container no-print">
+            <div class="currency-toggle">
+                <button class="currency-btn active" onclick="setCurrency('£')">GBP £</button>
+                <button class="currency-btn" onclick="setCurrency('€')">EUR €</button>
+                <button class="currency-btn" onclick="setCurrency('$')">USD $</button>
+            </div>
+        </div>
     </header>
 
     <div class="main-container">
@@ -103,7 +115,7 @@
             <span class="label-text">Work Description</span>
             <textarea id="workDesc" class="input-area h-24 mb-6" placeholder="Describe the work done..."></textarea>
             
-            <span class="label-text">Labour £</span>
+            <span class="label-text">Labour <span class="curr-sym">£</span></span>
             <input type="number" id="labour" class="input-area mb-6" placeholder="0" oninput="runCalc()">
             
             <span class="label-text">Materials</span>
@@ -111,19 +123,4 @@
             
             <div class="flex gap-2 mb-6 no-print">
                 <input type="text" id="matName" class="input-area" placeholder="Item name">
-                <input type="number" id="matPrice" class="input-area w-24" placeholder="£">
-                <button onclick="addMaterial()" class="add-btn">+</button>
-            </div>
-            
-            <span class="label-text">Additional Costs (Fuel/Tools) £</span>
-            <input type="number" id="expenses" class="input-area" placeholder="0" oninput="runCalc()">
-        </section>
-
-        <section class="card display-box">
-            <div class="space-y-6 mb-10">
-                <div class="flex justify-between items-center">
-                    <span class="text-slate-400 font-bold uppercase tracking-widest text-[11px]">Subtotal (Labour + Materials)</span>
-                    <span id="dispRevenue" class="text-xl font-black">£0.00</span>
-                </div>
-                <div class="flex justify-between items-center no-print">
-                    <span class
+                <input type="number" id="matPrice" class="
