@@ -29,17 +29,20 @@
 
         .onboarding-header { text-align: center; padding: 40px 0; }
         .step-indicator { color: var(--toolbox-orange); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 10px; }
+        
+        /* Success Animation */
+        .saved-success { background: #22c55e !important; color: white !important; }
     </style>
 </head>
 <body onload="checkExisting()">
 
     <div class="main-container">
         <header class="onboarding-header">
-            <div class="step-indicator">Step 1: Business Identity</div>
+            <div class="step-indicator">System Configuration</div>
             <h1 class="text-4xl font-black uppercase tracking-tighter mb-1">
                 <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
             </h1>
-            <p class="text-slate-400 text-sm font-medium">Configure your professional profile</p>
+            <p class="text-slate-400 text-sm font-medium">Verify your payment foundations</p>
         </header>
 
         <section class="card">
@@ -47,16 +50,16 @@
             <input type="text" id="bizName" class="input-area mb-6" placeholder="e.g. Smith & Co. Electrical">
             
             <span class="label-text">Specialising In</span>
-            <input type="text" id="specialising" class="input-area mb-2" placeholder="e.g. Domestic Installations">
-            <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-6">This appears on your settlements</p>
+            <input type="text" id="specialising" class="input-area mb-2" placeholder="e.g. Kitchen Refurbishments">
+            <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-6">Appears in your settlement footer</p>
 
-            <span class="label-text">Contact Email / Phone</span>
+            <span class="label-text">Business Contact</span>
             <input type="text" id="bizContact" class="input-area" placeholder="e.g. 07700 900123">
         </section>
 
         <section class="card">
             <span class="label-text">Bank Name</span>
-            <input type="text" id="bankName" class="input-area mb-6" placeholder="e.g. NatWest">
+            <input type="text" id="bankName" class="input-area mb-6" placeholder="e.g. Lloyds Bank">
             
             <div class="flex gap-4">
                 <div class="flex-grow">
@@ -65,20 +68,21 @@
                 </div>
                 <div class="flex-grow">
                     <span class="label-text">Account Number</span>
-                    <input type="text" id="accNum" class="input-area" placeholder="12345678">
+                    <input type="text" id="accNum" class="input-area" placeholder="12345678" maxlength="8">
                 </div>
             </div>
         </section>
 
-        <button onclick="completeSetup()" class="btn-main">Save & Continue</button>
+        <button id="saveBtn" onclick="completeSetup()" class="btn-main">Save & Lock Details</button>
         
         <a href="dashboard.html" id="backBtn" class="hidden text-center text-slate-500 font-bold text-xs uppercase tracking-widest mt-4">← Back to Dashboard</a>
 
-        <div onclick="masterReset()" class="btn-reset">Factory Reset App</div>
+        <div onclick="masterReset()" class="btn-reset">Factory Reset All App Data</div>
     </div>
 
     <script>
         function checkExisting() {
+            // Load existing data into the fields
             document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
             document.getElementById('specialising').value = localStorage.getItem('toolboxSpecial') || '';
             document.getElementById('bizContact').value = localStorage.getItem('toolboxContact') || '';
@@ -86,7 +90,6 @@
             document.getElementById('sortCode').value = localStorage.getItem('toolboxSort') || '';
             document.getElementById('accNum').value = localStorage.getItem('toolboxAcc') || '';
 
-            // Show back button if setup was already done
             if(localStorage.getItem('toolboxSetupComplete') === 'true') {
                 document.getElementById('backBtn').classList.remove('hidden');
             }
@@ -97,12 +100,14 @@
             const bank = document.getElementById('bankName').value;
             const sort = document.getElementById('sortCode').value;
             const acc = document.getElementById('accNum').value;
+            const btn = document.getElementById('saveBtn');
 
             if(!biz || !bank || !sort || !acc) {
-                alert("Please complete all fields to ensure your settlements are professional.");
+                alert("Please fill in all details to ensure you get paid correctly.");
                 return;
             }
 
+            // Lock to LocalStorage
             localStorage.setItem('toolboxBizName', biz);
             localStorage.setItem('toolboxSpecial', document.getElementById('specialising').value);
             localStorage.setItem('toolboxContact', document.getElementById('bizContact').value);
@@ -111,16 +116,20 @@
             localStorage.setItem('toolboxAcc', acc);
             localStorage.setItem('toolboxSetupComplete', 'true');
 
-            window.location.href = 'dashboard.html';
+            // Visual confirmation
+            btn.innerText = "DETAILS SECURED ✓";
+            btn.classList.add('saved-success');
+
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 800);
         }
 
         function masterReset() {
-            const confirm1 = confirm("WARNING: This will permanently delete all business details, clients, and job history.");
-            if(confirm1) {
-                const confirm2 = confirm("Are you absolutely sure? This cannot be undone unless you have a backup.");
-                if(confirm2) {
+            if(confirm("DANGER: This will purge every client, job record, and business detail. Proceed?")) {
+                if(confirm("Final check: Are you absolutely sure?")) {
                     localStorage.clear();
-                    alert("App Reset Successful.");
+                    alert("App memory wiped.");
                     window.location.reload();
                 }
             }
