@@ -11,35 +11,23 @@
             background-color: var(--bg-midnight); 
             color: #FFFFFF; 
             font-family: 'Inter', sans-serif; 
-            margin: 0; 
-            padding: 15px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            margin: 0; padding: 15px; 
+            display: flex; flex-direction: column; align-items: center;
         }
-        
         .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
-        
-        .card { 
-            background: #1E293B; 
-            border: 1px solid rgba(255,255,255,0.05); 
-            border-radius: 20px; 
-            padding: 24px; 
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-        }
-        
+        .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); }
         .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
         
-        /* THE DYNAMIC TABS - REBUILT */
-        .currency-container { display: flex; background: #0F172A; padding: 6px; border-radius: 18px; gap: 8px; border: 1px solid rgba(255,255,255,0.05); }
-        .currency-tab { 
-            flex: 1; padding: 18px; border-radius: 14px; font-size: 14px; font-weight: 900; 
-            color: #94A3B8 !important; cursor: pointer; border: none; background: transparent; 
-            transition: 0.2s all ease;
+        /* THE BULLETPROOF RADIO TOGGLE */
+        .currency-toggle-group { display: flex; background: #0F172A; padding: 6px; border-radius: 18px; gap: 6px; position: relative; }
+        .currency-toggle-group input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .currency-label { 
+            flex: 1; padding: 16px; border-radius: 14px; font-size: 14px; font-weight: 900; 
+            color: #94A3B8; cursor: pointer; text-align: center; transition: 0.2s all ease;
             -webkit-tap-highlight-color: transparent;
         }
-        /* Forced high-priority active state */
-        .currency-tab.active-choice { 
+        /* CSS State change - This cannot fail as it's browser-native */
+        input:checked + .currency-label { 
             background-color: var(--toolbox-orange) !important; 
             color: #000000 !important; 
             box-shadow: 0 4px 15px rgba(255, 149, 0, 0.5);
@@ -47,10 +35,8 @@
 
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); }
-
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
-        .btn-main:active { transform: scale(0.97); }
-
+        
         @media print { .no-print { display: none !important; } }
     </style>
 </head>
@@ -66,17 +52,19 @@
     <div class="main-container">
         <section class="card no-print">
             <span class="label-text">Select Currency</span>
-            <div class="currency-container">
-                <button id="tab-GBP" class="currency-tab active-choice" onclick="toggleCurrency('£', 'tab-GBP')">GBP £</button>
-                <button id="tab-EUR" class="currency-tab" onclick="toggleCurrency('€', 'tab-EUR')">EUR €</button>
-                <button id="tab-USD" class="currency-tab" onclick="toggleCurrency('$', 'tab-USD')">USD $</button>
+            <div class="currency-toggle-group">
+                <input type="radio" id="gbp" name="currency" value="£" onchange="updateCurrency('£')" checked>
+                <label for="gbp" class="currency-label">GBP £</label>
+
+                <input type="radio" id="eur" name="currency" value="€" onchange="updateCurrency('€')">
+                <label for="eur" class="currency-label">EUR €</label>
+
+                <input type="radio" id="usd" name="currency" value="$" onchange="updateCurrency('$')">
+                <label for="usd" class="currency-label">USD $</label>
             </div>
         </section>
 
         <section class="card">
-            <span class="label-text">Quote For:</span>
-            <input type="text" id="clientName" class="input-area mb-6 font-bold" placeholder="Customer Name / Address">
-            
             <span class="label-text">From:</span>
             <input type="text" id="bizName" class="input-area mb-2 text-sm" placeholder="Your Business Name" oninput="saveDetails()">
             <input type="text" id="bankDetails" class="input-area text-xs" placeholder="Sort Code & Account Number" oninput="saveDetails()">
@@ -90,65 +78,3 @@
             <input type="number" id="labour" class="input-area mb-6" placeholder="0" oninput="runCalc()">
             
             <span class="label-text">Additional Costs <span class="curr-sym">£</span></span>
-            <input type="number" id="expenses" class="input-area" placeholder="0" oninput="runCalc()">
-        </section>
-
-        <section class="card border-2 border-[#FF9500] bg-[#0F172A]">
-            <div class="flex justify-between items-center mb-4">
-                <span class="label-text mb-0">Total Due:</span>
-                <span id="dispTotal" class="text-4xl font-black text-[#FF9500]">£0.00</span>
-            </div>
-            <button onclick="window.print()" class="btn-main">SHARE SETTLEMENT</button>
-        </section>
-    </div>
-
-    <script>
-        let currentSymbol = '£';
-
-        function initApp() {
-            const savedCurr = localStorage.getItem('toolboxCurr') || '£';
-            const savedId = localStorage.getItem('toolboxTabId') || 'tab-GBP';
-            toggleCurrency(savedCurr, savedId);
-            loadDetails();
-        }
-
-        function toggleCurrency(sym, btnId) {
-            // Forcefully clear all buttons
-            document.querySelectorAll('.currency-tab').forEach(btn => {
-                btn.classList.remove('active-choice');
-            });
-
-            // Forcefully highlight selection
-            const selected = document.getElementById(btnId);
-            if(selected) {
-                selected.classList.add('active-choice');
-            }
-
-            // Sync symbols
-            currentSymbol = sym;
-            localStorage.setItem('toolboxCurr', sym);
-            localStorage.setItem('toolboxTabId', btnId);
-            document.querySelectorAll('.curr-sym').forEach(el => el.innerText = sym);
-            
-            runCalc();
-        }
-
-        function saveDetails() {
-            localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
-            localStorage.setItem('toolboxBank', document.getElementById('bankDetails').value);
-        }
-
-        function loadDetails() {
-            document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
-            document.getElementById('bankDetails').value = localStorage.getItem('toolboxBank') || '';
-        }
-
-        function runCalc() {
-            const lab = parseFloat(document.getElementById('labour').value) || 0;
-            const exp = parseFloat(document.getElementById('expenses').value) || 0;
-            const total = lab + exp;
-            document.getElementById('dispTotal').innerText = `${currentSymbol}${total.toFixed(2)}`;
-        }
-    </script>
-</body>
-</html>
