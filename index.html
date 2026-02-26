@@ -9,12 +9,12 @@
         :root { --toolbox-orange: #FF9500; }
         body { background-color: #05070A; color: #FFFFFF; font-family: 'Inter', sans-serif; min-height: 100vh; margin: 0; padding: 0; }
         
-        /* Industrial Inputs */
+        /* Input Styling */
         .industrial-input { background: #11141B; border: 1px solid #1E232D; border-radius: 8px; color: white; padding: 14px; width: 100%; margin-bottom: 16px; outline: none; font-size: 16px; border-left: 3px solid transparent; transition: 0.3s; box-sizing: border-box; }
         .industrial-input:focus { border-left-color: var(--toolbox-orange); background: #161A22; }
         
-        /* Containers */
-        .main-display { background: #0B0E14; border: 1px solid #FF9500; border-radius: 24px; padding: 25px; height: 100%; }
+        /* Display Box */
+        .main-display { background: #0B0E14; border: 1px solid #FF9500; border-radius: 24px; padding: 25px; display: flex; flex-direction: column; justify-content: space-between; min-height: 300px; }
         .label { font-size: 10px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-bottom: 8px; }
         
         /* Branding & Buttons */
@@ -22,24 +22,28 @@
         .btn-orange { background: #FF9500; color: #000; font-weight: 900; text-transform: uppercase; padding: 18px; border-radius: 12px; transition: 0.3s; width: 100%; margin-top: 10px; border: none; cursor: pointer; font-size: 14px; }
         .logo-toolbox { color: #FF9500; }
         .logo-pay { color: #FFFFFF; }
-        
-        /* Mobile specific spacing */
-        @media (max-width: 768px) {
-            .mobile-stack { flex-direction: column !important; }
-            .main-display { margin-top: 20px; }
+
+        /* Mobile-First Layout: Stacked by default */
+        .app-container { display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 1200px; margin: 0 auto; }
+
+        /* Desktop override: Side-by-side only for large screens */
+        @media (min-width: 1024px) {
+            .app-container { flex-direction: row; }
+            .sidebar { width: 350px; }
+            .content-area { flex: 1; }
         }
     </style>
 </head>
 <body class="p-4 md:p-10">
-    <header class="flex flex-col items-center mb-10">
+    <header class="flex flex-col items-center mb-8">
         <h1 class="text-4xl font-black uppercase tracking-tighter">
             <span class="logo-toolbox">toolbox</span><span class="logo-pay">pay</span>
         </h1>
         <div class="text-slate-500 font-bold tracking-[0.3em] text-[10px] mt-1 uppercase">Command Centre</div>
     </header>
 
-    <div class="flex mobile-stack gap-6 max-w-6xl mx-auto w-full">
-        <aside class="w-full lg:w-1/3 bg-[#0B0E14] border border-[#1E232D] rounded-3xl p-6">
+    <div class="app-container">
+        <aside class="sidebar bg-[#0B0E14] border border-[#1E232D] rounded-3xl p-6">
             <span class="label">Work Description</span>
             <textarea id="workDesc" class="industrial-input h-32" placeholder="e.g. 500 labour..."></textarea>
             
@@ -61,8 +65,8 @@
             <button onclick="resetForm()" class="btn-orange bg-zinc-800 text-white mt-3">Clear Form</button>
         </aside>
 
-        <main class="w-full lg:flex-1">
-            <div class="main-display flex flex-col justify-between">
+        <main class="content-area">
+            <div class="main-display">
                 <div>
                     <div class="flex justify-between items-center mb-6">
                         <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Total Revenue</span>
@@ -78,7 +82,7 @@
                     </div>
                 </div>
 
-                <div class="text-center lg:text-right mt-12 mb-4">
+                <div class="text-center lg:text-right">
                     <span class="text-[#00FF88] font-black uppercase tracking-tighter text-sm block mb-2">Net Profit (Take Home):</span>
                     <span id="dispTakeHome" class="text-6xl md:text-8xl font-black orange-text">£0.00</span>
                 </div>
@@ -93,7 +97,7 @@
             let part = parseFloat(document.getElementById('parts').value) || 0;
             let exp = parseFloat(document.getElementById('expenses').value) || 0;
 
-            // British English 'labour' matching
+            // Auto-detect labour from text
             const labMatch = desc.match(/(\d+)\s*LABOUR/);
             if(labMatch && lab === 0) lab = parseFloat(labMatch[1]);
             
