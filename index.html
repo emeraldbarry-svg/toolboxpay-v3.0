@@ -12,68 +12,67 @@
             font-family: 'Inter', sans-serif; margin: 0; padding: 20px; 
             display: flex; flex-direction: column; align-items: center;
         }
-        .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
+        .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 24px; }
         
         /* BRANDING AREA */
-        .logo-area { text-align: center; padding: 20px 0; }
+        .logo-area { text-align: center; padding: 10px 0; }
         .logo-text { font-size: 42px; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase; line-height: 1; }
-        .page-tag { font-size: 10px; font-weight: 900; color: #94A3B8; letter-spacing: 0.4em; text-transform: uppercase; margin-top: 10px; }
+        .page-tag { font-size: 10px; font-weight: 900; color: #94A3B8; letter-spacing: 0.4em; text-transform: uppercase; margin-top: 12px; }
 
-        /* REFINED PRICE DISPLAY */
-        .total-display-card {
-            background: linear-gradient(145deg, #1E293B, #141D36);
-            border: 2px solid var(--toolbox-orange);
-            border-radius: 32px;
-            padding: 40px 20px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-        .total-label { font-size: 12px; font-weight: 900; color: var(--toolbox-orange); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 15px; display: block; }
-        .total-amount { font-size: 72px; font-weight: 900; color: #FFFFFF; line-height: 1; display: flex; justify-content: center; align-items: flex-start; }
-        .currency { font-size: 32px; margin-top: 8px; margin-right: 4px; color: var(--toolbox-orange); }
-
-        /* WORK RECORDING AREA */
-        .work-card {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 28px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .record-btn-container { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-        .record-btn {
-            width: 85px; height: 85px; border-radius: 50%;
-            background: rgba(255, 149, 0, 0.1);
+        /* THE "TOTAL TO CHARGE" BOX */
+        .charge-card {
+            background: linear-gradient(180deg, #1E293B 0%, #141D36 100%);
             border: 3px solid var(--toolbox-orange);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 34px; cursor: pointer; transition: 0.3s;
+            border-radius: 35px;
+            padding: 45px 20px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-        .record-btn.active {
+        .charge-label { font-size: 13px; font-weight: 900; color: var(--toolbox-orange); text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 10px; display: block; }
+        .charge-amount { font-size: 80px; font-weight: 900; color: #FFFFFF; line-height: 1; display: flex; justify-content: center; align-items: flex-start; }
+        .currency-symbol { font-size: 35px; margin-top: 10px; margin-right: 5px; color: var(--toolbox-orange); font-weight: 800; }
+
+        /* ACTION AREA */
+        .action-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 30px;
+            padding: 30px;
+            text-align: center;
+        }
+        .mic-trigger {
+            width: 90px; height: 90px; border-radius: 50%;
+            background: rgba(255, 149, 0, 0.1);
+            border: 4px solid var(--toolbox-orange);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 38px; cursor: pointer; margin: 0 auto 15px;
+            transition: all 0.3s ease;
+        }
+        .mic-trigger.active {
             background: var(--toolbox-orange);
             color: #000;
-            box-shadow: 0 0 30px rgba(255, 149, 0, 0.4);
-            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 40px rgba(255, 149, 0, 0.4);
+            animation: pulse-ring 1.5s infinite;
         }
 
-        .notes-box {
+        .notes-area {
             background: #0F172A;
-            border-radius: 20px;
-            padding: 20px;
-            min-height: 100px;
+            border-radius: 22px;
+            padding: 22px;
+            min-height: 110px;
             font-size: 16px;
             color: #94A3B8;
-            border: 1px solid rgba(255,255,255,0.05);
-            line-height: 1.5;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: left;
+            margin-top: 25px;
         }
 
-        .btn-submit { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 24px; border-radius: 20px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
-        .nav-link { color: #57657a; font-weight: 900; text-transform: uppercase; font-size: 11px; text-decoration: none; margin-top: 10px; }
+        .btn-pay { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 25px; border-radius: 22px; width: 100%; border: none; font-size: 18px; cursor: pointer; margin-top: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .back-link { color: #475569; font-weight: 900; text-transform: uppercase; font-size: 11px; text-decoration: none; margin-top: 10px; letter-spacing: 0.1em; }
 
-        @keyframes pulse {
+        @keyframes pulse-ring {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.06); }
             100% { transform: scale(1); }
         }
     </style>
@@ -88,34 +87,32 @@
             <div class="page-tag">Labour & Costs</div>
         </header>
 
-        <section class="total-display-card">
-            <span class="total-label">Total to Charge</span>
-            <div class="total-amount">
-                <span class="currency">£</span><span id="priceValue">0.00</span>
+        <section class="charge-card">
+            <span class="charge-label">Total to Charge</span>
+            <div class="charge-amount">
+                <span class="currency-symbol">£</span><span id="displayPrice">0.00</span>
             </div>
         </section>
 
-        <section class="work-card">
-            <div class="record-btn-container">
-                <div id="micBtn" onclick="toggleRecording()" class="record-btn">🎙️</div>
-                <span id="statusLabel" class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Tap to Record Work</span>
+        <section class="action-card">
+            <div id="micBtn" onclick="handleVoice()" class="mic-trigger">🎙️</div>
+            <span id="micStatus" class="text-[11px] font-black uppercase text-slate-400 tracking-[0.2em]">Tap to Record Work</span>
+
+            <div class="notes-area" id="workNotes">
+                <span class="text-[10px] font-black uppercase text-slate-600 block mb-2">Work & Parts Log</span>
+                <span id="transcriptText">...start speaking to log work</span>
             </div>
 
-            <div>
-                <span class="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-3 block">Job Notes</span>
-                <div id="transcription" class="notes-box">...describe the work or costs</div>
-            </div>
-
-            <button class="btn-submit">Finalise & Pay</button>
+            <button class="btn-pay" onclick="alert('Proceeding to Payment QR...')">Finalise & Collect Pay</button>
         </section>
 
-        <a href="dashboard.html" class="nav-link">← Return to Dashboard</a>
+        <a href="dashboard.html" class="back-link">← Return to Dashboard</a>
     </div>
 
     <script>
         let recognition;
         let isRecording = false;
-        let silenceTimer;
+        let timer;
 
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
@@ -124,49 +121,49 @@
             recognition.lang = 'en-GB';
 
             recognition.onresult = (event) => {
-                resetTimer();
-                let text = '';
+                resetSilenceTimer();
+                let speech = '';
                 for (let i = event.resultIndex; i < event.results.length; ++i) {
-                    text += event.results[i][0].transcript;
+                    speech += event.results[i][0].transcript;
                 }
-                document.getElementById('transcription').innerText = text;
-                document.getElementById('transcription').style.color = "#FFFFFF";
+                document.getElementById('transcriptText').innerText = speech;
+                document.getElementById('transcriptText').style.color = "#FFFFFF";
 
-                const numbers = text.match(/\d+/g);
-                if (numbers) {
-                    document.getElementById('priceValue').innerText = parseFloat(numbers[numbers.length - 1]).toFixed(2);
+                const foundPrices = speech.match(/\d+/g);
+                if (foundPrices) {
+                    document.getElementById('displayPrice').innerText = parseFloat(foundPrices[foundPrices.length - 1]).toFixed(2);
                 }
             };
             recognition.onend = () => { if(isRecording) recognition.start(); };
         }
 
-        function toggleRecording() {
+        function handleVoice() {
             const btn = document.getElementById('micBtn');
-            const label = document.getElementById('statusLabel');
+            const status = document.getElementById('micStatus');
             if (!isRecording) {
                 recognition.start();
                 isRecording = true;
                 btn.classList.add('active');
-                label.innerText = "Listening to Work...";
-                label.style.color = "#FF9500";
-                resetTimer();
+                status.innerText = "Recording Now...";
+                status.style.color = "#FF9500";
+                resetSilenceTimer();
             } else {
-                stopRecording();
+                stopVoice();
             }
         }
 
-        function stopRecording() {
+        function stopVoice() {
             recognition.stop();
             isRecording = false;
             document.getElementById('micBtn').classList.remove('active');
-            document.getElementById('statusLabel').innerText = "Tap to Record Work";
-            document.getElementById('statusLabel').style.color = "#94A3B8";
-            clearTimeout(silenceTimer);
+            document.getElementById('micStatus').innerText = "Tap to Record Work";
+            document.getElementById('micStatus').style.color = "#94A3B8";
+            clearTimeout(timer);
         }
 
-        function resetTimer() {
-            clearTimeout(silenceTimer);
-            silenceTimer = setTimeout(() => { if(isRecording) stopRecording(); }, 15000);
+        function resetSilenceTimer() {
+            clearTimeout(timer);
+            timer = setTimeout(() => { if(isRecording) stopVoice(); }, 15000);
         }
     </script>
 </body>
