@@ -33,13 +33,11 @@
 
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); }
-        
-        .material-row, .client-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; border-left: 3px solid var(--toolbox-orange); }
+        .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; border-left: 3px solid var(--toolbox-orange); }
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
         
-        select.input-area { appearance: none; cursor: pointer; }
-
-        @media print { .no-print { display: none !important; } }
+        @media print { .no-print { display: none !important; } .print-only { display: block !important; } }
+        .print-only { display: none; }
     </style>
 </head>
 <body onload="initApp()">
@@ -49,43 +47,26 @@
             <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
         </h1>
         <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[12px] uppercase mb-1">COMMAND CENTRE</div>
+        <a href="settings.html" class="no-print text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-700 pb-1">Edit Bank Details</a>
     </header>
 
     <div class="main-container">
-        <section class="card no-print">
-            <span class="label-text">Select Currency</span>
-            <div class="toggle-group">
-                <input type="radio" id="gbp" name="currency" value="£" onchange="updateCurrency('£')" checked>
-                <label for="gbp" class="toggle-label">GBP £</label>
-                <input type="radio" id="eur" name="currency" value="€" onchange="updateCurrency('€')">
-                <label for="eur" class="toggle-label">EUR €</label>
-                <input type="radio" id="usd" name="currency" value="$" onchange="updateCurrency('$')">
-                <label for="usd" class="toggle-label">USD $</label>
-            </div>
-        </section>
-
-        <section class="card">
-            <span class="label-text">Client Selection</span>
-            <select id="clientSelect" class="input-area mb-4 w-full" onchange="selectClient()">
-                <option value="">-- Choose Saved Client --</option>
-            </select>
-            
-            <div class="no-print">
-                <input type="text" id="newClientName" class="input-area mb-2 text-sm" placeholder="New Client Name">
-                <input type="text" id="newClientAddr" class="input-area mb-4 text-xs" placeholder="Client Address/Contact">
-                <button onclick="saveClient()" class="w-full py-2 border border-[#FF9500] text-[#FF9500] font-black rounded-xl text-xs uppercase tracking-widest">Add to Database</button>
-            </div>
-        </section>
-
-        <section class="card">
+        <div class="card">
             <span class="label-text">From:</span>
-            <input type="text" id="bizName" class="input-area mb-2 text-sm" placeholder="Your Business Name" oninput="saveDetails()">
-            <input type="text" id="bankDetails" class="input-area text-xs" placeholder="Bank Details" oninput="saveDetails()">
+            <div id="displayBiz" class="text-xl font-black text-white">Your Business</div>
+            <div id="displayBank" class="text-xs text-slate-400 font-mono mt-1">Setup bank details in settings</div>
+        </div>
+
+        <section class="card no-print">
+            <span class="label-text">Choose Client</span>
+            <select id="clientSelect" class="input-area w-full" onchange="selectClient()">
+                <option value="">-- No Client Selected --</option>
+            </select>
         </section>
 
         <section class="card">
             <span class="label-text">Work Description</span>
-            <textarea id="workDesc" class="input-area h-24 mb-6" placeholder="Describe the work done..."></textarea>
+            <textarea id="workDesc" class="input-area h-24 mb-6" placeholder="Details of the job..."></textarea>
             
             <span class="label-text">Labour <span class="curr-sym">£</span></span>
             <input type="number" id="labour" class="input-area mb-6" placeholder="0" oninput="runCalc()">
@@ -126,45 +107,33 @@
         let clientsArr = JSON.parse(localStorage.getItem('toolboxClients')) || [];
 
         function initApp() {
-            const savedCurr = localStorage.getItem('toolboxCurr') || '£';
-            const radioToClick = document.querySelector(`input[value="${savedCurr}"]`);
-            if(radioToClick) { radioToClick.checked = true; updateCurrency(savedCurr); }
-            loadDetails();
+            loadProfile();
             updateClientDropdown();
+            runCalc();
         }
 
-        function saveClient() {
-            const name = document.getElementById('newClientName').value;
-            const addr = document.getElementById('newClientAddr').value;
-            if(name) {
-                clientsArr.push({ name, addr });
-                localStorage.setItem('toolboxClients', JSON.stringify(clientsArr));
-                document.getElementById('newClientName').value = '';
-                document.getElementById('newClientAddr').value = '';
-                updateClientDropdown();
-            }
+        function loadProfile() {
+            const biz = localStorage.getItem('toolboxBizName') || 'Your Business Name';
+            const sort = localStorage.getItem('toolboxSort') || '00-00-00';
+            const acc = localStorage.getItem('toolboxAcc') || '00000000';
+            document.getElementById('displayBiz').innerText = biz;
+            document.getElementById('displayBank').innerText = `Sort: ${sort} | Acc: ${acc}`;
         }
 
         function updateClientDropdown() {
             const select = document.getElementById('clientSelect');
-            select.innerHTML = '<option value="">-- Choose Saved Client --</option>' + 
-                clientsArr.map((c, i) => `<option value="${i}">${c.name}</option>`).join('');
+            const clients = JSON.parse(localStorage.getItem('toolboxClients')) || [];
+            select.innerHTML = '<option value="">-- No Client Selected --</option>' + 
+                clients.map((c, i) => `<option value="${i}">${c.name}</option>`).join('');
         }
 
         function selectClient() {
             const index = document.getElementById('clientSelect').value;
+            const clients = JSON.parse(localStorage.getItem('toolboxClients')) || [];
             if(index !== "") {
-                const client = clientsArr[index];
-                document.getElementById('workDesc').value = `Job for: ${client.name}\n${client.addr}\n\n---\n`;
+                const client = clients[index];
+                document.getElementById('workDesc').value = `FOR: ${client.name}\n${client.addr}\n\n---\n`;
             }
-        }
-
-        function updateCurrency(sym) {
-            currentSymbol = sym;
-            localStorage.setItem('toolboxCurr', sym);
-            document.querySelectorAll('.curr-sym').forEach(el => el.innerText = sym);
-            renderMaterials();
-            runCalc();
         }
 
         function addMaterial() {
@@ -185,22 +154,12 @@
                 <div class="material-row">
                     <span class="flex-grow font-bold text-xs">${m.name}</span>
                     <span class="text-[#FF9500] font-black text-sm">${currentSymbol}${m.price.toFixed(2)}</span>
-                    <button onclick="removeMat(${i})" class="text-red-500 ml-2 font-black">✕</button>
+                    <button onclick="removeMat(${i})" class="text-red-500 ml-2 font-black no-print">✕</button>
                 </div>
             `).join('');
         }
 
         function removeMat(i) { materialsArr.splice(i, 1); renderMaterials(); runCalc(); }
-
-        function saveDetails() {
-            localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
-            localStorage.setItem('toolboxBank', document.getElementById('bankDetails').value);
-        }
-
-        function loadDetails() {
-            document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
-            document.getElementById('bankDetails').value = localStorage.getItem('toolboxBank') || '';
-        }
 
         function runCalc() {
             const lab = parseFloat(document.getElementById('labour').value) || 0;
