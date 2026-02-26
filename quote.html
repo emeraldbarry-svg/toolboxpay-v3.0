@@ -15,11 +15,9 @@
         .label { font-size: 12px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-bottom: 8px; }
         .orange-text { color: #FF9500; }
         .btn-orange { background: #FF9500; color: #000; font-weight: 900; text-transform: uppercase; padding: 16px; border-radius: 12px; transition: 0.3s; width: 100%; }
-        .btn-orange:hover { background: #FFB84D; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255,149,0,0.2); }
     </style>
 </head>
 <body class="p-6">
-
     <header class="flex flex-col items-center mb-10">
         <h1 class="text-4xl font-black uppercase tracking-tighter"><span class="orange-text">toolbox</span>pay</h1>
         <div class="text-slate-500 font-bold tracking-[0.3em] text-xs mt-2 uppercase">Command Centre</div>
@@ -27,14 +25,12 @@
 
     <div class="flex gap-8 max-w-6xl mx-auto w-full flex-1">
         <aside class="sidebar rounded-3xl border border-[#1E232D]">
-            <span class="label">Entry Terminal</span>
+            <span class="label">Work Description</span>
             <textarea id="workDesc" class="industrial-input h-32" placeholder="e.g. 500 labour..."></textarea>
-            
             <div class="grid grid-cols-2 gap-4">
                 <div><span class="label">Labour £</span><input type="number" id="labour" class="industrial-input" value="0"></div>
                 <div><span class="label">Parts £</span><input type="number" id="parts" class="industrial-input" value="0"></div>
             </div>
-
             <button onclick="window.print()" class="btn-orange mt-4">Print Document</button>
         </aside>
 
@@ -48,7 +44,6 @@
                     <span class="text-red-500 font-bold uppercase tracking-widest text-sm">Tax Reserve (20%)</span>
                     <span id="dispTax" class="text-2xl font-black text-red-500">-£0.00</span>
                 </div>
-                
                 <div class="flex justify-between items-center pt-4">
                     <span class="text-[#00FF88] font-black uppercase tracking-tighter text-xl">Take Home:</span>
                     <span id="dispTakeHome" class="text-6xl font-black orange-text">£0.00</span>
@@ -58,23 +53,19 @@
     </div>
 
     <script>
-        function updateDashboard() {
+        function update() {
             const desc = document.getElementById('workDesc').value.toUpperCase();
-            let labVal = parseFloat(document.getElementById('labour').value) || 0;
-            let partVal = parseFloat(document.getElementById('parts').value) || 0;
-
-            const labMatch = desc.match(/(\d+(?:\.\d+)?)\s*LABOUR/);
-            if(labMatch && labVal === 0) labVal = parseFloat(labMatch[1]);
-            
-            const revenue = labVal + partVal;
-            const tax = revenue * 0.20;
-            const takeHome = revenue - tax;
-
-            document.getElementById('dispRevenue').innerText = `£${revenue.toFixed(2)}`;
+            let lab = parseFloat(document.getElementById('labour').value) || 0;
+            let part = parseFloat(document.getElementById('parts').value) || 0;
+            const labMatch = desc.match(/(\d+)\s*LABOUR/);
+            if(labMatch && lab === 0) lab = parseFloat(labMatch[1]);
+            const rev = lab + part;
+            const tax = rev * 0.20;
+            document.getElementById('dispRevenue').innerText = `£${rev.toFixed(2)}`;
             document.getElementById('dispTax').innerText = `-£${tax.toFixed(2)}`;
-            document.getElementById('dispTakeHome').innerText = `£${takeHome.toFixed(2)}`;
+            document.getElementById('dispTakeHome').innerText = `£${(rev - tax).toFixed(2)}`;
         }
-        document.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', updateDashboard));
+        document.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', update));
     </script>
 </body>
 </html>
