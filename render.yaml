@@ -1,6 +1,6 @@
 services:
   - type: static
-    name: toolboxpay-v3.0
+    name: toolboxpay-v4.0
     env: static
     buildCommand: ""
     publishPath: "."
