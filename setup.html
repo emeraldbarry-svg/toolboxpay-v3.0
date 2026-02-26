@@ -2,128 +2,112 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Setup | Toolbox Pay</title>
-    <link rel="stylesheet" href="src/index.css">
-    <script src="src/auth.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Toolbox Pay | Business Setup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .page-container { width: 95%; max-width: 450px; padding: 70px 20px 40px 20px; margin: 0 auto; }
-        .logo-text { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 5px; }
-        .orange { color: #FFA500; }
-        .white { color: #FFFFFF; }
-
-        .setup-group { margin-bottom: 20px; }
-        .form-label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 8px; margin-left: 5px; }
-        .setup-input {
-            width: 100%; background: #1a1a1a; border: 2px solid #333;
-            border-radius: 15px; padding: 18px; color: white; font-size: 16px;
-            box-sizing: border-box; outline: none;
+        :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
+        body { 
+            background-color: var(--bg-midnight); 
+            color: #FFFFFF; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; padding: 20px; 
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
         }
-        .setup-input:focus { border-color: #FFA500; }
+        .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
+        .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); }
+        .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
+        
+        .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
+        .input-area:focus { border-left-color: var(--toolbox-orange); }
+        
+        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        .btn-main:active { transform: scale(0.98); opacity: 0.9; }
 
-        /* Data Protection Status */
-        .status-box {
-            background: #111; border: 1px solid #222; border-radius: 20px;
-            padding: 20px; margin-top: 30px; text-align: center;
-        }
-        .status-pill {
-            display: inline-block; padding: 4px 12px; background: rgba(0, 255, 136, 0.1);
-            color: #00ff88; border-radius: 20px; font-size: 10px; font-weight: 800; margin-bottom: 10px;
-        }
-
-        .menu-trigger {
-            position: fixed; top: 20px; left: 20px; width: 55px; height: 55px;
-            background: rgba(255, 165, 0, 0.15); border: 2px solid #FFA500;
-            border-radius: 15px; display: flex; justify-content: center; align-items: center; z-index: 2000;
-        }
-        .menu-trigger span { font-size: 32px; color: #FFA500; }
-
-        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #0a0a0a; z-index: 1999; transition: 0.4s; padding-top: 100px; border-right: 1px solid #333; }
-        .sidebar.active { left: 0; }
-        .sidebar a { padding: 20px 30px; color: white; text-decoration: none; display: block; border-bottom: 1px solid #1a1a1a; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1998; }
+        .onboarding-header { text-align: center; padding: 40px 0; }
+        .step-indicator { color: var(--toolbox-orange); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 10px; }
     </style>
 </head>
-<body>
+<body onload="checkExisting()">
 
-    <div class="menu-trigger" onclick="toggleMenu()"><span>☰</span></div>
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-    
-    <div class="sidebar" id="sidebar">
-        <a href="index.html">🏠 Dashboard</a>
-        <a href="quote.html">📝 Create Quote</a>
-        <a href="expense.html">💸 Log Expense</a>
-        <a href="report.html">📊 Labour Report</a>
-        <a href="gallery.html">📸 Portfolio</a>
-        <a href="directory.html">👤 Customers</a>
-        <a href="setup.html">⚙️ Settings</a>
-    </div>
-
-    <div class="page-container">
-        <header style="margin-bottom: 30px;">
-            <div class="logo-text"><span class="orange">toolbox</span><span class="white">pay</span></div>
-            <p style="text-align: center; color: #666; font-size: 10px; letter-spacing: 2px;">BUSINESS SETTINGS</p>
+    <div class="main-container">
+        <header class="onboarding-header">
+            <div class="step-indicator">Step 1: Business Identity</div>
+            <h1 class="text-4xl font-black uppercase tracking-tighter mb-1">
+                <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
+            </h1>
+            <p class="text-slate-400 text-sm font-medium">Configure your professional profile</p>
         </header>
 
-        <form id="setupForm">
-            <div class="setup-group">
-                <span class="form-label">First Name</span>
-                <input type="text" id="adminName" class="setup-input" required>
+        <section class="card">
+            <span class="label-text">Trading Name</span>
+            <input type="text" id="bizName" class="input-area mb-6" placeholder="e.g. Smith & Co. Electrical">
+            
+            <span class="label-text">Specialising In</span>
+            <input type="text" id="specialising" class="input-area mb-2" placeholder="e.g. Domestic Installations">
+            <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-6">This appears on your settlements</p>
+
+            <span class="label-text">Contact Email / Phone</span>
+            <input type="text" id="bizContact" class="input-area" placeholder="e.g. 07700 900123">
+        </section>
+
+        <section class="card">
+            <span class="label-text">Bank Name</span>
+            <input type="text" id="bankName" class="input-area mb-6" placeholder="e.g. NatWest">
+            
+            <div class="flex gap-4">
+                <div class="flex-grow">
+                    <span class="label-text">Sort Code</span>
+                    <input type="text" id="sortCode" class="input-area" placeholder="00-00-00">
+                </div>
+                <div class="flex-grow">
+                    <span class="label-text">Account Number</span>
+                    <input type="text" id="accNum" class="input-area" placeholder="12345678">
+                </div>
             </div>
+        </section>
 
-            <div class="setup-group">
-                <span class="form-label">Trading Name</span>
-                <input type="text" id="bizName" class="setup-input" required>
-            </div>
-
-            <div class="setup-group">
-                <span class="form-label">Geographical Location</span>
-                <input type="text" id="geoLoc" class="setup-input" required>
-            </div>
-
-            <div class="setup-group">
-                <span class="form-label">Security PIN</span>
-                <input type="password" id="userPin" class="setup-input" maxlength="4" required>
-            </div>
-
-            <button type="submit" class="btn-primary" style="width: 100%; padding: 20px; border-radius: 20px;">Save Profile</button>
-        </form>
-
-        <div class="status-box">
-            <div class="status-pill">System Protected</div>
-            <p style="font-size: 13px; color: #fff; margin-bottom: 5px;">Customer Directory Records</p>
-            <p id="contactCount" style="font-size: 18px; color: #FFA500; font-weight: 800;">0 Contacts Saved</p>
-            <p style="font-size: 10px; color: #444; margin-top: 10px; text-transform: uppercase;">Contacts are stored locally on this device</p>
-        </div>
+        <button onclick="completeSetup()" class="btn-main">Launch Command Centre</button>
+        
+        <p class="text-center text-[10px] text-slate-600 font-bold uppercase tracking-widest mt-4">
+            Data is stored locally on this device only.
+        </p>
     </div>
 
     <script>
-        function toggleMenu() {
-            const sb = document.getElementById('sidebar');
-            const ov = document.getElementById('overlay');
-            sb.classList.toggle('active');
-            ov.style.display = sb.classList.contains('active') ? 'block' : 'none';
+        function checkExisting() {
+            // Pre-fill if they are just editing
+            document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
+            document.getElementById('specialising').value = localStorage.getItem('toolboxSpecial') || '';
+            document.getElementById('bizContact').value = localStorage.getItem('toolboxContact') || '';
+            document.getElementById('bankName').value = localStorage.getItem('toolboxBankName') || '';
+            document.getElementById('sortCode').value = localStorage.getItem('toolboxSort') || '';
+            document.getElementById('accNum').value = localStorage.getItem('toolboxAcc') || '';
         }
 
-        window.onload = () => {
-            document.getElementById('adminName').value = localStorage.getItem('adminName') || '';
-            document.getElementById('bizName').value = localStorage.getItem('companyName') || '';
-            document.getElementById('geoLoc').value = localStorage.getItem('userLocation') || '';
-            document.getElementById('userPin').value = localStorage.getItem('userPin') || '';
+        function completeSetup() {
+            const biz = document.getElementById('bizName').value;
+            const bank = document.getElementById('bankName').value;
+            const sort = document.getElementById('sortCode').value;
+            const acc = document.getElementById('accNum').value;
 
-            const customers = JSON.parse(localStorage.getItem('directory')) || [];
-            document.getElementById('contactCount').innerText = `${customers.length} Contacts Saved`;
-        };
+            if(!biz || !bank || !sort || !acc) {
+                alert("Please complete all fields to ensure your settlements are professional.");
+                return;
+            }
 
-        document.getElementById('setupForm').onsubmit = (e) => {
-            e.preventDefault();
-            localStorage.setItem('adminName', document.getElementById('adminName').value);
-            localStorage.setItem('companyName', document.getElementById('bizName').value);
-            localStorage.setItem('userLocation', document.getElementById('geoLoc').value);
-            localStorage.setItem('userPin', document.getElementById('userPin').value);
-            alert('Business profile updated successfully.');
-            window.location.href = "index.html";
-        };
+            localStorage.setItem('toolboxBizName', biz);
+            localStorage.setItem('toolboxSpecial', document.getElementById('specialising').value);
+            localStorage.setItem('toolboxContact', document.getElementById('bizContact').value);
+            localStorage.setItem('toolboxBankName', bank);
+            localStorage.setItem('toolboxSort', sort);
+            localStorage.setItem('toolboxAcc', acc);
+            localStorage.setItem('toolboxSetupComplete', 'true');
+
+            // Redirect to dashboard
+            window.location.href = 'dashboard.html';
+        }
     </script>
 </body>
 </html>
