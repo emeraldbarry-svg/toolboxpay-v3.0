@@ -41,8 +41,12 @@
                     <input type="number" id="parts" class="industrial-input" value="0">
                 </div>
             </div>
+
+            <span class="label">Expenses (Fuel/Tools) £</span>
+            <input type="number" id="expenses" class="industrial-input" value="0">
             
             <button onclick="window.print()" class="btn-orange">Print Document</button>
+            <button onclick="resetForm()" class="btn-orange bg-zinc-800 text-white mt-2">Clear Form</button>
         </aside>
 
         <main class="w-full lg:flex-1">
@@ -52,14 +56,18 @@
                         <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">Total Revenue</span>
                         <span id="dispRevenue" class="text-xl font-black">£0.00</span>
                     </div>
-                    <div class="flex justify-between items-center mb-8 border-b border-slate-800 pb-6">
+                    <div class="flex justify-between items-center mb-4">
                         <span class="text-red-500 font-bold uppercase tracking-widest text-xs">Tax Reserve (20%)</span>
                         <span id="dispTax" class="text-xl font-black text-red-500">-£0.00</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-8 border-b border-slate-800 pb-6">
+                        <span class="text-orange-300 font-bold uppercase tracking-widest text-xs">Costs/Expenses</span>
+                        <span id="dispExpenses" class="text-xl font-black text-orange-300">-£0.00</span>
                     </div>
                 </div>
 
                 <div class="text-center lg:text-right mt-10">
-                    <span class="text-[#00FF88] font-black uppercase tracking-tighter text-lg block mb-2">Take Home:</span>
+                    <span class="text-[#00FF88] font-black uppercase tracking-tighter text-lg block mb-2">Net Profit (Take Home):</span>
                     <span id="dispTakeHome" class="text-5xl md:text-7xl font-black orange-text">£0.00</span>
                 </div>
             </div>
@@ -71,14 +79,28 @@
             const desc = document.getElementById('workDesc').value.toUpperCase();
             let lab = parseFloat(document.getElementById('labour').value) || 0;
             let part = parseFloat(document.getElementById('parts').value) || 0;
+            let exp = parseFloat(document.getElementById('expenses').value) || 0;
+
+            // British English 'labour' logic
             const labMatch = desc.match(/(\d+)\s*LABOUR/);
             if(labMatch && lab === 0) lab = parseFloat(labMatch[1]);
+            
             const rev = lab + part;
             const tax = rev * 0.20;
+            const takeHome = rev - tax - exp;
+            
             document.getElementById('dispRevenue').innerText = `£${rev.toFixed(2)}`;
             document.getElementById('dispTax').innerText = `-£${tax.toFixed(2)}`;
-            document.getElementById('dispTakeHome').innerText = `£${(rev - tax).toFixed(2)}`;
+            document.getElementById('dispExpenses').innerText = `-£${exp.toFixed(2)}`;
+            document.getElementById('dispTakeHome').innerText = `£${takeHome.toFixed(2)}`;
         }
+
+        function resetForm() {
+            document.querySelectorAll('input').forEach(i => i.value = 0);
+            document.getElementById('workDesc').value = '';
+            update();
+        }
+
         document.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', update));
     </script>
 </body>
