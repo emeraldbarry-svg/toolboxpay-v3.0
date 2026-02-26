@@ -16,54 +16,78 @@
         .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 12px; display: block; }
         
+        /* OVERSIZED PRICE BOX */
+        .price-container {
+            background: #0F172A;
+            border: 2px solid var(--toolbox-orange);
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 20px rgba(255, 149, 0, 0.1);
+        }
+        .price-display {
+            font-size: 64px;
+            font-weight: 900;
+            color: #FFFFFF;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+        .price-symbol { color: var(--toolbox-orange); margin-right: 4px; }
+
         /* VOICE BUTTON */
         .voice-btn {
-            width: 80px; height: 80px; border-radius: 50%;
+            width: 70px; height: 70px; border-radius: 50%;
             background: rgba(255, 149, 0, 0.1);
             border: 2px solid var(--toolbox-orange);
             display: flex; align-items: center; justify-content: center;
-            font-size: 32px; cursor: pointer; transition: 0.3s;
-            margin: 0 auto; position: relative;
+            font-size: 28px; cursor: pointer; transition: 0.3s;
+            margin: 0 auto;
         }
         .voice-btn.recording {
             background: var(--toolbox-orange);
             color: #000;
-            box-shadow: 0 0 30px rgba(255, 149, 0, 0.5);
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 149, 0, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(255, 149, 0, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 149, 0, 0); }
+            0% { transform: scale(1); }
+            70% { transform: scale(1.08); }
+            100% { transform: scale(1); }
         }
 
         .output-box { 
             background: #0F172A; border-radius: 16px; padding: 20px; 
-            min-height: 120px; font-size: 16px; line-height: 1.6;
+            min-height: 80px; font-size: 14px; color: #94A3B8;
             border-left: 4px solid var(--toolbox-orange);
         }
-        .nav-link { color: #94A3B8; font-weight: 900; text-transform: uppercase; font-size: 11px; text-decoration: none; text-align: center; margin-top: 20px; }
+        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 16px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        .nav-link { color: #94A3B8; font-weight: 900; text-transform: uppercase; font-size: 11px; text-decoration: none; margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <header class="text-center pt-6">
+        <header class="text-center pt-4">
             <h1 class="text-4xl font-black uppercase tracking-tighter mb-1">
                 <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
             </h1>
-            <div style="color: #94A3B8;" class="font-black tracking-[0.3em] text-[10px] uppercase">Labour Dictation</div>
+            <div style="color: #94A3B8;" class="font-black tracking-[0.3em] text-[10px] uppercase">New Settlement</div>
         </header>
 
+        <section class="price-container">
+            <span class="label-text">Settlement Total</span>
+            <div class="price-display"><span class="price-symbol">£</span><span id="totalDisplay">0.00</span></div>
+        </section>
+
         <section class="card text-center">
-            <span class="label-text">Tap to start dictating</span>
-            <div id="micBtn" onclick="toggleDictation()" class="voice-btn mb-6">🎙️</div>
-            <div id="statusText" class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Microphone Ready</div>
+            <div id="micBtn" onclick="toggleDictation()" class="voice-btn mb-4">🎙️</div>
+            <div id="statusText" class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Tap to dictate labour</div>
         </section>
 
         <section class="card">
-            <span class="label-text">Recognised Labour Entry</span>
-            <div id="dictationOutput" class="output-box">...waiting for voice input</div>
+            <span class="label-text">Live Transcription</span>
+            <div id="dictationOutput" class="output-box">...waiting for input</div>
+            <button class="btn-main">Submit Settlement</button>
         </section>
 
         <a href="dashboard.html" class="nav-link">← Return to Dashboard</a>
@@ -76,7 +100,7 @@
 
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
-            recognition.continuous = true; // Keeps the mic on
+            recognition.continuous = true;
             recognition.interimResults = true;
             recognition.lang = 'en-GB';
 
@@ -87,19 +111,21 @@
                     transcript += event.results[i][0].transcript;
                 }
                 document.getElementById('dictationOutput').innerText = transcript;
-            };
-
-            recognition.onend = () => {
-                if (isRecording) {
-                    recognition.start(); // Auto-restart if it drops unexpectedly
+                
+                // Simple logic to extract numbers for the price display
+                const matches = transcript.match(/\d+/g);
+                if (matches) {
+                    const lastMatch = matches[matches.length - 1];
+                    document.getElementById('totalDisplay').innerText = parseFloat(lastMatch).toFixed(2);
                 }
             };
+
+            recognition.onend = () => { if (isRecording) recognition.start(); };
         }
 
         function toggleDictation() {
             const btn = document.getElementById('micBtn');
             const status = document.getElementById('statusText');
-
             if (!isRecording) {
                 recognition.start();
                 isRecording = true;
@@ -116,19 +142,15 @@
             recognition.stop();
             isRecording = false;
             document.getElementById('micBtn').classList.remove('recording');
-            document.getElementById('statusText').innerText = "Microphone Ready";
+            document.getElementById('statusText').innerText = "Tap to dictate labour";
             document.getElementById('statusText').style.color = "#94A3B8";
             clearTimeout(silenceTimer);
         }
 
         function resetSilenceTimer() {
             clearTimeout(silenceTimer);
-            // Auto-stop after 15 seconds of no speech
             silenceTimer = setTimeout(() => {
-                if (isRecording) {
-                    stopDictation();
-                    alert("Dictation paused due to 15 seconds of silence.");
-                }
+                if (isRecording) stopDictation();
             }, 15000);
         }
     </script>
