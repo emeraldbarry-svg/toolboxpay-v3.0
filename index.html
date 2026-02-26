@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Command Centre</title>
+    <title>Toolbox Pay | Settlement</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
@@ -11,31 +11,39 @@
         .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
         .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); }
         .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
-        .toggle-group { display: flex; background: #0F172A; padding: 6px; border-radius: 18px; gap: 6px; position: relative; }
-        .toggle-group input { position: absolute; opacity: 0; width: 0; height: 0; }
-        .toggle-label { flex: 1; padding: 16px; border-radius: 14px; font-size: 14px; font-weight: 900; color: #94A3B8; cursor: pointer; text-align: center; transition: 0.2s all ease; }
-        input:checked + .toggle-label { background-color: var(--toolbox-orange) !important; color: #000000 !important; box-shadow: 0 4px 15px rgba(255, 149, 0, 0.5); }
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); }
         .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; border-left: 3px solid var(--toolbox-orange); }
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; }
-        @media print { .no-print { display: none !important; } }
+        
+        /* PRINT STYLES */
+        @media print {
+            body { background: white !important; color: black !important; padding: 0; }
+            .no-print, .btn-main, select, .input-area { display: none !important; }
+            .card { background: white !important; border: 1px solid #eee !important; box-shadow: none !important; color: black !important; padding: 10px !important; }
+            .label-text { color: #666 !important; }
+            #displayBiz { color: var(--toolbox-orange) !important; font-size: 28px !important; }
+            #dispTotal { color: black !important; border-top: 2px solid var(--toolbox-orange); padding-top: 10px; }
+            .main-container { max-width: 100% !important; }
+            .material-row { border: 1px solid #eee !important; color: black !important; }
+            .curr-sym, .text-white { color: black !important; }
+        }
     </style>
 </head>
 <body onload="initApp()">
 
-    <header class="text-center pt-10 pb-6">
+    <header class="text-center pt-10 pb-6 no-print">
         <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
             <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
         </h1>
-        <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[12px] uppercase mb-1">COMMAND CENTRE</div>
+        <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[12px] uppercase mb-1">SETTLEMENT ENGINE</div>
     </header>
 
     <div class="main-container">
         <div class="card">
-            <span class="label-text">From:</span>
-            <div id="displayBiz" class="text-xl font-black text-white">Your Business</div>
-            <div id="displayBank" class="text-xs text-slate-400 font-mono mt-1">Bank details not set</div>
+            <div id="displayBiz" class="text-xl font-black text-white uppercase tracking-tighter">Your Business</div>
+            <div id="displaySpecial" class="text-[10px] text-[#FF9500] font-black uppercase tracking-widest mb-4">Labour & Maintenance</div>
+            <div id="displayBank" class="text-xs text-slate-400 font-mono">Bank details loading...</div>
         </div>
 
         <section class="card no-print">
@@ -46,40 +54,31 @@
         </section>
 
         <section class="card">
-            <span class="label-text">Work Description</span>
+            <span class="label-text">Job Description</span>
             <textarea id="workDesc" class="input-area h-24 mb-6" placeholder="Job details..."></textarea>
             
             <span class="label-text">Labour <span class="curr-sym">£</span></span>
-            <input type="number" id="labour" class="input-area mb-6" placeholder="0" oninput="runCalc()">
+            <input type="number" id="labour" class="input-area mb-6 no-print" placeholder="0" oninput="runCalc()">
+            <div id="printLabour" class="hidden font-black text-lg mb-4"></div>
             
             <span class="label-text">Materials List</span>
             <div id="materialList" class="mb-4"></div>
+            
             <div class="flex gap-2 no-print mb-6">
                 <input type="text" id="matName" class="input-area text-sm" placeholder="Item">
                 <input type="number" id="matPrice" class="input-area w-24 text-sm" placeholder="0">
                 <button onclick="addMaterial()" class="bg-[#FF9500] text-black font-black w-12 rounded-xl">+</button>
             </div>
-
-            <span class="label-text">VAT (20%)</span>
-            <div class="toggle-group">
-                <input type="radio" id="vatOff" name="vat" value="0" onchange="runCalc()" checked>
-                <label for="vatOff" class="toggle-label">NO VAT</label>
-                <input type="radio" id="vatOn" name="vat" value="0.2" onchange="runCalc()">
-                <label for="vatOn" class="toggle-label">+ 20% VAT</label>
-            </div>
         </section>
 
         <section class="card border-4 border-[#FF9500] bg-[#0F172A]">
-            <div id="taxDisplay" class="flex justify-between items-center mb-2 hidden">
-                <span class="label-text mb-0">VAT Amount:</span>
-                <span id="dispTax" class="text-sm font-bold text-slate-400">£0.00</span>
-            </div>
             <div class="flex justify-between items-center mb-4">
                 <span class="label-text mb-0 text-white">Total Balance Due:</span>
                 <span id="dispTotal" class="text-4xl font-black text-[#FF9500]">£0.00</span>
             </div>
-            <button onclick="saveAndPrint()" class="btn-main">SAVE & SHARE</button>
+            <button onclick="saveAndPrint()" class="btn-main">GENERATE SETTLEMENT</button>
         </section>
+        
         <a href="dashboard.html" class="no-print text-center text-slate-500 font-bold text-xs uppercase tracking-widest">← Back to Dashboard</a>
     </div>
 
@@ -97,17 +96,19 @@
             currentSymbol = localStorage.getItem('toolboxCurr') || '£';
             document.querySelectorAll('.curr-sym').forEach(el => el.innerText = currentSymbol);
             
-            const biz = localStorage.getItem('toolboxBizName') || 'Your Business Name';
+            document.getElementById('displayBiz').innerText = localStorage.getItem('toolboxBizName') || 'Your Business';
+            document.getElementById('displaySpecial').innerText = localStorage.getItem('toolboxSpecial') || 'Labour Specialists';
+            
             const sort = localStorage.getItem('toolboxSort') || '00-00-00';
             const acc = localStorage.getItem('toolboxAcc') || '00000000';
-            document.getElementById('displayBiz').innerText = biz;
-            document.getElementById('displayBank').innerText = `Sort: ${sort} | Acc: ${acc}`;
+            const bName = localStorage.getItem('toolboxBankName') || 'Bank';
+            document.getElementById('displayBank').innerText = `${bName} | Sort: ${sort} | Acc: ${acc}`;
         }
 
         function updateClientDropdown() {
             const select = document.getElementById('clientSelect');
             const clients = JSON.parse(localStorage.getItem('toolboxClients')) || [];
-            select.innerHTML = '<option value="">-- No Client Selected --</option>' + 
+            select.innerHTML = '<option value="">-- Select Saved Client --</option>' + 
                 clients.map((c, i) => `<option value="${i}">${c.name}</option>`).join('');
         }
 
@@ -148,30 +149,27 @@
         function runCalc() {
             const lab = parseFloat(document.getElementById('labour').value) || 0;
             const matTotal = materialsArr.reduce((sum, m) => sum + m.price, 0);
-            const subtotal = lab + matTotal;
-            const isVatOn = document.getElementById('vatOn').checked;
-            const taxAmount = isVatOn ? (subtotal * 0.2) : 0;
-            const total = subtotal + taxAmount;
-            const taxRow = document.getElementById('taxDisplay');
-            if(isVatOn) {
-                taxRow.classList.remove('hidden');
-                document.getElementById('dispTax').innerText = `${currentSymbol}${taxAmount.toFixed(2)}`;
-            } else { taxRow.classList.add('hidden'); }
+            const total = lab + matTotal;
             document.getElementById('dispTotal').innerText = `${currentSymbol}${total.toFixed(2)}`;
+            document.getElementById('printLabour').innerText = `Labour: ${currentSymbol}${lab.toFixed(2)}`;
         }
 
         function saveAndPrint() {
             const history = JSON.parse(localStorage.getItem('toolboxHistory')) || [];
             const select = document.getElementById('clientSelect');
             const clientName = select.options[select.selectedIndex].text;
-            const totalVal = document.getElementById('dispTotal').innerText;
+            
             history.push({
                 date: new Date().toLocaleDateString('en-GB'),
-                client: clientName === "-- No Client Selected --" ? "Cash Client" : clientName,
-                total: totalVal
+                client: clientName === "-- Select Saved Client --" ? "Cash Sale" : clientName,
+                total: document.getElementById('dispTotal').innerText
             });
             localStorage.setItem('toolboxHistory', JSON.stringify(history));
+            
+            // Toggle visibility for print
+            document.getElementById('printLabour').classList.remove('hidden');
             window.print();
+            document.getElementById('printLabour').classList.add('hidden');
         }
     </script>
 </body>
