@@ -25,6 +25,8 @@
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; transition: 0.2s; }
         .btn-main:active { transform: scale(0.98); opacity: 0.9; }
 
+        .btn-reset { color: #ef4444; font-size: 10px; font-weight: 900; text-transform: uppercase; margin-top: 40px; cursor: pointer; text-align: center; width: 100%; border: 1px solid rgba(239, 68, 68, 0.2); padding: 15px; border-radius: 12px; }
+
         .onboarding-header { text-align: center; padding: 40px 0; }
         .step-indicator { color: var(--toolbox-orange); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 10px; }
     </style>
@@ -68,22 +70,26 @@
             </div>
         </section>
 
-        <button onclick="completeSetup()" class="btn-main">Launch Command Centre</button>
+        <button onclick="completeSetup()" class="btn-main">Save & Continue</button>
         
-        <p class="text-center text-[10px] text-slate-600 font-bold uppercase tracking-widest mt-4">
-            Data is stored locally on this device only.
-        </p>
+        <a href="dashboard.html" id="backBtn" class="hidden text-center text-slate-500 font-bold text-xs uppercase tracking-widest mt-4">← Back to Dashboard</a>
+
+        <div onclick="masterReset()" class="btn-reset">Factory Reset App</div>
     </div>
 
     <script>
         function checkExisting() {
-            // Pre-fill if they are just editing
             document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
             document.getElementById('specialising').value = localStorage.getItem('toolboxSpecial') || '';
             document.getElementById('bizContact').value = localStorage.getItem('toolboxContact') || '';
             document.getElementById('bankName').value = localStorage.getItem('toolboxBankName') || '';
             document.getElementById('sortCode').value = localStorage.getItem('toolboxSort') || '';
             document.getElementById('accNum').value = localStorage.getItem('toolboxAcc') || '';
+
+            // Show back button if setup was already done
+            if(localStorage.getItem('toolboxSetupComplete') === 'true') {
+                document.getElementById('backBtn').classList.remove('hidden');
+            }
         }
 
         function completeSetup() {
@@ -105,8 +111,19 @@
             localStorage.setItem('toolboxAcc', acc);
             localStorage.setItem('toolboxSetupComplete', 'true');
 
-            // Redirect to dashboard
             window.location.href = 'dashboard.html';
+        }
+
+        function masterReset() {
+            const confirm1 = confirm("WARNING: This will permanently delete all business details, clients, and job history.");
+            if(confirm1) {
+                const confirm2 = confirm("Are you absolutely sure? This cannot be undone unless you have a backup.");
+                if(confirm2) {
+                    localStorage.clear();
+                    alert("App Reset Successful.");
+                    window.location.reload();
+                }
+            }
         }
     </script>
 </body>
