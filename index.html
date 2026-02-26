@@ -57,8 +57,8 @@
         .btn-sub { background: rgba(0,0,0,0.3); color: #94A3B8; font-weight: 700; text-transform: uppercase; padding: 16px; border-radius: 12px; width: 100%; border: none; margin-top: 12px; font-size: 11px; cursor: pointer; }
         .btn-outline { background: transparent; border: 2px solid var(--toolbox-orange); color: var(--toolbox-orange); font-weight: 900; text-transform: uppercase; padding: 18px; border-radius: 14px; width: 100%; margin-top: 12px; cursor: pointer; }
 
-        .currency-toggle { display: flex; gap: 4px; background: #0F172A; padding: 4px; border-radius: 10px; }
-        .currency-btn { flex: 1; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 900; color: #94A3B8; cursor: pointer; border: none; background: transparent; transition: 0.2s; }
+        .currency-toggle { display: flex; gap: 4px; background: #0F172A; padding: 4px; border-radius: 10px; position: relative; z-index: 50; }
+        .currency-btn { flex: 1; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 900; color: #94A3B8; cursor: pointer; border: none; background: transparent; transition: 0.2s; }
         .currency-btn.active { background: var(--toolbox-orange); color: #000; }
 
         @media print {
@@ -78,13 +78,13 @@
             <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
         </h1>
         <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[16px] uppercase mb-1">COMMAND CENTRE</div>
-        <div class="text-slate-500 font-bold tracking-[0.5em] text-[10px] uppercase no-print mb-4">WORKER PORTAL</div>
+        <div class="text-slate-500 font-bold tracking-[0.5em] text-[10px] uppercase no-print mb-8">WORKER PORTAL</div>
         
-        <div class="main-container no-print">
+        <div class="main-container no-print px-4">
             <div class="currency-toggle">
-                <button class="currency-btn active" onclick="setCurrency('£')">GBP £</button>
-                <button class="currency-btn" onclick="setCurrency('€')">EUR €</button>
-                <button class="currency-btn" onclick="setCurrency('$')">USD $</button>
+                <button id="btnGBP" class="currency-btn active" onclick="setCurrency('£')">GBP £</button>
+                <button id="btnEUR" class="currency-btn" onclick="setCurrency('€')">EUR €</button>
+                <button id="btnUSD" class="currency-btn" onclick="setCurrency('$')">USD $</button>
             </div>
         </div>
     </header>
@@ -193,10 +193,16 @@
         function setCurrency(sym) {
             currSym = sym;
             localStorage.setItem('toolboxCurr', sym);
+            
+            // Update Symbols in Labels
             document.querySelectorAll('.curr-sym').forEach(el => el.innerText = sym);
+            
+            // Update Active Class on Buttons
             document.querySelectorAll('.currency-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.innerText.includes(sym));
+                btn.classList.remove('active');
+                if (btn.innerText.includes(sym)) btn.classList.add('active');
             });
+            
             runCalc();
         }
 
@@ -207,4 +213,82 @@
             localStorage.setItem('toolboxFooter', document.getElementById('footerNotes').value);
         }
 
-        function load
+        function loadDetails() {
+            document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
+            document.getElementById('taxRef').value = localStorage.getItem('toolboxTaxRef') || '';
+            document.getElementById('bankDetails').value = localStorage.getItem('toolboxBank') || '';
+            document.getElementById('footerNotes').value = localStorage.getItem('toolboxFooter') || '';
+        }
+
+        function addMaterial() {
+            const name = document.getElementById('matName').value;
+            const price = parseFloat(document.getElementById('matPrice').value) || 0;
+            if (name && price > 0) {
+                materialsArr.push({ name, price });
+                document.getElementById('matName').value = '';
+                document.getElementById('matPrice').value = '';
+                renderMaterials();
+                runCalc();
+            }
+        }
+
+        function renderMaterials() {
+            const list = document.getElementById('materialList');
+            list.innerHTML = materialsArr.map((m, index) => `
+                <div class="material-row">
+                    <span class="material-name">${m.name}</span>
+                    <span class="material-cost">${currSym}${m.price.toFixed(2)}</span>
+                    <button onclick="removeMat(${index})" class="text-red-500 font-black ml-4 px-2 no-print">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function removeMat(index) {
+            materialsArr.splice(index, 1);
+            renderMaterials();
+            runCalc();
+        }
+
+        function runCalc() {
+            const lab = parseFloat(document.getElementById('labour').value) || 0;
+            const rate = parseFloat(document.getElementById('taxRate').value) || 0;
+            const matTotal = materialsArr.reduce((sum, m) => sum + m.price, 0);
+            const exp = parseFloat(document.getElementById('expenses').value) || 0;
+            
+            const totalRevenue = lab + matTotal;
+            const taxAmount = totalRevenue * (rate / 100);
+            const takeHome = totalRevenue - taxAmount - exp;
+            
+            document.getElementById('taxLabel').innerText = rate;
+            document.getElementById('dispRevenue').innerText = `${currSym}${totalRevenue.toFixed(2)}`;
+            document.getElementById('dispTax').innerText = `-${currSym}${taxAmount.toFixed(2)}`;
+            document.getElementById('dispExpenses').innerText = `-${currSym}${(matTotal + exp).toFixed(2)}`;
+            document.getElementById('dispTakeHome').innerText = `${currSym}${takeHome.toFixed(2)}`;
+        }
+
+        function shareEmail() {
+            const biz = document.getElementById('bizName').value;
+            const ref = document.getElementById('jobRef').value;
+            const total = document.getElementById('dispTakeHome').innerText;
+            const desc = document.getElementById('workDesc').value;
+            const bank = document.getElementById('bankDetails').value;
+            
+            const subject = encodeURIComponent(`${ref} - Job Settlement - ${biz}`);
+            const body = encodeURIComponent(`Job Reference: ${ref}\n\nJob Description:\n${desc}\n\nTotal Balance Due: ${total}\n\nPayment Details:\n${bank}\n\nSent via Toolbox Pay`);
+            
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }
+
+        function resetApp() {
+            document.querySelectorAll('input, textarea').forEach(el => {
+                const preserved = ['bizName', 'taxRef', 'bankDetails', 'footerNotes', 'taxRate'];
+                if(!preserved.includes(el.id)) el.value = '';
+            });
+            document.getElementById('jobRef').value = generateRef();
+            materialsArr = [];
+            renderMaterials();
+            runCalc();
+        }
+    </script>
+</body>
+</html>
