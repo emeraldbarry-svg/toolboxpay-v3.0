@@ -3,106 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Business Setup</title>
+    <title>Toolbox Pay | Setup & QR</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
-        body { 
-            background-color: var(--bg-midnight); color: #FFFFFF; 
-            font-family: 'Inter', sans-serif; margin: 0; padding: 20px; 
-            display: flex; flex-direction: column; align-items: center;
-        }
+        body { background-color: var(--bg-midnight); color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
-        .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; position: relative; }
+        .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; }
         .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
-        .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; font-style: normal; }
-        .input-area:focus { border-left-color: var(--toolbox-orange); }
+        .qr-container { background: white; padding: 15px; border-radius: 15px; display: flex; justify-content: center; margin-top: 20px; }
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; }
-        .btn-nav { text-align: center; color: #94A3B8; font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 0.1em; text-decoration: none; padding: 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; margin-top: 10px; }
-        .mic-btn { position: absolute; right: 35px; bottom: 35px; background: rgba(255,149,0,0.2); color: var(--toolbox-orange); border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .mic-active { animation: pulse 1.5s infinite; background: var(--toolbox-orange); color: black; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,149,0,0.7); } 70% { box-shadow: 0 0 0 10px rgba(255,149,0,0); } 100% { box-shadow: 0 0 0 0 rgba(255,149,0,0); } }
     </style>
 </head>
-<body onload="checkExisting()">
+<body onload="initSetup()">
 
     <div class="main-container">
-        <header class="text-center pt-10 pb-6">
+        <header class="text-center pt-6 pb-4">
             <h1 class="text-3xl font-black uppercase tracking-tighter mb-1">
                 <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
             </h1>
-            <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[10px] uppercase">SYSTEM CONFIGURATION</div>
+            <div class="text-[10px] font-black text-slate-500 uppercase">Profile Configuration</div>
         </header>
 
         <section class="card">
-            <span class="label-text">Trading Name</span>
-            <input type="text" id="bizName" class="input-area" placeholder="e.g. Smith & Co. Electrical">
-            <button class="mic-btn" onclick="startDictation('bizName')">🎤</button>
+            <span class="label-text">Official App Domain</span>
+            <div class="text-sm font-black text-[#FF9500] mb-4">www.toolboxpay.com</div>
+            
+            <span class="label-text">Your Business Name</span>
+            <input type="text" id="bizName" class="w-full bg-[#0F172A] p-4 rounded-xl text-white outline-none mb-4" placeholder="e.g. Smith & Co.">
+            
+            <button onclick="saveAndQR()" class="btn-main">Save & Generate QR Code</button>
         </section>
 
-        <section class="card">
-            <span class="label-text">Specialising In</span>
-            <input type="text" id="specialising" class="input-area" placeholder="e.g. Kitchen Refurbishments">
-            <button class="mic-btn" onclick="startDictation('specialising')">🎤</button>
+        <section class="card text-center" id="qrCard" style="display: none;">
+            <span class="label-text">Your App Access QR</span>
+            <div class="qr-container" id="qrcode"></div>
+            <p class="text-[10px] text-slate-500 font-bold uppercase mt-4">Show this to clients to access your profile on www.toolboxpay.com</p>
         </section>
 
-        <section class="card">
-            <span class="label-text">Business Contact</span>
-            <input type="text" id="bizContact" class="input-area" placeholder="e.g. 07700 900123">
-            <button class="mic-btn" onclick="startDictation('bizContact')">🎤</button>
-        </section>
-
-        <section class="card">
-            <div class="flex gap-4">
-                <div class="flex-grow">
-                    <span class="label-text">Sort Code</span>
-                    <input type="text" id="sortCode" class="input-area" placeholder="00-00-00">
-                </div>
-                <div class="flex-grow">
-                    <span class="label-text">Account Number</span>
-                    <input type="text" id="accNum" class="input-area" placeholder="12345678" maxlength="8">
-                </div>
-            </div>
-        </section>
-
-        <button onclick="completeSetup()" class="btn-main">Save & Lock Details</button>
-        <a href="dashboard.html" class="btn-nav">Return to Dashboard</a>
+        <a href="dashboard.html" class="text-center text-slate-500 font-bold text-xs uppercase tracking-widest">← Return to Dashboard</a>
     </div>
 
     <script>
-        function checkExisting() {
+        function initSetup() {
             document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
-            document.getElementById('specialising').value = localStorage.getItem('toolboxSpecial') || '';
-            document.getElementById('bizContact').value = localStorage.getItem('toolboxContact') || '';
-            document.getElementById('sortCode').value = localStorage.getItem('toolboxSort') || '';
-            document.getElementById('accNum').value = localStorage.getItem('toolboxAcc') || '';
+            if(localStorage.getItem('toolboxSetupComplete') === 'true') {
+                generateQRCode();
+            }
         }
 
-        function startDictation(elementId) {
-            if (!('webkitSpeechRecognition' in window)) return alert("Voice not supported.");
-            const recognition = new webkitSpeechRecognition();
-            const btn = event.currentTarget;
-            recognition.lang = 'en-GB';
-            recognition.onstart = () => btn.classList.add('mic-active');
-            recognition.onresult = (event) => {
-                let text = event.results[0][0].transcript;
-                text = text.replace(/labor/gi, 'labour').replace(/specializing/gi, 'specialising');
-                document.getElementById(elementId).value = text;
-                btn.classList.remove('mic-active');
-            };
-            recognition.onend = () => btn.classList.remove('mic-active');
-            recognition.start();
-        }
-
-        function completeSetup() {
+        function saveAndQR() {
             localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
-            localStorage.setItem('toolboxSpecial', document.getElementById('specialising').value);
-            localStorage.setItem('toolboxContact', document.getElementById('bizContact').value);
-            localStorage.setItem('toolboxSort', document.getElementById('sortCode').value);
-            localStorage.setItem('toolboxAcc', document.getElementById('accNum').value);
             localStorage.setItem('toolboxSetupComplete', 'true');
-            alert("Profile Secured.");
-            window.location.href = 'dashboard.html';
+            generateQRCode();
+            alert("Business settings locked.");
+        }
+
+        function generateQRCode() {
+            document.getElementById('qrCard').style.display = 'block';
+            document.getElementById('qrcode').innerHTML = "";
+            new QRCode(document.getElementById("qrcode"), {
+                text: "https://www.toolboxpay.com",
+                width: 180,
+                height: 180,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
         }
     </script>
 </body>
