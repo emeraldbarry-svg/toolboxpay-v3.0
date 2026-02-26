@@ -33,20 +33,20 @@
         .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); background: #020617; }
         
-        /* CURRENCY TABS FIX */
-        .currency-container { display: flex; background: #0F172A; padding: 5px; border-radius: 15px; gap: 5px; }
+        /* THE REINFORCED TABS */
+        .currency-container { display: flex; background: #0F172A; padding: 6px; border-radius: 16px; gap: 6px; border: 1px solid rgba(255,255,255,0.05); }
         .currency-tab { 
-            flex: 1; padding: 15px; border-radius: 12px; font-size: 14px; font-weight: 900; 
-            color: #FFFFFF; cursor: pointer; border: none; background: transparent; 
-            transition: all 0.2s ease-in-out;
+            flex: 1; padding: 16px; border-radius: 12px; font-size: 13px; font-weight: 900; 
+            color: #94A3B8; cursor: pointer; border: none; background: transparent; 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-tap-highlight-color: transparent;
         }
-        .currency-tab:hover { background: rgba(255,149,0,0.1); }
-        .currency-tab.active { background: var(--toolbox-orange); color: #000; box-shadow: 0 5px 15px rgba(255, 149, 0, 0.4); }
+        .currency-tab.active { background: var(--toolbox-orange) !important; color: #000 !important; box-shadow: 0 4px 12px rgba(255, 149, 0, 0.4); }
 
         .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; margin-top: 10px; transition: 0.2s; }
-        .btn-main:active { transform: scale(0.96); }
+        .btn-main:active { transform: scale(0.97); }
 
-        .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; }
+        .material-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; border-left: 3px solid var(--toolbox-orange); }
         
         @media print { .no-print { display: none !important; } }
     </style>
@@ -64,9 +64,9 @@
         <section class="card no-print">
             <span class="label-text">Select Currency</span>
             <div class="currency-container">
-                <button id="btn-GBP" class="currency-tab active" onclick="updateCurrency('£', 'btn-GBP')">GBP £</button>
-                <button id="btn-EUR" class="currency-tab" onclick="updateCurrency('€', 'btn-EUR')">EUR €</button>
-                <button id="btn-USD" class="currency-tab" onclick="updateCurrency('$', 'btn-USD')">USD $</button>
+                <button class="currency-tab active" data-sym="£" onclick="handleCurrencyClick(this)">GBP £</button>
+                <button class="currency-tab" data-sym="€" onclick="handleCurrencyClick(this)">EUR €</button>
+                <button class="currency-tab" data-sym="$" onclick="handleCurrencyClick(this)">USD $</button>
             </div>
         </section>
 
@@ -90,8 +90,8 @@
             <div id="materialList" class="mb-4"></div>
             <div class="flex gap-2 no-print mb-6">
                 <input type="text" id="matName" class="input-area" placeholder="Item name">
-                <input type="number" id="matPrice" class="input-area w-24" placeholder="£">
-                <button onclick="addMaterial()" class="bg-[#FF9500] text-black font-black w-14 rounded-xl">+</button>
+                <input type="number" id="matPrice" class="input-area w-24" placeholder="0">
+                <button onclick="addMaterial()" class="bg-[#FF9500] text-black font-black w-14 rounded-xl active:scale-90 transition-transform">+</button>
             </div>
 
             <span class="label-text">Additional Costs (Fuel/Tools) <span class="curr-sym">£</span></span>
@@ -113,72 +113,5 @@
         let currentSymbol = '£';
 
         function initApp() {
+            // Load persistent data
             const savedCurr = localStorage.getItem('toolboxCurr') || '£';
-            const savedBtn = localStorage.getItem('toolboxBtnId') || 'btn-GBP';
-            updateCurrency(savedCurr, savedBtn);
-            loadDetails();
-        }
-
-        function updateCurrency(sym, btnId) {
-            currentSymbol = sym;
-            localStorage.setItem('toolboxCurr', sym);
-            localStorage.setItem('toolboxBtnId', btnId);
-
-            // 1. Reset all tabs
-            document.querySelectorAll('.currency-tab').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            // 2. Activate clicked tab
-            const activeBtn = document.getElementById(btnId);
-            if(activeBtn) activeBtn.classList.add('active');
-
-            // 3. Update all symbol displays
-            document.querySelectorAll('.curr-sym').forEach(el => el.innerText = sym);
-            
-            runCalc();
-        }
-
-        function saveDetails() {
-            localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
-            localStorage.setItem('toolboxBank', document.getElementById('bankDetails').value);
-        }
-
-        function loadDetails() {
-            document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
-            document.getElementById('bankDetails').value = localStorage.getItem('toolboxBank') || '';
-        }
-
-        function addMaterial() {
-            const name = document.getElementById('matName').value;
-            const price = parseFloat(document.getElementById('matPrice').value) || 0;
-            if (name && price > 0) {
-                materialsArr.push({ name, price });
-                document.getElementById('matName').value = '';
-                document.getElementById('matPrice').value = '';
-                renderMaterials();
-                runCalc();
-            }
-        }
-
-        function renderMaterials() {
-            const list = document.getElementById('materialList');
-            list.innerHTML = materialsArr.map((m, i) => `
-                <div class="material-row">
-                    <span class="flex-grow font-bold">${m.name}</span>
-                    <span class="text-[#FF9500] font-black">${currentSymbol}${m.price.toFixed(2)}</span>
-                    <button onclick="removeMat(${i})" class="text-red-500 ml-2">✕</button>
-                </div>
-            `).join('');
-        }
-
-        function removeMat(i) {
-            materialsArr.splice(i, 1);
-            renderMaterials();
-            runCalc();
-        }
-
-        function runCalc() {
-            const lab = parseFloat(document.getElementById('labour').value) || 0;
-            const matTotal = materialsArr.reduce((sum, m) => sum + m.price, 0);
-            const exp = parseFloat(document.getElementById('expenses').value) ||
