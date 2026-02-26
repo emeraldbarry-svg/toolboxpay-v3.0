@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Command Centre v4.2</title>
+    <title>Toolbox Pay | Job Settlement</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; }
@@ -19,10 +19,9 @@
             align-items: center;
         }
         
-        /* THE ABSOLUTE TOWER FIX */
         .main-container { 
             width: 100%; 
-            max-width: 480px; /* Limits width to keep it looking like a mobile app even on desktop */
+            max-width: 480px; 
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -42,7 +41,6 @@
             box-shadow: 0 10px 40px rgba(255, 149, 0, 0.15); 
         }
         
-        /* Inputs & Typography */
         .label-text { font-size: 10px; font-weight: 900; color: #4B5563; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
         .input-area { background: #11141B; border: 1px solid #1E232D; border-radius: 12px; color: white; padding: 18px; width: 100%; margin-bottom: 12px; outline: none; font-size: 16px; border-left: 4px solid transparent; box-sizing: border-box; transition: 0.3s; }
         .input-area:focus { border-left-color: var(--toolbox-orange); background: #161A22; }
@@ -53,15 +51,16 @@
 </head>
 <body>
     <header class="text-center py-10">
-        <h1 class="text-4xl font-black uppercase tracking-tighter">
+        <h1 class="text-5xl font-black uppercase tracking-tighter mb-1">
             <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
         </h1>
-        <div class="text-slate-500 font-bold tracking-[0.4em] text-[10px] mt-2 uppercase">Command Centre</div>
+        <div style="color: #FF9500;" class="font-black tracking-[0.4em] text-[14px] uppercase mb-1">JOB SETTLEMENT</div>
+        <div class="text-slate-600 font-bold tracking-[0.5em] text-[9px] uppercase">Command Centre</div>
     </header>
 
     <div class="main-container">
         <section class="card">
-            <span class="label-text">Work Description</span>
+            <span class="label-text">What was the job?</span>
             <textarea id="workDesc" class="input-area h-32" placeholder="e.g. 500 labour..."></textarea>
             
             <div class="grid grid-cols-2 gap-4">
@@ -75,31 +74,31 @@
                 </div>
             </div>
             
-            <span class="label-text">Expenses (Fuel/Tools) £</span>
+            <span class="label-text">Costs (Fuel/Tools) £</span>
             <input type="number" id="expenses" class="input-area" placeholder="0">
             
-            <button onclick="window.print()" class="btn-main">PRINT DOCUMENT</button>
-            <button onclick="resetApp()" class="btn-sub">CLEAR ALL DATA</button>
+            <button onclick="window.print()" class="btn-main">PRINT INVOICE</button>
+            <button onclick="resetApp()" class="btn-sub">CLEAR EVERYTHING</button>
         </section>
 
         <section class="card display-box">
             <div class="space-y-6 mb-10">
                 <div class="flex justify-between items-center">
-                    <span class="text-slate-400 font-bold uppercase tracking-widest text-[11px]">Total Revenue</span>
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-[11px]">Money In</span>
                     <span id="dispRevenue" class="text-xl font-black">£0.00</span>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-red-500 font-bold uppercase tracking-widest text-[11px]">Tax Reserve (20%)</span>
+                    <span class="text-red-500 font-bold uppercase tracking-widest text-[11px]">Tax To Save (20%)</span>
                     <span id="dispTax" class="text-xl font-black text-red-500">-£0.00</span>
                 </div>
                 <div class="flex justify-between items-center border-b border-slate-800 pb-6">
-                    <span class="text-orange-300 font-bold uppercase tracking-widest text-[11px]">Expenses</span>
+                    <span class="text-orange-300 font-bold uppercase tracking-widest text-[11px]">Your Costs</span>
                     <span id="dispExpenses" class="text-xl font-black text-orange-300">-£0.00</span>
                 </div>
             </div>
             
             <div class="text-center">
-                <span class="text-[#00FF88] font-black uppercase tracking-tighter text-[11px] block mb-2">Net Profit (Take Home):</span>
+                <span class="text-[#00FF88] font-black uppercase tracking-tighter text-[11px] block mb-2">Total Take Home:</span>
                 <span id="dispTakeHome" class="text-7xl font-black" style="color: #FF9500;">£0.00</span>
             </div>
         </section>
