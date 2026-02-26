@@ -3,49 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Setup & QR</title>
+    <title>Toolbox Pay | Profile Configuration</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
-        body { background-color: var(--bg-midnight); color: #FFFFFF; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
-        .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; }
-        .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px; display: block; }
-        .qr-container { background: white; padding: 15px; border-radius: 15px; display: flex; justify-content: center; margin-top: 20px; }
-        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 14px; width: 100%; border: none; font-size: 16px; cursor: pointer; }
+        body { 
+            background-color: var(--bg-midnight); color: #FFFFFF; 
+            font-family: 'Inter', sans-serif; margin: 0; padding: 20px; 
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+        .main-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 24px; }
+        .card { background: #1E293B; border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .label-text { font-size: 10px; font-weight: 900; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 12px; display: block; }
+        .input-area { background: #0F172A; border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; color: #FFFFFF; padding: 18px; width: 100%; outline: none; font-size: 16px; border-left: 4px solid transparent; transition: 0.3s; font-style: normal; }
+        .input-area:focus { border-left-color: var(--toolbox-orange); }
+        .btn-main { background: var(--toolbox-orange); color: #000; font-weight: 900; text-transform: uppercase; padding: 22px; border-radius: 16px; width: 100%; border: none; font-size: 16px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(255,149,0,0.3); }
+        .btn-main:active { transform: scale(0.98); }
+        .nav-link { color: #94A3B8; font-weight: 900; text-transform: uppercase; font-size: 11px; letter-spacing: 0.1em; text-decoration: none; text-align: center; margin-top: 10px; transition: 0.3s; }
+        .nav-link:hover { color: #FFFFFF; }
+        .qr-wrapper { background: white; padding: 20px; border-radius: 20px; display: flex; justify-content: center; margin-top: 15px; }
     </style>
 </head>
 <body onload="initSetup()">
 
     <div class="main-container">
-        <header class="text-center pt-6 pb-4">
-            <h1 class="text-3xl font-black uppercase tracking-tighter mb-1">
+        <header class="text-center pt-6">
+            <h1 class="text-4xl font-black uppercase tracking-tighter mb-1">
                 <span style="color: #FF9500;">TOOLBOX</span><span style="color: #FFFFFF;">PAY</span>
             </h1>
-            <div class="text-[10px] font-black text-slate-500 uppercase">Profile Configuration</div>
+            <div style="color: #94A3B8;" class="font-black tracking-[0.3em] text-[10px] uppercase">Profile Configuration</div>
         </header>
 
         <section class="card">
             <span class="label-text">Official App Domain</span>
-            <div class="text-sm font-black text-[#FF9500] mb-4">www.toolboxpay.com</div>
+            <div class="text-lg font-black text-[#FF9500] mb-6">www.toolboxpay.com</div>
             
             <span class="label-text">Your Business Name</span>
-            <input type="text" id="bizName" class="w-full bg-[#0F172A] p-4 rounded-xl text-white outline-none mb-4" placeholder="e.g. Smith & Co.">
+            <input type="text" id="bizName" class="input-area mb-6" placeholder="e.g. Smith & Co. Electrical">
             
             <button onclick="saveAndQR()" class="btn-main">Save & Generate QR Code</button>
         </section>
 
         <section class="card text-center" id="qrCard" style="display: none;">
             <span class="label-text">Your App Access QR</span>
-            <div class="qr-container" id="qrcode"></div>
-            <p class="text-[10px] text-slate-500 font-bold uppercase mt-4">Show this to clients to access your profile on www.toolboxpay.com</p>
+            <div class="qr-wrapper" id="qrcode"></div>
+            <p class="text-[10px] text-slate-500 font-bold uppercase mt-6 leading-relaxed">Show this to clients to access your profile on www.toolboxpay.com</p>
         </section>
 
-        <a href="dashboard.html" class="text-center text-slate-500 font-bold text-xs uppercase tracking-widest">← Return to Dashboard</a>
+        <a href="dashboard.html" class="nav-link">← Return to Dashboard</a>
     </div>
 
     <script>
+        // Security Check
+        if (sessionStorage.getItem('toolboxAuthenticated') !== 'true') {
+            window.location.href = 'gateway.html';
+        }
+
         function initSetup() {
             document.getElementById('bizName').value = localStorage.getItem('toolboxBizName') || '';
             if(localStorage.getItem('toolboxSetupComplete') === 'true') {
@@ -54,10 +69,13 @@
         }
 
         function saveAndQR() {
-            localStorage.setItem('toolboxBizName', document.getElementById('bizName').value);
+            const biz = document.getElementById('bizName').value;
+            if(!biz) return alert("Please enter your business name.");
+            
+            localStorage.setItem('toolboxBizName', biz);
             localStorage.setItem('toolboxSetupComplete', 'true');
             generateQRCode();
-            alert("Business settings locked.");
+            alert("Settings successfully locked.");
         }
 
         function generateQRCode() {
@@ -65,8 +83,8 @@
             document.getElementById('qrcode').innerHTML = "";
             new QRCode(document.getElementById("qrcode"), {
                 text: "https://www.toolboxpay.com",
-                width: 180,
-                height: 180,
+                width: 200,
+                height: 200,
                 colorDark : "#000000",
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H
