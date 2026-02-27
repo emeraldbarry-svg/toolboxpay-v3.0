@@ -2,8 +2,8 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v3.5 - Gold Master</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>toolboxpay v3.6 - Anti-Freeze</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -12,13 +12,12 @@
         .logo { text-align: center; margin-bottom: 30px; font-size: 30px; font-weight: 800; }
         .logo span { color: var(--org); }
         #back-btn { display: none; color: var(--org); border: 1px solid var(--org); background: none; padding: 12px; width: 100%; border-radius: 8px; margin-bottom: 25px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
-        .screen { display: none; animation: fadeIn 0.2s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .screen { display: none; }
         .tile { background: var(--crd); padding: 25px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .tile h3 { color: var(--org); text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
         .tile p { font-size: 12px; color: #8892b0; margin-top: 4px; }
         .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
-        input, textarea { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 16px; outline: none; }
+        input, textarea { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 16px; outline: none; transition: border 0.2s; }
         input:focus { border-color: var(--org); }
         textarea { height: 80px; resize: none; }
         .vat-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 5px; background: rgba(255,102,0,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,102,0,0.2); }
@@ -35,79 +34,28 @@
 <body>
 
 <div class="shell">
-    <button id="back-btn" onclick="go('dash')">← BACK TO DASHBOARD</button>
-    <div class="logo"><span>toolbox</span>pay <small style="font-size: 10px; color: #8892b0;">v3.5</small></div>
+    <button id="back-btn">← BACK TO DASHBOARD</button>
+    <div class="logo"><span>toolbox</span>pay <small style="font-size: 10px; color: #8892b0;">v3.6</small></div>
 
     <div id="dash" class="screen" style="display: block;">
-        <div class="tile" onclick="go('calc')"><div><h3>Labour & Materials</h3><p>Calculate & quote</p></div><span>→</span></div>
-        <div class="tile" onclick="go('biz')"><div><h3>Business Details</h3><p>Company info & address</p></div><span>→</span></div>
-        <div class="tile" onclick="go('bank')"><div><h3>Bank Details</h3><p>Payment information</p></div><span>→</span></div>
+        <div class="tile" id="to-calc"><div><h3>Labour & Materials</h3><p>Calculate & quote</p></div><span>→</span></div>
+        <div class="tile" id="to-biz"><div><h3>Business Details</h3><p>Company info & address</p></div><span>→</span></div>
+        <div class="tile" id="to-bank"><div><h3>Bank Details</h3><p>Payment information</p></div><span>→</span></div>
     </div>
 
     <div id="calc" class="screen">
         <div class="tag">Costs</div>
-        <input type="number" id="h" placeholder="Hours" oninput="doMath()" pattern="[0-9]*" inputmode="decimal">
-        <input type="number" id="r" placeholder="Rate (£)" oninput="doMath()" pattern="[0-9]*" inputmode="decimal">
-        <input type="number" id="m" placeholder="Materials (£)" oninput="doMath()" pattern="[0-9]*" inputmode="decimal">
-        <div class="vat-row"><span>Add 20% VAT</span><input type="checkbox" id="v-tog" onchange="doMath()" style="width:24px; height:24px;"></div>
+        <input type="number" id="h" placeholder="Hours" pattern="[0-9]*" inputmode="decimal">
+        <input type="number" id="r" placeholder="Rate (£)" pattern="[0-9]*" inputmode="decimal">
+        <input type="number" id="m" placeholder="Materials (£)" pattern="[0-9]*" inputmode="decimal">
+        <div class="vat-row"><span>Add 20% VAT</span><input type="checkbox" id="v-tog" style="width:24px; height:24px;"></div>
         <div class="total-box"><span style="font-size:12px;">TOTAL:</span><span id="res" class="price">£0.00</span></div>
-        <button class="btn-main" onclick="gen()">View Summary</button>
-        <button class="btn-sec" onclick="resetCalc()">Clear Figures</button>
+        <button class="btn-main" id="to-sum">View Summary</button>
+        <button class="btn-sec" id="clr-calc">Clear Figures</button>
     </div>
 
     <div id="summary" class="screen">
         <div class="summary-card">
             <h2 id="s-biz">Company Name</h2>
             <div id="s-addr" class="summary-address">Address</div>
-            <div class="summary-row"><span>Labour:</span> <span id="s-lab">£0.00</span></div>
-            <div class="summary-row"><span>Materials:</span> <span id="s-mat">£0.00</span></div>
-            <div id="s-v-row" class="summary-row" style="display:none; color:#888;"><span>VAT (20%):</span> <span id="s-v-amt">£0.00</span></div>
-            <div class="summary-row" style="border-top:2px solid #eee; margin-top:15px; padding-top:10px; font-weight:800; color:var(--org); font-size:18px;"><span>Total:</span> <span id="s-tot">£0.00</span></div>
-            <div class="tag" style="color:#666; border-color:#eee; margin-top:20px;">Payment Details</div>
-            <div class="summary-row" style="font-size:12px;"><span>Account:</span> <span id="s-acc">---</span></div>
-            <div class="summary-row" style="font-size:12px;"><span>Sort Code:</span> <span id="s-srt">---</span></div>
-            <div class="summary-row" style="font-size:12px;"><span>Account No:</span> <span id="s-num">---</span></div>
-        </div>
-        <button id="copy-btn" class="btn-main" onclick="copyIt()">Copy for WhatsApp</button>
-        <button class="btn-main" style="background:#1a2635;" onclick="go('calc')">Back to Edit</button>
-    </div>
-
-    <div id="biz" class="screen">
-        <div class="tag">Company Info</div>
-        <input type="text" id="biz-name" placeholder="Business Name" oninput="set('biz-name',this.value)">
-        <textarea id="biz-addr" placeholder="Business Address" oninput="set('biz-addr',this.value)"></textarea>
-        <button class="btn-main" onclick="go('dash')">Save & Return</button>
-    </div>
-
-    <div id="bank" class="screen">
-        <div class="tag">Bank Info</div>
-        <input type="text" id="bank-acc" placeholder="Account Name" oninput="set('bank-acc',this.value)">
-        <input type="text" id="bank-sort" placeholder="Sort Code" oninput="set('bank-sort',this.value)">
-        <input type="text" id="bank-num" placeholder="Account Number" oninput="set('bank-num',this.value)">
-        <button class="btn-main" onclick="go('dash')">Save & Return</button>
-    </div>
-</div>
-
-<script>
-    function go(id) {
-        try {
-            const screens = document.getElementsByClassName('screen');
-            for(let i=0; i<screens.length; i++) { screens[i].style.display = 'none'; }
-            document.getElementById(id).style.display = 'block';
-            document.getElementById('back-btn').style.display = (id === 'dash') ? 'none' : 'block';
-            window.scrollTo(0,0);
-        } catch(e) { console.error("Nav Error", e); }
-    }
-
-    function set(k, v) { localStorage.setItem(k, v); }
-
-    function doMath() {
-        const h = parseFloat(document.getElementById('h').value) || 0;
-        const r = parseFloat(document.getElementById('r').value) || 0;
-        const m = parseFloat(document.getElementById('m').value) || 0;
-        const sub = (h * r) + m;
-        const v = document.getElementById('v-tog').checked ? (sub * 0.2) : 0;
-        document.getElementById('res').innerText = '£' + (sub + v).toLocaleString('en-GB', {minimumFractionDigits: 2});
-    }
-
-    function resetCalc() {
+            <div class="summary-row"><span>Labour:</span> <span id="s-
