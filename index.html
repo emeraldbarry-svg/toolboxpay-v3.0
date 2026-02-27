@@ -3,100 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v50.0</title>
+    <title>toolboxpay v51.0</title>
     <style>
-        /* Zero-Impact Static Engine: No transitions, no shadows, no GPU load */
-        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding: 15px; }
-        .hdr { text-align: center; font-weight: 900; font-size: 24px; margin-bottom: 25px; padding-bottom: 10px; border-bottom: 1px solid #222; }
-        .hdr span { color: #ff6600; }
+        /* SANE & STABLE: No animations, no shadows, no GPU rendering */
+        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding: 15px; -webkit-text-size-adjust: 100%; }
         
-        section { background: #111; padding: 15px; margin-bottom: 30px; border: 1px solid #333; border-radius: 4px; }
-        h2 { color: #ff6600; font-size: 13px; text-transform: uppercase; margin: 0 0 15px 0; letter-spacing: 1px; }
+        .hdr { text-align: center; margin-bottom: 25px; border-bottom: 1px solid #222; padding-bottom: 15px; }
+        .hdr span { color: #ff6600; font-weight: 900; font-size: 28px; }
+        .hdr b { color: #fff; font-weight: 900; font-size: 28px; }
 
-        input, textarea { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #444; background: #000; color: #fff; font-size: 16px; box-sizing: border-box; border-radius: 4px; }
+        section { background: #111; padding: 18px; margin-bottom: 25px; border: 1px solid #333; border-radius: 4px; }
+        h2 { color: #ff6600; font-size: 13px; text-transform: uppercase; margin: 0 0 15px 0; letter-spacing: 1px; font-weight: 800; }
+
+        label { display: block; font-size: 11px; color: #666; margin-bottom: 4px; text-transform: uppercase; }
+        input, textarea { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #444; background: #000; color: #fff; font-size: 16px; box-sizing: border-box; border-radius: 4px; outline: none; }
+        input:focus { border-color: #ff6600; }
         
-        .total-box { font-size: 55px; font-weight: 900; color: #ff6600; text-align: right; margin: 10px 0; letter-spacing: -2px; }
-        .btn-big { width: 100%; padding: 22px; background: #ff6600; color: #000; border: none; font-weight: 900; font-size: 18px; text-transform: uppercase; border-radius: 4px; }
+        .total-row { display: flex; justify-content: space-between; align-items: center; margin: 15px 0; }
+        .total-val { font-size: 48px; font-weight: 900; color: #ff6600; letter-spacing: -2px; }
+        
+        .btn-action { width: 100%; padding: 20px; background: #ff6600; color: #000; border: none; font-weight: 900; font-size: 18px; text-transform: uppercase; border-radius: 4px; cursor: pointer; }
+        .btn-action:active { background: #cc5200; }
 
-        .hist-item { border-bottom: 1px solid #222; padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
-        .hist-item strong { color: #ff6600; }
+        .log-item { border-bottom: 1px solid #222; padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
+        .log-item:last-child { border: none; }
+        .log-price { color: #ff6600; font-weight: 800; font-size: 18px; }
     </style>
 </head>
 <body>
 
-    <div class="hdr"><span>toolbox</span>pay</div>
+    <div class="hdr"><span>toolbox</span><b>pay</b></div>
 
     <section>
         <h2>New Quote</h2>
         <input type="text" id="qn" placeholder="Client Name">
         <textarea id="ql" placeholder="Description of Labour" style="height:70px"></textarea>
-        <div style="display:flex; gap:8px;">
-            <input type="number" id="qh" placeholder="Hours" oninput="c()" style="flex:1">
-            <input type="number" id="qr" placeholder="Rate" oninput="c()" style="flex:1">
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1"><label>Hours</label><input type="number" id="qh" oninput="calc()"></div>
+            <div style="flex:1"><label>Rate</label><input type="number" id="qr" oninput="calc()"></div>
         </div>
-        <input type="number" id="qm" placeholder="Materials" oninput="c()">
-        <div class="total-box" id="tt">£0.00</div>
-        <button class="btn-big" onclick="s()">Save & Log Quote</button>
+        <label>Materials cost</label>
+        <input type="number" id="qm" oninput="calc()">
+        
+        <div class="total-row">
+            <span style="font-weight:800; color:#888">TOTAL</span>
+            <div class="total-val" id="tt">£0.00</div>
+        </div>
+        <button class="btn-action" onclick="saveQ()">Save & Log Quote</button>
     </section>
 
     <section>
         <h2>Recent History</h2>
-        <div id="hl"></div>
+        <div id="history_box"></div>
     </section>
 
     <section>
-        <h2>Business & Bank Details</h2>
-        <input type="text" id="sn" placeholder="Business Name" oninput="ls('n',this.value)">
-        <textarea id="sa" placeholder="Business Address" oninput="ls('a',this.value)" style="height:60px"></textarea>
-        <input type="text" id="sb" placeholder="Bank Name" oninput="ls('b',this.value)">
-        <div style="display:flex; gap:8px;">
-            <input type="text" id="ss" placeholder="Sort Code" oninput="ls('s',this.value)" style="flex:1">
-            <input type="text" id="snm" placeholder="Account Number" oninput="ls('nm',this.value)" style="flex:1">
+        <h2>Business & Bank Setup</h2>
+        <label>Your Trading Name</label>
+        <input type="text" id="bn" placeholder="e.g. Smith Plumbing" oninput="st('bn',this.value)">
+        <label>Business Address</label>
+        <textarea id="ba" placeholder="Line 1, Postcode" oninput="st('ba',this.value)" style="height:60px"></textarea>
+        
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <div style="flex:1"><label>Bank Name</label><input type="text" id="bk" oninput="st('bk',this.value)"></div>
+            <div style="flex:1"><label>Sort Code</label><input type="text" id="sc" oninput="st('sc',this.value)"></div>
         </div>
+        <label>Account Number</label>
+        <input type="text" id="an" oninput="st('an',this.value)">
     </section>
 
     <script>
-        const DB = "tb_v50_";
-        function ls(k, v) { localStorage.setItem(DB+k, v); }
-        function gl(k) { return localStorage.getItem(DB+k) || ""; }
+        const STORE = "tb_sane_v51_";
+        
+        // Storage Helpers
+        function st(k, v) { localStorage.setItem(STORE+k, v); }
+        function gt(k) { return localStorage.getItem(STORE+k) || ""; }
 
-        function c() {
-            let h = +document.getElementById('qh').value || 0;
-            let r = +document.getElementById('qr').value || 0;
-            let m = +document.getElementById('qm').value || 0;
-            document.getElementById('tt').innerText = "£" + (h*r + m).toFixed(2);
+        // Calculation Engine
+        function calc() {
+            const h = parseFloat(document.getElementById('qh').value) || 0;
+            const r = parseFloat(document.getElementById('qr').value) || 0;
+            const m = parseFloat(document.getElementById('qm').value) || 0;
+            const total = (h * r) + m;
+            document.getElementById('tt').innerText = "£" + total.toFixed(2);
         }
 
-        function s() {
-            let d = JSON.parse(localStorage.getItem(DB+'d') || '[]');
-            d.unshift({
-                n: document.getElementById('qn').value || 'Client',
-                t: document.getElementById('tt').innerText,
-                dt: new Date().toLocaleDateString('en-GB')
-            });
-            localStorage.setItem(DB+'d', JSON.stringify(d.slice(0,10)));
-            render();
-            alert("Quote Logged.");
-        }
-
-        function render() {
-            let d = JSON.parse(localStorage.getItem(DB+'d') || '[]');
-            document.getElementById('hl').innerHTML = d.map(i => `
-                <div class="hist-item">
-                    <span>${i.n}<br><small style="color:#555">${i.dt}</small></span>
-                    <strong>${i.t}</strong>
-                </div>
-            `).join('') || '<p style="opacity:0.3; font-size:12px;">No quotes yet.</p>';
-        }
-
-        window.onload = () => {
-            document.getElementById('sn').value = gl('n');
-            document.getElementById('sa').value = gl('a');
-            document.getElementById('sb').value = gl('b');
-            document.getElementById('ss').value = gl('s');
-            document.getElementById('snm').value = gl('nm');
-            render();
-        };
-    </script>
-</body>
-</html>
+        // Save Quote Logic
+        function saveQ() {
+            const name = document.getElementById('qn').value || "Unnamed Client";
+            const price = document.getElementById('tt').innerText;
+            const date = new Date().toLocaleDateString('en-GB');
+            
+            let logs = JSON.parse(localStorage.getItem(STORE+'logs') || '[]');
+            logs.unshift({ name,
