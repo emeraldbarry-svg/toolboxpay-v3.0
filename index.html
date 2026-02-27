@@ -8,41 +8,46 @@
         :root { --org: #ff6600; --bg: #0b0b0b; --card: #161616; }
         html, body { background: var(--bg); margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; color: white; display: flex; justify-content: center; }
         
-        /* THE STATIC CONTAINER */
-        #app { background: var(--card); width: 400px; min-height: 95vh; margin: 20px 0; border: 1px solid #333; border-radius: 24px; padding: 25px; box-sizing: border-box; }
+        #app { background: var(--card); width: 400px; min-height: 95vh; margin: 20px 0; border: 1px solid #333; border-radius: 24px; padding: 25px; box-sizing: border-box; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         
         .logo { color: var(--org); font-weight: 900; font-size: 28px; text-align: center; margin-bottom: 25px; }
         .logo span { color: #fff; }
 
-        /* SECTION STYLING */
-        .section { border-top: 1px solid #333; padding-top: 20px; margin-top: 20px; }
-        h3 { color: var(--org); font-size: 14px; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
+        .section { border-top: 1px solid #333; padding-top: 20px; margin-top: 25px; }
+        h3 { color: var(--org); font-size: 14px; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; font-weight: 800; }
 
-        input, textarea, select { width: 100%; padding: 14px; margin-bottom: 10px; border: 1.5px solid #333; background: #000; color: #fff; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none; }
+        input, textarea, select { width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #333; background: #000; color: #fff; border-radius: 10px; font-size: 15px; box-sizing: border-box; outline: none; }
         input:focus { border-color: var(--org); }
 
         .row { display: flex; gap: 10px; }
         .row input { flex: 1; }
 
-        .tax-btn { background: #222; border: 1px solid #444; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; margin-bottom: 15px; }
+        .tax-btn { background: #222; border: 1px solid #444; padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; margin-bottom: 15px; transition: 0.2s; }
         .tax-btn.active { border-color: var(--org); background: #2a1500; }
-        .dot { width: 12px; height: 12px; background: #444; border-radius: 50%; }
+        .dot { width: 14px; height: 14px; background: #444; border-radius: 50%; }
         .active .dot { background: var(--org); box-shadow: 0 0 8px var(--org); }
 
-        .total-box { text-align: right; font-size: 48px; font-weight: 900; color: var(--org); margin: 10px 0; line-height: 1; }
+        .total-box { text-align: right; font-size: 48px; font-weight: 900; color: var(--org); margin: 15px 0; line-height: 1; letter-spacing: -2px; }
         
-        .btn-save { width: 100%; padding: 20px; background: var(--org); color: #000; border: none; border-radius: 14px; font-size: 18px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
-        .btn-save:active { transform: scale(0.98); }
+        .btn-save { width: 100%; padding: 20px; background: var(--org); color: #000; border: none; border-radius: 14px; font-size: 18px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-save:hover { background: #ff8533; }
 
-        /* HISTORY LIST */
-        #history-box { max-height: 200px; overflow-y: auto; margin-top: 10px; }
-        .hist-item { background: #222; padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
-        .btn-view { background: none; border: 1px solid var(--org); color: var(--org); padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+        #history-box { max-height: 250px; overflow-y: auto; margin-top: 10px; padding-right: 5px; }
+        #history-box::-webkit-scrollbar { width: 4px; }
+        #history-box::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
 
-        /* MODAL FOR PRINTING */
-        #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .paper { background: #fff; color: #000; padding: 30px; width: 100%; max-width: 400px; border-radius: 4px; font-size: 13px; line-height: 1.5; }
-        @media print { body * { visibility: hidden; } #overlay, #overlay * { visibility: visible; } #overlay { position: absolute; left: 0; top: 0; } .no-print { display: none; } }
+        .hist-item { background: #222; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--org); }
+        .btn-view { background: none; border: 1.5px solid var(--org); color: var(--org); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 12px; }
+
+        #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999; justify-content: center; align-items: flex-start; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .paper { background: #fff; color: #000; padding: 35px; width: 100%; max-width: 420px; border-radius: 4px; font-size: 14px; line-height: 1.6; margin-top: 20px; }
+        
+        @media print { 
+            body * { visibility: hidden; } 
+            #overlay, #overlay * { visibility: visible; } 
+            #overlay { position: absolute; left: 0; top: 0; width: 100%; background: white; } 
+            .no-print { display: none; } 
+        }
     </style>
 </head>
 <body>
@@ -52,7 +57,7 @@
 
         <h3>New Quote</h3>
         <input type="text" id="q-name" placeholder="Client Name">
-        <textarea id="q-desc" placeholder="Description of Labour" style="height: 60px;"></textarea>
+        <textarea id="q-desc" placeholder="Description of Labour" style="height: 70px;"></textarea>
         <div class="row">
             <input type="number" id="q-hrs" placeholder="Hours" oninput="math()">
             <input type="number" id="q-rate" placeholder="Rate" oninput="math()">
@@ -60,7 +65,7 @@
         <input type="number" id="q-mat" placeholder="Materials" oninput="math()">
         
         <div id="tax-toggle" class="tax-btn" onclick="toggleVAT()">
-            <span style="font-weight: bold; font-size: 13px;">ADD 20% VAT</span>
+            <span id="tax-text" style="font-weight: bold; font-size: 13px; color: #777;">ADD 20% VAT</span>
             <div class="dot"></div>
         </div>
 
@@ -68,20 +73,140 @@
         <button class="btn-save" onclick="saveQuote()">Save & Log Quote</button>
 
         <div class="section">
-            <h3>Recent History</h3>
+            <h3>Recent Quotes</h3>
             <div id="history-box"></div>
         </div>
 
         <div class="section">
             <h3>Business & Bank Details</h3>
             <input type="text" id="s-bn" placeholder="Business Name" oninput="store('bn', this.value)">
-            <textarea id="s-ba" placeholder="Business Address" oninput="store('ba', this.value)" style="height:50px;"></textarea>
+            <textarea id="s-ba" placeholder="Business Address" oninput="store('ba', this.value)" style="height:60px;"></textarea>
+            
             <div class="row">
                 <input type="text" id="s-b1" placeholder="Bank Name" oninput="store('b1', this.value)">
                 <input type="text" id="s-b2" placeholder="Sort Code" oninput="store('b2', this.value)">
             </div>
             <input type="text" id="s-b3" placeholder="Account Number" oninput="store('b3', this.value)">
+            
             <select id="s-cu" onchange="store('cu', this.value); math();">
                 <option value="£">Currency: GBP (£)</option>
                 <option value="$">Currency: USD ($)</option>
-                <option value="€
+                <option value="€">Currency: EUR (€)</option>
+            </select>
+        </div>
+        
+        <center>
+            <button onclick="if(confirm('Wipe all data?')) { localStorage.clear(); location.reload(); }" 
+                    style="margin-top:40px; background:none; border:none; color:#333; cursor:pointer; font-size:10px; text-decoration: underline;">
+                [ RESET ALL APPLICATION DATA ]
+            </button>
+        </center>
+    </div>
+
+    <div id="overlay" onclick="this.style.display='none'">
+        <div class="paper" id="print-area" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <script>
+        const KEY = "tb_v41_static_";
+        let hasVAT = false;
+
+        function store(k, v) { localStorage.setItem(KEY+k, v); }
+        function get(k) { return localStorage.getItem(KEY+k) || ""; }
+
+        function toggleVAT() {
+            hasVAT = !hasVAT;
+            document.getElementById('tax-toggle').classList.toggle('active', hasVAT);
+            document.getElementById('tax-text').style.color = hasVAT ? 'var(--org)' : '#777';
+            math();
+        }
+
+        function math() {
+            let sym = get('cu') || '£';
+            let h = Number(document.getElementById('q-hrs').value) || 0;
+            let r = Number(document.getElementById('q-rate').value) || 0;
+            let m = Number(document.getElementById('q-mat').value) || 0;
+            let total = (h * r) + m; if(hasVAT) total *= 1.2;
+            document.getElementById('display-total').innerText = sym + total.toFixed(2);
+        }
+
+        function saveQuote() {
+            let data = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
+            const newQuote = { 
+                id: Date.now(), 
+                n: document.getElementById('q-name').value || 'Unnamed Client',
+                d: document.getElementById('q-desc').value || 'Labour / Services provided',
+                t: document.getElementById('display-total').innerText,
+                date: new Date().toLocaleDateString('en-GB')
+            };
+            data.unshift(newQuote);
+            localStorage.setItem(KEY+'data', JSON.stringify(data.slice(0,25)));
+            renderHistory();
+            
+            // Clear calculator for next one
+            document.getElementById('q-name').value = '';
+            document.getElementById('q-desc').value = '';
+            document.getElementById('q-hrs').value = '';
+            document.getElementById('q-rate').value = '';
+            document.getElementById('q-mat').value = '';
+            math();
+            alert("Quote added to your history.");
+        }
+
+        function renderHistory() {
+            let data = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
+            document.getElementById('history-box').innerHTML = data.map(i => `
+                <div class="hist-item">
+                    <span><strong style="color:white">${i.n}</strong><br><small style="color:#777">${i.date} — ${i.t}</small></span>
+                    <button class="btn-view" onclick="viewQuote(${i.id})">VIEW</button>
+                </div>
+            `).join('') || '<p style="opacity:0.2; text-align:center; font-size:12px;">No quotes logged yet.</p>';
+        }
+
+        function viewQuote(id) {
+            let q = JSON.parse(localStorage.getItem(KEY+'data') || '[]').find(x => x.id === id);
+            document.getElementById('print-area').innerHTML = `
+                <div style="text-align:center; margin-bottom:20px;">
+                    <h1 style="margin:0; letter-spacing:2px;">QUOTE</h1>
+                    <small>REF: ${q.id}</small>
+                </div>
+                <hr>
+                <div style="display:flex; justify-content:space-between; margin:20px 0;">
+                    <div>
+                        <strong>FROM:</strong><br>${get('bn')||'---'}<br>${get('ba')||'---'}
+                    </div>
+                    <div style="text-align:right;">
+                        <strong>TO:</strong><br>${q.n}<br><strong>DATE:</strong> ${q.date}
+                    </div>
+                </div>
+                <hr>
+                <strong>DESCRIPTION OF LABOUR:</strong><br>
+                <p style="white-space: pre-wrap;">${q.d}</p>
+                <div style="font-size:32px; font-weight:900; color:#ff6600; text-align:right; margin:25px 0;">
+                    TOTAL: ${q.t}
+                </div>
+                <hr>
+                <strong>PAYMENT DETAILS:</strong><br>
+                Bank: ${get('b1')||'---'}<br>
+                Sort Code: ${get('b2')||'---'}<br>
+                Account: ${get('b3')||'---'}
+                <br><br>
+                <button class="no-print" onclick="window.print()" style="width:100%; padding:15px; background:#ff6600; color:#000; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">PRINT / SAVE AS PDF</button>
+                <button class="no-print" onclick="document.getElementById('overlay').style.display='none'" style="width:100%; padding:10px; background:none; border:none; color:#666; cursor:pointer; margin-top:5px;">Close Preview</button>
+            `;
+            document.getElementById('overlay').style.display = 'flex';
+        }
+
+        window.onload = () => {
+            document.getElementById('s-bn').value = get('bn');
+            document.getElementById('s-ba').value = get('ba');
+            document.getElementById('s-b1').value = get('b1');
+            document.getElementById('s-b2').value = get('b2');
+            document.getElementById('s-b3').value = get('b3');
+            document.getElementById('s-cu').value = get('cu') || '£';
+            renderHistory();
+            math();
+        };
+    </script>
+</body>
+</html>
