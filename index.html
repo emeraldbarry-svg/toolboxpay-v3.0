@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v4.3</title>
+    <title>toolboxpay v4.4 - Stable</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -18,15 +18,11 @@
         .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
         input, textarea { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 16px; outline: none; }
         input:focus { border-color: var(--org); }
-        textarea { height: 80px; resize: none; }
-        .vat-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 5px; background: rgba(255,102,0,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,102,0,0.2); }
         .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; flex-direction: column; gap: 5px; margin-top: 20px; background: rgba(255,102,0,0.05); }
         .price { color: var(--org); font-size: 26px; font-weight: 800; text-align: right; }
         .btn-main { width: 100%; padding: 18px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
         .btn-sec { width: 100%; padding: 12px; background: none; border: 1px solid #233554; color: #8892b0; border-radius: 8px; margin-top: 10px; cursor: pointer; font-size: 12px; text-transform: uppercase; }
-        .summary-card { background: #fff; color: #333; padding: 25px; border-radius: 12px; margin-top: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .summary-card h2 { color: #000; font-size: 18px; margin-bottom: 4px; }
-        .summary-address { font-size: 12px; color: #666; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; white-space: pre-wrap; line-height: 1.4; }
+        .summary-card { background: #fff; color: #333; padding: 25px; border-radius: 12px; margin-top: 10px; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
     </style>
 </head>
@@ -34,7 +30,7 @@
 
 <div class="shell" id="main-shell">
     <button id="back-btn" onclick="render('dash')">← BACK TO DASHBOARD</button>
-    <div class="logo"><span>toolbox</span>pay <small style="font-size: 10px; color: #8892b0;">v4.3</small></div>
+    <div class="logo"><span>toolbox</span>pay <small style="font-size: 10px; color: #8892b0;">v4.4</small></div>
     <div id="view-port"></div>
 </div>
 
@@ -46,7 +42,18 @@
 
 <template id="view-calc">
     <div class="tag">Costs</div>
-    <input type="number" id="h" placeholder="Hours" oninput="math()" pattern="[0-9]*" inputmode="decimal">
-    <input type="number" id="r" placeholder="Rate (£)" oninput="math()" pattern="[0-9]*" inputmode="decimal">
-    <input type="number" id="m" placeholder="Materials (£)" oninput="math()" pattern="[0-9]*" inputmode="decimal">
-    <div class="vat-row"><span>Add 20% VAT</span><input type="checkbox" id="v-tog" onchange="math()" style="width:24px; height:24
+    <input type="number" id="h" placeholder="Hours" oninput="math()" inputmode="decimal">
+    <input type="number" id="r" placeholder="Rate (£)" oninput="math()" inputmode="decimal">
+    <input type="number" id="m" placeholder="Materials (£)" oninput="math()" inputmode="decimal">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin:10px 0; padding:10px; background:rgba(255,102,0,0.05); border-radius:8px;">
+        <span>Add 20% VAT</span>
+        <input type="checkbox" id="v-tog" onchange="math()" style="width:24px; height:24px;">
+    </div>
+    <div class="total-box"><span id="res" class="price">£0.00</span></div>
+    <button class="btn-main" onclick="gen()">View Summary</button>
+</template>
+
+<template id="view-summary">
+    <div class="summary-card">
+        <h2 id="s-biz"></h2>
+        <div id="s-addr" style="font-size:12px; color:#666; margin-bottom:15px; border
