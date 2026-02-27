@@ -8,77 +8,88 @@
         :root { --org: #ff6600; --wht: #ffffff; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); color: var(--wht); font-family: sans-serif; display: flex; justify-content: center; padding: 40px 20px; }
-        .wrapper { width: 100%; max-width: 380px; }
+        .wrapper { width: 100%; max-width: 400px; }
         
         /* Branding */
-        .logo-area { text-align: center; margin-bottom: 30px; font-size: 32px; font-weight: 800; }
-        .logo-area span { color: var(--org); }
+        .logo { text-align: center; margin-bottom: 30px; font-size: 32px; font-weight: 800; }
+        .logo span { color: var(--org); }
 
         /* Nav */
-        #top-nav { display: none; color: var(--org); border: 1px solid var(--org); background: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 20px; }
+        #btn-return { display: none; color: var(--org); border: 1px solid var(--org); background: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 20px; text-transform: uppercase; }
 
         /* Views */
-        .screen { display: none; }
-        .is-visible { display: block; }
+        .view { display: none; }
+        .active { display: block; }
 
         /* Dashboard Tile */
         .tile { background: var(--crd); padding: 25px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 16px; }
+        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 16px; margin-bottom: 4px; }
+        .tile p { font-size: 12px; color: #8892b0; }
 
         /* Calc Styles */
-        .heading { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 5px; }
+        .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 5px; }
+        label { display: block; font-size: 13px; margin-bottom: 8px; }
         input { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 18px; outline: none; }
 
         .total-box { border: 2px solid var(--org); padding: 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
-        .price-text { color: var(--org); font-size: 26px; font-weight: 800; }
+        .total-val { color: var(--org); font-size: 26px; font-weight: 800; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
-    <button id="top-nav" onclick="toPage('home')">← RETURN TO DASHBOARD</button>
-    <div class="logo-area"><span>toolbox</span>pay</div>
+    <button id="btn-return" onclick="showView('dash')">← Return to Dashboard</button>
+    <div class="logo"><span>toolbox</span>pay</div>
 
-    <div id="home" class="screen is-visible">
-        <div class="tile" onclick="toPage('calc')">
+    <div id="dash" class="view active">
+        <div class="tile" onclick="showView('calc')">
             <div>
                 <h3>Labour & Materials</h3>
-                <p style="font-size:12px; color:#8892b0; margin-top:5px;">Calculate costs and specialising tasks</p>
+                <p>Calculate costs and specialising tasks</p>
             </div>
             <span style="color:var(--org); font-weight:bold;">→</span>
         </div>
     </div>
 
-    <div id="calc" class="screen">
-        <div class="heading">Labour Costs</div>
-        <input type="number" id="v-hrs" placeholder="Hours worked" oninput="vCalc()">
-        <input type="number" id="v-rte" placeholder="Hourly rate (£)" oninput="vCalc()">
-        <div class="heading">Materials</div>
-        <input type="number" id="v-mat" placeholder="Total material costs (£)" oninput="vCalc()">
+    <div id="calc" class="view">
+        <div class="tag">Labour Costs</div>
+        <label>Hours worked</label>
+        <input type="number" id="hrs" placeholder="0" oninput="doMath()">
+        <label>Hourly rate (£)</label>
+        <input type="number" id="rate" placeholder="0.00" oninput="doMath()">
+        
+        <div class="tag">Materials</div>
+        <label>Total material costs (£)</label>
+        <input type="number" id="mats" placeholder="0.00" oninput="doMath()">
+        
         <div class="total-box">
             <span style="font-weight:800; font-size:12px;">TOTAL:</span>
-            <span id="v-out" class="price-text">£0.00</span>
+            <span id="final" class="total-val">£0.00</span>
         </div>
     </div>
 </div>
 
 <script>
-    // Completely fresh function names to kill old cache logic
-    function toPage(pageId) {
-        document.getElementById('home').classList.remove('is-visible');
-        document.getElementById('calc').classList.remove('is-visible');
+    function showView(viewId) {
+        // Toggle view visibility
+        document.getElementById('dash').classList.remove('active');
+        document.getElementById('calc').classList.remove('active');
+        document.getElementById(viewId).classList.add('active');
         
-        document.getElementById(pageId).classList.add('is-visible');
-        document.getElementById('top-nav').style.display = (pageId === 'calc') ? 'block' : 'none';
+        // Show/Hide back button
+        document.getElementById('btn-return').style.display = (viewId === 'calc') ? 'block' : 'none';
         window.scrollTo(0,0);
     }
 
-    function vCalc() {
-        const h = parseFloat(document.getElementById('v-hrs').value) || 0;
-        const r = parseFloat(document.getElementById('v-rte').value) || 0;
-        const m = parseFloat(document.getElementById('v-mat').value) || 0;
+    function doMath() {
+        const h = parseFloat(document.getElementById('hrs').value) || 0;
+        const r = parseFloat(document.getElementById('rate').value) || 0;
+        const m = parseFloat(document.getElementById('mats').value) || 0;
         const total = (h * r) + m;
-        document.getElementById('v-out').innerText = '£' + total.toLocaleString('en-GB', {minimumFractionDigits: 2});
+        document.getElementById('final').innerText = '£' + total.toLocaleString('en-GB', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
     }
 </script>
 
