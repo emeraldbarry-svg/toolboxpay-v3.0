@@ -88,4 +88,32 @@
 
     <script>
         const DB = "tb_v42_";
-        let isTax = false
+        let isTax = false;
+
+        function st(k, v) { localStorage.setItem(DB+k, v); }
+        function gt(k) { return localStorage.getItem(DB+k) || ""; }
+
+        function toggleVAT() {
+            isTax = !isTax;
+            document.getElementById('tax_toggle').classList.toggle('active', isTax);
+            math();
+        }
+
+        function math() {
+            let h = Number(document.getElementById('in_hrs').value) || 0;
+            let r = Number(document.getElementById('in_rate').value) || 0;
+            let m = Number(document.getElementById('in_mat').value) || 0;
+            let tot = (h * r) + m; if(isTax) tot *= 1.2;
+            document.getElementById('out_total').innerText = "£" + tot.toFixed(2);
+        }
+
+        function save() {
+            let d = JSON.parse(localStorage.getItem(DB+'data') || '[]');
+            d.unshift({ 
+                id: Date.now(), 
+                n: document.getElementById('in_name').value || 'Client',
+                d: document.getElementById('in_desc').value || 'Labour',
+                t: document.getElementById('out_total').innerText,
+                date: new Date().toLocaleDateString('en-GB')
+            });
+            localStorage.setItem(DB+'data',
