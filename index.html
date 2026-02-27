@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v6.6</title>
+    <title>toolboxpay - v6.7</title>
     <style>
-        /* CORE THEME & BRANDING */
+        /* CORE THEME */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             background: #4a4a4a; 
@@ -14,24 +14,27 @@
             font-family: sans-serif; 
             display: flex;
             justify-content: center;
+            min-height: 100vh;
         }
 
-        /* MASTER CONSTRAINED CONTAINER */
+        /* THE CONSTRAINED VIEWPORT */
         #app-viewport {
             width: 100%;
             max-width: 420px;
-            min-height: 100vh;
             padding: 20px;
             position: relative;
         }
 
-        /* LOGO */
-        .header { text-align: center; padding: 20px 0; }
+        /* HEADER & LOGO */
+        .header { text-align: center; padding: 20px 0 10px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
         /* DASHBOARD STACK */
+        .view { display: none; width: 100%; }
+        .view.active { display: block; }
+
         .stack { display: flex; flex-direction: column; gap: 15px; }
         .btn-tile {
             background: #222;
@@ -49,37 +52,36 @@
             display: flex; align-items: center; justify-content: center;
             margin-right: 20px; font-size: 24px;
         }
-        .btn-tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; }
+        .btn-tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* CONTENT PAGES */
-        .view { display: none; }
-        .view.active { display: block; }
-
+        /* UNIFIED PAGE ELEMENTS */
         .back-btn { 
-            background: #000; color: #ff6600; border: 1px solid #ff6600; 
-            padding: 10px 18px; border-radius: 10px; font-weight: 900; 
-            margin-bottom: 20px; cursor: pointer; text-transform: uppercase; font-size: 11px;
+            background: #000; color: #ff6600; border: 2px solid #ff6600; 
+            padding: 10px 15px; border-radius: 8px; font-weight: 900; 
+            margin-bottom: 30px; cursor: pointer; text-transform: uppercase; 
+            font-size: 11px; width: fit-content; display: flex; align-items: center;
         }
+        .back-btn:active { background: #111; }
 
         .card { 
-            background: #1a1a1a; border-radius: 22px; padding: 25px; 
-            border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            background: #1e1e1e; border-radius: 25px; padding: 30px; 
+            border: 1px solid #333; box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
         }
 
-        h2 { color: #ff6600; font-size: 16px; text-transform: uppercase; margin: 0 0 20px 0; font-weight: 900; }
+        h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; letter-spacing: 0.5px; }
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
         
         input, textarea { 
             width: 100%; background: #000; border: 1px solid #333; color: #fff; 
-            padding: 16px; border-radius: 12px; margin-bottom: 15px; outline: none; font-size: 16px; 
+            padding: 18px; border-radius: 15px; margin-bottom: 20px; outline: none; font-size: 16px; 
         }
 
         .save-btn { 
-            width: 100%; background: #ff6600; color: #000; padding: 20px; border: none; 
-            border-radius: 15px; font-weight: 900; font-size: 20px; text-transform: uppercase; cursor: pointer;
+            width: 100%; background: #ff6600; color: #000; padding: 22px; border: none; 
+            border-radius: 18px; font-weight: 900; font-size: 20px; text-transform: uppercase; cursor: pointer;
         }
 
-        .total-display { font-size: 60px; font-weight: 900; color: #ff6600; text-align: right; margin: 10px 0; }
+        .total-display { font-size: 64px; font-weight: 900; color: #ff6600; text-align: right; margin: 15px 0; }
     </style>
 </head>
 <body>
@@ -91,55 +93,79 @@
             <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         </div>
         <div class="stack">
-            <div class="btn-tile" onclick="showView('view-quotes')"><div class="icon-sq">📝</div><span>Job Quotes</span></div>
-            <div class="btn-tile" onclick="showView('view-calc')"><div class="icon-sq">🧮</div><span>Calculator</span></div>
-            <div class="btn-tile" onclick="showView('view-history')"><div class="icon-sq">📜</div><span>Job History</span></div>
-            <div class="btn-tile" onclick="openBank()"><div class="icon-sq">🏦</div><span>Bank Setup</span></div>
+            <div class="btn-tile" onclick="nav('view-quotes')"><div class="icon-sq">📝</div><span>Job Quotes</span></div>
+            <div class="btn-tile" onclick="nav('view-calc')"><div class="icon-sq">🧮</div><span>Calculator</span></div>
+            <div class="btn-tile" onclick="nav('view-history')"><div class="icon-sq">📜</div><span>Job History</span></div>
+            <div class="btn-tile" onclick="nav('view-bank')"><div class="icon-sq">🏦</div><span>Bank Setup</span></div>
+            <div class="btn-tile" onclick="nav('view-readme')"><div class="icon-sq">📖</div><span>Read Me</span></div>
         </div>
     </div>
 
     <div id="view-quotes" class="view">
-        <div class="back-btn" onclick="showView('view-home')">← Dashboard</div>
+        <div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div>
         <div class="card">
             <h2>New Quote</h2>
             <label>Client Name</label><input type="text" id="cn">
-            <label>Labour Description</label><textarea id="dl" style="height:80px;"></textarea>
-            <label>Hours</label><input type="number" id="qh" oninput="calcQuote()">
-            <label>Rate (£)</label><input type="number" id="qr" oninput="calcQuote()">
+            <label>Labour Description</label><textarea id="dl" style="height:100px;"></textarea>
+            <div style="display:flex; gap:10px;">
+                <div style="flex:1;"><label>Hours</label><input type="number" id="qh" oninput="runQ()"></div>
+                <div style="flex:1;"><label>Rate (£)</label><input type="number" id="qr" oninput="runQ()"></div>
+            </div>
+            <label>Materials (£)</label><input type="number" id="qm" oninput="runQ()">
             <div class="total-display" id="q-total">£0.00</div>
-            <button class="save-btn" onclick="saveJob()">Save Job</button>
+            <button class="save-btn" onclick="saveJ()">SAVE JOB</button>
         </div>
     </div>
 
     <div id="view-bank" class="view">
-        <div class="back-btn" onclick="showView('view-home')">← Dashboard</div>
+        <div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div>
         <div class="card">
-            <h2>Bank Setup</h2>
-            <label>Business Name</label><input type="text" id="sn" oninput="store('sn',this.value)">
-            <label>Bank Name</label><input type="text" id="sb" oninput="store('sb',this.value)">
-            <label>Sort Code</label><input type="text" id="sc" oninput="store('sc',this.value)">
-            <label>Account No.</label><input type="text" id="an" oninput="store('an',this.value)">
+            <h2>Business & Bank Setup</h2>
+            <label>Business Name</label><input type="text" id="sn" oninput="pers('sn',this.value)">
+            <label>Bank Name</label><input type="text" id="sb" oninput="pers('sb',this.value)">
+            <label>Sort Code</label><input type="text" id="sc" oninput="pers('sc',this.value)">
+            <label>Account No.</label><input type="text" id="an" oninput="pers('an',this.value)">
+        </div>
+    </div>
+
+    <div id="view-calc" class="view">
+        <div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div>
+        <div class="card">
+            <h2>Calculator</h2>
+            <label>Hours</label><input type="number" id="ch" oninput="runC()">
+            <label>Rate (£)</label><input type="number" id="cr" oninput="runC()">
+            <label>Materials (£)</label><input type="number" id="cm" oninput="runC()">
+            <div class="total-display" id="c-total">£0.00</div>
         </div>
     </div>
 
 </div>
 
 <script>
-    const STORAGE_KEY = "TBP_V66_MASTER";
+    const K = "TBP_V67_UNIFIED";
 
-    function showView(id) {
+    function nav(id) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         window.scrollTo(0,0);
     }
 
-    function openBank() {
-        ['sn', 'sb', 'sc', 'an'].forEach(id => {
-            document.getElementById(id).value = localStorage.getItem(STORAGE_KEY + id) || "";
-        });
-        showView('view-bank');
+    function pers(k, v) { localStorage.setItem(K + k, v); }
+    function load(k) { return localStorage.getItem(K + k) || ""; }
+
+    function runQ() {
+        const h = parseFloat(document.getElementById('qh').value) || 0;
+        const r = parseFloat(document.getElementById('qr').value) || 0;
+        const m = parseFloat(document.getElementById('qm').value) || 0;
+        document.getElementById('q-total').innerText = "£" + ((h * r) + m).toFixed(2);
     }
 
-    function store(k, v) { localStorage.setItem(STORAGE_KEY + k, v); }
+    function runC() {
+        const h = parseFloat(document.getElementById('ch').value) || 0;
+        const r = parseFloat(document.getElementById('cr').value) || 0;
+        const m = parseFloat(document.getElementById('cm').value) || 0;
+        document.getElementById('c-total').innerText = "£" + ((h * r) + m).toFixed(2);
+    }
 
-    function calcQuote
+    function saveJ() {
+        alert("Job
