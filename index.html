@@ -3,252 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v19.0 - RECOVERY BUILD</title>
+    <title>toolboxpay v20.0</title>
     <style>
-        /* THE VISUAL RESET: A hard Charcoal, Orange, and Black theme */
-        :root {
-            --charcoal: #111111;
-            --orange: #ff6600;
-            --dark-card: #1c1c1c;
-            --input-bg: #151515;
-            --white: #ffffff;
+        /* THE VISUAL KILL-SWITCH: Forced Dark Background */
+        html, body { 
+            background-color: #0e0e0e !important; 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            justify-content: center; 
+            font-family: sans-serif;
+            color: white;
         }
 
-        /* 1. Reset all styles to stop ghosting/overlaps */
-        html, body, div, span, h1, p, button, input {
-            margin: 0; padding: 0; border: 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        /* Fixed-width shell for your laptop screen */
+        #app-box {
+            background: #1a1a1a;
+            width: 400px;
+            height: 90vh;
+            margin-top: 5vh;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 20px;
             box-sizing: border-box;
-            -webkit-appearance: none;
-            color: var(--white);
+            box-shadow: 0 0 100px rgba(0,0,0,1);
+            overflow-y: auto;
         }
 
-        /* 2. Forces the dark background on the entire screen */
-        body {
-            background-color: var(--charcoal) !important;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
+        .logo { color: #ff6600; font-weight: 900; font-size: 26px; text-align: center; margin-bottom: 30px; }
+        .logo span { color: #fff; }
 
-        /* 3. A fixed vertical shell to contain the app and prevent stretching */
-        #app-shell {
-            width: 100%;
-            max-width: 380px; /* Forces phone width on laptops */
-            display: flex;
-            flex-direction: column;
-        }
+        /* Solid buttons with British English */
+        .btn { width: 100%; padding: 20px; margin-bottom: 12px; background: #222; border: 1px solid #444; border-radius: 8px; font-size: 16px; font-weight: bold; text-align: left; color: #ff6600; cursor: pointer; display: block; }
+        .btn-org { background: #ff6600 !important; color: #000 !important; border: none; text-align: center; }
+        .back { background: none; border: 1px solid #ff6600; color: #ff6600; text-align: center; padding: 10px; margin-bottom: 20px; width: 100%; border-radius: 5px; cursor: pointer; }
 
-        /* 4. Correct branding colours as seen in image_0.png */
-        .logo {
-            color: var(--orange);
-            font-weight: 900;
-            font-size: 28px;
-            text-align: center;
-            margin-bottom: 25px;
-            text-transform: none;
-        }
-        .logo span {
-            color: var(--white);
-        }
+        .scr { display: none; }
+        .active { display: block !important; }
 
-        /* Screens are hidden by default to prevent overlap */
-        .screen {
-            display: none !important;
-        }
-        /* Active screen is shown and cleared */
-        .active {
-            display: block !important;
-            clear: both;
-        }
-
-        /* 5. Block-style Tiles that use native rendering to prevent "Freezing" */
-        button, a.tile {
-            width: 100%;
-            padding: 22px;
-            margin-bottom: 12px;
-            background: var(--dark-card) !important;
-            color: var(--white) !important;
-            border: 1px solid #333 !important;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: left;
-            text-transform: uppercase;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        button:hover { background: #2a2a2a !important; }
-
-        /* A distinct Back button with clear orange lines */
-        .back-btn {
-            border: 1px solid var(--orange) !important;
-            color: var(--orange) !important;
-            background: var(--input-bg) !important;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-align: center;
-            justify-content: center;
-        }
-
-        /* Calculator Styling with High-Contrast fields */
-        input, textarea, select {
-            width: 100%;
-            padding: 16px;
-            background: var(--input-bg) !important;
-            border: 1px solid #333;
-            color: var(--white) !important;
-            margin-bottom: 15px;
-            border-radius: 6px;
-            font-size: 16px;
-        }
-
-        .total-box {
-            text-align: right;
-            margin: 20px 0;
-            color: var(--orange);
-            font-size: 36px;
-            font-weight: 900;
-        }
-
-        /* Full White high-contrast Invoice view for saving as PDF */
-        .invoice-card {
-            background: var(--white);
-            color: #000;
-            padding: 20px;
-            border: 1px solid #ccc;
-            line-height: 1.5;
-            font-size: 14px;
-        }
+        input, textarea, select { width: 100%; padding: 16px; margin: 8px 0 15px 0; border: 1px solid #444; background: #000; color: #fff; border-radius: 6px; font-size: 16px; box-sizing: border-box; }
+        .total { text-align: right; font-size: 32px; font-weight: 900; color: #ff6600; margin: 20px 0; }
+        .invoice { background: #fff; color: #000; padding: 20px; border-radius: 4px; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <div id="app-shell">
+    <div id="app-box">
         <div class="logo">toolbox<span>pay</span></div>
 
-        <div id="scr_main" class="screen active">
-            <button onclick="goto('scr_calc')"><span>NEW QUOTE</span><span>→</span></button>
-            <button onclick="goto('scr_hist'); loadHistory();"><span>HISTORY</span><span>→</span></button>
-            <button onclick="goto('scr_setup')"><span>BUSINESS SETUP</span><span>→</span></button>
-            <button onclick="goto('scr_bank')"><span>BANK DETAILS</span><span>→</span></button>
-            <button onclick="localStorage.clear(); location.reload();" style="border:none !important; text-align:center; justify-content:center; text-transform:lowercase; margin-top:40px; color:#555 !important;">[ cite: Clear App Memory ]</button>
+        <div id="dash" class="scr active">
+            <button class="btn" onclick="go('calc')">NEW QUOTE →</button>
+            <button class="btn" onclick="go('hist'); drawH();">HISTORY →</button>
+            <button class="btn" onclick="go('biz')">BUSINESS SETUP →</button>
+            <button class="btn" onclick="go('bnk')">BANK DETAILS →</button>
+            <button onclick="localStorage.clear(); location.reload();" style="width:100%; margin-top:50px; background:none; border:none; color:#555; cursor:pointer;">[ FORCE DATA RESET ]</button>
         </div>
 
-        <div id="scr_calc" class="screen">
-            <button class="back-btn" onclick="goto('scr_main')">← BACK</button>
-            <input type="text" id="cust_name" placeholder="Customer Name">
-            <input type="number" id="lab_hrs" placeholder="Labour Hours" oninput="runMath()">
-            <input type="number" id="lab_rte" placeholder="Hourly Rate" oninput="runMath()">
-            <input type="number" id="mat_cost" placeholder="Materials Cost" oninput="runMath()">
-            <div id="total_display" class="total-box">£0.00</div>
-            <button class="back-btn" style="background:var(--orange) !important; color:#000 !important; border:none !important;" onclick="saveJob()">SAVE QUOTE</button>
+        <div id="calc" class="scr">
+            <button class="back" onclick="go('dash')">← BACK</button>
+            <input type="text" id="q_n" placeholder="Client Name">
+            <input type="number" id="q_h" placeholder="Labour Hours" oninput="m()">
+            <input type="number" id="q_r" placeholder="Hourly Rate" oninput="m()">
+            <input type="number" id="q_m" placeholder="Materials" oninput="m()">
+            <div id="q_t" class="total">£0.00</div>
+            <button class="btn btn-org" onclick="save()">SAVE QUOTE</button>
         </div>
 
-        <div id="scr_hist" class="screen">
-            <button class="back-btn" onclick="goto('scr_main')">← BACK</button>
-            <div id="hist_list"></div>
+        <div id="hist" class="scr">
+            <button class="back" onclick="go('dash')">← BACK</button>
+            <div id="h_list"></div>
         </div>
 
-        <div id="scr_setup" class="screen">
-            <button class="back-btn" onclick="goto('scr_main')">← BACK</button>
-            <label style="color:var(--orange); font-size:11px; font-weight:800; display:block; text-transform:uppercase;">CURRENCY</label>
-            <select id="cur" onchange="localStorage.setItem('cur_v19', this.value)">
-                <option value="£">GBP (£)</option>
-                <option value="$">USD ($)</option>
-                <option value="€">EUR (€)</option>
-            </select>
-            <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn_v19', this.value)">
-            <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba_v19', this.value)"></textarea>
+        <div id="biz" class="scr">
+            <button class="back" onclick="go('dash')">← BACK</button>
+            <input type="text" id="s_bn" placeholder="Business Name" oninput="localStorage.setItem('v20_bn', this.value)">
+            <textarea id="s_ba" placeholder="Business Address" oninput="localStorage.setItem('v20_ba', this.value)"></textarea>
         </div>
 
-        <div id="scr_bank" class="screen">
-            <button class="back-btn" onclick="goto('scr_main')">← BACK</button>
-            <input type="text" id="bk1" placeholder="Account Name" oninput="localStorage.setItem('bk1_v19', this.value)">
-            <input type="text" id="bk2" placeholder="Sort Code" oninput="localStorage.setItem('bk2_v19', this.value)">
-            <input type="text" id="bk3" placeholder="Account Number" oninput="localStorage.setItem('bk3_v19', this.value)">
+        <div id="bnk" class="scr">
+            <button class="back" onclick="go('dash')">← BACK</button>
+            <input type="text" id="s_b1" placeholder="Account Name" oninput="localStorage.setItem('v20_b1', this.value)">
+            <input type="text" id="s_b2" placeholder="Sort Code" oninput="localStorage.setItem('v20_b2', this.value)">
+            <input type="text" id="s_b3" placeholder="Account Number" oninput="localStorage.setItem('v20_b3', this.value)">
         </div>
 
-        <div id="scr_view" class="screen">
-            <button class="back-btn" onclick="goto('scr_hist')">← BACK</button>
-            <div id="invoice_content" class="invoice-card"></div>
-            <button class="back-btn" style="background:var(--orange) !important; color:#000 !important; border:none !important; margin-top:20px;" onclick="window.print()">PRINT / PDF</button>
+        <div id="view" class="scr">
+            <button class="back" onclick="go('hist')">← BACK</button>
+            <div id="v_out" class="invoice"></div>
+            <button class="btn btn-org" style="margin-top:20px" onclick="window.print()">PRINT / PDF</button>
         </div>
     </div>
 
     <script>
-        // Use unique storage keys for v19 to bypass cache
-        const prefix = "_v19";
+        const K = "v20_";
 
-        // WIPES and shows a screen
-        function goto(id) {
-            // Physically wipes old screen memory before drawing new one
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            // Draws new screen and clears anything underneath it
-            const target = document.getElementById(id);
-            target.classList.add('active');
+        function go(id) {
+            document.querySelectorAll('.scr').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
             window.scrollTo(0,0);
         }
 
-        function runMath() {
-            const sym = localStorage.getItem('cur'+prefix) || '£';
-            const hrs = Number(document.getElementById('lab_hrs').value) || 0;
-            const rte = Number(document.getElementById('lab_rte').value) || 0;
-            const mat = Number(document.getElementById('mat_cost').value) || 0;
-            document.getElementById('total_display').innerText = sym + ((hrs * rte) + mat).toFixed(2);
+        function m() {
+            var h = Number(document.getElementById('q_h').value) || 0;
+            var r = Number(document.getElementById('q_r').value) || 0;
+            var mt = Number(document.getElementById('q_m').value) || 0;
+            document.getElementById('q_t').innerText = '£' + ((h*r)+mt).toFixed(2);
         }
 
-        function saveJob() {
-            const sym = localStorage.getItem('cur'+prefix) || '£';
-            const hrs = Number(document.getElementById('lab_hrs').value) || 0;
-            const rte = Number(document.getElementById('lab_rte').value) || 0;
-            const mat = Number(document.getElementById('mat_cost').value) || 0;
-            const total = sym + ((hrs * rte) + mat).toFixed(2);
-            
-            var jobs = JSON.parse(localStorage.getItem('jobs'+prefix) || '[]');
-            jobs.unshift({id: Date.now(), name: document.getElementById('cust_name').value || 'Client', total: total, date: new Date().toLocaleDateString()});
-            localStorage.setItem('jobs'+prefix, JSON.stringify(jobs.slice(0,30)));
-            goto('scr_main');
+        function save() {
+            var jobs = JSON.parse(localStorage.getItem(K+'data') || '[]');
+            jobs.unshift({id: Date.now(), n: document.getElementById('q_n').value || 'Client', t: document.getElementById('q_t').innerText, d: new Date().toLocaleDateString('en-GB')});
+            localStorage.setItem(K+'data', JSON.stringify(jobs.slice(0,25)));
+            location.reload();
         }
 
-        function loadHistory() {
-            var jobs = JSON.parse(localStorage.getItem('jobs'+prefix) || '[]');
-            document.getElementById('hist_list').innerHTML = jobs.map(j => `
-                <button onclick="viewQuote(${j.id})"><span>${j.name}</span><span style="font-size:11px; color:#aaa;">${j.date} — ${j.total}</span></button>
-            `).join('') || '<p style="text-align:center;">No history.</p>';
+        function drawH() {
+            var jobs = JSON.parse(localStorage.getItem(K+'data') || '[]');
+            document.getElementById('h_list').innerHTML = jobs.map(j => `
+                <button class="btn" onclick="openQ(${j.id})">${j.n}<br><small>${j.d} — ${j.t}</small></button>
+            `).join('') || '<p>No quotes saved.</p>';
         }
 
-        function viewQuote(id) {
-            var jobs = JSON.parse(localStorage.getItem('jobs'+prefix) || '[]');
-            var j = jobs.find(item => item.id === id);
+        function openQ(id) {
+            var j = JSON.parse(localStorage.getItem(K+'data') || '[]').find(x => x.id === id);
             if(!j) return;
-            
-            document.getElementById('invoice_content').innerHTML = `
-                <div style="display:flex; justify-content:space-between">
-                    <div><strong>${localStorage.getItem('bn'+prefix) || 'Business'}</strong><br>${localStorage.getItem('ba'+prefix) || ''}</div>
-                </div>
-                <hr style="margin:15px 0;">
-                <div>Client: ${j.name}<br>Date: ${j.date}</div>
-                <div style="font-size:24px; font-weight:900; color:var(--orange); text-align:right; margin:15px 0;">Total Due: ${j.total}</div>
-                <hr style="margin:15px 0;">
-                <div style="font-size:11px; color:#555">Bank Details:<br>Name: ${localStorage.getItem('bk1'+prefix) || ''}<br>Sort: ${localStorage.getItem('bk2'+prefix) || ''}<br>Acc: ${localStorage.getItem('bk3'+prefix) || ''}</div>
+            document.getElementById('v_out').innerHTML = `
+                <strong>${localStorage.getItem(K+'bn') || 'Business Name'}</strong><br>${localStorage.getItem(K+'ba') || ''}<hr>
+                Client: ${j.n}<br>Total: ${j.t}<hr>
+                Bank: ${localStorage.getItem(K+'b1') || ''}<br>Sort: ${localStorage.getItem(K+'b2') || ''}<br>Acc: ${localStorage.getItem(K+'b3') || ''}
             `;
-            goto('scr_view');
+            go('view');
         }
 
-        // AUTO-LOAD saved business details on start
         window.onload = function() {
-            ['bn','ba','bk1','bk2','bk3','cur'].forEach(k => {
-                var v = localStorage.getItem(k+prefix);
-                if(v && document.getElementById(k)) document.getElementById(k).value = v;
+            ['bn','ba','b1','b2','b3'].forEach(k => {
+                var v = localStorage.getItem(K+k);
+                if(v && document.getElementById('s_'+k)) document.getElementById('s_'+k).value = v;
             });
-            runMath();
+            m();
         };
     </script>
 </body>
