@@ -2,152 +2,102 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <title>toolboxpay v18.0</title>
+    <title>toolboxpay v19.0 - DESKTOP FIX</title>
     <style>
-        /* This CSS is designed specifically for Laptop/Desktop browsers */
-        html, body { 
-            background-color: #1a1a1a !important; 
-            margin: 0; 
-            padding: 0; 
-            height: 100%; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-        }
-
-        /* This creates a physical "Phone" box on your laptop screen */
-        #app-container { 
-            background: white !important; 
-            width: 400px !important; /* Fixed width prevents stretching */
-            height: 85vh; 
-            border: 8px solid #333; 
-            border-radius: 20px; 
+        /* Forces a dark background so you can see if the update worked */
+        html, body { background: #111; margin: 0; height: 100%; display: flex; justify-content: center; align-items: center; font-family: sans-serif; }
+        
+        /* The "Phone" frame for your laptop screen */
+        #mobile-frame { 
+            background: white; 
+            width: 380px; 
+            height: 80vh; 
+            border-radius: 15px; 
+            box-shadow: 0 0 40px rgba(0,0,0,0.7); 
+            padding: 25px; 
             overflow-y: auto; 
             position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            font-family: sans-serif;
-            padding: 20px;
-            box-sizing: border-box;
         }
 
-        .logo { color: #ff6600; font-weight: 900; font-size: 24px; text-align: center; margin-bottom: 25px; }
+        .logo { color: #ff6600; font-weight: 900; font-size: 24px; text-align: center; margin-bottom: 30px; }
         .logo span { color: #000; }
 
-        .btn { display: block; width: 100%; padding: 18px; margin-bottom: 12px; background: #f2f2f2; border: 1px solid #ccc; border-radius: 10px; font-size: 16px; font-weight: bold; text-align: left; color: #ff6600; cursor: pointer; }
-        .btn-org { background: #ff6600; color: #fff; border: none; text-align: center; }
-        .btn-back { background: #fff; border: 1px solid #ff6600; color: #ff6600; text-align: center; padding: 8px; margin-bottom: 15px; width: 100%; font-size: 12px; }
+        /* Solid block buttons to prevent the "ghosting" seen in your screenshots */
+        .tile { width: 100%; padding: 20px; margin-bottom: 12px; background: #f4f4f4; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: bold; text-align: left; color: #ff6600; cursor: pointer; display: block; }
+        .tile-org { background: #ff6600; color: white; border: none; text-align: center; }
+        .back-link { width: 100%; padding: 10px; margin-bottom: 20px; background: #fff; border: 1px solid #ff6600; color: #ff6600; font-weight: bold; cursor: pointer; border-radius: 5px; }
 
-        .scr { display: none; }
-        .active { display: block !important; }
-
-        input, textarea, select { width: 100%; padding: 14px; margin: 8px 0 15px 0; border: 1px solid #bbb; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
-        .total-box { text-align: right; font-size: 28px; font-weight: 900; color: #ff6600; margin: 15px 0; }
-        .card { border: 1px solid #000; padding: 15px; line-height: 1.4; font-size: 14px; }
+        input, textarea, select { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; box-sizing: border-box; }
+        .price { text-align: right; font-size: 32px; font-weight: 900; color: #ff6600; margin: 20px 0; }
     </style>
 </head>
 <body>
 
-    <div id="app-container">
+    <div id="mobile-frame">
         <div class="logo">toolbox<span>pay</span></div>
-
-        <div id="d" class="scr active">
-            <button class="btn" onclick="sh('c')">NEW QUOTE →</button>
-            <button class="btn" onclick="sh('h'); lh();">HISTORY →</button>
-            <button class="btn" onclick="sh('s')">BUSINESS SETUP →</button>
-            <button class="btn" onclick="sh('b')">BANK DETAILS →</button>
-            <button onclick="localStorage.clear(); location.reload();" style="width:100%; background:none; border:none; color:#ccc; font-size:9px; margin-top:30px;">[ CLEAR CACHE ]</button>
-        </div>
-
-        <div id="c" class="scr">
-            <button class="btn-back" onclick="sh('d')">← BACK</button>
-            <input type="text" id="cn" placeholder="Client Name">
-            <input type="number" id="hrs" placeholder="Hours" oninput="m()">
-            <input type="number" id="rte" placeholder="Rate" oninput="m()">
-            <input type="number" id="mat" placeholder="Materials" oninput="m()">
-            <div id="out" class="total-box">£0.00</div>
-            <button class="btn btn-org" onclick="sq()">SAVE QUOTE</button>
-        </div>
-
-        <div id="h" class="scr">
-            <button class="btn-back" onclick="sh('d')">← BACK</button>
-            <div id="h-list"></div>
-        </div>
-
-        <div id="s" class="scr">
-            <button class="btn-back" onclick="sh('d')">← BACK</button>
-            <select id="cur" onchange="localStorage.setItem('v18_cur', this.value)">
-                <option value="£">GBP (£)</option>
-                <option value="$">USD ($)</option>
-                <option value="€">EUR (€)</option>
-            </select>
-            <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('v18_bn', this.value)">
-            <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('v18_ba', this.value)"></textarea>
-        </div>
-
-        <div id="b" class="scr">
-            <button class="btn-back" onclick="sh('d')">← BACK</button>
-            <input type="text" id="b1" placeholder="Account Name" oninput="localStorage.setItem('v18_b1', this.value)">
-            <input type="text" id="b2" placeholder="Sort Code" oninput="localStorage.setItem('v18_b2', this.value)">
-            <input type="text" id="b3" placeholder="Account Number" oninput="localStorage.setItem('v18_b3', this.value)">
-        </div>
-
-        <div id="v" class="scr">
-            <button class="btn-back" onclick="sh('h')">← BACK</button>
-            <div id="v-out" class="card"></div>
-            <button class="btn btn-org" style="margin-top:15px" onclick="window.print()">PRINT / PDF</button>
-        </div>
+        <div id="app-content">
+            </div>
     </div>
 
     <script>
-        const KEY = "v18_";
+        const KEY = "v19_";
 
-        function sh(id) {
-            const ss = ['d','c','h','s','b','v'];
-            ss.forEach(x => document.getElementById(x).classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+        // This function WIPES the screen before loading a new one
+        function show(screen) {
+            const container = document.getElementById('app-content');
+            container.innerHTML = ""; // This kills the "ghosting" from your screenshot
+
+            if(screen === 'menu') {
+                container.innerHTML = `
+                    <button class="tile" onclick="show('quote')">NEW QUOTE →</button>
+                    <button class="tile" onclick="show('history')">HISTORY →</button>
+                    <button class="tile" onclick="show('setup')">BUSINESS SETUP →</button>
+                    <button class="tile" onclick="show('bank')">BANK DETAILS →</button>
+                `;
+            } 
+            else if(screen === 'quote') {
+                container.innerHTML = `
+                    <button class="back-link" onclick="show('menu')">← BACK</button>
+                    <input type="text" id="in-n" placeholder="Client Name">
+                    <input type="number" id="in-h" placeholder="Hours" oninput="math()">
+                    <input type="number" id="in-r" placeholder="Rate" oninput="math()">
+                    <input type="number" id="in-m" placeholder="Materials" oninput="math()">
+                    <div id="in-t" class="price">£0.00</div>
+                    <button class="tile tile-org" onclick="save()">SAVE QUOTE</button>
+                `;
+            }
+            else if(screen === 'setup') {
+                container.innerHTML = `
+                    <button class="back-link" onclick="show('menu')">← BACK</button>
+                    <select id="set-c" onchange="localStorage.setItem('${KEY}cur', this.value)">
+                        <option value="£">GBP (£)</option>
+                        <option value="$">USD ($)</option>
+                        <option value="€">EUR (€)</option>
+                    </select>
+                    <input type="text" id="set-bn" placeholder="Business Name" oninput="localStorage.setItem('${KEY}bn', this.value)" value="${localStorage.getItem(KEY+'bn')||''}">
+                    <textarea id="set-ba" placeholder="Address" oninput="localStorage.setItem('${KEY}ba', this.value)">${localStorage.getItem(KEY+'ba')||''}</textarea>
+                `;
+            }
         }
 
-        function m() {
-            var sy = localStorage.getItem(KEY+'cur') || '£';
-            var h = Number(document.getElementById('hrs').value) || 0;
-            var r = Number(document.getElementById('rte').value) || 0;
-            var mt = Number(document.getElementById('mat').value) || 0;
-            document.getElementById('out').innerText = sy + ((h*r)+mt).toFixed(2);
+        function math() {
+            var s = localStorage.getItem(KEY+'cur') || '£';
+            var h = Number(document.getElementById('in-h').value) || 0;
+            var r = Number(document.getElementById('in-r').value) || 0;
+            var m = Number(document.getElementById('in-m').value) || 0;
+            document.getElementById('in-t').innerText = s + ((h*r)+m).toFixed(2);
         }
 
-        function sq() {
-            var sy = localStorage.getItem(KEY+'cur') || '£';
-            var h = Number(document.getElementById('hrs').value) || 0;
-            var r = Number(document.getElementById('rte').value) || 0;
-            var mt = Number(document.getElementById('mat').value) || 0;
-            var j = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
-            j.unshift({id: Date.now(), n: document.getElementById('cn').value || 'Client', t: sy + ((h*r)+mt).toFixed(2), d: new Date().toLocaleDateString('en-GB')});
-            localStorage.setItem(KEY+'data', JSON.stringify(j.slice(0,30)));
-            location.reload();
+        function save() {
+            var jobs = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
+            var total = document.getElementById('in-t').innerText;
+            jobs.unshift({n: document.getElementById('in-n').value, t: total, d: new Date().toLocaleDateString()});
+            localStorage.setItem(KEY+'data', JSON.stringify(jobs.slice(0,20)));
+            show('menu');
         }
 
-        function lh() {
-            var j = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
-            document.getElementById('h-list').innerHTML = j.map(function(x) {
-                return '<button class="btn" onclick="vq('+x.id+')">'+x.n+'<br><small>'+x.d+' — '+x.t+'</small></button>';
-            }).join('') || '<p>No history.</p>';
-        }
-
-        function vq(id) {
-            var j = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
-            var x = j.find(z => z.id === id);
-            if(!x) return;
-            document.getElementById('v-out').innerHTML = '<strong>'+(localStorage.getItem(KEY+'bn')||'Business')+'</strong><br>'+(localStorage.getItem(KEY+'ba')||'')+'<hr>Client: '+x.n+'<br>Total: '+x.t+'<hr>Bank: '+(localStorage.getItem(KEY+'b1')||'')+'<br>Sort: '+(localStorage.getItem(KEY+'b2')||'')+'<br>Acc: '+(localStorage.getItem(KEY+'b3')||'');
-            sh('v');
-        }
-
-        window.onload = function() {
-            ['bn','ba','b1','b2','b3','cur'].forEach(k => {
-                var val = localStorage.getItem(KEY+k);
-                if(val && document.getElementById(k)) document.getElementById(k).value = val;
-            });
-            m();
-        };
+        // Start the app on the menu
+        window.onload = () => show('menu');
     </script>
 </body>
 </html>
