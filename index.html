@@ -3,47 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v4.5</title>
+    <title>toolboxpay v4.6</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: #fff; min-height: 100vh; padding: 20px; display: flex; justify-content: center; }
         .shell { width: 100%; max-width: 380px; }
-        .logo { text-align: center; margin-bottom: 30px; font-size: 30px; font-weight: 800; }
+        .logo { text-align: center; margin-bottom: 25px; font-size: 28px; font-weight: 800; }
         .logo span { color: var(--org); }
-        
-        /* Navigation Buttons */
-        .back-btn { color: var(--org); border: 1px solid var(--org); background: none; padding: 12px; width: 100%; border-radius: 8px; margin-bottom: 25px; font-weight: 800; cursor: pointer; display: none; }
-
-        /* Screens */
+        .back-btn { color: var(--org); border: 1px solid var(--org); background: none; padding: 12px; width: 100%; border-radius: 8px; margin-bottom: 20px; font-weight: 800; cursor: pointer; display: none; }
         .screen { display: none; }
         .active { display: block !important; }
-
-        /* Dashboard UI */
-        .tile { background: var(--crd); padding: 25px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
-        .tile p { font-size: 12px; color: #8892b0; margin-top: 4px; }
-        
-        /* Form UI */
-        .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
-        input, textarea { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 16px; outline: none; display: block; }
-        
-        .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; text-align: right; background: rgba(255,102,0,0.05); margin-top: 20px; }
-        .price { color: var(--org); font-size: 26px; font-weight: 800; }
-        
+        .tile { background: var(--crd); padding: 22px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; }
+        .tile p { font-size: 11px; color: #8892b0; margin-top: 4px; }
+        .tag { color: var(--org); font-size: 10px; font-weight: 800; text-transform: uppercase; margin: 20px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 5px; }
+        input, textarea { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 8px; font-size: 16px; outline: none; }
+        .total-box { border: 2px solid var(--org); padding: 20px; border-radius: 12px; text-align: right; background: rgba(255,102,0,0.05); margin-top: 15px; }
+        .price { color: var(--org); font-size: 24px; font-weight: 800; }
         .btn-main { width: 100%; padding: 18px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
-        .btn-sec { width: 100%; padding: 12px; background: none; border: 1px solid #233554; color: #8892b0; border-radius: 8px; margin-top: 10px; cursor: pointer; font-size: 12px; }
-
-        /* Summary Card */
-        .summary-card { background: #fff; color: #333; padding: 25px; border-radius: 12px; margin-top: 10px; }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .summary-card { background: #fff; color: #333; padding: 20px; border-radius: 12px; margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
     </style>
 </head>
 <body>
 
 <div class="shell">
     <button id="nav-back" class="back-btn" onclick="show('dash')">← BACK TO DASHBOARD</button>
-    <div class="logo"><span>toolbox</span>pay <small style="font-size: 10px; color: #8892b0;">v4.5</small></div>
+    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #8892b0;">v4.6</small></div>
 
     <div id="scr-dash" class="screen active">
         <div class="tile" onclick="show('calc')"><div><h3>Labour & Materials</h3><p>Calculate & quote</p></div><span>→</span></div>
@@ -56,9 +43,9 @@
         <input type="number" id="h" placeholder="Hours" oninput="math()" inputmode="decimal">
         <input type="number" id="r" placeholder="Rate (£)" oninput="math()" inputmode="decimal">
         <input type="number" id="m" placeholder="Materials (£)" oninput="math()" inputmode="decimal">
-        <div style="display:flex; justify-content:space-between; margin:15px 0;">
-            <span>Add 20% VAT</span>
-            <input type="checkbox" id="v-tog" onchange="math()" style="width:22px; height:22px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin:10px 0;">
+            <span style="font-size:14px;">Add 20% VAT</span>
+            <input type="checkbox" id="v-tog" onchange="math()" style="width:20px; height:20px;">
         </div>
         <div class="total-box"><span id="res" class="price">£0.00</span></div>
         <button class="btn-main" onclick="gen()">View Summary</button>
@@ -66,23 +53,24 @@
 
     <div id="scr-sum" class="screen">
         <div class="summary-card">
-            <h2 id="s-biz" style="color:black"></h2>
-            <div id="s-addr" style="font-size:12px; color:#666; margin-bottom:10px;"></div>
+            <h2 id="s-biz" style="color:#000; margin-bottom:5px; font-size:18px;"></h2>
+            <div id="s-addr" style="font-size:11px; color:#666; margin-bottom:12px; line-height:1.4;"></div>
             <div class="summary-row"><span>Labour:</span> <span id="s-lab"></span></div>
             <div class="summary-row"><span>Materials:</span> <span id="s-mat"></span></div>
             <div id="s-v-row" class="summary-row" style="display:none; color:#888;"><span>VAT (20%):</span> <span id="s-v-amt"></span></div>
-            <div class="summary-row" style="border-top:2px solid #eee; margin-top:15px; padding-top:10px; font-weight:800; color:var(--org); font-size:18px;"><span>Total:</span> <span id="s-tot"></span></div>
-            <div class="tag" style="color:#666; border-color:#eee; margin-top:20px;">Bank Info</div>
-            <div id="s-bank" style="font-size:12px; color:#333; white-space:pre-wrap;"></div>
+            <div class="summary-row" style="border-top:1px solid #eee; margin-top:10px; padding-top:10px; font-weight:800; color:var(--org); font-size:16px;"><span>Total:</span> <span id="s-tot"></span></div>
+            <div class="tag" style="color:#999; border-color:#eee; margin-top:15px;">Payment Details</div>
+            <div id="s-bank" style="font-size:11px; color:#444; white-space:pre-wrap; background:#f9f9f9; padding:10px; border-radius:6px;"></div>
+            
+            <button id="copy-btn" class="btn-main" onclick="copy()" style="margin-top:20px; font-size:14px;">Copy for WhatsApp</button>
         </div>
-        <button id="copy-btn" class="btn-main" onclick="copy()">Copy for WhatsApp</button>
-        <button class="btn-sec" style="width:100%" onclick="show('calc')">Back to Edit</button>
+        <button class="btn-main" style="background:#1a2635; margin-top:15px;" onclick="show('calc')">Edit Figures</button>
     </div>
 
     <div id="scr-biz" class="screen">
-        <div class="tag">Company Info</div>
+        <div class="tag">Business Info</div>
         <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
-        <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba',this.value)" style="height:100px; width:100%; background:var(--crd); color:#fff; border-radius:8px; padding:15px; border:1px solid #233554;"></textarea>
+        <textarea id="ba" placeholder="Business Address" oninput="localStorage.setItem('ba',this.value)" style="height:100px; width:100%; background:var(--crd); color:#fff; border-radius:8px; padding:15px; border:1px solid #233554; font-size:16px;"></textarea>
         <button class="btn-main" onclick="show('dash')">Save & Return</button>
     </div>
 
@@ -98,7 +86,8 @@
 <script>
     function show(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById('scr-' + id).classList.add('active');
+        const target = document.getElementById('scr-' + id);
+        if(target) target.classList.add('active');
         document.getElementById('nav-back').style.display = (id === 'dash') ? 'none' : 'block';
         window.scrollTo(0,0);
     }
@@ -127,26 +116,20 @@
         document.getElementById('s-v-row').style.display = isV ? 'flex' : 'none';
         document.getElementById('s-v-amt').innerText = '£' + vAmt.toLocaleString('en-GB', {minimumFractionDigits: 2});
         document.getElementById('s-tot').innerText = '£' + (sub + vAmt).toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('s-bank').innerText = `Acc: ${localStorage.getItem('ba-acc')}\nSort: ${localStorage.getItem('ba-srt')}\nNo: ${localStorage.getItem('ba-num')}`;
+        document.getElementById('s-bank').innerText = `Account Name: ${localStorage.getItem('ba-acc') || '---'}\nSort Code: ${localStorage.getItem('ba-srt') || '---'}\nAccount No: ${localStorage.getItem('ba-num') || '---'}`;
         show('sum');
     }
 
     function copy() {
-        const msg = `${(localStorage.getItem('bn')||'Quote').toUpperCase()}\nTotal: ${document.getElementById('s-tot').innerText}\n\nBank: ${localStorage.getItem('ba-acc')} / ${localStorage.getItem('ba-srt')} / ${localStorage.getItem('ba-num')}`;
+        const b = (localStorage.getItem('bn') || 'Quote').toUpperCase();
+        const t = document.getElementById('s-tot').innerText;
+        const acc = localStorage.getItem('ba-acc') || '---';
+        const srt = localStorage.getItem('ba-srt') || '---';
+        const num = localStorage.getItem('ba-num') || '---';
+        
+        const msg = `${b}\nTOTAL: ${t}\n\nBANK DETAILS:\nName: ${acc}\nSort: ${srt}\nAcc: ${num}`;
+        
         navigator.clipboard.writeText(msg).then(() => {
             const btn = document.getElementById('copy-btn');
             btn.innerText = 'COPIED!';
-            setTimeout(() => btn.innerText = 'Copy for WhatsApp', 1500);
-        });
-    }
-
-    window.onload = () => {
-        ['bn','ba','ba-acc','ba-srt','ba-num'].forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.value = localStorage.getItem(id) || '';
-        });
-    };
-</script>
-
-</body>
-</html>
+            btn.style.background = '#27
