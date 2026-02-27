@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - Labour & Materials</title>
+    <title>toolboxpay - Command Centre</title>
     <style>
         :root {
             --orange: #ff6600;
             --white: #ffffff;
             --dark-bg: #0b1521;
-            --input-bg: #1a2635;
+            --card-bg: #1a2635;
             --border-color: #233554;
         }
         body {
@@ -26,28 +26,10 @@
             max-width: 550px;
         }
 
-        /* Top Navigation - Explicit Link */
-        .top-nav {
-            margin-bottom: 30px;
-            padding-top: 10px;
-        }
-        .return-link {
-            color: var(--orange);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            display: inline-block;
-        }
-        .return-link:hover {
-            color: var(--white);
-            text-decoration: underline;
-        }
-
         /* Branding - Clean & Borderless */
         .branding {
             margin-bottom: 40px;
+            margin-top: 20px;
         }
         .logo-text {
             font-size: 38px;
@@ -58,110 +40,146 @@
         .toolbox { color: var(--orange); }
         .pay { color: var(--white); }
         
+        /* Dashboard Menu Styles */
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .menu-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            color: var(--white);
+            text-align: left;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-btn:hover { border-color: var(--orange); }
+        .menu-btn h3 { margin: 0; color: var(--orange); text-transform: uppercase; font-size: 16px; }
+        .menu-btn p { margin: 5px 0 0 0; font-size: 13px; color: #8892b0; }
+
+        /* Navigation Link for sub-pages */
+        .top-nav {
+            margin-bottom: 20px;
+            display: none; /* Hidden on main dashboard */
+        }
+        .return-link {
+            color: var(--orange);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        /* Form Visibility */
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
+        /* Form Styling */
         .section-label {
             color: var(--orange);
             font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
             margin: 30px 0 15px 0;
             display: block;
             border-bottom: 1px solid rgba(255, 102, 0, 0.3);
             padding-bottom: 8px;
         }
-
         .field-group { margin-bottom: 20px; }
-        label { display: block; font-size: 14px; margin-bottom: 10px; color: var(--white); }
+        label { display: block; font-size: 14px; margin-bottom: 10px; }
         input {
             width: 100%;
             padding: 14px;
-            background-color: var(--input-bg);
+            background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 6px;
             color: var(--white);
             font-size: 16px;
             box-sizing: border-box;
         }
-        input:focus { outline: none; border-color: var(--orange); }
-
-        .row { display: flex; gap: 20px; }
-        .flex-1 { flex: 1; }
-
-        .results-card {
-            background-color: var(--input-bg);
-            border: 2px solid var(--orange);
-            border-radius: 10px;
-            padding: 25px;
-            margin-top: 30px;
-        }
-        .result-row { display: flex; justify-content: space-between; margin-bottom: 12px; }
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-color);
-            font-size: 24px;
+        .btn-submit {
+            width: 100%;
+            padding: 18px;
+            background-color: var(--orange);
+            color: white;
+            border: none;
+            border-radius: 6px;
             font-weight: 800;
-            color: var(--orange);
+            cursor: pointer;
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="top-nav">
-        <a href="dashboard.html" class="return-link">← RETURN TO DASHBOARD</a>
+    <div id="nav" class="top-nav">
+        <a onclick="showView('dashboard')" class="return-link">← RETURN TO DASHBOARD</a>
     </div>
 
     <div class="branding">
         <h1 class="logo-text"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
     </div>
 
-    <form id="calcForm">
-        <span class="section-label">Labour Costs</span>
-        <div class="row">
-            <div class="field-group flex-1">
-                <label for="hours">Total Hours</label>
-                <input type="number" id="hours" placeholder="0" oninput="calculate()">
+    <div id="dashboard" class="view-section active">
+        <div class="menu-grid">
+            <div class="menu-btn" onclick="showView('settlement')">
+                <div>
+                    <h3>Settlement Profile</h3>
+                    <p>Manage business and bank details</p>
+                </div>
+                <span>→</span>
             </div>
-            <div class="field-group flex-1">
-                <label for="rate">Hourly Rate (£)</label>
-                <input type="number" id="rate" placeholder="0.00" oninput="calculate()">
+            <div class="menu-btn" onclick="alert('Quote Generator Coming Soon')">
+                <div>
+                    <h3>Quotes</h3>
+                    <p>Generate new client estimates</p>
+                </div>
+                <span>→</span>
             </div>
         </div>
+    </div>
 
-        <span class="section-label">Materials</span>
+    <div id="settlement" class="view-section">
+        <span class="section-label">Business Information</span>
         <div class="field-group">
-            <label for="materials">Materials Total (£)</label>
-            <input type="number" id="materials" placeholder="0.00" oninput="calculate()">
+            <label>Trading Name</label>
+            <input type="text" id="tradingName" placeholder="Enter business name">
         </div>
-
-        <div class="results-card">
-            <div class="result-row">
-                <span>Labour Subtotal:</span>
-                <span id="labour-sub">£0.00</span>
-            </div>
-            <div class="total-row">
-                <span>GRAND TOTAL:</span>
-                <span id="grand-total">£0.00</span>
-            </div>
+        <span class="section-label">Bank Details</span>
+        <div class="field-group">
+            <label>Account Holder Name</label>
+            <input type="text" id="accHolder" placeholder="Name on account">
         </div>
-    </form>
+        <button class="btn-submit" onclick="saveDetails()">Save Settlement Details</button>
+    </div>
 </div>
 
 <script>
-    function calculate() {
-        const hours = parseFloat(document.getElementById('hours').value) || 0;
-        const rate = parseFloat(document.getElementById('rate').value) || 0;
-        const materials = parseFloat(document.getElementById('materials').value) || 0;
-
-        const labourTotal = hours * rate;
-        const grandTotal = labourTotal + materials;
-
-        document.getElementById('labour-sub').innerText = '£' + labourTotal.toFixed(2);
-        document.getElementById('grand-total').innerText = '£' + grandTotal.toFixed(2);
+    function showView(viewId) {
+        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        document.getElementById('nav').style.display = (viewId === 'dashboard') ? 'none' : 'block';
     }
+
+    function saveDetails() {
+        localStorage.setItem('tradingName', document.getElementById('tradingName').value);
+        localStorage.setItem('accHolder', document.getElementById('accHolder').value);
+        alert('Details Saved Successfully');
+        showView('dashboard');
+    }
+
+    window.onload = function() {
+        document.getElementById('tradingName').value = localStorage.getItem('tradingName') || '';
+        document.getElementById('accHolder').value = localStorage.getItem('accHolder') || '';
+    };
 </script>
 
 </body>
