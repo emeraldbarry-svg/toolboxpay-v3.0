@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v2.9 Final Link</title>
+    <title>toolboxpay - v3.0 Ironclad</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding-bottom: 80px; }
+        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding-bottom: 100px; }
         .wrap { max-width: 480px; margin: 0 auto; padding: 15px; }
 
+        /* BRANDING */
         .logo { text-align: center; padding: 40px 0; font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
+        /* PHYSICAL BOXES */
         .card { background: #111; border: 1px solid #222; border-radius: 24px; padding: 25px; margin-bottom: 35px; display: block !important; }
         h2 { color: #ff6600; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 20px 0; font-weight: 900; }
 
+        /* INPUTS */
         label { display: block; font-size: 11px; color: #777; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
         input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 16px; outline: none; margin-bottom: 15px; }
-        
+        input:focus { border-color: #ff6600; }
+
+        /* VAT TOGGLE */
         .vat-row { display: flex; justify-content: space-between; align-items: center; background: #080808; border: 1px solid #222; padding: 12px 18px; border-radius: 14px; margin-bottom: 20px; }
         .sw { position: relative; width: 44px; height: 22px; }
         .sw input { opacity: 0; width: 0; height: 0; }
@@ -30,28 +35,27 @@
         .big-p { font-size: 58px; font-weight: 900; color: #ff6600; text-align: right; letter-spacing: -3px; margin-bottom: 15px; }
         .btn-m { width: 100%; background: #ff6600; color: #000; padding: 20px; border: none; border-radius: 14px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
 
-        /* HISTORY */
+        /* HISTORY & WHATSAPP */
         .job { padding: 20px 0; border-bottom: 1px solid #222; }
-        .job-p { color: #ff6600; font-weight: 900; font-size: 20px; }
         .tag { display: inline-block; padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 900; margin-bottom: 12px; cursor: pointer; }
         .tag-due { background: #000; color: #ff6600; border: 1px solid #ff6600; }
         .tag-paid { background: #2ecc71; color: #000; }
         
-        /* WHATSAPP BUTTON - FORCED VISIBILITY */
         .btn-wa { 
             display: block !important; 
             width: 100%; 
             background: #25D366 !important; 
             color: #000 !important; 
-            padding: 15px; 
-            border-radius: 10px; 
+            padding: 16px; 
+            border-radius: 12px; 
             text-align: center; 
             text-decoration: none; 
-            font-weight: 800; 
+            font-weight: 900; 
             font-size: 14px; 
             margin-top: 15px; 
+            text-transform: uppercase;
         }
-        .btn-del { color: #ff4444; background: none; border: none; font-size: 11px; margin-top: 15px; cursor: pointer; font-weight: 700; text-transform: uppercase; width: 100%; text-align: left;}
+        .btn-del { color: #555; background: none; border: none; font-size: 10px; margin-top: 15px; cursor: pointer; font-weight: 700; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -101,96 +105,5 @@
 </div>
 
 <script>
-    const STORAGE_K = "TBP_V29_FINAL";
-    function st(k,v){ localStorage.setItem(STORAGE_K+k,v); }
-    function gt(k){ return localStorage.getItem(STORAGE_K+k) || ""; }
-
-    function calc() {
-        const hrs = parseFloat(document.getElementById('h').value) || 0;
-        const rte = parseFloat(document.getElementById('r').value) || 0;
-        const mat = parseFloat(document.getElementById('m').value) || 0;
-        let total = (hrs * rte) + mat;
-        if(document.getElementById('v').checked) total *= 1.2;
-        document.getElementById('tot').innerText = "£" + total.toFixed(2);
-    }
-
-    function up(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                let pics = JSON.parse(localStorage.getItem(STORAGE_K+'pics') || '[]');
-                pics.unshift(e.target.result);
-                localStorage.setItem(STORAGE_K+'pics', JSON.stringify(pics.slice(0, 6)));
-                drawPics();
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function drawPics() {
-        const pics = JSON.parse(localStorage.getItem(STORAGE_K+'pics') || '[]');
-        document.getElementById('gallery').innerHTML = pics.map(p => `<div style="aspect-ratio:1; background:#000; border-radius:8px; overflow:hidden; border:1px solid #333;"><img src="${p}" style="width:100%; height:100%; object-fit:cover;"></div>`).join('');
-    }
-
-    function save() {
-        const j = {
-            id: Date.now(),
-            n: document.getElementById('cn').value || "Client",
-            l: document.getElementById('dl').value || "Labour details.",
-            t: document.getElementById('tot').innerText,
-            v: document.getElementById('v').checked,
-            d: new Date().toLocaleDateString('en-GB'),
-            p: false
-        };
-        let jobs = JSON.parse(localStorage.getItem(STORAGE_K+'jobs') || '[]');
-        jobs.unshift(j);
-        localStorage.setItem(STORAGE_K+'jobs', JSON.stringify(jobs));
-        ['cn','dl','h','r','m'].forEach(i => document.getElementById(i).value = "");
-        document.getElementById('v').checked = false;
-        document.getElementById('tot').innerText = "£0.00";
-        render();
-    }
-
-    function toggleStatus(id) {
-        let jobs = JSON.parse(localStorage.getItem(STORAGE_K+'jobs') || '[]');
-        const i = jobs.findIndex(x => x.id === id);
-        jobs[i].p = !jobs[i].p;
-        localStorage.setItem(STORAGE_K+'jobs', JSON.stringify(jobs));
-        render();
-    }
-
-    function del(id) {
-        if(confirm("Delete record?")) {
-            let jobs = JSON.parse(localStorage.getItem(STORAGE_K+'jobs') || '[]');
-            jobs = jobs.filter(x => x.id !== id);
-            localStorage.setItem(STORAGE_K+'jobs', JSON.stringify(jobs));
-            render();
-        }
-    }
-
-    function render() {
-        const jobs = JSON.parse(localStorage.getItem(STORAGE_K+'jobs') || '[]');
-        document.getElementById('joblist').innerHTML = jobs.map(j => {
-            const msg = `Hi ${j.n},\n\nInvoice for: ${j.l}\nTotal: ${j.t}${j.v ? ' (Inc VAT)' : ''}\n\nBank: ${gt('sb')}\nSort Code: ${gt('sc')}\nAccount: ${gt('an')}\n\nMany thanks,\n${gt('sn')}`;
-            return `
-            <div class="job">
-                <div class="tag ${j.p ? 'tag-paid' : 'tag-due'}" onclick="toggleStatus(${j.id})">${j.p ? 'PAID' : 'DUE'}</div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-weight:900;">${j.n}</span>
-                    <span class="job-p">${j.t}</span>
-                </div>
-                <div style="font-size:12px; color:#555; margin:4px 0;">${j.d}</div>
-                <a class="btn-wa" href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank">SEND WHATSAPP INVOICE</a>
-                <button class="btn-del" onclick="del(${j.id})">Remove Record</button>
-            </div>`;
-        }).join('') || '<p style="color:#333; text-align:center;">History empty.</p>';
-    }
-
-    window.onload = () => {
-        ['sn','sb','sc','an'].forEach(i => document.getElementById(i).value = gt(i));
-        drawPics();
-        render();
-    };
-</script>
-</body>
-</html>
+    const STORAGE_K = "TBP_V30_IRON";
+    function st(k
