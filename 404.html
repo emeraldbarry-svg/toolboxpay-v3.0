@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - toolboxpay</title>
+    <style>
+        :root {
+            --orange: #ff6600;
+            --white: #ffffff;
+            --dark: #1a1a1a;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--white);
+            color: var(--dark);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .toolbox { color: var(--orange); }
+        .pay { color: var(--dark); } /* Swapping to dark for visibility on white background */
+        
+        .error-container {
+            border: 2px solid var(--orange);
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 400px;
+        }
+        h1 { font-size: 72px; margin: 0; color: var(--orange); }
+        p { font-size: 18px; margin: 20px 0; }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--orange);
+            color: var(--white);
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+    <div class="logo">
+        <span class="toolbox">toolbox</span><span class="pay">pay</span>
+    </div>
+
+    <div class="error-container">
+        <h1>404</h1>
+        <p>Sorry, we couldn't find that page.</p>
+        <p>We are <strong>specialising</strong> in helping you manage <strong>labour</strong> costs, not getting lost!</p>
+        <a href="index.html" class="btn">Return to Command Centre</a>
+    </div>
+
+</body>
+</html>
