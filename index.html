@@ -5,38 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>toolboxpay</title>
     <style>
-        :root { 
-            --orange: #ff6600; 
-            --white: #ffffff; 
-            --navy: #0b1521; 
-            --card: #1a2635; 
-            --border: #233554;
-        }
-
-        /* Layout & Centering */
+        :root { --org: #ff6600; --wht: #ffffff; --bg: #0b1521; --crd: #1a2635; }
+        
+        /* Mobile-Locked Column for Laptop */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            background: var(--navy); 
-            color: var(--white); 
+            background: var(--bg); 
+            color: var(--wht); 
             font-family: -apple-system, sans-serif; 
             display: flex; 
             justify-content: center; 
             min-height: 100vh;
             padding: 40px 20px; 
         }
-        .app-shell { width: 100%; max-width: 380px; }
+        .shell { width: 100%; max-width: 380px; }
 
-        /* Branding */
-        .header { text-align: center; margin-bottom: 35px; }
-        .logo { font-size: 34px; font-weight: 800; letter-spacing: -1px; }
-        .toolbox { color: var(--orange); }
-        .pay { color: var(--white); }
+        /* Logo Styling */
+        .logo { text-align: center; margin-bottom: 35px; font-size: 34px; font-weight: 800; }
+        .logo span { color: var(--org); }
 
-        /* Nav Button */
-        #back-nav { 
+        /* Navigation */
+        #nav-btn { 
             display: none; 
-            color: var(--orange); 
-            border: 1px solid var(--orange); 
+            color: var(--org); 
+            border: 1px solid var(--org); 
             background: none; 
             padding: 12px; 
             width: 100%; 
@@ -47,105 +39,95 @@
             text-transform: uppercase; 
         }
 
-        /* Rigid Screen Switching */
+        /* Screen States */
         .screen { display: none !important; }
-        .is-visible { display: block !important; }
+        .active { display: block !important; }
 
-        /* Dashboard Tile */
+        /* Dashboard Card */
         .tile { 
-            background: var(--card); 
+            background: var(--crd); 
             padding: 25px; 
             border-radius: 12px; 
-            border: 1px solid var(--border); 
+            border: 1px solid #233554; 
             cursor: pointer; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
         }
-        .tile h3 { color: var(--orange); text-transform: uppercase; font-size: 16px; }
+        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 16px; }
 
         /* Calculator Styles */
-        .tag { color: var(--orange); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
+        .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
         label { display: block; font-size: 13px; margin-bottom: 8px; color: #8892b0; }
         input { 
             width: 100%; 
             padding: 15px; 
-            background: var(--card); 
-            border: 1px solid var(--border); 
+            background: var(--crd); 
+            border: 1px solid #233554; 
             color: #fff; 
-            margin-bottom: 18px; 
+            margin-bottom: 15px; 
             border-radius: 8px; 
             font-size: 18px; 
             outline: none; 
         }
-        input:focus { border-color: var(--orange); }
 
-        /* Total Panel */
-        .result-box { border: 2px solid var(--orange); padding: 22px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 35px; background: rgba(255,102,0,0.05); }
-        .total-amount { color: var(--orange); font-size: 26px; font-weight: 800; }
+        .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 35px; }
+        .price { color: var(--org); font-size: 26px; font-weight: 800; }
     </style>
 </head>
 <body>
 
-<div class="app-shell">
-    <button id="back-nav" onclick="navTo('dash')">← Return to Dashboard</button>
-    
-    <div class="header">
-        <h1 class="logo"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
-    </div>
+<div class="shell">
+    <button id="nav-btn" onclick="goTo('dash')">← Return to Dashboard</button>
+    <div class="logo"><span>toolbox</span>pay</div>
 
-    <div id="dash" class="screen is-visible">
-        <div class="tile" onclick="navTo('calc')">
+    <div id="dash" class="screen active">
+        <div class="tile" onclick="goTo('calc')">
             <div>
                 <h3>Labour & Materials</h3>
                 <p style="font-size:12px; color:#8892b0; margin-top:4px;">Calculate costs and specialising tasks</p>
             </div>
-            <span style="color:var(--orange); font-weight:bold; font-size: 20px;">→</span>
+            <span style="color:var(--org); font-weight:bold; font-size: 20px;">→</span>
         </div>
     </div>
 
     <div id="calc" class="screen">
         <div class="tag">Labour Costs</div>
         <label>Hours worked</label>
-        <input type="number" id="hrs" placeholder="0" oninput="math()">
-        
+        <input type="number" id="h" placeholder="0" oninput="doMath()">
         <label>Hourly rate (£)</label>
-        <input type="number" id="rte" placeholder="0.00" oninput="math()">
+        <input type="number" id="r" placeholder="0.00" oninput="doMath()">
         
         <div class="tag">Materials</div>
         <label>Total material costs (£)</label>
-        <input type="number" id="mat" placeholder="0.00" oninput="math()">
+        <input type="number" id="m" placeholder="0.00" oninput="doMath()">
         
-        <div class="result-box">
+        <div class="total-box">
             <span style="font-weight:800; font-size:12px;">TOTAL:</span>
-            <span id="final" class="total-amount">£0.00</span>
+            <span id="res" class="price">£0.00</span>
         </div>
     </div>
 </div>
 
 <script>
-    function navTo(targetId) {
-        // 1. Hide EVERY screen first to break any loop
-        document.querySelectorAll('.screen').forEach(screen => {
-            screen.classList.remove('is-visible');
-        });
-
-        // 2. Show only the target screen
-        document.getElementById(targetId).classList.add('is-visible');
-
-        // 3. Handle Back Button visibility
-        document.getElementById('back-nav').style.display = (targetId === 'calc') ? 'block' : 'none';
+    function goTo(id) {
+        // Force-hide all screens to stop looping
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         
-        // 4. Reset scroll to top
+        // Show target
+        document.getElementById(id).classList.add('active');
+        
+        // Toggle back button
+        document.getElementById('nav-btn').style.display = (id === 'calc') ? 'block' : 'none';
         window.scrollTo(0,0);
     }
 
-    function math() {
-        const h = parseFloat(document.getElementById('hrs').value) || 0;
-        const r = parseFloat(document.getElementById('rte').value) || 0;
-        const m = parseFloat(document.getElementById('mat').value) || 0;
+    function doMath() {
+        const h = parseFloat(document.getElementById('h').value) || 0;
+        const r = parseFloat(document.getElementById('r').value) || 0;
+        const m = parseFloat(document.getElementById('m').value) || 0;
         const total = (h * r) + m;
-        document.getElementById('final').innerText = '£' + total.toLocaleString('en-GB', {
+        document.getElementById('res').innerText = '£' + total.toLocaleString('en-GB', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
