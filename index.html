@@ -10,7 +10,6 @@
         body { background: var(--bg); color: var(--wht); font-family: -apple-system, sans-serif; display: flex; justify-content: center; min-height: 100vh; padding: 40px 20px; }
         .shell { width: 100%; max-width: 380px; }
         
-        /* Logo: toolbox in orange, pay in white */
         .logo { text-align: center; margin-bottom: 35px; font-size: 34px; font-weight: 800; letter-spacing: -1px; }
         .logo span { color: var(--org); }
 
@@ -116,7 +115,6 @@
         math();
     }
 
-    // Auto-save business and bank info
     const fields = ['biz-name', 'biz-email', 'biz-phone', 'bank-acc', 'bank-sort', 'bank-num'];
     fields.forEach(f => {
         const el = document.getElementById(f);
