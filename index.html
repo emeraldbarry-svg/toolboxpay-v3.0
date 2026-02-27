@@ -72,7 +72,7 @@
         const m = parseFloat(document.getElementById('m').value) || 0;
         document.getElementById('res').innerText = '£' + ((h * r) + m).toLocaleString('en-GB', {minimumFractionDigits: 2});
     }
-    // Auto-save business and bank details logic
+    // Logic to remember business and bank details automatically
     ['b-name', 'b-sort', 'b-acc'].forEach(id => {
         const el = document.getElementById(id);
         if(el) {
