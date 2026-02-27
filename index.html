@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v1.3 Job History</title>
+    <title>toolboxpay - v1.4 Photos</title>
     <style>
         :root { --orange: #ff6600; --white: #ffffff; --bg: #050505; --card: #141414; --border: #252525; }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--white); margin: 0; font-family: 'Segoe UI', Helvetica, sans-serif; padding-bottom: 80px; }
+        body { background: var(--bg); color: var(--white); margin: 0; font-family: 'Segoe UI', Helvetica, sans-serif; padding-bottom: 100px; }
         
         #app { max-width: 520px; margin: 0 auto; padding: 20px; }
 
@@ -40,7 +40,6 @@
             font-size: 17px; 
             outline: none; 
         }
-        input:focus { border-color: var(--orange); }
 
         .flex { display: flex; gap: 15px; }
         .flex > div { flex: 1; }
@@ -49,26 +48,24 @@
         .total-val { font-size: 68px; font-weight: 900; color: var(--orange); letter-spacing: -4px; line-height: 1; margin: 10px 0; }
         
         .btn-save { 
-            width: 100%; 
-            padding: 24px; 
-            background: var(--orange); 
-            color: #000; 
-            border: none; 
-            border-radius: 12px; 
-            font-size: 20px; 
-            font-weight: 900; 
-            text-transform: uppercase; 
-            cursor: pointer; 
-            margin-top: 25px;
-            box-shadow: 0 4px 0 #cc5200;
+            width: 100%; padding: 24px; background: var(--orange); color: #000; border: none; 
+            border-radius: 12px; font-size: 20px; font-weight: 900; text-transform: uppercase; cursor: pointer; 
+            margin-top: 25px; box-shadow: 0 4px 0 #cc5200;
+        }
+
+        /* PHOTO GALLERY STYLES */
+        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .photo-item { aspect-ratio: 1; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid #333; position: relative; }
+        .photo-item img { width: 100%; height: 100%; object-fit: cover; }
+        .btn-upload { 
+            display: inline-block; width: 100%; padding: 15px; background: #222; color: var(--orange); 
+            text-align: center; border-radius: 10px; border: 1px dashed var(--orange); cursor: pointer; font-weight: 800; font-size: 14px;
         }
 
         .log-item { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #222; }
         .log-item:last-child { border: none; }
         .log-name { font-weight: 800; font-size: 18px; color: var(--white); }
-        .log-date { font-size: 13px; color: #555; margin-top: 4px; }
         .log-amt { color: var(--orange); font-weight: 900; font-size: 22px; }
-        .job-desc { font-size: 13px; color: #888; margin-top: 5px; font-style: italic; }
     </style>
 </head>
 <body>
@@ -105,6 +102,15 @@
     </section>
 
     <section>
+        <h2>Job Photos</h2>
+        <label class="btn-upload">
+            + ADD PHOTO
+            <input type="file" accept="image/*" id="p_in" style="display:none;" onchange="up(this)">
+        </label>
+        <div class="photo-grid" id="p_grid"></div>
+    </section>
+
+    <section>
         <h2>Recent Quotes</h2>
         <div id="hist"></div>
     </section>
@@ -136,7 +142,7 @@
 </div>
 
 <script>
-    const KEY = "TBP_CLEAN_V1.3_";
+    const KEY = "TBP_V1.4_";
 
     function st(k, v) { localStorage.setItem(KEY+k, v); }
     function gt(k) { return localStorage.getItem(KEY+k) || ""; }
@@ -148,6 +154,26 @@
         document.getElementById('disp').innerText = "£" + ((h * r) + m).toFixed(2);
     }
 
+    // Photo Upload Logic
+    function up(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                let photos = JSON.parse(localStorage.getItem(KEY+'imgs') || '[]');
+                photos.unshift(e.target.result);
+                localStorage.setItem(KEY+'imgs', JSON.stringify(photos.slice(0, 9)));
+                drawPhotos();
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function drawPhotos() {
+        const photos = JSON.parse(localStorage.getItem(KEY+'imgs') || '[]');
+        const grid = document.getElementById('p_grid');
+        grid.innerHTML = photos.map(src => `<div class="photo-item"><img src="${src}"></div>`).join('');
+    }
+
     function save() {
         const q = {
             n: document.getElementById('q_n').value || "Unnamed Client",
@@ -155,11 +181,47 @@
             t: document.getElementById('disp').innerText,
             d: new Date().toLocaleDateString('en-GB')
         };
-        
         let logs = JSON.parse(localStorage.getItem(KEY+'logs') || '[]');
         logs.unshift(q);
-        // Keep recent quotes to 5 items, but Job History stores them all
         localStorage.setItem(KEY+'logs', JSON.stringify(logs));
-        
         ['q_n','q_l','q_h','q_r','q_m'].forEach(id => document.getElementById(id).value = "");
         document.getElementById('disp').innerText = "£0.00";
+        render();
+        alert("Quote Logged.");
+    }
+
+    function render() {
+        const logs = JSON.parse(localStorage.getItem(KEY+'logs') || '[]');
+        const hCont = document.getElementById('hist');
+        const jCont = document.getElementById('job_history');
+        
+        hCont.innerHTML = logs.slice(0, 3).map(i => `
+            <div class="log-item">
+                <div><div class="log-name">${i.n}</div><div style="font-size:12px;color:#555;">${i.d}</div></div>
+                <div class="log-amt">${i.t}</div>
+            </div>
+        `).join('') || '<p style="color:#333;">No recent quotes.</p>';
+
+        jCont.innerHTML = logs.map(i => `
+            <div class="log-item" style="flex-direction: column; align-items: flex-start;">
+                <div style="display:flex; justify-content:space-between; width:100%;">
+                    <div class="log-name">${i.n}</div><div class="log-amt">${i.t}</div>
+                </div>
+                <div style="font-size:12px;color:#555;">${i.d}</div>
+                <div style="font-size:13px;color:#888;margin-top:5px;font-style:italic;">${i.l}</div>
+            </div>
+        `).join('') || '<p style="color:#333;">No job history.</p>';
+    }
+
+    window.onload = () => {
+        document.getElementById('s_n').value = gt('n');
+        document.getElementById('s_a').value = gt('a');
+        document.getElementById('s_b').value = gt('b');
+        document.getElementById('s_sc').value = gt('sc');
+        document.getElementById('s_an').value = gt('an');
+        drawPhotos();
+        render();
+    };
+</script>
+</body>
+</html>
