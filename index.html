@@ -9,11 +9,12 @@
         /* Prevent elastic scrolling which can cause freezes on mobile */
         html, body { background: var(--bg); margin: 0; padding: 0; font-family: -apple-system, sans-serif; color: white; height: 100%; overflow: hidden; }
         
-        #app { width: 100%; max-width: 400px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; }
+        #app { width: 100%; max-width: 400px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; border-left: 1px solid #222; border-right: 1px solid #222; }
         
-        .header { padding: 20px; text-align: center; background: var(--bg); }
-        .logo { font-weight: 900; font-size: 24px; letter-spacing: -1px; }
-        .logo span { color: var(--org); }
+        .header { padding: 25px 20px; text-align: center; background: var(--bg); }
+        .logo { font-weight: 900; font-size: 26px; letter-spacing: -1px; }
+        .logo .t { color: var(--org); }
+        .logo .p { color: #fff; }
 
         /* INDEPENDENT CONTAINERS */
         .view { display: none; flex: 1; overflow-y: auto; padding: 20px; box-sizing: border-box; }
@@ -21,24 +22,57 @@
 
         /* HUB MENU */
         .menu-item { background: var(--card); border: 1px solid #333; padding: 25px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--org); font-weight: 800; text-transform: uppercase; font-size: 13px; }
+        .menu-item:active { background: #222; }
         
         /* FORMS */
-        h3 { color: var(--org); font-size: 12px; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
-        input, textarea { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #333; background: #000; color: #fff; border-radius: 8px; font-size: 16px; box-sizing: border-box; -webkit-appearance: none; }
+        h3 { color: var(--org); font-size: 12px; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; font-weight: 800; }
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #333; background: #000; color: #fff; border-radius: 8px; font-size: 16px; box-sizing: border-box; outline: none; -webkit-appearance: none; }
         input:focus { border-color: var(--org); }
         
         .row { display: flex; gap: 10px; }
         .row input { flex: 1; }
 
-        .tax-bar { background: var(--card); padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid #333; margin-bottom: 20px; }
+        .tax-bar { background: var(--card); padding: 18px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid #333; margin-bottom: 20px; }
         .tax-bar.active { border-color: var(--org); background: #221400; }
-        .indicator { width: 12px; height: 12px; border-radius: 50%; background: #333; }
-        .active .indicator { background: var(--org); box-shadow: 0 0 5px var(--org); }
+        .indicator { width: 24px; height: 12px; border-radius: 10px; background: #333; position: relative; }
+        .active .indicator { background: var(--org); }
 
-        .big-total { text-align: right; font-size: 50px; font-weight: 900; color: var(--org); margin: 10px 0; }
+        .big-total { text-align: right; font-size: 54px; font-weight: 900; color: var(--org); margin: 10px 0; letter-spacing: -2px; }
         
-        .btn-orange { width: 100%; padding: 20px; background: var(--org); color: #000; border: none; border-radius: 12px; font-size: 16px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
-        .btn-back { background: none; border: 1px solid #444; color: #888; width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 20px; cursor: pointer; font-weight: bold; font-size: 11px; }
+        .btn-orange { width: 100%; padding: 20px; background: var(--org); color: #000; border: none; border-radius: 12px; font-size: 18px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+        .btn-back { background: none; border: 1px solid var(--org); color: var(--org); width: 100%; padding: 12px; border-radius: 10px; margin-bottom: 20px; cursor: pointer; font-weight: 800; font-size: 12px; text-transform: uppercase; }
 
-        /* HISTORY */
-        .log-card { background: var(--card); padding: 15
+        /* LISTS */
+        .log-card { background: var(--card); padding: 15px; border-radius: 10px; margin-bottom: 8px; border-left: 4px solid var(--org); display: flex; justify-content: space-between; align-items: center; }
+
+        /* PRINT OVERLAY */
+        #ov { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 100; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .paper { background: #fff; color: #000; padding: 35px; border-radius: 2px; font-size: 14px; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <div class="header"><div class="logo"><span class="t">toolbox</span><span class="p">pay</span></div></div>
+
+        <div id="v_menu" class="view active">
+            <div class="menu-item" onclick="nav('quote')">New Quote <span>→</span></div>
+            <div class="menu-item" onclick="nav('history')">History <span>→</span></div>
+            <div class="menu-item" onclick="nav('setup')">Business & Bank Setup <span>→</span></div>
+        </div>
+
+        <div id="v_quote" class="view">
+            <button class="btn-back" onclick="nav('menu')">← BACK TO MENU</button>
+            <input type="text" id="c_name" placeholder="Client Name">
+            <textarea id="c_desc" placeholder="Description of Labour" style="height: 80px;"></textarea>
+            <div class="row">
+                <input type="number" id="c_hrs" placeholder="Hours" oninput="calc()">
+                <input type="number" id="c_rate" placeholder="Rate" oninput="calc()">
+            </div>
+            <input type="number" id="c_mat" placeholder="Materials" oninput="calc()">
+            <div id="v_bar" class="tax-bar" onclick="togV()">
+                <span style="font-weight: 800; font-size: 13px; color: #888;">ADD 20% VAT</span>
+                <div class="indicator"></div>
+            </div>
+            <div id="c_tot" class="big-total">£0.00</div>
+            <button class="btn-
