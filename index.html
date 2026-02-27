@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - Command Centre</title>
+    <title>toolboxpay - Settlement Profile</title>
     <style>
         :root {
             --orange: #ff6600;
             --white: #ffffff;
-            --dark-bg: #0d1b2a;
-            --input-bg: rgba(255, 255, 255, 0.07);
+            --dark-bg: #0b1521;
+            --input-bg: #1a2635;
+            --border-color: #233554;
         }
         body {
             font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
@@ -25,9 +26,9 @@
             max-width: 550px;
         }
 
+        /* Top Navigation */
         .top-nav {
-            margin-bottom: 25px;
-            padding-bottom: 10px;
+            margin-bottom: 30px;
         }
         .return-link {
             color: var(--orange);
@@ -38,25 +39,20 @@
             letter-spacing: 1px;
         }
 
+        /* Branding - Clean & Borderless */
         .branding {
             margin-bottom: 40px;
         }
         .logo-text {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 800;
             letter-spacing: -1px;
+            margin: 0;
         }
         .toolbox { color: var(--orange); }
         .pay { color: var(--white); }
-        .tagline {
-            font-size: 12px;
-            color: #8892b0;
-            letter-spacing: 2px;
-            margin-top: 8px;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
+        
+        /* Section Labels */
         .section-label {
             color: var(--orange);
             font-size: 13px;
@@ -68,20 +64,22 @@
             border-bottom: 1px solid rgba(255, 102, 0, 0.3);
             padding-bottom: 8px;
         }
+
         .field-group {
             margin-bottom: 20px;
         }
         label {
             display: block;
             font-size: 14px;
-            margin-bottom: 8px;
-            color: #ccd6f6;
+            margin-bottom: 10px;
+            color: var(--white);
+            font-weight: 500;
         }
         input {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background-color: var(--input-bg);
-            border: 1px solid #233554;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             color: var(--white);
             font-size: 16px;
@@ -91,29 +89,36 @@
             outline: none;
             border-color: var(--orange);
         }
-        .row { display: flex; gap: 15px; }
+        input::placeholder {
+            color: #4a5d7e;
+        }
+
+        .row { display: flex; gap: 20px; }
         .flex-1 { flex: 1; }
         .flex-2 { flex: 2; }
 
         .btn-submit {
             width: 100%;
-            padding: 16px;
+            padding: 18px;
             background-color: var(--orange);
             color: white;
             border: none;
             border-radius: 6px;
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
             margin-top: 30px;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
+        
         #status-msg {
             text-align: center;
             font-size: 14px;
             margin-top: 15px;
             color: #4bb543;
             display: none;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -125,11 +130,10 @@
     </div>
 
     <div class="branding">
-        <div class="logo-text"><span class="toolbox">toolbox</span><span class="pay">pay</span></div>
-        <div class="tagline">Calculate Labour & Costs</div>
+        <h1 class="logo-text"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
     </div>
 
-    <form id="settlementForm">
+    <form id="profileForm">
         <span class="section-label">Business Information</span>
         <div class="field-group">
             <label for="tradingName">Trading Name</label>
@@ -153,26 +157,14 @@
             </div>
         </div>
 
-        <span class="section-label">Labour Calculations</span>
-        <div class="row">
-            <div class="field-group flex-1">
-                <label for="hours">Hours Worked</label>
-                <input type="number" id="hours" placeholder="0">
-            </div>
-            <div class="field-group flex-1">
-                <label for="rate">Hourly Rate (£)</label>
-                <input type="number" id="rate" placeholder="0.00">
-            </div>
-        </div>
-
         <button type="button" onclick="saveDetails()" class="btn-submit">Save Settlement Details</button>
-        <div id="status-msg">Details saved securely.</div>
+        <div id="status-msg">Settlement Profile Updated Successfully.</div>
     </form>
 </div>
 
 <script>
     window.onload = function() {
-        const fields = ['tradingName', 'accHolder', 'sortCode', 'accNumber', 'hours', 'rate'];
+        const fields = ['tradingName', 'accHolder', 'sortCode', 'accNumber'];
         fields.forEach(field => {
             const savedValue = localStorage.getItem(field);
             if (savedValue) document.getElementById(field).value = savedValue;
@@ -180,4 +172,15 @@
     };
 
     function saveDetails() {
-        const fields = ['trading
+        const fields = ['tradingName', 'accHolder', 'sortCode', 'accNumber'];
+        fields.forEach(field => {
+            localStorage.setItem(field, document.getElementById(field).value);
+        });
+        const msg = document.getElementById('status-msg');
+        msg.style.display = 'block';
+        setTimeout(() => { msg.style.display = 'none'; }, 3000);
+    }
+</script>
+
+</body>
+</html>
