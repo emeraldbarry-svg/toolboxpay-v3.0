@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>toolboxpay - v8.7</title>
     <style>
-        /* BRANDING & THEME */
+        /* BRANDING & THEME [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: #4a4a4a; color: #fff; margin: 0; font-family: sans-serif; display: flex; justify-content: center; }
         #app-viewport { width: 100%; max-width: 420px; padding: 20px; min-height: 100vh; position: relative; }
@@ -34,7 +34,7 @@
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
         input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; }
 
-        /* CALCULATOR GRID */
+        /* CALCULATOR GRID [cite: 2026-02-27] */
         .calc-screen { background: #000; color: #ff6600; padding: 25px; text-align: right; font-size: 38px; font-weight: 900; border-radius: 15px; margin-bottom: 15px; min-height: 90px; border: 1px solid #333; }
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         .c-btn { background: #333; color: #fff; border: none; padding: 22px 10px; border-radius: 12px; font-weight: 900; font-size: 20px; cursor: pointer; }
@@ -45,7 +45,7 @@
         .btn-wa { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; cursor: pointer; }
         .btn-save { width: 100%; background: #ff6600; color: #000; padding: 18px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
         
-        /* HISTORY LIST */
+        /* HISTORY LIST [cite: 2026-02-27] */
         .hist-item { background: #000; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid #ff6600; }
     </style>
 </head>
@@ -89,4 +89,112 @@
                 <button class="c-btn" onclick="num('3')">3</button>
                 <button class="c-btn" onclick="num('0')">0</button>
                 <button class="c-btn" onclick="num('.')">.</button>
-                <button class="c-btn wide" onclick
+                <button class="c-btn wide" onclick="equal()">=</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-quote" class="view">
+        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
+        <div class="card">
+            <h2>New Quote</h2>
+            <label>Client Name</label><input type="text" id="c-name">
+            <label>Labour Description</label><textarea id="l-desc" style="height:80px;"></textarea>
+            <label>Total Price (£)</label><input type="number" id="p-in" oninput="upT()">
+            <div style="font-size:48px; font-weight:900; color:#ff6600; text-align:right;" id="q-total">£0.00</div>
+            <button class="btn-wa" onclick="waQ()">Send via WhatsApp</button>
+            <button class="btn-save" onclick="saveJ()">Save Job</button>
+        </div>
+    </div>
+
+    <div id="view-history" class="view">
+        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
+        <div class="card">
+            <h2>Job History</h2>
+            <div id="history-list">
+                <div class="hist-item" style="color:#888;">No jobs saved yet. Quotes you save will appear here.</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-bank" class="view">
+        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
+        <div class="card">
+            <h2>Bank Setup</h2>
+            <label>Business Name</label><input type="text" id="b-name" oninput="sv('bn',this.value)">
+            <label>Bank Name</label><input type="text" id="b-bank" oninput="sv('bk',this.value)">
+            <label>Sort Code</label><input type="text" id="b-sort" oninput="sv('sc',this.value)">
+            <label>Account No.</label><input type="text" id="b-acc" oninput="sv('an',this.value)">
+            <button class="btn-wa" onclick="waB()">Share Bank Details</button>
+        </div>
+    </div>
+
+    <div id="view-readme" class="view">
+        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
+        <div class="card">
+            <h2>Read Me</h2>
+            <p style="color:#ccc; line-height:1.6; font-size:14px;">
+                <strong>toolboxpay v8.7</strong><br><br>
+                1. <strong>Calculator:</strong> Use for quick pricing on-site. [cite: 2026-02-27]<br>
+                2. <strong>Quotes:</strong> Standard British English "Labour" used for all work descriptions. [cite: 2020-02-20]<br>
+                3. <strong>Bank Details:</strong> These are stored locally and will be here next time you open the app. [cite: 2026-02-26]<br>
+                4. <strong>WhatsApp:</strong> Use the green buttons to send quotes or bank info instantly. [cite: 2026-02-27]
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const K = "TBP_V87_FINAL";
+    let exp = "";
+
+    function tick() {
+        const d = new Date();
+        const t = d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0')+":"+d.getSeconds().toString().padStart(2,'0');
+        document.getElementById('live-clock').innerText = t;
+    }
+    setInterval(tick, 1000);
+
+    function nav(id) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    /* CALC FUNCTIONS [cite: 2026-02-27] */
+    function num(n) { exp += n; document.getElementById('disp').innerText = exp; }
+    function op(o) { exp += " " + o + " "; document.getElementById('disp').innerText = exp; }
+    function cls() { exp = ""; document.getElementById('disp').innerText = "0"; }
+    function equal() {
+        try { 
+            const r = eval(exp); 
+            document.getElementById('disp').innerText = r; 
+            exp = r.toString(); 
+        } catch(e) { document.getElementById('disp').innerText = "Error"; exp = ""; }
+    }
+
+    function sv(k, v) { localStorage.setItem(K + k, v); }
+    function gt(k) { return localStorage.getItem(K + k) || ""; }
+    function upT() { const v = parseFloat(document.getElementById('p-in').value) || 0; document.getElementById('q-total').innerText = "£" + v.toFixed(2); }
+
+    function waQ() {
+        const msg = `Quote from ${gt('bn') || "Business"}:\nLabour: ${document.getElementById('l-desc').value}\nTotal: ${document.getElementById('q-total').innerText}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function waB() {
+        const msg = `Bank Details:\nBank: ${gt('bk')}\nSort: ${gt('sc')}\nAcc: ${gt('an')}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    window.onload = function() {
+        tick();
+        document.getElementById('b-name').value = gt('bn');
+        document.getElementById('b-bank').value = gt('bk');
+        document.getElementById('b-sort').value = gt('sc');
+        document.getElementById('b-acc').value = gt('an');
+    };
+</script>
+</body>
+</html>
