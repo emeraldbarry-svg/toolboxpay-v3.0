@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v5.8</title>
+    <title>toolboxpay v5.9</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -33,7 +33,7 @@
         
         .stats { background: rgba(255,102,0,0.05); padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; border: 1px solid var(--org); }
         .hist-item { background: var(--crd); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--org); display: flex; justify-content: space-between; align-items: center; }
-        .del-btn { background: #d9534f; color: white; border: none; padding: 10px 14px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 900; }
+        .del-btn { background: #cc0000; color: white; border: none; padding: 10px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 900; margin-left: 10px; }
     </style>
 </head>
 <body>
@@ -41,7 +41,7 @@
 <div class="shell">
     <div id="nav-header"><div class="back-btn" onclick="go('dash')">← BACK TO MAIN MENU</div></div>
 
-    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #444;">v5.8</small></div>
+    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #444;">v5.9</small></div>
 
     <div id="scr-dash" class="screen active">
         <div class="tile" onclick="go('calc')"><div><h3>Labour & Materials</h3><p>New Quote</p></div><span>→</span></div>
@@ -52,7 +52,7 @@
 
     <div id="scr-calc" class="screen">
         <div class="tag">Create Quote</div>
-        <input type="text" id="job-ref" placeholder="Job Reference (e.g. Living Room)">
+        <input type="text" id="job-ref" placeholder="Job Reference">
         <input type="number" id="h" placeholder="Hours" oninput="doMath()" inputmode="decimal">
         <input type="number" id="r" placeholder="Rate (£)" oninput="doMath()" inputmode="decimal">
         <input type="number" id="m" placeholder="Materials (£)" oninput="doMath()" inputmode="decimal">
@@ -62,11 +62,11 @@
 
     <div id="scr-hist" class="screen">
         <div class="stats">
-            <div style="font-size: 10px; color: #8892b0; margin-bottom: 5px;">TOTAL SAVED VALUE</div>
+            <div style="font-size: 10px; color: #8892b0; margin-bottom: 5px;">TOTAL SAVED REVENUE</div>
             <div id="hist-total" style="font-size: 24px; font-weight: 800; color: var(--org);">£0.00</div>
         </div>
         <div id="hist-list"></div>
-        <button class="btn-main" style="background:#222; margin-top:20px; font-size: 11px;" onclick="clearHist()">Wipe All History</button>
+        <button class="btn-main" style="background:#222; margin-top:20px; font-size: 11px;" onclick="clearHist()">Wipe All Records</button>
     </div>
 
     <div id="scr-biz" class="screen">
@@ -101,20 +101,16 @@
         var h = parseFloat(document.getElementById('h').value) || 0;
         var r = parseFloat(document.getElementById('r').value) || 0;
         var m = parseFloat(document.getElementById('m').value) || 0;
-        var total = (h * r) + m;
-        document.getElementById('res').innerText = '£' + total.toFixed(2);
+        document.getElementById('res').innerText = '£' + ((h * r) + m).toFixed(2);
     }
 
     function saveJob() {
-        var ref = document.getElementById('job-ref').value || 'Untitled Job';
+        var ref = document.getElementById('job-ref').value || 'New Quote';
         var txt = document.getElementById('res').innerText;
         var num = parseFloat(txt.replace('£', ''));
         var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-        
         jobs.unshift({ id: Date.now(), ref: ref, txt: txt, num: num, date: new Date().toLocaleDateString('en-GB') });
-        localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 30)));
-        
-        alert('Job Saved');
+        localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 25)));
         document.getElementById('job-ref').value = '';
         go('dash');
     }
@@ -124,18 +120,16 @@
         var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
         var total = 0;
         var html = '';
-        
         for (var i = 0; i < jobs.length; i++) {
             total += jobs[i].num;
             html += '<div class="hist-item">' +
                 '<div style="flex:1; min-width:0;">' +
-                    '<div style="font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + jobs[i].ref + '</div>' +
+                    '<div style="font-weight:800; color:white; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + jobs[i].ref + '</div>' +
                     '<div style="font-size:11px; color:#8892b0;">' + jobs[i].date + ' • <span style="color:var(--org);">' + jobs[i].txt + '</span></div>' +
                 '</div>' +
                 '<button class="del-btn" onclick="deleteJob(' + jobs[i].id + ')">DEL</button>' +
             '</div>';
         }
-        
         list.innerHTML = jobs.length ? html : '<p style="text-align:center;font-size:12px;color:#444;margin-top:20px;">No saved quotes.</p>';
         document.getElementById('hist-total').innerText = '£' + total.toLocaleString('en-GB', {minimumFractionDigits: 2});
     }
@@ -152,7 +146,7 @@
         }
     }
 
-    function clearHist() { if(confirm('Wipe all history?')) { localStorage.setItem('jobs', '[]'); loadHist(); } }
+    function clearHist() { if(confirm('Clear all?')) { localStorage.setItem('jobs', '[]'); loadHist(); } }
 
     window.onload = function() {
         var keys = ['bn','ba','bk-a','bk-s','bk-n'];
