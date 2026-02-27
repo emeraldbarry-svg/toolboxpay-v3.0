@@ -3,36 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v48.0</title>
+    <title>toolboxpay v49.0 - RECOVERY</title>
     <style>
-        /* Zero-Impact Design: No shadows, no animations, no transitions */
-        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding: 20px; box-sizing: border-box; }
-        
-        .hdr { text-align: center; font-weight: 900; font-size: 28px; margin-bottom: 30px; }
+        /* The most basic CSS possible to prevent GPU crashes */
+        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding: 15px; }
+        .hdr { text-align: center; font-weight: 900; font-size: 24px; margin: 20px 0; border-bottom: 2px solid #222; padding-bottom: 10px; }
         .hdr span { color: #ff6600; }
-
-        section { border-top: 1px solid #222; padding-top: 25px; margin-bottom: 40px; }
-        h2 { color: #ff6600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
-
-        input, textarea { width: 100%; padding: 16px; margin-bottom: 12px; border: 1px solid #333; background: #000; color: #fff; border-radius: 4px; font-size: 16px; box-sizing: border-box; outline: none; -webkit-appearance: none; }
-        input:focus { border-color: #ff6600; }
         
-        .row { display: flex; gap: 10px; }
-        .row input { flex: 1; }
+        section { background: #111; padding: 15px; margin-bottom: 20px; border: 1px solid #333; }
+        h2 { color: #ff6600; font-size: 12px; text-transform: uppercase; margin-top: 0; }
 
-        .vat-box { background: #111; padding: 15px; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; border-radius: 4px; cursor: pointer; margin-bottom: 15px; }
-        .vat-box.on { border-color: #ff6600; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid #444; background: #000; color: #fff; font-size: 16px; box-sizing: border-box; }
         
-        .total-display { text-align: right; font-size: 60px; font-weight: 900; color: #ff6600; margin: 10px 0; }
+        .total-box { font-size: 45px; font-weight: 900; color: #ff6600; text-align: right; margin: 10px 0; }
+        .btn-work { width: 100%; padding: 20px; background: #ff6600; color: #000; border: none; font-weight: 900; font-size: 16px; text-transform: uppercase; }
         
-        .btn-main { width: 100%; padding: 22px; background: #ff6600; color: #000; border: none; border-radius: 4px; font-size: 18px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
-
-        /* History Cards */
-        .log-card { background: #111; padding: 15px; border-radius: 4px; border-left: 4px solid #ff6600; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-
-        /* Overlay */
-        #ov { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; padding: 15px; box-sizing: border-box; overflow-y: auto; }
-        .paper { background: #fff; color: #000; padding: 30px; border-radius: 2px; line-height: 1.5; font-size: 14px; }
+        .item { border-bottom: 1px solid #333; padding: 10px 0; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
@@ -41,58 +27,65 @@
 
     <section>
         <h2>New Quote</h2>
-        <input type="text" id="q_n" placeholder="Client Name">
-        <textarea id="q_l" placeholder="Description of Labour" style="height: 80px;"></textarea>
-        <div class="row">
-            <input type="number" id="q_h" placeholder="Hours" oninput="calc()">
-            <input type="number" id="q_r" placeholder="Rate" oninput="calc()">
-        </div>
-        <input type="number" id="q_m" placeholder="Materials" oninput="calc()">
-        
-        <div id="v_bar" class="vat-box" onclick="togV()">
-            <span style="font-weight: 800; font-size: 12px; color: #888;">ADD 20% VAT</span>
-            <div id="v_dot" style="width: 14px; height: 14px; border-radius: 50%; background: #333;"></div>
-        </div>
-
-        <div id="t_disp" class="total-display">£0.00</div>
-        <button class="btn-main" onclick="save()">Save & Log Quote</button>
+        <input type="text" id="qn" placeholder="Client Name">
+        <textarea id="ql" placeholder="Description of Labour" style="height:60px"></textarea>
+        <input type="number" id="qh" placeholder="Hours" oninput="c()">
+        <input type="number" id="qr" placeholder="Rate" oninput="c()">
+        <input type="number" id="qm" placeholder="Materials" oninput="c()">
+        <div class="total-box" id="tt">£0.00</div>
+        <button class="btn-work" onclick="s()">Save Quote</button>
     </section>
 
     <section>
-        <h2>Recent History</h2>
-        <div id="history_list"></div>
+        <h2>Business & Bank (Auto-Saves)</h2>
+        <input type="text" id="sn" placeholder="Business Name" oninput="st('n',this.value)">
+        <input type="text" id="sb" placeholder="Bank Name" oninput="st('b',this.value)">
+        <input type="text" id="ss" placeholder="Sort Code" oninput="st('s',this.value)">
+        <input type="text" id="sa" placeholder="Account Number" oninput="st('a',this.value)">
     </section>
 
-    <section>
-        <h2>Business & Bank Setup</h2>
-        <input type="text" id="s_bn" placeholder="Business Name" oninput="st('bn', this.value)">
-        <textarea id="s_ba" placeholder="Business Address" oninput="st('ba', this.value)" style="height: 60px;"></textarea>
-        <input type="text" id="s_bk" placeholder="Bank Name" oninput="st('bk', this.value)">
-        <div class="row">
-            <input type="text" id="s_sc" placeholder="Sort Code" oninput="st('sc', this.value)">
-            <input type="text" id="s_an" placeholder="Account Number" oninput="st('an', this.value)">
-        </div>
+    <section id="hist">
+        <h2>History</h2>
+        <div id="hl"></div>
     </section>
-
-    <div id="ov" onclick="this.style.display='none'">
-        <div class="paper" id="out" onclick="event.stopPropagation()"></div>
-        <button class="btn-main" style="margin-top: 15px;" onclick="document.getElementById('ov').style.display='none'">CLOSE</button>
-    </div>
 
     <script>
-        const KEY = "tb_v48_";
-        let vActive = false;
+        const K = "tb49_";
+        function st(k, v) { localStorage.setItem(K+k, v); }
+        function gt(k) { return localStorage.getItem(K+k) || ""; }
 
-        function st(k, v) { localStorage.setItem(KEY+k, v); }
-        function gt(k) { return localStorage.getItem(KEY+k) || ""; }
-
-        function togV() {
-            vActive = !vActive;
-            document.getElementById('v_bar').classList.toggle('on', vActive);
-            document.getElementById('v_dot').style.background = vActive ? "#ff6600" : "#333";
-            calc();
+        function c() {
+            let h = +document.getElementById('qh').value || 0;
+            let r = +document.getElementById('qr').value || 0;
+            let m = +document.getElementById('qm').value || 0;
+            document.getElementById('tt').innerText = "£" + (h*r + m).toFixed(2);
         }
 
-        function calc() {
-            let h = parseFloat(document.getElementById('q_h').value) || 0;
-            let r = parseFloat(document.
+        function s() {
+            let d = JSON.parse(localStorage.getItem(K+'d') || '[]');
+            d.unshift({n:document.getElementById('qn').value, t:document.getElementById('tt').innerText});
+            localStorage.setItem(K+'d', JSON.stringify(d.slice(0,5)));
+            draw();
+            alert("Saved");
+        }
+
+        function draw() {
+            let d = JSON.parse(localStorage.getItem(K+'d') || '[]');
+            document.getElementById('hl').innerHTML = d.map(i => `
+                <div class="item">
+                    <span>${i.n}</span>
+                    <strong style="color:#ff6600">${i.t}</strong>
+                </div>
+            `).join('');
+        }
+
+        window.onload = () => {
+            document.getElementById('sn').value = gt('n');
+            document.getElementById('sb').value = gt('b');
+            document.getElementById('ss').value = gt('s');
+            document.getElementById('sa').value = gt('a');
+            draw();
+        };
+    </script>
+</body>
+</html>
