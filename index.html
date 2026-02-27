@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v23.0 - STABILITY BUILD</title>
+    <title>toolboxpay v24.0 - HISTORY EDIT BUILD</title>
     <style>
         :root { --orange: #ff6600; --bg: #0b0b0b; --card: #161616; --text: #ffffff; }
 
@@ -13,7 +13,7 @@
             display: flex; justify-content: center; 
             font-family: Arial, sans-serif; 
             color: var(--text);
-            overflow: hidden; /* Prevents laptop scroll-sync issues */
+            overflow: hidden; 
         }
 
         #app-shell {
@@ -32,10 +32,16 @@
             width: 100%; padding: 20px; margin-bottom: 12px; 
             background: #222; border: 1px solid #333; border-radius: 10px; 
             font-size: 16px; font-weight: bold; text-align: left; 
-            color: var(--orange); cursor: pointer; display: block;
+            color: var(--orange); cursor: pointer; display: flex;
+            justify-content: space-between; align-items: center;
         }
 
-        .btn-org { background: var(--orange) !important; color: #000 !important; border: none; text-align: center; font-weight: 900; }
+        .btn-del { 
+            background: #441111; color: #ff4444; border: 1px solid #661111; 
+            padding: 8px 12px; border-radius: 5px; font-size: 12px; cursor: pointer;
+        }
+
+        .btn-org { background: var(--orange) !important; color: #000 !important; border: none !important; text-align: center; font-weight: 900; justify-content: center; }
 
         .back-link { 
             background: none; border: 1px solid var(--orange); color: var(--orange); 
@@ -43,7 +49,6 @@
             width: 100%; border-radius: 5px; cursor: pointer; 
         }
 
-        /* HARD HIDE - This prevents the overlapping "ghosting" from your previous screenshots */
         .scr { display: none !important; visibility: hidden; }
         .active { display: block !important; visibility: visible; }
 
@@ -86,20 +91,94 @@
         <div id="h" class="scr">
             <button class="back-link" onclick="sh('m')">← BACK</button>
             <div id="h-list"></div>
+            <button onclick="clearAll()" style="width:100%; background:none; border:none; color:#444; font-size:11px; margin-top:20px; cursor:pointer;">[ WIPE ALL HISTORY ]</button>
         </div>
 
         <div id="s" class="scr">
             <button class="back-link" onclick="sh('m')">← BACK</button>
-            <select id="s-cur" onchange="localStorage.setItem('v23_cur', this.value)">
+            <select id="s-cur" onchange="localStorage.setItem('v24_cur', this.value)">
                 <option value="£">GBP (£)</option>
                 <option value="$">USD ($)</option>
                 <option value="€">EUR (€)</option>
             </select>
-            <input type="text" id="s-bn" placeholder="Business Name" oninput="localStorage.setItem('v23_bn', this.value)">
-            <textarea id="s-ba" placeholder="Business Address" oninput="localStorage.setItem('v23_ba', this.value)" style="height:80px;"></textarea>
+            <input type="text" id="s-bn" placeholder="Business Name" oninput="localStorage.setItem('v24_bn', this.value)">
+            <textarea id="s-ba" placeholder="Business Address" oninput="localStorage.setItem('v24_ba', this.value)" style="height:80px;"></textarea>
         </div>
 
         <div id="b" class="scr">
             <button class="back-link" onclick="sh('m')">← BACK</button>
-            <input type="text" id="s-b1" placeholder="Account Name" oninput="localStorage.setItem('v23_b1', this.value)">
-            <input type="text" id="s-b2" placeholder="Sort Code" oninput="localStorage.setItem('v23
+            <input type="text" id="s-b1" placeholder="Account Name" oninput="localStorage.setItem('v24_b1', this.value)">
+            <input type="text" id="s-b2" placeholder="Sort Code" oninput="localStorage.setItem('v24_b2', this.value)">
+            <input type="text" id="s-b3" placeholder="Account Number" oninput="localStorage.setItem('v24_b3', this.value)">
+        </div>
+
+        <div id="v" class="scr">
+            <button class="back-link" onclick="sh('h')">← BACK</button>
+            <div id="v-paper" class="card-white"></div>
+            <button class="tile btn-org" style="margin-top:20px" onclick="window.print()">PRINT / PDF</button>
+        </div>
+    </div>
+
+    <script>
+        const DB = "v24_";
+
+        function sh(id) {
+            ['m','c','h','s','b','v'].forEach(s => document.getElementById(s).classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function math() {
+            var sym = localStorage.getItem(DB+'cur') || '£';
+            var h = Number(document.getElementById('q-h').value) || 0;
+            var r = Number(document.getElementById('q-r').value) || 0;
+            var m = Number(document.getElementById('q-m').value) || 0;
+            document.getElementById('q-t').innerText = sym + ((h*r)+m).toFixed(2);
+        }
+
+        function save() {
+            var jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
+            jobs.unshift({
+                id: Date.now(),
+                n: document.getElementById('q-n').value || 'Client',
+                t: document.getElementById('q-t').innerText,
+                d: new Date().toLocaleDateString('en-GB')
+            });
+            localStorage.setItem(DB+'data', JSON.stringify(jobs.slice(0,30)));
+            sh('m');
+        }
+
+        function lh() {
+            var jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
+            document.getElementById('h-list').innerHTML = jobs.map(j => `
+                <div style="display:flex; gap:10px;">
+                    <button class="tile" style="flex:1" onclick="viewQ(${j.id})">
+                        ${j.n} <span style="font-size:12px; opacity:0.6;">${j.t}</span>
+                    </button>
+                    <button class="btn-del" onclick="delJob(${j.id})">DEL</button>
+                </div>
+            `).join('') || '<p style="text-align:center">Empty.</p>';
+        }
+
+        function delJob(id) {
+            if(!confirm("Delete this quote?")) return;
+            var jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
+            jobs = jobs.filter(x => x.id !== id);
+            localStorage.setItem(DB+'data', JSON.stringify(jobs));
+            lh();
+        }
+
+        function clearAll() {
+            if(!confirm("Wipe all history? This cannot be undone.")) return;
+            localStorage.setItem(DB+'data', '[]');
+            lh();
+        }
+
+        function viewQ(id) {
+            var j = JSON.parse(localStorage.getItem(DB+'data') || '[]').find(x => x.id === id);
+            if(!j) return;
+            document.getElementById('v-paper').innerHTML = `
+                <div style="text-align:center; font-weight:bold; margin-bottom:15px;">QUOTE</div>
+                <strong>${localStorage.getItem(DB+'bn') || 'Business'}</strong><br>${localStorage.getItem(DB+'ba') || ''}<hr>
+                Client: ${j.n}<br>Date: ${j.d}<br>
+                <div style="font-size:24px; font-weight:bold; color:var(--orange); text-align:right; margin:15px 0;">Total: ${j.t}</div><hr>
+                Bank: ${localStorage.getItem(DB+'b1') || ''}<br>Sort: ${localStorage.getItem(DB+'b2
