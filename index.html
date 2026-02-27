@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v5.7 Master</title>
+    <title>toolboxpay - v5.9</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
@@ -12,51 +12,61 @@
             margin: 0; 
             font-family: sans-serif; 
             height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
-        /* DASHBOARD LAYOUT */
-        .home-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            height: 100%;
-        }
-
-        .logo { font-size: 36px; font-weight: 900; letter-spacing: -2px; margin: 30px 0; }
+        /* HEADER & LOGO */
+        .header { text-align: center; padding: 30px 0 10px 0; }
+        .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        /* VERTICAL DASHBOARD STACK */
+        .stack {
+            display: flex;
+            flex-direction: column;
             gap: 15px;
             width: 100%;
             max-width: 400px;
+            margin: 0 auto;
+            padding: 10px 20px 40px 20px;
         }
 
-        /* INDIVIDUALIZED TILES */
         .tile {
             background: #1e1e1e;
             border: 1px solid #333;
             border-radius: 20px;
-            aspect-ratio: 1;
+            padding: 25px;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
             transition: transform 0.1s;
         }
-        .tile:active { transform: scale(0.95); }
-        .tile span { color: #ff6600; font-weight: 900; font-size: 11px; text-transform: uppercase; margin-top: 10px; }
-        .tile i { font-size: 32px; font-style: normal; }
+        .tile:active { transform: scale(0.98); background: #252525; }
+        
+        /* ICON BOX */
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            background: #000;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 24px;
+        }
 
-        .tile.full { grid-column: span 2; aspect-ratio: auto; padding: 25px; }
+        .tile span { 
+            color: #ff6600; 
+            font-weight: 900; 
+            font-size: 16px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+        }
 
-        /* FULL PAGE OVERLAYS */
+        /* PAGE OVERLAYS */
         .page {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -71,57 +81,86 @@
 
         .back-btn { 
             background: #000; color: #ff6600; border: 1px solid #ff6600; 
-            padding: 12px 20px; border-radius: 12px; font-weight: 900; 
-            width: fit-content; margin-bottom: 25px; cursor: pointer;
+            padding: 12px 24px; border-radius: 12px; font-weight: 900; 
+            width: fit-content; margin-bottom: 25px; cursor: pointer; text-transform: uppercase;
         }
 
-        .card { background: #1e1e1e; border-radius: 18px; padding: 25px; border: 1px solid #333; }
-        h2 { color: #ff6600; font-size: 14px; text-transform: uppercase; margin: 0 0 20px 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        /* CARD STYLE FROM SCREENSHOT */
+        .card { background: #1a1a1a; border-radius: 20px; padding: 25px; border: 1px solid #333; }
+        h2 { color: #ff6600; font-size: 16px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; }
         
-        label { display: block; font-size: 10px; color: #888; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; }
-        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; margin-bottom: 15px; outline: none; font-size: 16px; }
-        
-        .save-btn { width: 100%; background: #ff6600; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; font-size: 18px; text-transform: uppercase; }
+        label { display: block; font-size: 11px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
+        input, textarea { 
+            width: 100%; background: #000; border: 1px solid #333; color: #fff; 
+            padding: 18px; border-radius: 12px; margin-bottom: 20px; outline: none; font-size: 16px; 
+        }
 
-        #tot-display { font-size: 50px; font-weight: 900; color: #ff6600; text-align: right; margin: 10px 0; }
+        .save-btn { 
+            width: 100%; background: #ff6600; color: #000; padding: 22px; border: none; 
+            border-radius: 15px; font-weight: 900; font-size: 20px; text-transform: uppercase;
+        }
+
+        #big-total { font-size: 58px; font-weight: 900; color: #ff6600; text-align: right; margin: 10px 0; }
     </style>
 </head>
 <body>
 
-<div id="home" class="home-screen">
-    <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
-    <div class="grid">
-        <div class="tile" onclick="go('quotes')"><i>📝</i><span>Job Quotes</span></div>
-        <div class="tile" onclick="go('calc')"><i>🧮</i><span>Calculator</span></div>
-        <div class="tile" onclick="go('history')"><i>📜</i><span>History</span></div>
-        <div class="tile" onclick="go('bank')"><i>🏦</i><span>Bank Setup</span></div>
-        <div class="tile full" onclick="go('readme')"><i>📖</i><span>Read Me</span></div>
+<div id="home">
+    <div class="header">
+        <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
+    </div>
+    
+    <div class="stack">
+        <div class="tile" onclick="openP('quotes')">
+            <div class="icon-box">📝</div>
+            <span>Job Quotes</span>
+        </div>
+        
+        <div class="tile" onclick="openP('calc')">
+            <div class="icon-box">🧮</div>
+            <span>Calculator</span>
+        </div>
+        
+        <div class="tile" onclick="openP('history')">
+            <div class="icon-box">📜</div>
+            <span>Job History</span>
+        </div>
+        
+        <div class="tile" onclick="openP('bank')">
+            <div class="icon-box">🏦</div>
+            <span>Bank Setup</span>
+        </div>
+        
+        <div class="tile" onclick="openP('readme')">
+            <div class="icon-box">📖</div>
+            <span>Read Me</span>
+        </div>
     </div>
 </div>
 
 <div id="quotes" class="page">
-    <div class="back-btn" onclick="back()">← DASHBOARD</div>
+    <div class="back-btn" onclick="closeP()">← Dashboard</div>
     <div class="card">
         <h2>Job Quotes</h2>
         <label>Client Name</label><input type="text" id="cn">
-        <label>Labour Description</label><textarea id="dl" style="height:80px;"></textarea>
-        <button class="save-btn" onclick="saveJob()">Save Quote</button>
+        <label>Labour Description</label><textarea id="dl" style="height:100px;"></textarea>
+        <button class="save-btn" onclick="saveJ()">Save Job</button>
     </div>
 </div>
 
 <div id="calc" class="page">
-    <div class="back-btn" onclick="back()">← DASHBOARD</div>
+    <div class="back-btn" onclick="closeP()">← Dashboard</div>
     <div class="card">
         <h2>Calculator</h2>
-        <label>Hours</label><input type="number" id="h" oninput="doCalc()">
-        <label>Rate (£)</label><input type="number" id="r" oninput="doCalc()">
-        <label>Materials (£)</label><input type="number" id="m" oninput="doCalc()">
-        <div id="tot-display">£0.00</div>
+        <label>Hours</label><input type="number" id="h" oninput="runC()">
+        <label>Rate (£)</label><input type="number" id="r" oninput="runC()">
+        <label>Materials (£)</label><input type="number" id="m" oninput="runC()">
+        <div id="big-total">£0.00</div>
     </div>
 </div>
 
 <div id="history" class="page">
-    <div class="back-btn" onclick="back()">← DASHBOARD</div>
+    <div class="back-btn" onclick="closeP()">← Dashboard</div>
     <div class="card">
         <h2>History</h2>
         <div id="joblist"></div>
@@ -129,51 +168,48 @@
 </div>
 
 <div id="bank" class="page">
-    <div class="back-btn" onclick="back()">← DASHBOARD</div>
+    <div class="back-btn" onclick="closeP()">← Dashboard</div>
     <div class="card">
         <h2>Bank Details</h2>
-        <label>Business Name</label><input type="text" id="sn" oninput="st('sn',this.value)">
-        <label>Bank Name</label><input type="text" id="sb" oninput="st('sb',this.value)">
-        <label>Sort Code</label><input type="text" id="sc" oninput="st('sc',this.value)">
-        <label>Account No.</label><input type="text" id="an" oninput="st('an',this.value)">
+        <label>Business Name</label><input type="text" id="sn" oninput="saveB('sn',this.value)">
+        <label>Bank Name</label><input type="text" id="sb" oninput="saveB('sb',this.value)">
+        <label>Sort Code</label><input type="text" id="sc" oninput="saveB('sc',this.value)">
+        <label>Account No.</label><input type="text" id="an" oninput="saveB('an',this.value)">
     </div>
 </div>
 
 <div id="readme" class="page">
-    <div class="back-btn" onclick="back()">← DASHBOARD</div>
+    <div class="back-btn" onclick="closeP()">← Dashboard</div>
     <div class="card">
-        <h2>Information</h2>
-        <p style="color:#aaa; line-height:1.6;">Welcome back to the original layout. Use the tiles to navigate between your tools. All data is saved locally to your device.</p>
+        <h2>Read Me</h2>
+        <p style="color:#aaa; line-height:1.6;">Vertical stack mode enabled. Optimized for one-handed mobile use.</p>
     </div>
 </div>
 
 <script>
-    const CUR = "TBP_V57_MASTER";
-    const OLD_KEYS = ["TBP_V56_DASH", "TBP_V55_PURE", "TBP_V54_ORIGINAL"];
+    const KEY = "TBP_V59_STACK";
+    const PREV = ["TBP_V58_FINAL", "TBP_V57_MASTER"];
 
-    function go(id) { document.getElementById(id).classList.add('active'); }
-    function back() { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); }
+    function openP(id) { document.getElementById(id).classList.add('active'); }
+    function closeP() { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); }
 
-    function st(k,v){ localStorage.setItem(CUR+k,v); }
-    function gt(k){ 
-        let val = localStorage.getItem(CUR+k);
-        if(val) return val;
-        for(let key of OLD_KEYS){
-            let old = localStorage.getItem(key+k);
-            if(old) return old;
-        }
+    function saveB(k,v) { localStorage.setItem(KEY+k,v); }
+    function getB(k) { 
+        let v = localStorage.getItem(KEY+k);
+        if(v) return v;
+        for(let p of PREV){ let o = localStorage.getItem(p+k); if(o) return o; }
         return "";
     }
 
-    function doCalc() {
+    function runC() {
         const h = parseFloat(document.getElementById('h').value)||0, 
               r = parseFloat(document.getElementById('r').value)||0, 
               m = parseFloat(document.getElementById('m').value)||0;
-        document.getElementById('tot-display').innerText = "£" + ((h*r)+m).toFixed(2);
+        document.getElementById('big-total').innerText = "£" + ((h*r)+m).toFixed(2);
     }
 
     window.onload = () => {
-        ['sn', 'sb', 'sc', 'an'].forEach(i => document.getElementById(i).value = gt(i));
+        ['sn', 'sb', 'sc', 'an'].forEach(i => document.getElementById(i).value = getB(i));
     };
 </script>
 </body>
