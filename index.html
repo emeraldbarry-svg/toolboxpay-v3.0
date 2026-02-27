@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v33.0 - DIRECT ACTION</title>
+    <title>toolboxpay v34.0</title>
     <style>
         :root { --org: #ff6600; --bg: #0b0b0b; --card: #161616; }
 
@@ -15,21 +15,23 @@
             overflow: hidden; 
         }
 
-        #app-shell {
+        /* PHYSICAL LAYER STACKING - Prevents the freeze in image_c7249e.png */
+        .app-layer {
             background: var(--card);
             width: 380px; height: 92vh;
             margin-top: 15px; border: 1px solid #333;
             border-radius: 20px; padding: 25px;
-            box-sizing: border-box; display: flex; flex-direction: column;
+            box-sizing: border-box; 
+            position: absolute; /* Stacked like a deck of cards */
+            display: none;
+            z-index: 1;
         }
+        .active-layer { display: flex !important; flex-direction: column; z-index: 10; }
 
-        .logo { color: var(--org); font-weight: 900; font-size: 24px; text-align: center; margin-bottom: 25px; }
+        .logo { color: var(--org); font-weight: 900; font-size: 24px; text-align: center; margin-bottom: 25px; pointer-events: none; }
         .logo span { color: #fff; }
 
-        /* NAVIGATION - Direct display switch to prevent "Back Button" freezing */
-        .scr { display: none !important; }
-        .scr.active { display: block !important; }
-
+        /* BUTTONS */
         .btn { 
             width: 100%; padding: 18px; margin-bottom: 12px; 
             background: #222; border: 1px solid #444; border-radius: 12px; 
@@ -39,12 +41,10 @@
         }
         .btn-org { background: var(--org) !important; color: #000 !important; border: none; justify-content: center; text-transform: uppercase; }
         
-        /* HARD BACK BUTTON - Forced to be clickable */
-        .back-btn { 
+        .back-target { 
             background: none; border: 1px solid var(--org); color: var(--org); 
             text-align: center; padding: 12px; margin-bottom: 20px; 
-            width: 100%; border-radius: 10px; cursor: pointer; 
-            font-weight: bold; display: block !important;
+            width: 100%; border-radius: 10px; cursor: pointer; font-weight: bold;
         }
 
         input, textarea, select { 
@@ -53,156 +53,38 @@
             border-radius: 8px; font-size: 16px; box-sizing: border-box; 
         }
 
+        /* VAT TOGGLE BAR - Improved from image_c720a8.png */
         .vat-bar { background: #222; border: 1px solid #333; border-radius: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; }
         .vat-on { border-color: var(--org); background: #2a1500; }
         .dot { width: 35px; height: 18px; background: #444; border-radius: 10px; }
         .vat-on .dot { background: var(--org); }
 
         .total { text-align: right; font-size: 40px; font-weight: 900; color: var(--org); margin: 10px 0; }
-        .paper { background: #fff; color: #000; padding: 25px; border-radius: 5px; font-size: 14px; line-height: 1.5; }
-        .del-btn { background: #311; color: #f55; border: 1px solid #522; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+        .paper { background: #fff; color: #000; padding: 25px; border-radius: 5px; font-size: 14px; line-height: 1.5; overflow-y: auto; }
+        .del-x { background: #311; color: #f55; border: 1px solid #522; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="app-shell">
+    <div id="L_MENU" class="app-layer active-layer">
         <div class="logo">toolbox<span>pay</span></div>
-
-        <div id="scr_m" class="scr active">
-            <button class="btn" onclick="go('scr_c')">NEW QUOTE <span>→</span></button>
-            <button class="btn" onclick="go('scr_h'); draw();">HISTORY <span>→</span></button>
-            <button class="btn" onclick="go('scr_s')">BUSINESS SETUP <span>→</span></button>
-            <button class="btn" onclick="go('scr_b')">BANK DETAILS <span>→</span></button>
-            <button onclick="localStorage.clear(); location.reload();" style="width:100%; margin-top:auto; background:none; border:none; color:#333; font-size:10px; cursor:pointer; text-decoration:underline;">REPAIR SYSTEM</button>
-        </div>
-
-        <div id="scr_c" class="scr">
-            <button class="back-btn" onclick="go('scr_m')">← BACK TO MENU</button>
-            <input type="text" id="i_n" placeholder="Client Name">
-            <input type="number" id="i_h" placeholder="Labour Hours" oninput="run()">
-            <input type="number" id="i_r" placeholder="Hourly Rate" oninput="run()">
-            <input type="number" id="i_m" placeholder="Materials" oninput="run()">
-            <div id="v_bar" class="vat-bar" onclick="tog()">
-                <span id="v_txt" style="color:#777; font-weight:bold;">ADD 20% VAT</span>
-                <div class="dot"></div>
-            </div>
-            <div id="i_t" class="total">£0.00</div>
-            <button class="btn btn-org" onclick="save()">SAVE QUOTE</button>
-        </div>
-
-        <div id="scr_h" class="scr">
-            <button class="back-btn" onclick="go('scr_m')">← BACK TO MENU</button>
-            <div id="h_list"></div>
-        </div>
-
-        <div id="scr_s" class="scr">
-            <button class="back-btn" onclick="go('scr_m')">← BACK TO MENU</button>
-            <input type="text" id="s_bn" placeholder="Business Name" oninput="ls('bn', this.value)">
-            <textarea id="s_ba" placeholder="Business Address" oninput="ls('ba', this.value)" style="height:60px;"></textarea>
-            <select id="s_cu" onchange="ls('cu', this.value)">
-                <option value="£">GBP (£)</option>
-                <option value="$">USD ($)</option>
-                <option value="€">EUR (€)</option>
-            </select>
-        </div>
-
-        <div id="scr_b" class="scr">
-            <button class="back-btn" onclick="go('scr_m')">← BACK TO MENU</button>
-            <input type="text" id="s_b1" placeholder="Account Name" oninput="ls('b1', this.value)">
-            <input type="text" id="s_b2" placeholder="Sort Code" oninput="ls('b2', this.value)">
-            <input type="text" id="s_b3" placeholder="Account Number" oninput="ls('b3', this.value)">
-        </div>
-
-        <div id="scr_v" class="scr">
-            <button class="back-btn" onclick="go('scr_h')">← BACK TO LIST</button>
-            <div id="v_out" class="paper"></div>
-            <button class="btn btn-org" style="margin-top:20px" onclick="window.print()">PRINT / PDF</button>
-        </div>
+        <button class="btn" onclick="openL('L_CALC')">NEW QUOTE <span>→</span></button>
+        <button class="btn" onclick="openL('L_HIST'); drawH();">HISTORY <span>→</span></button>
+        <button class="btn" onclick="openL('L_SET')">BUSINESS SETUP <span>→</span></button>
+        <button class="btn" onclick="openL('L_BANK')">BANK DETAILS <span>→</span></button>
+        <button onclick="localStorage.clear(); location.reload();" style="margin-top:auto; background:none; border:none; color:#333; cursor:pointer; font-size:10px;">[ FORCE SYSTEM RESET ]</button>
     </div>
 
-    <script>
-        const DB = "v33_";
-        let isV = false;
-
-        function ls(k, v) { localStorage.setItem(DB+k, v); }
-        function lg(k) { return localStorage.getItem(DB+k) || ""; }
-
-        // THE DIRECT SWITCH - No fancy lookups, just brute force visibility
-        function go(id) {
-            const screens = document.getElementsByClassName('scr');
-            for(let i=0; i<screens.length; i++) {
-                screens[i].classList.remove('active');
-            }
-            document.getElementById(id).classList.add('active');
-        }
-
-        function tog() {
-            isV = !isV;
-            document.getElementById('v_bar').classList.toggle('vat-on', isV);
-            document.getElementById('v_txt').style.color = isV ? 'var(--org)' : '#777';
-            run();
-        }
-
-        function run() {
-            let cur = lg('cu') || '£';
-            let h = Number(document.getElementById('i_h').value) || 0;
-            let r = Number(document.getElementById('i_r').value) || 0;
-            let m = Number(document.getElementById('i_m').value) || 0;
-            let tot = (h * r) + m;
-            if(isV) tot *= 1.2;
-            document.getElementById('i_t').innerText = cur + tot.toFixed(2);
-        }
-
-        function save() {
-            let jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
-            jobs.unshift({
-                id: Date.now(),
-                n: document.getElementById('i_n').value || 'Client',
-                t: document.getElementById('i_t').innerText,
-                d: new Date().toLocaleDateString('en-GB')
-            });
-            localStorage.setItem(DB+'data', JSON.stringify(jobs.slice(0,30)));
-            go('scr_m');
-        }
-
-        function draw() {
-            let jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
-            document.getElementById('h_list').innerHTML = jobs.map(j => `
-                <div style="display:flex; gap:10px; margin-bottom:12px;">
-                    <button class="btn" style="flex:1; margin-bottom:0;" onclick="view(${j.id})">
-                        ${j.n} <span style="font-size:12px; opacity:0.5;">${j.t}</span>
-                    </button>
-                    <button class="del-btn" onclick="del(${j.id})">DEL</button>
-                </div>
-            `).join('') || '<p style="text-align:center; opacity:0.3;">Empty.</p>';
-        }
-
-        function del(id) {
-            if(!confirm("Delete?")) return;
-            let jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
-            localStorage.setItem(DB+'data', JSON.stringify(jobs.filter(x => x.id !== id)));
-            draw();
-        }
-
-        function view(id) {
-            let j = JSON.parse(localStorage.getItem(DB+'data') || '[]').find(x => x.id === id);
-            if(!j) return;
-            document.getElementById('v_out').innerHTML = `
-                <center><h2 style="margin:0;">QUOTE</h2></center><hr>
-                <strong>FROM:</strong><br>${lg('bn') || 'Business'}<br>${lg('ba')}<br><br>
-                <strong>TO:</strong> ${j.n}<br><strong>DATE:</strong> ${j.d}<br>
-                <div style="font-size:28px; font-weight:bold; color:var(--org); text-align:right; margin:20px 0;">TOTAL: ${j.t}</div><hr>
-                <strong>BANK:</strong> ${lg('b1')}<br><strong>SORT:</strong> ${lg('b2')}<br><strong>ACC:</strong> ${lg('b3')}
-            `;
-            go('scr_v');
-        }
-
-        window.onload = function() {
-            ['bn','ba','b1','b2','b3','cu'].forEach(k => {
-                if(document.getElementById('s_'+k)) document.getElementById('s_'+k).value = lg(k);
-            });
-            run();
-        };
-    </script>
-</body>
-</html>
+    <div id="L_CALC" class="app-layer">
+        <button class="back-target" onclick="openL('L_MENU')">← BACK TO MENU</button>
+        <input type="text" id="q_n" placeholder="Client Name">
+        <input type="number" id="q_h" placeholder="Labour Hours" oninput="math()">
+        <input type="number" id="q_r" placeholder="Hourly Rate" oninput="math()">
+        <input type="number" id="q_m" placeholder="Materials" oninput="math()">
+        <div id="v_bar" class="vat-bar" onclick="vTog()">
+            <span id="v_t" style="color:#777; font-weight:bold;">ADD 20% VAT</span>
+            <div class="dot"></div>
+        </div>
+        <div id="q_tot" class="total">£0.00</div>
+        <button class="btn btn-org" onclick="save()">SAVE QUOTE</button>
+    </div>
