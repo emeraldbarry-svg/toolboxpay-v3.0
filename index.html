@@ -2,8 +2,8 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - v4.8</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>toolboxpay - v4.9</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
@@ -12,7 +12,7 @@
             margin: 0; 
             font-family: sans-serif; 
             padding: 15px; 
-            padding-bottom: 200px; 
+            padding-bottom: 150px; 
         }
         .wrap { max-width: 450px; margin: 0 auto; }
         
@@ -21,12 +21,13 @@
         .logo .w { color: #ffffff; }
 
         .card { 
-            background: #1e1e1e; /* Slightly lighter than pure black for contrast */
+            background: #1e1e1e; 
             border: 1px solid #333; 
             border-radius: 15px; 
             padding: 20px; 
             margin-bottom: 25px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: block !important;
         }
         
         h2 { color: #ff6600; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 15px 0; font-weight: 900; border-bottom: 1px solid #333; padding-bottom: 8px; }
@@ -35,7 +36,7 @@
         
         input, textarea { 
             width: 100%; 
-            background: #111; 
+            background: #000; 
             border: 1px solid #444; 
             color: #fff; 
             padding: 14px; 
@@ -58,10 +59,19 @@
             cursor: pointer; 
         }
 
-        .gallery { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .img-box { aspect-ratio: 1; background: #111; border-radius: 8px; overflow: hidden; border: 1px solid #444; }
+        .dash { display: flex; gap: 8px; margin-bottom: 15px; }
+        .stat { flex: 1; background: #000; padding: 12px; border-radius: 10px; border: 1px solid #222; text-align: center; }
+        .stat-val { font-size: 18px; font-weight: 900; color: #ff6600; }
+        .stat-lbl { font-size: 8px; color: #555; text-transform: uppercase; display: block; }
 
-        #joblist { min-height: 40px; }
+        .gallery { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .img-box { aspect-ratio: 1; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid #444; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .job { padding: 12px 0; border-bottom: 1px solid #222; }
+        .tag { display: inline-block; padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: 900; margin-bottom: 5px; cursor: pointer; }
+        .tag-due { background: #000; color: #ff6600; border: 1px solid #ff6600; }
+        .tag-paid { background: #2ecc71; color: #000; }
     </style>
 </head>
 <body>
@@ -71,32 +81,3 @@
     <div class="card">
         <h2>New Quote</h2>
         <label>Client Name</label><input type="text" id="cn">
-        <label>Labour</label><textarea id="dl" style="height:50px;"></textarea>
-        <label>Materials (£)</label><input type="number" id="m">
-        <div id="tot" style="font-size:44px; font-weight:900; color:#ff6600; text-align:right; margin-bottom:10px;">£0.00</div>
-        <button class="btn-m">Save Job</button>
-    </div>
-
-    <div class="card">
-        <h2>Job Photos</h2>
-        <label style="display:block; width:100%; padding:15px; border:1px dashed #ff6600; text-align:center; border-radius:10px; color:#ff6600; cursor:pointer; font-weight:800;">+ ADD PHOTO</label>
-        <div id="gallery" class="gallery"></div>
-    </div>
-
-    <div class="card">
-        <h2>Job History</h2>
-        <div id="joblist">
-            <p style="text-align:center; color:#666; font-size:11px;">No history logged.</p>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>Business & Bank Setup</h2>
-        <label>Business Name</label><input type="text" id="sn">
-        <label>Bank Name</label><input type="text" id="sb">
-        <label>Sort Code</label><input type="text" id="sc">
-        <label>Account No.</label><input type="text" id="an">
-    </div>
-</div>
-</body>
-</html>
