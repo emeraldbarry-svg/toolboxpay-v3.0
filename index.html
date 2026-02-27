@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v6.2</title>
+    <title>toolboxpay v6.3</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -35,14 +35,13 @@
         .hist-item { background: var(--crd); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--org); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .del-btn { background: #cc0000; color: white; border: none; padding: 10px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 900; margin-left: 10px; }
 
-        .summary-card { background: #fff; color: #000; padding: 25px; border-radius: 4px; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .summary-card { background: #fff; color: #000; padding: 25px; border-radius: 4px; margin-top: 10px; }
         .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
 
         @media print {
-            body { background: white !important; padding: 0; color: black; }
-            .shell { max-width: 100%; }
+            body { background: white !important; color: black !important; }
             #nav-header, .logo, .btn-main, .tag { display: none !important; }
-            .summary-card { box-shadow: none; border: none; padding: 0; margin: 0; }
+            .summary-card { border: none; padding: 0; }
         }
     </style>
 </head>
@@ -51,7 +50,7 @@
 <div class="shell">
     <div id="nav-header"><div class="back-btn" onclick="go('dash')">← BACK TO MAIN MENU</div></div>
 
-    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #444;">v6.2</small></div>
+    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #444;">v6.3</small></div>
 
     <div id="scr-dash" class="screen active">
         <div class="tile" onclick="go('calc')"><div><h3>Labour & Materials</h3><p>New Quote</p></div><span>→</span></div>
@@ -63,7 +62,7 @@
     <div id="scr-calc" class="screen">
         <div class="tag">Create Quote</div>
         <input type="text" id="cust-name" placeholder="Customer Name">
-        <input type="text" id="job-ref" placeholder="Job Reference (e.g. Kitchen)">
+        <input type="text" id="job-ref" placeholder="Job Reference">
         <input type="number" id="h" placeholder="Hours" oninput="doMath()" inputmode="decimal">
         <input type="number" id="r" placeholder="Rate (£)" oninput="doMath()" inputmode="decimal">
         <input type="number" id="m" placeholder="Materials (£)" oninput="doMath()" inputmode="decimal">
@@ -89,7 +88,7 @@
 
     <div id="scr-biz" class="screen">
         <div class="tag">Company Profile</div>
-        <input type="text" id="bn" placeholder="Business Name" id="bn-input" oninput="localStorage.setItem('bn',this.value)">
+        <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
         <textarea id="ba" placeholder="Business Address" oninput="localStorage.setItem('ba',this.value)" style="height:100px; width:100%; background:var(--crd); border:1px solid #233554; color:#fff; padding:12px; border-radius:8px;"></textarea>
         <button class="btn-main" onclick="go('dash')">Save & Return</button>
     </div>
@@ -99,4 +98,107 @@
         <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
         <input type="text" id="bk-s" placeholder="Sort Code" oninput="localStorage.setItem('bk-s',this.value)">
         <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
-        <button class="btn-main" onclick="go('dash')
+        <button class="btn-main" onclick="go('dash')">Save & Return</button>
+    </div>
+</div>
+
+<script>
+    function go(id) {
+        var screens = document.getElementsByClassName('screen');
+        for (var i = 0; i < screens.length; i++) { screens[i].classList.remove('active'); }
+        var target = document.getElementById('scr-' + id);
+        if(target) target.classList.add('active');
+        document.getElementById('nav-header').style.display = (id === 'dash') ? 'none' : 'block';
+        if(id === 'hist') loadHist();
+        window.scrollTo(0,0);
+    }
+
+    function doMath() {
+        var h = parseFloat(document.getElementById('h').value) || 0;
+        var r = parseFloat(document.getElementById('r').value) || 0;
+        var m = parseFloat(document.getElementById('m').value) || 0;
+        document.getElementById('res').innerText = '£' + ((h * r) + m).toFixed(2);
+    }
+
+    function saveJob() {
+        var cust = document.getElementById('cust-name').value || 'Private Client';
+        var ref = document.getElementById('job-ref').value || 'New Quote';
+        var h = document.getElementById('h').value || 0;
+        var r = document.getElementById('r').value || 0;
+        var m = document.getElementById('m').value || 0;
+        var txt = document.getElementById('res').innerText;
+        var num = parseFloat(txt.replace('£', ''));
+        
+        var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        jobs.unshift({ id: Date.now(), cust: cust, ref: ref, h: h, r: r, m: m, txt: txt, num: num, date: new Date().toLocaleDateString('en-GB') });
+        localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 50)));
+        
+        document.getElementById('cust-name').value = '';
+        document.getElementById('job-ref').value = '';
+        document.getElementById('h').value = '';
+        document.getElementById('r').value = '';
+        document.getElementById('m').value = '';
+        go('dash');
+    }
+
+    function loadHist() {
+        var list = document.getElementById('hist-list');
+        var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        var total = 0;
+        var html = '';
+        for (var i = 0; i < jobs.length; i++) {
+            total += jobs[i].num;
+            var cName = jobs[i].cust || 'Private Client';
+            html += '<div class="hist-item" onclick="viewJob(' + jobs[i].id + ')">' +
+                '<div style="flex:1; min-width:0;">' +
+                    '<div style="font-weight:800; color:white; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + cName + '</div>' +
+                    '<div style="font-size:11px; color:#8892b0;">' + jobs[i].ref + ' • <span style="color:var(--org);">' + jobs[i].txt + '</span></div>' +
+                '</div>' +
+                '<button class="del-btn" onclick="event.stopPropagation(); deleteJob(' + jobs[i].id + ')">DEL</button>' +
+            '</div>';
+        }
+        list.innerHTML = jobs.length ? html : '<p style="text-align:center;font-size:12px;color:#444;margin-top:20px;">No records</p>';
+        document.getElementById('hist-total').innerText = '£' + total.toLocaleString('en-GB', {minimumFractionDigits: 2});
+    }
+
+    function viewJob(id) {
+        var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        var j = jobs.find(function(item) { return item.id === id; });
+        if(!j) return;
+        
+        var bN = localStorage.getItem('bn') || 'Your Business';
+        var bA = localStorage.getItem('ba') || '';
+        var bAk = localStorage.getItem('bk-a') || '---';
+        var bS = localStorage.getItem('bk-s') || '---';
+        var bAn = localStorage.getItem('bk-n') || '---';
+        
+        document.getElementById('view-content').innerHTML = 
+            '<div style="text-align:right; color:#ff6600; font-weight:800; font-size:20px;">QUOTE</div>' +
+            '<strong>' + bN + '</strong><br><small>' + bA + '</small><hr style="margin:15px 0; border:0; border-top:1px solid #ddd;">' +
+            '<div class="summary-row"><span>Customer:</span><strong>' + (j.cust || 'Private Client') + '</strong></div>' +
+            '<div class="summary-row"><span>Reference:</span><strong>' + j.ref + '</strong></div>' +
+            '<div class="summary-row"><span>Date:</span><strong>' + j.date + '</strong></div>' +
+            '<div class="summary-row"><span>Labour:</span><strong>' + j.h + ' hrs @ £' + j.r + '</strong></div>' +
+            '<div class="summary-row"><span>Materials:</span><strong>£' + parseFloat(j.m || 0).toFixed(2) + '</strong></div>' +
+            '<div class="summary-row" style="font-size:18px; margin-top:10px; border-top:2px solid #000; padding-top:10px;"><span>Total:</span><strong>' + j.txt + '</strong></div>' +
+            '<div style="margin-top:20px; font-size:11px; color:#333; background:#f9f9f9; padding:10px; border-radius:4px;">' +
+            '<strong>Payment Info:</strong><br>' + bAk + ' | Sort: ' + bS + ' | Acc: ' + bAn + '</div>';
+        go('view');
+    }
+
+    function deleteJob(id) {
+        if(confirm('Delete?')) {
+            var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+            localStorage.setItem('jobs', JSON.stringify(jobs.filter(function(item) { return item.id !== id; })));
+            loadHist();
+        }
+    }
+
+    function clearHist() { if(confirm('Clear all?')) { localStorage.setItem('jobs', '[]'); loadHist(); } }
+
+    window.onload = function() {
+        // Data Repair: Ensure old jobs don't crash the history
+        var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        var changed = false;
+        jobs.forEach(function(j) { if(!j.cust) { j.cust = 'Private Client'; changed = true; } });
+        if(changed) localStorage.setItem('jobs', JSON.stringify(jobs
