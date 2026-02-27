@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v8.0 [BUSINESS SETUP]</title>
+    <title>toolboxpay v8.1 [LIVE CONTACTS]</title>
     <style>
-        :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
+        :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; --inp: #162130; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; }
         .shell { width: 100%; max-width: 360px; }
@@ -21,12 +21,11 @@
 
         .tile { background: var(--crd); padding: 22px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; text-decoration: none; color: inherit; }
         .tile h3 { color: var(--org); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; }
-        .tile p { font-size: 11px; color: #8892b0; margin-top: 4px; }
         
         .back-btn { display: block; width: 100%; padding: 14px; border: 2px solid var(--org); color: var(--org); background: rgba(255,102,0,0.1); border-radius: 8px; font-weight: 800; text-align: center; text-decoration: none; text-transform: uppercase; font-size: 12px; margin-bottom: 20px; }
 
         .tag { color: var(--org); font-size: 10px; font-weight: 800; text-transform: uppercase; margin: 15px 0 8px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 4px; }
-        input, textarea { width: 100%; padding: 16px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 8px; font-size: 16px; outline: none; }
+        input, textarea { width: 100%; padding: 16px; background: var(--inp); border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 8px; font-size: 16px; outline: none; }
         
         .total-box { border: 2px solid var(--org); padding: 20px; border-radius: 12px; text-align: right; background: rgba(255,102,0,0.1); margin: 15px 0; }
         .price { color: var(--org); font-size: 30px; font-weight: 800; }
@@ -49,31 +48,14 @@
 <body>
 
 <div class="shell">
-    <div class="logo"><span>toolbox</span><em>pay</em> <small style="font-size: 8px; color: #444;">v8.0</small></div>
+    <div class="logo"><span>toolbox</span><em>pay</em></div>
 
     <div id="scr-dash" class="screen">
-        <a href="#scr-calc" class="tile"><div><h3>Labour & Materials</h3><p>New Quote</p></div><span>→</span></a>
-        <a href="#scr-hist" class="tile" onclick="loadHistory()"><div><h3>Job History</h3><p>Manage Records</p></div><span>→</span></a>
-        <a href="#scr-biz" class="tile"><div><h3>Business Setup</h3><p>Profile, Logo & Contact</p></div><span>→</span></a>
-        <a href="#scr-bank" class="tile"><div><h3>Bank Details</h3><p>Payment Info</p></div><span>→</span></a>
-    </div>
-
-    <div id="scr-calc" class="screen">
-        <a href="#" class="back-btn">← BACK TO DASHBOARD</a>
-        <div class="tag">Quote Details</div>
-        <input type="text" id="cust-name" placeholder="Customer Name">
-        <input type="text" id="job-ref" placeholder="Job Reference">
-        <input type="number" id="h" placeholder="Labour Hours" oninput="runMath()">
-        <input type="number" id="r" placeholder="Hourly Rate (£)" oninput="runMath()">
-        <input type="number" id="m" placeholder="Materials (£)" oninput="runMath()">
-        <div style="background: #233554; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--org);">
-            <span style="font-weight:800; font-size:13px;">ADD VAT (20%)</span>
-            <input type="checkbox" id="vat-toggle" onchange="runMath()" style="width:24px; height:24px;">
-        </div>
-        <div class="total-box">
-            <div id="res-total" class="price">£0.00</div>
-        </div>
-        <button class="btn-main" onclick="saveJob()">Save Quote</button>
+        <a href="#scr-calc" class="tile"><div><h3>New Quote</h3></div><span>→</span></a>
+        <a href="#scr-hist" class="tile" onclick="loadHistory()"><div><h3>History</h3></div><span>→</span></a>
+        <a href="#scr-biz" class="tile"><div><h3>Business Setup</h3></div><span>→</span></a>
+        <a href="#scr-bank" class="tile"><div><h3>Bank Details</h3></div><span>→</span></a>
+        <button onclick="localStorage.clear(); location.reload();" style="width:100%; background:none; border:1px solid #cc0000; color:#cc0000; padding:14px; margin-top:40px; border-radius:8px; font-weight:800; font-size:12px;">FORCE RESET (WIPE ALL)</button>
     </div>
 
     <div id="scr-biz" class="screen">
@@ -83,8 +65,9 @@
             <img id="preview-logo" src="" alt="Preview">
             <input type="file" id="logo-in" accept="image/*" onchange="processLogo(this)" style="display:none">
             <button class="btn-main" onclick="document.getElementById('logo-in').click()" style="background:#222; font-size:11px; padding:10px;">Upload Logo File</button>
+            <button class="btn-main" onclick="localStorage.removeItem('user-logo'); location.reload();" style="background:none; color:#cc0000; font-size:10px; margin-top:5px; border:none;">Remove Logo</button>
         </div>
-        <div class="tag">Company Profile</div>
+        <div class="tag">Company Details</div>
         <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
         <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba',this.value)" style="height:80px;"></textarea>
         <div class="tag">Contact Information</div>
@@ -99,6 +82,20 @@
         <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
         <input type="text" id="bk-s" placeholder="Sort Code" oninput="localStorage.setItem('bk-s',this.value)">
         <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
+    </div>
+
+    <div id="scr-calc" class="screen">
+        <a href="#" class="back-btn">← BACK</a>
+        <input type="text" id="cust-name" placeholder="Customer Name">
+        <input type="number" id="h" placeholder="Hours" oninput="runMath()">
+        <input type="number" id="r" placeholder="Rate (£)" oninput="runMath()">
+        <input type="number" id="m" placeholder="Materials (£)" oninput="runMath()">
+        <div style="background: var(--crd); padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--org);">
+            <span style="font-weight:800; font-size:13px;">ADD VAT (20%)</span>
+            <input type="checkbox" id="vat-toggle" onchange="runMath()" style="width:24px; height:24px;">
+        </div>
+        <div class="total-box"><div id="res-total" class="price">£0.00</div></div>
+        <button class="btn-main" onclick="saveJob()">Save Quote</button>
     </div>
 
     <div id="scr-hist" class="screen">
@@ -128,14 +125,83 @@
     function renderLogo() {
         const data = localStorage.getItem('user-logo');
         const img = document.getElementById('preview-logo');
-        if (data && img) {
-            img.src = data;
-            img.style.display = 'block';
-        }
+        if (data && img) { img.src = data; img.style.display = 'block'; }
     }
 
     function runMath() {
         const h = Number(document.getElementById('h').value) || 0;
         const r = Number(document.getElementById('r').value) || 0;
         const m = Number(document.getElementById('m').value) || 0;
-        const sub = (h * r) +
+        const sub = (h * r) + m;
+        const total = document.getElementById('vat-toggle').checked ? sub * 1.2 : sub;
+        document.getElementById('res-total').innerText = '£' + total.toFixed(2);
+    }
+
+    function saveJob() {
+        const h = Number(document.getElementById('h').value) || 0;
+        const r = Number(document.getElementById('r').value) || 0;
+        const m = Number(document.getElementById('m').value) || 0;
+        const sub = (h * r) + m;
+        const isVat = document.getElementById('vat-toggle').checked;
+        const total = isVat ? sub * 1.2 : sub;
+
+        let jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        jobs.unshift({ id: Date.now(), cust: document.getElementById('cust-name').value || 'Client', h, r, m, sub, isVat, totalTxt: '£' + total.toFixed(2), date: new Date().toLocaleDateString('en-GB') });
+        localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 50)));
+        window.location.hash = ''; 
+    }
+
+    function loadHistory() {
+        const list = document.getElementById('hist-list');
+        const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        list.innerHTML = jobs.map(j => `<div class="tile" onclick="viewJob(${j.id})"><div><h3>${j.cust}</h3><p>${j.date} • ${j.totalTxt}</p></div></div>`).join('') || '<p style="text-align:center;padding:20px;">No history.</p>';
+    }
+
+    function viewJob(id) {
+        const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        const j = jobs.find(x => x.id === id);
+        if(!j) return;
+
+        const logo = localStorage.getItem('user-logo');
+        const bN = localStorage.getItem('bn') || 'Business Name';
+        const bA = localStorage.getItem('ba') || 'Address';
+        const bP = localStorage.getItem('bp') || '';
+        const bE = localStorage.getItem('be') || '';
+        const bW = localStorage.getItem('bw') || '';
+        const bAk = localStorage.getItem('bk-a') || '---';
+        const bS = localStorage.getItem('bk-s') || '---';
+        const bAn = localStorage.getItem('bk-n') || '---';
+
+        document.getElementById('view-content').innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
+                <div>
+                    <strong style="font-size:16px;">${bN}</strong><br>
+                    <small style="color:#444;">${bA}</small><br>
+                    <small><a href="tel:${bP}" style="color:#000; text-decoration:none;">${bP}</a> | <a href="mailto:${bE}" style="color:#000; text-decoration:none;">${bE}</a></small><br>
+                    <small style="color:var(--org); font-weight:bold;">${bW}</small>
+                </div>
+                ${logo ? `<img src="${logo}" style="max-height:60px; max-width:100px;">` : ''}
+            </div>
+            <hr style="margin:10px 0; border:0; border-top:1px solid #eee;">
+            <div class="summary-row"><span>Client:</span><strong>${j.cust}</strong></div>
+            <div class="summary-row"><span>Labour:</span><strong>${j.h} hrs @ £${j.r}</strong></div>
+            <div class="summary-row"><span>Materials:</span><strong>£${Number(j.m).toFixed(2)}</strong></div>
+            ${j.isVat ? `<div class="summary-row"><span>VAT (20%):</span><strong>£${(Number(j.sub) * 0.2).toFixed(2)}</strong></div>` : ''}
+            <div class="summary-row" style="margin-top:10px; border-top:2px solid #000; padding-top:10px;"><span>Total Due:</span><strong>${j.totalTxt}</strong></div>
+            <div style="margin-top:15px; font-size:11px; color:#333; background:#f9f9f9; padding:10px; border:1px solid #eee;">
+                <strong>Bank Transfer:</strong><br>${bAk} | Sort: ${bS} | Acc: ${bAn}
+            </div>
+        `;
+        window.location.hash = 'scr-view';
+    }
+
+    window.onload = function() {
+        renderLogo();
+        ['bn','ba','bp','be','bw','bk-a','bk-s','bk-n'].forEach(k => {
+            const val = localStorage.getItem(k);
+            if(val && document.getElementById(k)) document.getElementById(k).value = val;
+        });
+    };
+</script>
+</body>
+</html>
