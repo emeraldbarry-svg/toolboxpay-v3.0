@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toolboxpay - Labour & Materials</title>
+    <style>
+        :root {
+            --orange: #ff6600;
+            --white: #ffffff;
+            --dark-bg: #0b1521;
+            --input-bg: #1a2635;
+            --border-color: #233554;
+        }
+        body {
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--white);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 550px;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            margin-bottom: 30px;
+        }
+        .return-link {
+            color: var(--orange);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Branding - Clean & Borderless */
+        .branding {
+            margin-bottom: 40px;
+        }
+        .logo-text {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 0;
+        }
+        .toolbox { color: var(--orange); }
+        .pay { color: var(--white); }
+        
+        /* Section Labels */
+        .section-label {
+            color: var(--orange);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 30px 0 15px 0;
+            display: block;
+            border-bottom: 1px solid rgba(255, 102, 0, 0.3);
+            padding-bottom: 8px;
+        }
+
+        .field-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--white);
+        }
+        input {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--white);
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--orange);
+        }
+
+        .row { display: flex; gap: 20px; }
+        .flex-1 { flex: 1; }
+
+        /* Results Box */
+        .results-card {
+            background-color: var(--input-bg);
+            border: 2px solid var(--orange);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--orange);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-nav">
+        <a href="dashboard.html" class="return-link">← Return to Dashboard</a>
+    </div>
+
+    <div class="branding">
+        <h1 class="logo-text"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
+    </div>
+
+    <form id="calcForm">
+        <span class="section-label">Labour Costs</span>
+        <div class="row">
+            <div class="field-group flex-1">
+                <label for="hours">Total Hours</label>
+                <input type="number" id="hours" placeholder="0" oninput="calculate()">
+            </div>
+            <div class="field-group flex-1">
+                <label for="rate">Hourly Rate (£)</label>
+                <input type="number" id="rate" placeholder="0.00" oninput="calculate()">
+            </div>
+        </div>
+
+        <span class="section-label">Materials & Sundries</span>
+        <div class="field-group">
+            <label for="materials">Materials Total (£)</label>
+            <input type="number" id="materials" placeholder="0.00" oninput="calculate()">
+        </div>
+        <div class="field-group">
+            <label for="mark-up">Mark-up (%)</label>
+            <input type="number" id="mark-up" placeholder="0" oninput="calculate()">
+        </div>
+
+        <div class="results-card">
+            <div class="result-row">
+                <span>Labour Subtotal:</span>
+                <span id="labour-sub">£0.00</span>
+            </div>
+            <div class="result-row">
+                <span>Materials Subtotal:</span>
+                <span id="materials-sub">£0.00</span>
+            </div>
+            <div class="total-row">
+                <span>GRAND TOTAL:</span>
+                <span id="grand-total">£0.00</span>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function calculate() {
+        const hours = parseFloat(document.getElementById('hours').value) || 0;
+        const rate = parseFloat(document.getElementById('rate').value) || 0;
+        const materials = parseFloat(document.getElementById('materials').value) || 0;
+        const markupPercent = parseFloat(document.getElementById('mark-up').value) || 0;
+
+        const labourTotal = hours * rate;
+        const materialsMarkup = materials * (markupPercent / 100);
+        const materialsTotal = materials + materialsMarkup;
+        const grandTotal = labourTotal + materialsTotal;
+
+        document.getElementById('labour-sub').innerText = '£' + labourTotal.toFixed(2);
+        document.getElementById('materials-sub').innerText = '£' + materialsTotal.toFixed(2);
+        document.getElementById('grand-total').innerText = '£' + grandTotal.toFixed(2);
+    }
+</script>
+
+</body>
+</html>
