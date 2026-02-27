@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v3.9 Ironclad</title>
+    <title>toolboxpay - v4.0</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding: 15px; }
         .wrap { max-width: 480px; margin: 0 auto; }
 
-        /* BRANDING */
-        .logo { text-align: center; padding: 15px 0; font-size: 34px; font-weight: 900; letter-spacing: -2px; }
+        .logo { text-align: center; padding: 25px 0; font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* BOX STABILITY */
-        .card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 25px; display: block !important; visibility: visible !important; opacity: 1 !important; }
+        .card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 25px; display: block !important; }
         h2 { color: #ff6600; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 15px 0; font-weight: 900; border-bottom: 1px solid #222; padding-bottom: 8px; }
 
         label { display: block; font-size: 10px; color: #666; margin-bottom: 5px; font-weight: 800; text-transform: uppercase; }
-        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 14px; border-radius: 10px; font-size: 16px; margin-bottom: 12px; }
+        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 14px; border-radius: 10px; font-size: 16px; margin-bottom: 12px; outline: none; }
+        input:focus { border-color: #ff6600; }
         
         .dash { display: flex; gap: 10px; margin-bottom: 15px; }
         .stat { flex: 1; background: #000; padding: 12px; border-radius: 10px; border: 1px solid #222; text-align: center; }
@@ -33,7 +32,8 @@
         .tag-due { background: #000; color: #ff6600; border: 1px solid #ff6600; }
         .tag-paid { background: #2ecc71; color: #000; }
 
-        #live-clock { text-align: center; color: #ff6600; font-size: 32px; font-weight: 900; font-family: monospace; padding: 20px 0; border-top: 1px solid #222; margin-top: 20px; }
+        .gallery { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .img-box { aspect-ratio: 1; background: #000; border-radius: 6px; overflow: hidden; border: 1px solid #333; }
     </style>
 </head>
 <body>
@@ -44,29 +44,29 @@
     <div class="card">
         <h2>New Quote</h2>
         <label>Client Name</label><input type="text" id="cn">
-        <label>Labour</label><textarea id="dl" style="height:50px;"></textarea>
+        <label>Labour Description</label><textarea id="dl" style="height:60px;"></textarea>
         <div style="display:flex; gap:10px;">
             <div style="flex:1;"><label>Hours</label><input type="number" id="h" oninput="calc()"></div>
             <div style="flex:1;"><label>Rate (£)</label><input type="number" id="r" oninput="calc()"></div>
         </div>
         <label>Materials (£)</label><input type="number" id="m" oninput="calc()">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:10px; background:#000; border:1px solid #222; border-radius:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:10px; background:#080808; border-radius:10px; border:1px solid #222;">
             <span style="font-size:11px; font-weight:800;">ADD VAT (20%)</span>
             <input type="checkbox" id="v" onchange="calc()" style="width:20px; height:20px;">
         </div>
-        <div id="tot" style="font-size:48px; font-weight:900; color:#ff6600; text-align:right; margin-bottom:10px;">£0.00</div>
+        <div id="tot" style="font-size:48px; font-weight:900; color:#ff6600; text-align:right; margin-bottom:15px;">£0.00</div>
         <button class="btn-m" onclick="save()">Save Job</button>
     </div>
 
-    <div id="p-card" class="card">
+    <div class="card">
         <h2>Job Photos</h2>
         <label style="display:block; width:100%; padding:15px; border:1px dashed #ff6600; text-align:center; border-radius:10px; color:#ff6600; cursor:pointer; font-weight:800; margin-bottom:15px;">
             + ADD PHOTO<input type="file" accept="image/*" style="display:none;" onchange="up(this)">
         </label>
-        <div id="gallery" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;"></div>
+        <div id="gallery" class="gallery"></div>
     </div>
 
-    <div id="h-card" class="card">
+    <div class="card">
         <h2>Job History</h2>
         <div class="dash">
             <div class="stat"><span class="stat-val" id="t-inv">£0.00</span><span class="stat-lbl">Invoiced</span></div>
@@ -75,19 +75,17 @@
         <div id="joblist"></div>
     </div>
 
-    <div id="b-card" class="card">
-        <h2>Business & Bank Setup</h2>
+    <div class="card">
+        <h2>Business Setup</h2>
         <label>Business Name</label><input type="text" id="sn" oninput="st('sn',this.value)">
         <label>Bank Name</label><input type="text" id="sb" oninput="st('sb',this.value)">
         <label>Sort Code</label><input type="text" id="sc" oninput="st('sc',this.value)">
         <label>Account No.</label><input type="text" id="an" oninput="st('an',this.value)">
     </div>
-
-    <div id="live-clock">00:00:00</div>
 </div>
 
 <script>
-    const KEY = "TBP_IRONCLAD_V1";
+    const KEY = "TBP_BLUEPRINT_V4";
     function st(k,v){ localStorage.setItem(KEY+k,v); }
     function gt(k){ return localStorage.getItem(KEY+k) || ""; }
 
@@ -100,67 +98,43 @@
     }
 
     function render() {
-        const jb = JSON.parse(localStorage.getItem(KEY+'j') || '[]');
+        // Jobs
+        const jobs = JSON.parse(localStorage.getItem(KEY+'j') || '[]');
         let i = 0, p = 0;
         const list = document.getElementById('joblist');
         if(list) {
-            list.innerHTML = jb.map(j => {
+            list.innerHTML = jobs.map(j => {
                 i += j.t; if(j.p) p += j.t;
                 return `<div class="job"><div class="tag ${j.p?'tag-paid':'tag-due'}" onclick="tog(${j.id})">${j.p?'PAID':'DUE'}</div><div style="display:flex; justify-content:space-between; font-weight:900;"><span>${j.n}</span><span style="color:#ff6600;">£${j.t.toFixed(2)}</span></div></div>`;
-            }).join('') || '<p style="text-align:center; color:#444;">No history recorded.</p>';
+            }).join('') || '<p style="color:#444;text-align:center;">History is empty.</p>';
         }
         document.getElementById('t-inv').innerText = "£" + i.toFixed(2);
         document.getElementById('t-paid').innerText = "£" + p.toFixed(2);
 
+        // Photos
         const pics = JSON.parse(localStorage.getItem(KEY+'p') || '[]');
         const gal = document.getElementById('gallery');
-        if(gal) gal.innerHTML = pics.map(x => `<div style="aspect-ratio:1; background:#000; border-radius:6px; overflow:hidden; border:1px solid #333;"><img src="${x}" style="width:100%; height:100%; object-fit:cover;"></div>`).join('');
+        if(gal) gal.innerHTML = pics.map(x => `<div class="img-box"><img src="${x}" style="width:100%; height:100%; object-fit:cover;"></div>`).join('');
     }
 
     function save() {
         const val = parseFloat(document.getElementById('tot').innerText.replace('£', '')) || 0;
         const j = { id: Date.now(), n: document.getElementById('cn').value || "Client", t: val, p: false };
-        let jb = JSON.parse(localStorage.getItem(KEY+'j') || '[]');
-        jb.unshift(j); localStorage.setItem(KEY+'j', JSON.stringify(jb));
-        ['cn','dl','h','r','m'].forEach(x => document.getElementById(x).value = "");
+        let jobs = JSON.parse(localStorage.getItem(KEY+'j') || '[]');
+        jobs.unshift(j); localStorage.setItem(KEY+'j', JSON.stringify(jobs));
+        ['cn','dl','h','r','m'].forEach(x => { if(document.getElementById(x)) document.getElementById(x).value = ""; });
         document.getElementById('v').checked = false;
         render();
     }
 
     function tog(id) {
-        let jb = JSON.parse(localStorage.getItem(KEY+'j') || '[]');
-        const i = jb.findIndex(x => x.id === id); jb[i].p = !jb[i].p;
-        localStorage.setItem(KEY+'j', JSON.stringify(jb));
-        render();
+        let jobs = JSON.parse(localStorage.getItem(KEY+'j') || '[]');
+        const idx = jobs.findIndex(x => x.id === id); 
+        if(idx > -1) { jobs[idx].p = !jobs[idx].p; localStorage.setItem(KEY+'j', JSON.stringify(jobs)); render(); }
     }
 
     function up(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = (e) => {
-                let p = JSON.parse(localStorage.getItem(KEY+'p') || '[]');
-                p.unshift(e.target.result);
-                localStorage.setItem(KEY+'p', JSON.stringify(p.slice(0, 3)));
-                render();
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    // CLOCK RUNS INDEPENDENTLY AT THE BOTTOM
-    setInterval(() => {
-        const d = new Date();
-        const c = document.getElementById('live-clock');
-        if(c) c.innerText = d.toLocaleTimeString('en-GB');
-    }, 1000);
-
-    window.onload = () => {
-        ['sn', 'sb', 'sc', 'an'].forEach(i => {
-            const el = document.getElementById(i);
-            if(el) el.value = gt(i);
-        });
-        render();
-    };
-</script>
-</body>
-</html>
+                let p = JSON.parse(localStorage.
