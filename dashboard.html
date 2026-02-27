@@ -7,8 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --toolbox-orange: #FF9500; --bg-midnight: #141D36; }
-        
-        /* NUCLEAR RESET TO ENSURE VISIBILITY */
         * { border: none !important; box-shadow: none !important; outline: none !important; }
 
         body { 
@@ -21,120 +19,99 @@
             flex-direction: column; 
             align-items: center;
             min-height: 100vh;
-            position: relative;
         }
 
-        /* FIXED CHAT WIDGET - TOP PRIORITY */
-        .global-chat-widget {
+        /* PERSISTENT CHAT WIDGET */
+        .chat-fab {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            width: 65px;
-            height: 65px;
-            background-color: var(--toolbox-orange) !important;
+            width: 60px;
+            height: 60px;
+            background: var(--toolbox-orange);
             border-radius: 50% !important;
-            display: flex !important;
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
+            font-size: 28px;
             cursor: pointer;
-            z-index: 999999 !important; /* Forces it above everything */
-            box-shadow: 0 10px 30px rgba(255, 149, 0, 0.5) !important;
+            z-index: 9999;
+            box-shadow: 0 10px 25px rgba(255, 149, 0, 0.4) !important;
         }
 
-        .dashboard-shell { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 12px; }
+        .dashboard-v3-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 12px; }
 
-        /* BRANDING: TOOLBOX (Orange) PAY (White) */
-        .brand-header { text-align: center; padding: 30px 0 15px 0; background: transparent !important; }
-        .text-orange { font-size: 42px; font-weight: 900; color: var(--toolbox-orange); text-transform: uppercase; letter-spacing: -0.05em; }
-        .text-white { font-size: 42px; font-weight: 900; color: #FFFFFF; text-transform: uppercase; letter-spacing: -0.05em; }
-        .brand-tag { font-size: 10px; font-weight: 900; color: #94A3B8; letter-spacing: 0.3em; text-transform: uppercase; margin-top: 5px; }
+        .brand-header-v3 { text-align: center; padding: 30px 0 15px 0; }
+        .logo-t { font-size: 42px; font-weight: 900; color: var(--toolbox-orange); text-transform: uppercase; }
+        .logo-p { font-size: 42px; font-weight: 900; color: #FFFFFF; text-transform: uppercase; }
+        .tag-v3 { font-size: 10px; font-weight: 900; color: #94A3B8; letter-spacing: 0.3em; text-transform: uppercase; margin-top: 5px; }
 
-        /* MENU CARDS */
-        .menu-link {
+        .nav-item-v3 {
             background: rgba(30, 41, 59, 0.4);
             border: 1px solid rgba(255, 149, 0, 0.2) !important;
             border-radius: 20px !important;
-            padding: 20px;
+            padding: 18px;
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 15px;
             text-decoration: none;
             color: inherit;
-            transition: 0.2s ease-in-out;
+            transition: 0.2s;
         }
+        .nav-item-v3:hover { border-color: var(--toolbox-orange) !important; background: rgba(30, 41, 59, 0.6); }
 
-        .menu-link:hover { 
-            background: rgba(30, 41, 59, 0.6); 
-            border-color: var(--toolbox-orange) !important;
-            transform: translateY(-2px);
-        }
-
-        .icon-container {
-            width: 52px;
-            height: 52px;
-            background: rgba(255, 149, 0, 0.1);
-            border-radius: 14px !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .label-stack { display: flex; flex-direction: column; }
-        .label-title { font-size: 16px; font-weight: 900; text-transform: uppercase; color: #FFFFFF; }
-        .label-desc { font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-top: 2px; }
+        .icon-v3 { width: 50px; height: 50px; background: rgba(255, 149, 0, 0.1); border-radius: 14px !important; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+        .title-v3 { font-size: 15px; font-weight: 900; text-transform: uppercase; color: #FFFFFF; }
+        .desc-v3 { font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-top: 2px; }
     </style>
 </head>
 <body>
 
-    <div class="global-chat-widget" onclick="alert('Opening Help Chat...')">
-        💬
-    </div>
+    <div class="chat-fab" onclick="alert('Support Chat Opening...')">💬</div>
 
-    <div class="dashboard-shell">
-        <div class="brand-header">
-            <span class="text-orange">TOOLBOX</span><span class="text-white">PAY</span>
-            <p class="brand-tag">Command Centre</p>
+    <div class="dashboard-v3-container">
+        <div class="brand-header-v3">
+            <span class="logo-t">TOOLBOX</span><span class="logo-p">PAY</span>
+            <p class="tag-v3">Command Centre</p>
         </div>
 
-        <a href="index.html" class="menu-link">
-            <div class="icon-container">💰</div>
-            <div class="label-stack">
-                <span class="label-title">New Settlement</span>
-                <span class="label-desc">Calculate labour & costs</span>
+        <a href="index.html" class="nav-item-v3">
+            <div class="icon-v3">💰</div>
+            <div>
+                <div class="title-v3">New Settlement</div>
+                <div class="desc-v3">Calculate labour & costs</div>
             </div>
         </a>
 
-        <a href="photos.html" class="menu-link">
-            <div class="icon-container">📸</div>
-            <div class="label-stack">
-                <span class="label-title">Photos & Evidence</span>
-                <span class="label-desc">Site photos & documentation</span>
+        <a href="photos.html" class="nav-item-v3">
+            <div class="icon-v3">📸</div>
+            <div>
+                <div class="title-v3">Photos & Evidence</div>
+                <div class="desc-v3">Site images & records</div>
             </div>
         </a>
 
-        <a href="history.html" class="menu-link">
-            <div class="icon-container">📜</div>
-            <div class="label-stack">
-                <span class="label-title">Job History</span>
-                <span class="label-desc">View previous work records</span>
+        <a href="history.html" class="nav-item-v3">
+            <div class="icon-v3">📜</div>
+            <div>
+                <div class="title-v3">Job History</div>
+                <div class="desc-v3">Archive of previous work</div>
             </div>
         </a>
 
-        <a href="profile.html" class="menu-link">
-            <div class="icon-container">⚒️</div>
-            <div class="label-stack">
-                <span class="label-title">Business Profile</span>
-                <span class="label-desc">Bank details & QR code</span>
+        <a href="profile.html" class="nav-item-v3">
+            <div class="icon-v3">⚒️</div>
+            <div>
+                <div class="title-v3">Business Profile</div>
+                <div class="desc-v3">Bank details & QR Code</div>
             </div>
         </a>
 
-        <a href="lock.html" class="menu-link">
-            <div class="icon-container">🔒</div>
-            <div class="label-stack">
-                <span class="label-title">Lock System</span>
-                <span class="label-desc">Secure local records</span>
+        <a href="lock.html" class="nav-item-v3">
+            <div class="icon-v3">🔒</div>
+            <div>
+                <div class="title-v3">Lock System</div>
+                <div class="desc-v3">Secure your local data</div>
             </div>
         </a>
     </div>
