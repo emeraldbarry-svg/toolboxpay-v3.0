@@ -3,207 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v35.0 - DESC</title>
+    <title>toolboxpay v36.0 - ATOMIC</title>
     <style>
         :root { --org: #ff6600; --bg: #0b0b0b; --card: #161616; }
-
-        html, body { 
-            background: var(--bg) !important; 
-            margin: 0; padding: 0; height: 100vh;
-            display: flex; justify-content: center; align-items: flex-start;
-            font-family: Arial, sans-serif; color: white;
-            overflow: hidden; 
-        }
-
-        .app-layer {
-            background: var(--card);
-            width: 380px; height: 92vh;
-            margin-top: 15px; border: 1px solid #333;
-            border-radius: 20px; padding: 25px;
-            box-sizing: border-box; 
-            position: absolute; 
-            display: none;
-            z-index: 1;
-        }
-        .active-layer { display: flex !important; flex-direction: column; z-index: 10; }
-
-        .logo { color: var(--org); font-weight: 900; font-size: 24px; text-align: center; margin-bottom: 25px; pointer-events: none; }
+        html, body { background: var(--bg); margin: 0; padding: 0; height: 100vh; font-family: Arial, sans-serif; color: white; display: flex; justify-content: center; align-items: flex-start; overflow: hidden; }
+        #app { background: var(--card); width: 380px; height: 92vh; margin-top: 15px; border: 1px solid #333; border-radius: 20px; padding: 25px; box-sizing: border-box; display: flex; flex-direction: column; position: relative; }
+        .logo { color: var(--org); font-weight: 900; font-size: 24px; text-align: center; margin-bottom: 25px; }
         .logo span { color: #fff; }
-
-        .btn { 
-            width: 100%; padding: 18px; margin-bottom: 12px; 
-            background: #222; border: 1px solid #444; border-radius: 12px; 
-            font-size: 16px; font-weight: bold; text-align: left; 
-            color: var(--org); cursor: pointer; display: flex;
-            justify-content: space-between; align-items: center;
-        }
+        .btn { width: 100%; padding: 18px; margin-bottom: 12px; background: #222; border: 1px solid #444; border-radius: 12px; font-size: 16px; font-weight: bold; text-align: left; color: var(--org); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .btn-org { background: var(--org) !important; color: #000 !important; border: none; justify-content: center; text-transform: uppercase; }
-        
-        .back-target { 
-            background: none; border: 1px solid var(--org); color: var(--org); 
-            text-align: center; padding: 12px; margin-bottom: 20px; 
-            width: 100%; border-radius: 10px; cursor: pointer; font-weight: bold;
-        }
-
-        input, textarea, select { 
-            width: 100%; padding: 15px; margin-bottom: 12px; 
-            border: 1px solid #333; background: #000; color: #fff; 
-            border-radius: 8px; font-size: 16px; box-sizing: border-box; 
-        }
-
+        .back-btn { background: none; border: 1px solid var(--org); color: var(--org); text-align: center; padding: 12px; margin-bottom: 20px; width: 100%; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 15px; margin-bottom: 12px; border: 1px solid #333; background: #000; color: #fff; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
         .vat-bar { background: #222; border: 1px solid #333; border-radius: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; }
         .vat-on { border-color: var(--org); background: #2a1500; }
         .dot { width: 35px; height: 18px; background: #444; border-radius: 10px; }
         .vat-on .dot { background: var(--org); }
-
         .total { text-align: right; font-size: 40px; font-weight: 900; color: var(--org); margin: 10px 0; }
-        .paper { background: #fff; color: #000; padding: 25px; border-radius: 5px; font-size: 14px; line-height: 1.5; overflow-y: auto; }
-        .del-x { background: #311; color: #f55; border: 1px solid #522; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+        .paper { background: #fff; color: #000; padding: 25px; border-radius: 5px; font-size: 14px; line-height: 1.5; }
+        .del { background: #311; color: #f55; border: 1px solid #522; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div id="L_MENU" class="app-layer active-layer">
-        <div class="logo">toolbox<span>pay</span></div>
-        <button class="btn" onclick="openL('L_CALC')">NEW QUOTE <span>→</span></button>
-        <button class="btn" onclick="openL('L_HIST'); drawH();">HISTORY <span>→</span></button>
-        <button class="btn" onclick="openL('L_SET')">BUSINESS SETUP <span>→</span></button>
-        <button class="btn" onclick="openL('L_BANK')">BANK DETAILS <span>→</span></button>
-        <button onclick="localStorage.clear(); location.reload();" style="margin-top:auto; background:none; border:none; color:#333; cursor:pointer; font-size:10px;">[ FORCE SYSTEM RESET ]</button>
-    </div>
-
-    <div id="L_CALC" class="app-layer">
-        <button class="back-target" onclick="openL('L_MENU')">← BACK TO MENU</button>
-        <input type="text" id="q_n" placeholder="Client Name">
-        <textarea id="q_d" placeholder="Description of Labour" style="height:60px;"></textarea>
-        <div style="display:flex; gap:10px;">
-            <input type="number" id="q_h" placeholder="Hours" oninput="math()" style="flex:1;">
-            <input type="number" id="q_r" placeholder="Rate" oninput="math()" style="flex:1;">
-        </div>
-        <input type="number" id="q_m" placeholder="Materials" oninput="math()">
-        <div id="v_bar" class="vat-bar" onclick="vTog()">
-            <span id="v_t" style="color:#777; font-weight:bold;">ADD 20% VAT</span>
-            <div class="dot"></div>
-        </div>
-        <div id="q_tot" class="total">£0.00</div>
-        <button class="btn btn-org" onclick="save()">SAVE QUOTE</button>
-    </div>
-
-    <div id="L_HIST" class="app-layer">
-        <button class="back-target" onclick="openL('L_MENU')">← BACK</button>
-        <div id="h_list"></div>
-    </div>
-
-    <div id="L_SET" class="app-layer">
-        <button class="back-target" onclick="openL('L_MENU')">← BACK</button>
-        <input type="text" id="s_bn" placeholder="Business Name" oninput="st('bn', this.value)">
-        <textarea id="s_ba" placeholder="Business Address" oninput="st('ba', this.value)" style="height:60px;"></textarea>
-        <select id="s_cu" onchange="st('cu', this.value)">
-            <option value="£">GBP (£)</option>
-            <option value="$">USD ($)</option>
-            <option value="€">EUR (€)</option>
-        </select>
-    </div>
-
-    <div id="L_BANK" class="app-layer">
-        <button class="back-target" onclick="openL('L_MENU')">← BACK</button>
-        <input type="text" id="s_b1" placeholder="Account Name" oninput="st('b1', this.value)">
-        <input type="text" id="s_b2" placeholder="Sort Code" oninput="st('b2', this.value)">
-        <input type="text" id="s_b3" placeholder="Account Number" oninput="st('b3', this.value)">
-    </div>
-
-    <div id="L_VIEW" class="app-layer">
-        <button class="back-target" onclick="openL('L_HIST')">← BACK TO LIST</button>
-        <div id="v_out" class="paper"></div>
-        <button class="btn btn-org" style="margin-top:15px" onclick="window.print()">PRINT / PDF</button>
-    </div>
+    <div id="app"></div>
 
     <script>
-        const KEY = "tb_v35_";
+        const KEY = "tb_v36_";
         let hasV = false;
 
         function st(k, v) { localStorage.setItem(KEY+k, v); }
         function gt(k) { return localStorage.getItem(KEY+k) || ""; }
 
-        function openL(id) {
-            const layers = document.getElementsByClassName('app-layer');
-            for(let i=0; i<layers.length; i++) {
-                layers[i].classList.remove('active-layer');
+        // THE ATOMIC ENGINE - Clears the screen and rebuilds it to prevent freezes
+        function render(view) {
+            const root = document.getElementById('app');
+            root.innerHTML = `<div class="logo">toolbox<span>pay</span></div>`;
+            
+            if (view === 'menu') {
+                root.innerHTML += `
+                    <button class="btn" onclick="render('calc')">NEW QUOTE <span>→</span></button>
+                    <button class="btn" onclick="render('hist')">HISTORY <span>→</span></button>
+                    <button class="btn" onclick="render('set')">BUSINESS SETUP <span>→</span></button>
+                    <button class="btn" onclick="render('bank')">BANK DETAILS <span>→</span></button>
+                    <button onclick="localStorage.clear(); location.reload();" style="margin-top:auto; background:none; border:none; color:#333; cursor:pointer; font-size:10px;">[ ATOMIC RESET ]</button>
+                `;
+            } 
+            else if (view === 'calc') {
+                root.innerHTML += `
+                    <button class="back-btn" onclick="render('menu')">← BACK</button>
+                    <input type="text" id="q_n" placeholder="Client Name">
+                    <textarea id="q_d" placeholder="Description of Labour" style="height:60px;"></textarea>
+                    <div style="display:flex; gap:10px;"><input type="number" id="q_h" placeholder="Hours" oninput="math()" style="flex:1;"><input type="number" id="q_r" placeholder="Rate" oninput="math()" style="flex:1;"></div>
+                    <input type="number" id="q_m" placeholder="Materials" oninput="math()">
+                    <div id="v_bar" class="vat-bar ${hasV?'vat-on':''}" onclick="vTog()">
+                        <span style="color:${hasV?'var(--org)':'#777'}; font-weight:bold;">ADD 20% VAT</span>
+                        <div class="dot"></div>
+                    </div>
+                    <div id="q_tot" class="total">${gt('cu')||'£'}0.00</div>
+                    <button class="btn btn-org" onclick="save()">SAVE QUOTE</button>
+                `;
             }
-            document.getElementById(id).classList.add('active-layer');
-        }
-
-        function vTog() {
-            hasV = !hasV;
-            document.getElementById('v_bar').classList.toggle('vat-on', hasV);
-            document.getElementById('v_t').style.color = hasV ? 'var(--org)' : '#777';
-            math();
-        }
-
-        function math() {
-            let cur = gt('cu') || '£';
-            let h = Number(document.getElementById('q_h').value) || 0;
-            let r = Number(document.getElementById('q_r').value) || 0;
-            let m = Number(document.getElementById('q_m').value) || 0;
-            let tot = (h * r) + m;
-            if(hasV) tot *= 1.2;
-            document.getElementById('q_tot').innerText = cur + tot.toFixed(2);
-        }
-
-        function save() {
-            let data = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
-            data.unshift({
-                id: Date.now(),
-                n: document.getElementById('q_n').value || 'Client',
-                d: document.getElementById('q_d').value || 'Service provided',
-                t: document.getElementById('q_tot').innerText,
-                date: new Date().toLocaleDateString('en-GB')
-            });
-            localStorage.setItem(KEY+'data', JSON.stringify(data.slice(0,30)));
-            openL('L_MENU');
-        }
-
-        function drawH() {
-            let data = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
-            document.getElementById('h_list').innerHTML = data.map(j => `
-                <div style="display:flex; gap:10px; margin-bottom:12px;">
-                    <button class="btn" style="flex:1; margin-bottom:0;" onclick="view(${j.id})">
-                        ${j.n} <span style="font-size:11px; opacity:0.5;">${j.t}</span>
-                    </button>
-                    <button class="del-x" onclick="del(${j.id})">X</button>
-                </div>
-            `).join('') || '<p style="text-align:center; opacity:0.3;">Empty.</p>';
-        }
-
-        function del(id) {
-            if(!confirm("Delete?")) return;
-            let data = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
-            localStorage.setItem(KEY+'data', JSON.stringify(data.filter(x => x.id !== id)));
-            drawH();
-        }
-
-        function view(id) {
-            let j = JSON.parse(localStorage.getItem(KEY+'data') || '[]').find(x => x.id === id);
-            if(!j) return;
-            document.getElementById('v_out').innerHTML = `
-                <center><strong>QUOTE</strong></center><hr>
-                <strong>FROM:</strong><br>${gt('bn') || 'Business Name'}<br>${gt('ba')}<br><br>
-                <strong>TO:</strong> ${j.n}<br>
-                <strong>DATE:</strong> ${j.date}<br><br>
-                <strong>DESCRIPTION:</strong><br>${j.d}<br>
-                <div style="font-size:28px; font-weight:bold; color:var(--org); text-align:right; margin:20px 0;">TOTAL: ${j.t}</div><hr>
-                <strong>BANK DETAILS:</strong><br>
-                Acc: ${gt('b1')}<br>Sort: ${gt('b2')}<br>No: ${gt('b3')}
-            `;
-            openL('L_VIEW');
-        }
-
-        window.onload = function() {
-            ['bn','ba','b1','b2','b3','cu'].forEach(k => {
-                if(document.getElementById('s_'+k)) document.getElementById('s_'+k).value = gt(k);
-            });
-            math();
-        };
-    </script>
-</body>
-</html>
+            else if (view === 'hist') {
+                let data = JSON.parse(localStorage.getItem(KEY+'data') || '
