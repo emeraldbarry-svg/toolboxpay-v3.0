@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v8.6 [FIXED NAVIGATION]</title>
+    <title>toolboxpay v8.7 [ULTRA STABLE]</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; --inp: #162130; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; }
+        body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; overflow-x: hidden; }
         .shell { width: 100%; max-width: 360px; }
         
         .logo { text-align: center; margin: 10px 0 25px 0; font-size: 26px; font-weight: 800; }
         .logo span { color: var(--org); }
         .logo em { color: #fff; font-style: normal; }
         
-        .screen { display: none; }
-        .active { display: block !important; }
+        /* THE STABILITY FIX: VISIBILITY OVER NAVIGATION */
+        .screen { display: none; width: 100%; }
+        .screen.active { display: block !important; }
 
-        .tile { background: var(--crd); padding: 22px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; text-decoration: none; color: inherit; }
+        .tile { background: var(--crd); padding: 22px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .tile h3 { color: var(--org); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; font-weight: 800; }
         
         .back-btn { display: block; width: 100%; padding: 14px; border: 2px solid var(--org); color: var(--org); background: rgba(255,102,0,0.1); border-radius: 8px; font-weight: 800; text-align: center; cursor: pointer; text-transform: uppercase; font-size: 12px; margin-bottom: 20px; }
 
         .tag { color: var(--org); font-size: 10px; font-weight: 800; text-transform: uppercase; margin: 15px 0 8px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 4px; }
-        input, textarea, select { width: 100%; padding: 16px; background: var(--inp); border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 8px; font-size: 16px; outline: none; }
+        input, textarea, select { width: 100%; padding: 16px; background: var(--inp); border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 8px; font-size: 16px; outline: none; display: block; }
         
         .total-box { border: 2px solid var(--org); padding: 20px; border-radius: 12px; text-align: right; background: rgba(255,102,0,0.1); margin: 15px 0; }
         .price { color: #fff; font-size: 30px; font-weight: 800; }
@@ -78,33 +79,4 @@
         <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba',this.value)" style="height:80px;"></textarea>
         
         <div class="tag">CONTACT INFORMATION</div>
-        <input type="tel" id="bp" placeholder="Phone Number" oninput="localStorage.setItem('bp',this.value)">
-        <input type="email" id="be" placeholder="Email Address" oninput="localStorage.setItem('be',this.value)">
-        <input type="text" id="bw" placeholder="Website" oninput="localStorage.setItem('bw',this.value)">
-    </div>
-
-    <div id="scr-bank" class="screen">
-        <div class="back-btn" onclick="go('scr-dash')">← BACK</div>
-        <div class="tag">BANK DETAILS</div>
-        <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
-        <input type="text" id="bk-s" placeholder="Sort Code / Routing" oninput="localStorage.setItem('bk-s',this.value)">
-        <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
-    </div>
-
-    <div id="scr-calc" class="screen">
-        <div class="back-btn" onclick="go('scr-dash')">← BACK</div>
-        <input type="text" id="cust-name" placeholder="Customer Name">
-        <input type="number" id="h" placeholder="Hours" oninput="runMath()">
-        <input type="number" id="r" placeholder="Rate" oninput="runMath()">
-        <input type="number" id="m" placeholder="Materials" oninput="runMath()">
-        
-        <div style="background: var(--crd); padding: 18px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--org); margin-bottom:12px;">
-            <span style="font-weight:800; font-size:13px; color:#fff;">ADD VAT (20%)</span>
-            <input type="checkbox" id="vat-toggle" onchange="runMath()" style="width:22px; height:22px;">
-        </div>
-        
-        <div class="total-box">
-            <div id="res-total" class="price">£0.00</div>
-        </div>
-        
-        <button class="btn-main" onclick="saveJob()">SAVE
+        <input type="tel" id="bp" placeholder="Phone Number" oninput="
