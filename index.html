@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v8.4</title>
+    <title>toolboxpay - v8.5</title>
     <style>
-        /* CORE THEME & BRANDING [cite: 2020-02-20, 2026-02-21] */
+        /* CORE THEME [cite: 2020-02-20] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             background: #4a4a4a; 
@@ -25,7 +25,7 @@
             position: relative;
         }
 
-        /* LIVE CLOCK - TOP RIGHT [cite: 2026-02-27] */
+        /* PERFECTED CLOCK */
         #live-clock {
             position: absolute;
             top: 25px;
@@ -37,7 +37,7 @@
             font-family: monospace;
         }
 
-        /* LOGO */
+        /* BRANDING */
         .header { text-align: center; padding: 25px 0 15px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
@@ -46,7 +46,7 @@
         .view { display: none; width: 100%; }
         .view.active { display: block; }
 
-        /* DASHBOARD STACK */
+        /* VERTICAL STACK */
         .stack { display: flex; flex-direction: column; gap: 15px; }
         .tile {
             background: #222; border-radius: 20px; padding: 20px;
@@ -61,7 +61,7 @@
         }
         .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* NAV ELEMENTS */
+        /* SUB-PAGE STYLES */
         .nav-header { padding: 10px 0 20px 0; }
         .back-btn { 
             background: #000; color: #ff6600; border: 2px solid #ff6600; 
@@ -69,8 +69,6 @@
             cursor: pointer; text-transform: uppercase; font-size: 11px;
             width: fit-content;
         }
-
-        /* CARDS */
         .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; }
         h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; }
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
@@ -80,16 +78,11 @@
         }
         .total-display { font-size: 58px; font-weight: 900; color: #ff6600; text-align: right; margin: 5px 0; }
 
-        /* BUTTONS [cite: 2026-02-27] */
+        /* WHATSAPP BUTTON [cite: 2026-02-27] */
         .btn-wa { 
             width: 100%; background: #25D366; color: #000; padding: 20px; border: none; 
             border-radius: 15px; font-weight: 900; font-size: 14px; text-transform: uppercase; 
             cursor: pointer; margin-bottom: 10px;
-        }
-        .btn-save { 
-            width: 100%; background: #ff6600; color: #000; padding: 20px; border: none; 
-            border-radius: 15px; font-weight: 900; font-size: 14px; text-transform: uppercase; 
-            cursor: pointer;
         }
     </style>
 </head>
@@ -103,94 +96,84 @@
             <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         </div>
         <div class="stack">
-            <div class="tile" onclick="openP('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
-            <div class="tile" onclick="openP('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
-            <div class="tile" onclick="openP('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
-            <div class="tile" onclick="openP('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
-            <div class="tile" onclick="openP('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
+            <div class="tile" onclick="go('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
+            <div class="tile" onclick="go('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
+            <div class="tile" onclick="go('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
+            <div class="tile" onclick="go('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
+            <div class="tile" onclick="go('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
         </div>
     </div>
 
     <div id="view-quote" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="openP('view-home')">← DASHBOARD</div></div>
+        <div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div>
         <div class="card">
             <h2>New Quote</h2>
             <label>Client Name</label><input type="text" id="c-name">
             <label>Labour Description</label><textarea id="l-desc" style="height:80px;"></textarea>
-            <label>Total Price (£)</label><input type="number" id="p-in" oninput="upP()">
+            <label>Total Price (£)</label><input type="number" id="p-in" oninput="up()">
             <div class="total-display" id="q-total">£0.00</div>
             <button class="btn-wa" onclick="waQ()">Send via WhatsApp</button>
-            <button class="btn-save" onclick="openP('view-home')">Save Job</button>
+            <button class="back-btn" style="width:100%; padding:15px;" onclick="go('view-home')">Save Job</button>
         </div>
     </div>
 
     <div id="view-bank" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="openP('view-home')">← DASHBOARD</div></div>
+        <div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div>
         <div class="card">
             <h2>Bank Setup</h2>
             <label>Business Name</label><input type="text" id="b-name" oninput="sv('bn',this.value)">
             <label>Bank Name</label><input type="text" id="b-bank" oninput="sv('bk',this.value)">
             <label>Sort Code</label><input type="text" id="b-sort" oninput="sv('sc',this.value)">
             <label>Account No.</label><input type="text" id="b-acc" oninput="sv('an',this.value)">
-            <button class="btn-wa" style="margin-top:10px;" onclick="waB()">Share via WhatsApp</button>
+            <button class="btn-wa" onclick="waB()">Share via WhatsApp</button>
         </div>
     </div>
 
-    <div id="view-calc" class="view"><div class="nav-header"><div class="back-btn" onclick="openP('view-home')">← DASHBOARD</div></div><div class="card"><h2>Calculator</h2></div></div>
-    <div id="view-history" class="view"><div class="nav-header"><div class="back-btn" onclick="openP('view-home')">← DASHBOARD</div></div><div class="card"><h2>History</h2></div></div>
-    <div id="view-readme" class="view"><div class="nav-header"><div class="back-btn" onclick="openP('view-home')">← DASHBOARD</div></div><div class="card"><h2>Read Me</h2><p>v8.4 Master Build [cite: 2026-02-27]</p></div></div>
+    <div id="view-calc" class="view"><div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div><div class="card"><h2>Calculator</h2></div></div>
+    <div id="view-history" class="view"><div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div><div class="card"><h2>History</h2></div></div>
+    <div id="view-readme" class="view"><div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div><div class="card"><h2>Read Me</h2><p>v8.5 Perfected.</p></div></div>
 
 </div>
 
 <script>
-    const STORAGE_KEY = "TBP_V84_MASTER";
+    const K = "TBP_V85_MASTER";
 
-    // CLOCK LOGIC [cite: 2026-02-27]
-    function updateClock() {
-        const now = new Date();
-        const t = now.getHours().toString().padStart(2, '0') + ":" + 
-                  now.getMinutes().toString().padStart(2, '0') + ":" + 
-                  now.getSeconds().toString().padStart(2, '0');
+    function tick() {
+        const n = new Date();
+        const t = n.getHours().toString().padStart(2, '0') + ":" + 
+                  n.getMinutes().toString().padStart(2, '0') + ":" + 
+                  n.getSeconds().toString().padStart(2, '0');
         const el = document.getElementById('live-clock');
         if (el) el.innerText = t;
     }
-    setInterval(updateClock, 1000);
+    setInterval(tick, 1000);
 
-    // NAVIGATION
-    function openP(id) {
-        const v = document.getElementsByClassName('view');
-        for (let i = 0; i < v.length; i++) { v[i].classList.remove('active'); }
+    function go(id) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         window.scrollTo(0,0);
     }
 
-    // PERSISTENCE [cite: 2026-02-26, 2026-02-27]
-    function sv(k, v) { localStorage.setItem(STORAGE_KEY + k, v); }
-    function gt(k) { return localStorage.getItem(STORAGE_KEY + k) || ""; }
+    function sv(k, v) { localStorage.setItem(K + k, v); }
+    function gt(k) { return localStorage.getItem(K + k) || ""; }
 
-    function upP() {
-        const val = parseFloat(document.getElementById('p-in').value) || 0;
-        document.getElementById('q-total').innerText = "£" + val.toFixed(2);
+    function up() {
+        const v = parseFloat(document.getElementById('p-in').value) || 0;
+        document.getElementById('q-total').innerText = "£" + v.toFixed(2);
     }
 
-    // WHATSAPP [cite: 2026-02-27]
     function waQ() {
-        const client = document.getElementById('c-name').value || "Client";
-        const desc = document.getElementById('l-desc').value || "Labour";
-        const total = document.getElementById('q-total').innerText;
-        const biz = gt('bn') || "toolboxpay";
-        const msg = `Hi ${client}, quote from ${biz}:\n\nLabour: ${desc}\nTotal: ${total}`;
+        const msg = `Quote from ${gt('bn') || "toolboxpay"}:\nLabour: ${document.getElementById('l-desc').value}\nTotal: ${document.getElementById('q-total').innerText}`;
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     function waB() {
-        const biz = gt('bn') || "Business";
-        const msg = `Bank Details for ${biz}:\nBank: ${gt('bk')}\nSort Code: ${gt('sc')}\nAccount No: ${gt('an')}`;
+        const msg = `Bank Details for ${gt('bn') || "Business"}:\nBank: ${gt('bk')}\nSort: ${gt('sc')}\nAcc: ${gt('an')}`;
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     window.onload = function() {
-        updateClock();
+        tick();
         document.getElementById('b-name').value = gt('bn');
         document.getElementById('b-bank').value = gt('bk');
         document.getElementById('b-sort').value = gt('sc');
