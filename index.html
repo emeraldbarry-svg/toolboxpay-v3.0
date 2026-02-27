@@ -3,30 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v5.4</title>
+    <title>toolboxpay v5.5</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; overflow-x: hidden; }
+        body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; }
         .shell { width: 100%; max-width: 360px; }
         
-        .emergency-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .reset-link { color: #444; font-size: 10px; text-decoration: none; cursor: pointer; border: 1px solid #222; padding: 4px 8px; border-radius: 4px; }
-
         .logo { text-align: center; margin-bottom: 20px; font-size: 26px; font-weight: 800; }
         .logo span { color: var(--org); }
         
         #back-btn { display: none; width: 100%; padding: 12px; border: 1px solid var(--org); color: var(--org); background: none; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 15px; }
 
-        .screen { display: none; opacity: 0; transition: opacity 0.2s ease-in; }
-        .active { display: block !important; opacity: 1; }
+        .screen { display: none; }
+        .active { display: block !important; }
 
         .tile { background: var(--crd); padding: 20px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .tile h3 { color: var(--org); text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
         .tile p { font-size: 11px; color: #8892b0; margin-top: 3px; }
 
         .tag { color: var(--org); font-size: 10px; font-weight: 800; text-transform: uppercase; margin: 15px 0 8px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 4px; }
-        input, textarea { width: 100%; padding: 14px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 10px; border-radius: 8px; font-size: 16px; outline: none; }
+        input, textarea { width: 100%; padding: 14px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 10px; border-radius: 8px; font-size: 16px; outline: none; display: block; }
         
         .total-box { border: 2px solid var(--org); padding: 18px; border-radius: 12px; text-align: right; background: rgba(255,102,0,0.05); margin: 15px 0; }
         .price { color: var(--org); font-size: 24px; font-weight: 800; }
@@ -41,20 +38,15 @@
 <body>
 
 <div class="shell">
-    <div class="emergency-row">
-        <div class="reset-link" onclick="location.reload(true)">REFRESH</div>
-        <div class="reset-link" onclick="hardReset()">FORCE DASHBOARD</div>
-    </div>
-    
     <button id="back-btn" onclick="go('dash')">← BACK TO DASHBOARD</button>
 
-    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #8892b0;">v5.4</small></div>
+    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #8892b0;">v5.5</small></div>
 
     <div id="scr-dash" class="screen active">
         <div class="tile" onclick="go('calc')"><div><h3>Labour & Materials</h3><p>New Quote</p></div><span>→</span></div>
         <div class="tile" onclick="go('hist')"><div><h3>Job History</h3><p>Manage Logs</p></div><span>→</span></div>
-        <div class="tile" onclick="go('biz')"><div><h3>Business Details</h3><p>Auto-saves info</p></div><span>→</span></div>
-        <div class="tile" onclick="go('bank')"><div><h3>Bank Details</h3><p>Auto-saves info</p></div><span>→</span></div>
+        <div class="tile" onclick="go('biz')"><div><h3>Business Details</h3><p>Saved automatically</p></div><span>→</span></div>
+        <div class="tile" onclick="go('bank')"><div><h3>Bank Details</h3><p>Saved automatically</p></div><span>→</span></div>
     </div>
 
     <div id="scr-calc" class="screen">
@@ -64,20 +56,4 @@
         <input type="number" id="r" placeholder="Rate (£)" oninput="doMath()" inputmode="decimal">
         <input type="number" id="m" placeholder="Materials (£)" oninput="doMath()" inputmode="decimal">
         <div class="total-box"><span id="res" class="price">£0.00</span></div>
-        <button class="btn-main" onclick="saveJob()">Save Quote</button>
-    </div>
-
-    <div id="scr-hist" class="screen">
-        <div class="stats-box">
-            <div style="font-size: 10px; color: #8892b0;">TOTAL LOGGED VALUE</div>
-            <div id="hist-total" style="font-size: 22px; font-weight: 800; color: var(--org);">£0.00</div>
-        </div>
-        <div id="hist-list"></div>
-        <button class="btn-main" style="background:#222; margin-top:20px; font-size: 10px;" onclick="clearHist()">Clear All History</button>
-    </div>
-
-    <div id="scr-biz" class="screen">
-        <div class="tag">Company</div>
-        <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
-        <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba',this.value)" style="height:80px;"></textarea>
-        <button class="btn
+        <button class="btn-main
