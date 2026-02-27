@@ -3,6 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>toolboxpay</title>
+    <style>
+        :root {
+            --orange: #ff6600;
+            --white: #ffffff;
+            --dark-bg: #0b1521;
+            --card-bg: #1a2635;
+            --border: #233554;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--white);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+        }
+        .container { width: 100%; max-width: 400px; }
+
+        /* Navigation Header */
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        #nav-return {
+            align-self: flex-start;
+            color: var(--orange);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            padding: 5px 0;
+            cursor: pointer;
+            display: none; /* Only visible in Calculator */
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin: 0;
+            user-select: none;
+        }
+        .logo .toolbox { color: var(--orange); }
+
+        /* View Toggle */
+        .view-pane { display: none; }
+        .view-pane.active { display: block; }
+
+        /* Dashboard Styles */
+        .menu-item {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.2s;
+        }
+        .menu-item:hover { border-color: var(--orange); }
+        .menu-item h3 { 
+            margin: 0; 
+            color: var(--orange); 
+            font-size: 16px; 
+            text-transform: uppercase; 
+        }
+        .menu-item p { margin: 4px 0 0 0; font-size: 12px; color: #8892b0; }
+
+        /* Calculator Styles */
+        .category-head {
+            color: var(--orange);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 25px 0 12px 0;
+            border-bottom: 1px solid rgba(255, 102, 0, 0.2);
+            padding-bottom: 6px;
+        }
+        .input-wrap { margin-bottom: 15px; }
+        label { display: block; font-size: 13px; margin-bottom: 8px; }
+        input {
+            width: 100%;
+            padding: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        /* Result Area */
+        .summary-card {
+            background: var(--card-bg);
+            border: 2px solid var(--orange);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .grand-total { font-size: 24px; font-weight: 800; color: var(--orange); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <span id="nav-return" onclick="navigateTo('dashboard-view')">← RETURN TO DASHBOARD</span>
+        <h1 class="logo"><span class="toolbox">toolbox</span>pay</h1>
+    </div>
+
+    <div id="dashboard-view" class="view-pane active">
+        <div class="menu-item" onclick="navigateTo('calculator-view')">
+            <div>
+                <h3>Labour & Materials</h3>
+                <p>Calculate costs and specialising tasks</p>
+            </div>
+            <span style="color:var(--orange); font-size: 18px;">→</span>
+        </div>
+    </div>
+
+    <div id="calculator-view" class="view-pane">
+        <div class="category-head">Labour Costs</div>
+        <div class="input-wrap">
+            <label>Hours worked</label>
+            <input type="number" id="hrs" placeholder="0" oninput="runTotal()">
+        </div>
+        <div class="input-wrap">
+            <label>Hourly rate (£)</label>
+            <input type="number" id="hr-rate" placeholder="0.00" oninput="runTotal()">
+        </div>
+
+        <div class="category-head">Materials</div>
+        <div class="input-wrap">
+            <label>Total material costs (£)</label>
+            <input type="number" id="mat-costs" placeholder="0.00" oninput="runTotal()">
+        </div>
+
+        <div class="summary-card">
+            <span style="font-weight:700; font-size:14px;">TOTAL:</span>
+            <span id="display-total" class="grand-total">£0.00</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function navigateTo(targetId) {
+        // Toggle visibility between Dashboard and Calculator
+        document.getElementById('dashboard-view').classList.remove('active');
+        document.getElementById('calculator-view').classList.remove('active');
+        
+        document.getElementById(targetId).classList.add('active');
+        
+        // Return link logic: only show if NOT on dashboard
+        const returnLink = document.getElementById('nav-return');
+        if (targetId === 'dashboard-view') {
+            returnLink.style.display = 'none';
+        } else {
+            returnLink.style.display = 'block';
+        }
+        window.scrollTo(0,0);
+    }
+
+    function runTotal() {
+        const h = parseFloat(document.getElementById('hrs').value) || 0;
+        const r = parseFloat(document.getElementById('hr-rate').value) || 0;
+        const m = parseFloat(document.getElementById('mat-costs').value) || 0;
+        const total = (h * r) + m;
+        document.getElementById('display-total').innerText = '£' + total.toLocaleString('en-GB', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>toolboxpay - Command Centre</title>
     <style>
         :root {
