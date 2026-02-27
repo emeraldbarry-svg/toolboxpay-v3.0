@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v7.0</title>
+    <title>toolboxpay - v7.1</title>
     <style>
-        /* BRANDING & THEME */
+        /* CORE BRANDING */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             background: #4a4a4a; 
@@ -16,7 +16,7 @@
             justify-content: center;
         }
 
-        /* THE 420PX CONTAINER */
+        /* 420PX MOBILE VIEWPORT */
         #main-container {
             width: 100%;
             max-width: 420px;
@@ -30,8 +30,8 @@
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* TILES */
-        .stack { display: flex; flex-direction: column; gap: 15px; padding-bottom: 40px; }
+        /* DASHBOARD TILES */
+        .stack { display: flex; flex-direction: column; gap: 15px; padding-bottom: 50px; }
         .tile {
             background: #222;
             border-radius: 20px;
@@ -50,7 +50,7 @@
         }
         .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* PAGES */
+        /* SUB-PAGE ELEMENTS */
         .back-btn { 
             background: #000; color: #ff6600; border: 2px solid #ff6600; 
             padding: 10px 15px; border-radius: 8px; font-weight: 900; 
@@ -63,14 +63,21 @@
         }
         h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; }
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
+        
         input, textarea { 
             width: 100%; background: #000; border: 1px solid #333; color: #fff; 
             padding: 18px; border-radius: 15px; margin-bottom: 20px; outline: none; font-size: 16px; 
         }
+        
         .total-box { font-size: 64px; font-weight: 900; color: #ff6600; text-align: right; margin: 15px 0; }
+        
         .save-btn { 
             width: 100%; background: #ff6600; color: #000; padding: 22px; border: none; 
             border-radius: 18px; font-weight: 900; font-size: 20px; text-transform: uppercase; cursor: pointer;
+        }
+
+        .history-item {
+            border-bottom: 1px solid #333; padding: 15px 0; display: flex; justify-content: space-between;
         }
     </style>
 </head>
@@ -80,13 +87,13 @@
     </div>
 
 <script>
-    const K = "TBP_V70_FULL";
+    const K = "TBP_V71_FINAL";
 
-    // STORAGE
+    // PERSISTENCE
     function st(k, v) { localStorage.setItem(K + k, v); }
     function gt(k) { return localStorage.getItem(K + k) || ""; }
 
-    // DASHBOARD
+    // 1. DASHBOARD VIEW
     function goHome() {
         document.getElementById('main-container').innerHTML = `
             <div class="header">
@@ -95,52 +102,4 @@
             <div class="stack">
                 <div class="tile" onclick="goQuotes()"><div class="icon-box">📝</div><span>Job Quotes</span></div>
                 <div class="tile" onclick="goCalc()"><div class="icon-box">🧮</div><span>Calculator</span></div>
-                <div class="tile" onclick="goHistory()"><div class="icon-box">📜</div><span>Job History</span></div>
-                <div class="tile" onclick="goBank()"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
-                <div class="tile" onclick="goReadMe()"><div class="icon-box">📖</div><span>Read Me</span></div>
-            </div>
-        `;
-    }
-
-    // NEW QUOTE
-    function goQuotes() {
-        document.getElementById('main-container').innerHTML = `
-            <div class="back-btn" onclick="goHome()">← DASHBOARD</div>
-            <div class="card">
-                <h2>New Quote</h2>
-                <label>Client Name</label><input type="text" id="cn">
-                <label>Labour Description</label><textarea id="dl" style="height:100px;"></textarea>
-                <label>Price (£)</label><input type="number" id="tp" oninput="document.getElementById('qv').innerText='£'+(parseFloat(this.value)||0).toFixed(2)">
-                <div class="total-box" id="qv">£0.00</div>
-                <button class="save-btn" onclick="goHome()">SAVE JOB</button>
-            </div>
-        `;
-    }
-
-    // CALCULATOR
-    function goCalc() {
-        document.getElementById('main-container').innerHTML = `
-            <div class="back-btn" onclick="goHome()">← DASHBOARD</div>
-            <div class="card">
-                <h2>Calculator</h2>
-                <label>Hours</label><input type="number" id="ch" oninput="runC()">
-                <label>Rate (£)</label><input type="number" id="cr" oninput="runC()">
-                <div class="total-box" id="cv">£0.00</div>
-            </div>
-        `;
-    }
-    function runC() {
-        const h = parseFloat(document.getElementById('ch').value)||0;
-        const r = parseFloat(document.getElementById('cr').value)||0;
-        document.getElementById('cv').innerText = "£" + (h*r).toFixed(2);
-    }
-
-    // BANK SETUP
-    function goBank() {
-        document.getElementById('main-container').innerHTML = `
-            <div class="back-btn" onclick="goHome()">← DASHBOARD</div>
-            <div class="card">
-                <h2>Business & Bank Setup</h2>
-                <label>Business Name</label><input type="text" value="${gt('sn')}" oninput="st('sn',this.value)">
-                <label>Bank Name</label><input type="text" value="${gt('sb')}" oninput="st('sb',this.value)">
-                <label>Sort Code</label><input type="text" value="${gt('sc')}" oninput="st('sc',this.value)">
+                <div class="tile" onclick="goHistory()"><div class="icon-box">📜</div><span>Job
