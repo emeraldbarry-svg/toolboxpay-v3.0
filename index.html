@@ -16,13 +16,29 @@
             background-color: var(--dark-bg);
             color: var(--white);
             margin: 0;
-            padding: 40px 20px;
+            padding: 20px;
             display: flex;
             justify-content: center;
         }
         .container {
             width: 100%;
             max-width: 550px;
+        }
+
+        /* Restored Navigation */
+        .top-nav {
+            margin-bottom: 20px;
+        }
+        .return-link {
+            color: var(--orange);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .return-link:hover {
+            text-decoration: underline;
         }
 
         /* Branding Section - Clean, No Boxes */
@@ -118,6 +134,10 @@
 <body>
 
 <div class="container">
+    <div class="top-nav">
+        <a href="index.html" class="return-link">← Return to Dashboard</a>
+    </div>
+
     <div class="branding">
         <div class="logo-text"><span class="toolbox">toolbox</span><span class="pay">pay</span></div>
         <div class="tagline">Calculate Labour & Costs</div>
@@ -153,7 +173,6 @@
 </div>
 
 <script>
-    // Load saved data on page start
     window.onload = function() {
         const fields = ['tradingName', 'accHolder', 'sortCode', 'accNumber'];
         fields.forEach(field => {
@@ -164,7 +183,6 @@
         });
     };
 
-    // Save data to Local Storage
     function saveDetails() {
         const fields = ['tradingName', 'accHolder', 'sortCode', 'accNumber'];
         fields.forEach(field => {
