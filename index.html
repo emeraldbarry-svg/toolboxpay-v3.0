@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v4.6</title>
+    <title>toolboxpay v4.7</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -30,7 +30,7 @@
 
 <div class="shell">
     <button id="nav-back" class="back-btn" onclick="show('dash')">← BACK TO DASHBOARD</button>
-    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #8892b0;">v4.6</small></div>
+    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #8892b0;">v4.7</small></div>
 
     <div id="scr-dash" class="screen active">
         <div class="tile" onclick="show('calc')"><div><h3>Labour & Materials</h3><p>Calculate & quote</p></div><span>→</span></div>
@@ -52,6 +52,8 @@
     </div>
 
     <div id="scr-sum" class="screen">
+        <button id="copy-btn" class="btn-main" onclick="copy()" style="margin-bottom:15px; background:#25D366;">COPY FOR WHATSAPP</button>
+        
         <div class="summary-card">
             <h2 id="s-biz" style="color:#000; margin-bottom:5px; font-size:18px;"></h2>
             <div id="s-addr" style="font-size:11px; color:#666; margin-bottom:12px; line-height:1.4;"></div>
@@ -61,8 +63,6 @@
             <div class="summary-row" style="border-top:1px solid #eee; margin-top:10px; padding-top:10px; font-weight:800; color:var(--org); font-size:16px;"><span>Total:</span> <span id="s-tot"></span></div>
             <div class="tag" style="color:#999; border-color:#eee; margin-top:15px;">Payment Details</div>
             <div id="s-bank" style="font-size:11px; color:#444; white-space:pre-wrap; background:#f9f9f9; padding:10px; border-radius:6px;"></div>
-            
-            <button id="copy-btn" class="btn-main" onclick="copy()" style="margin-top:20px; font-size:14px;">Copy for WhatsApp</button>
         </div>
         <button class="btn-main" style="background:#1a2635; margin-top:15px;" onclick="show('calc')">Edit Figures</button>
     </div>
@@ -116,7 +116,7 @@
         document.getElementById('s-v-row').style.display = isV ? 'flex' : 'none';
         document.getElementById('s-v-amt').innerText = '£' + vAmt.toLocaleString('en-GB', {minimumFractionDigits: 2});
         document.getElementById('s-tot').innerText = '£' + (sub + vAmt).toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('s-bank').innerText = `Account Name: ${localStorage.getItem('ba-acc') || '---'}\nSort Code: ${localStorage.getItem('ba-srt') || '---'}\nAccount No: ${localStorage.getItem('ba-num') || '---'}`;
+        document.getElementById('s-bank').innerText = `Name: ${localStorage.getItem('ba-acc') || '---'}\nSort: ${localStorage.getItem('ba-srt') || '---'}\nAcc: ${localStorage.getItem('ba-num') || '---'}`;
         show('sum');
     }
 
@@ -129,7 +129,31 @@
         
         const msg = `${b}\nTOTAL: ${t}\n\nBANK DETAILS:\nName: ${acc}\nSort: ${srt}\nAcc: ${num}`;
         
-        navigator.clipboard.writeText(msg).then(() => {
-            const btn = document.getElementById('copy-btn');
-            btn.innerText = 'COPIED!';
-            btn.style.background = '#27
+        // Fail-safe copy method
+        const dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = msg;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+
+        const btn = document.getElementById('copy-btn');
+        btn.innerText = 'COPIED TO CLIPBOARD!';
+        btn.style.background = '#075E54';
+        setTimeout(() => {
+            btn.innerText = 'COPY FOR WHATSAPP';
+            btn.style.background = '#25D366';
+        }, 2000);
+    }
+
+    window.onload = () => {
+        ['bn','ba','ba-acc','ba-srt','ba-num'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.value = localStorage.getItem(id) || '';
+        });
+        show('dash');
+    };
+</script>
+
+</body>
+</html>
