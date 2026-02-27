@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v10.6</title>
+    <title>toolboxpay - v10.7</title>
     <style>
         /* BRANDING & THEME */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -16,45 +16,12 @@
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* VIEW SYSTEM - BULLETPROOF */
+        /* NAVIGATION SYSTEM */
         .view { display: none; width: 100%; }
         #view-home { display: block; } 
 
         /* DASHBOARD TILES */
         .stack { display: flex; flex-direction: column; gap: 12px; }
-        .tile { background: #222; border-radius: 20px; padding: 20px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; }
+        .tile { background: #222; border-radius: 20px; padding: 22px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; }
         .icon-box { width: 50px; height: 50px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 24px; pointer-events: none; }
-        .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; pointer-events: none; }
-
-        /* CARDS & FORMS */
-        .card { background: #1e1e1e; border-radius: 25px; padding: 25px; border: 1px solid #333; margin-top: 10px; }
-        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 12px 18px; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 12px; margin-bottom: 20px; display: inline-block; }
-        
-        h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin-bottom: 20px; font-weight: 900; }
-        label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
-        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; display: block; outline: none; }
-        
-        /* RESULTS */
-        .total-display { font-size: 50px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 15px; }
-        .btn-green { width: 100%; background: #25D366; color: #000; padding: 22px; border: none; border-radius: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 16px; margin-top: 10px; }
-        
-        /* CLIENT LIST STYLE */
-        .cli-row { background: #000; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid #ff6600; display: flex; justify-content: space-between; align-items: center; }
-        .cli-row b { color: #ff6600; display: block; }
-        .cli-row small { color: #888; }
-        .del-btn { color: #ff4444; font-weight: 900; cursor: pointer; padding: 5px; }
-    </style>
-</head>
-<body>
-
-<div id="app-viewport">
-    <div class="header">
-        <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
-    </div>
-
-    <div id="view-home" class="view">
-        <div class="stack">
-            <div class="tile" onclick="openView('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
-            <div class="tile" onclick="openView('view-clients')"><div class="icon-box">👥</div><span>Clients</span></div>
-            <div class="tile" onclick="openView('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
-            <div
+        .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase;
