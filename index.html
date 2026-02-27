@@ -7,27 +7,73 @@
     <style>
         :root { --org: #ff6600; --wht: #ffffff; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--wht); font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; padding: 40px; }
-        .shell { width: 100%; max-width: 380px; text-align: center; }
-        /* toolbox (orange) pay (white) */
-        .logo { font-size: 34px; font-weight: 800; margin-bottom: 35px; }
+        body { 
+            background: var(--bg); 
+            color: var(--wht); 
+            font-family: -apple-system, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh;
+            padding: 40px 20px; 
+        }
+        .shell { width: 100%; max-width: 380px; }
+        
+        /* Branding */
+        .logo { text-align: center; margin-bottom: 35px; font-size: 34px; font-weight: 800; }
         .logo span { color: var(--org); }
-        .btn-back { display: none; color: var(--org); border: 1px solid var(--org); background: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 25px; }
+
+        #back-nav { 
+            display: none; 
+            color: var(--org); 
+            border: 1px solid var(--org); 
+            background: none; 
+            padding: 12px; 
+            width: 100%; 
+            border-radius: 8px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            margin-bottom: 25px; 
+            text-transform: uppercase; 
+        }
+
+        /* Logic: Hidden by default, shown by .active */
         .view { display: none; }
         .active { display: block !important; }
-        .tile { background: var(--crd); padding: 25px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; text-align: left; }
+
+        .tile { 
+            background: var(--crd); 
+            padding: 25px; 
+            border-radius: 12px; 
+            border: 1px solid #233554; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
         .tile h3 { color: var(--org); text-transform: uppercase; font-size: 16px; }
-        .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; text-align: left; }
-        input { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 18px; outline: none; }
+
+        .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
+        input { 
+            width: 100%; 
+            padding: 15px; 
+            background: var(--crd); 
+            border: 1px solid #233554; 
+            color: #fff; 
+            margin-bottom: 15px; 
+            border-radius: 8px; 
+            font-size: 18px; 
+            outline: none; 
+        }
         .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 35px; }
     </style>
 </head>
 <body>
 <div class="shell">
-    <button id="back" class="btn-back" onclick="nav('dash')">← RETURN TO DASHBOARD</button>
+    <button id="back-nav" onclick="swap('dash')">← RETURN TO DASHBOARD</button>
     <div class="logo"><span>toolbox</span>pay</div>
+
     <div id="dash" class="view active">
-        <div class="tile" onclick="nav('calc')">
+        <div class="tile" onclick="swap('calc')">
             <div>
                 <h3>Labour & Materials</h3>
                 <p style="font-size:12px; color:#8892b0; margin-top:4px;">Calculate costs and specialising tasks</p>
@@ -35,26 +81,29 @@
             <span style="color:var(--org); font-weight:bold;">→</span>
         </div>
     </div>
+
     <div id="calc" class="view">
         <div class="tag">Labour Costs</div>
-        <input type="number" id="h" placeholder="Hours worked" oninput="run()">
-        <input type="number" id="r" placeholder="Hourly rate (£)" oninput="run()">
+        <input type="number" id="h" placeholder="Hours worked" oninput="math()">
+        <input type="number" id="r" placeholder="Hourly rate (£)" oninput="math()">
         <div class="tag">Materials</div>
-        <input type="number" id="m" placeholder="Total materials (£)" oninput="run()">
+        <input type="number" id="m" placeholder="Total materials (£)" oninput="math()">
         <div class="total-box">
             <span style="font-weight:800; font-size:12px;">TOTAL:</span>
             <span id="res" style="color:var(--org); font-size:26px; font-weight:800;">£0.00</span>
         </div>
     </div>
 </div>
+
 <script>
-    function nav(id) {
+    function swap(id) {
+        // Force hide all, then show one
         document.getElementById('dash').classList.remove('active');
         document.getElementById('calc').classList.remove('active');
         document.getElementById(id).classList.add('active');
-        document.getElementById('back').style.display = (id === 'calc') ? 'block' : 'none';
+        document.getElementById('back-nav').style.display = (id === 'calc') ? 'block' : 'none';
     }
-    function run() {
+    function math() {
         const h = parseFloat(document.getElementById('h').value) || 0;
         const r = parseFloat(document.getElementById('r').value) || 0;
         const m = parseFloat(document.getElementById('m').value) || 0;
