@@ -64,4 +64,36 @@
         <div class="vat-row"><span>Add VAT (20%)</span><label class="switch"><input type="checkbox" id="vat-toggle" onchange="math()"><span class="slider"></span></label></div>
         <div class="total-box"><div style="display:flex; justify-content: space-between; align-items: center;"><span style="font-weight:800; font-size:12px;">TOTAL:</span><span id="res" class="price">£0.00</span></div><div id="vat-info" style="font-size:12px; color:#8892b0; text-align:right; display:none;">Inc. £0.00 VAT</div></div>
         <button class="btn-main" onclick="genSummary()">View Quote Summary</button>
-        <button class="btn-reset" onclick="resetCalc()">Reset Figures</
+        <button class="btn-reset" onclick="resetCalc()">Reset Figures</button>
+    </div>
+
+    <div id="summary" class="screen">
+        <div class="summary-card"><h2 id="s-biz-name">Quote</h2><div class="summary-row"><span>Labour:</span> <span id="s-labour">£0.00</span></div><div class="summary-row"><span>Materials:</span> <span id="s-materials">£0.00</span></div><div id="s-vat-row" class="summary-row" style="display:none; color:#888;"><span>VAT (20%):</span> <span id="s-vat-amt">£0.00</span></div><div class="summary-total">Total: <span id="s-total">£0.00</span></div><div class="tag" style="color:#666; border-color:#eee; margin-top:20px;">Payment Details</div><div class="summary-row" style="font-size:12px;"><span>Account Name:</span> <span id="s-acc">---</span></div><div class="summary-row" style="font-size:12px;"><span>Sort Code:</span> <span id="s-sort">---</span></div><div class="summary-row" style="font-size:12px;"><span>Account Number:</span> <span id="s-num">---</span></div></div>
+        <button class="btn-reset" style="background:var(--crd); color:white; border:none;" onclick="nav('calc')">Back to Edit</button>
+    </div>
+
+    <div id="biz" class="screen">
+        <div class="tag">Company Information</div>
+        <input type="text" id="biz-name" placeholder="Business Name">
+        <input type="text" id="biz-email" placeholder="Email Address">
+        <input type="text" id="biz-phone" placeholder="Phone Number">
+    </div>
+
+    <div id="bank" class="screen">
+        <div class="tag">Payment Information</div>
+        <input type="text" id="bank-acc" placeholder="Account Name">
+        <input type="text" id="bank-sort" placeholder="Sort Code">
+        <input type="text" id="bank-num" placeholder="Account Number">
+    </div>
+</div>
+
+<script>
+    function nav(id) {
+        document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        document.getElementById('back-btn').style.display = (id === 'dash') ? 'none' : 'block';
+        window.scrollTo(0,0);
+    }
+    function math() {
+        const h = parseFloat(document.getElementById('h').value) || 0, r = parseFloat(document.getElementById('r').value) || 0, m = parseFloat(document.getElementById('m').value) || 0;
+        const sub = (h * r) +
