@@ -18,11 +18,10 @@
         }
         .shell { width: 100%; max-width: 380px; }
         
-        /* Branding */
         .logo { text-align: center; margin-bottom: 35px; font-size: 34px; font-weight: 800; }
         .logo span { color: var(--org); }
 
-        #back-nav { 
+        #nav-back { 
             display: none; 
             color: var(--org); 
             border: 1px solid var(--org); 
@@ -36,9 +35,9 @@
             text-transform: uppercase; 
         }
 
-        /* Logic: Hidden by default, shown by .active */
-        .view { display: none; }
-        .active { display: block !important; }
+        /* Strict switching: Hidden is absolute */
+        .view { display: none !important; visibility: hidden; }
+        .active { display: block !important; visibility: visible; }
 
         .tile { 
             background: var(--crd); 
@@ -69,7 +68,7 @@
 </head>
 <body>
 <div class="shell">
-    <button id="back-nav" onclick="swap('dash')">← RETURN TO DASHBOARD</button>
+    <button id="nav-back" onclick="swap('dash')">← RETURN TO DASHBOARD</button>
     <div class="logo"><span>toolbox</span>pay</div>
 
     <div id="dash" class="view active">
@@ -87,7 +86,7 @@
         <input type="number" id="h" placeholder="Hours worked" oninput="math()">
         <input type="number" id="r" placeholder="Hourly rate (£)" oninput="math()">
         <div class="tag">Materials</div>
-        <input type="number" id="m" placeholder="Total materials (£)" oninput="math()">
+        <input type="number" id="m" placeholder="Total materials (£)" oninput="runmath()">
         <div class="total-box">
             <span style="font-weight:800; font-size:12px;">TOTAL:</span>
             <span id="res" style="color:var(--org); font-size:26px; font-weight:800;">£0.00</span>
@@ -96,13 +95,25 @@
 </div>
 
 <script>
-    function swap(id) {
-        // Force hide all, then show one
-        document.getElementById('dash').classList.remove('active');
-        document.getElementById('calc').classList.remove('active');
-        document.getElementById(id).classList.add('active');
-        document.getElementById('back-nav').style.display = (id === 'calc') ? 'block' : 'none';
+    function swap(targetId) {
+        // 1. Identify both screens
+        const dash = document.getElementById('dash');
+        const calc = document.getElementById('calc');
+        const back = document.getElementById('nav-back');
+
+        // 2. Hard-reset both to hidden first
+        dash.className = 'view';
+        calc.className = 'view';
+
+        // 3. Show only the one we want
+        document.getElementById(targetId).className = 'view active';
+
+        // 4. Toggle back button
+        back.style.display = (targetId === 'calc') ? 'block' : 'none';
+        
+        window.scrollTo(0,0);
     }
+
     function math() {
         const h = parseFloat(document.getElementById('h').value) || 0;
         const r = parseFloat(document.getElementById('r').value) || 0;
