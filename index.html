@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v3.1 Foreman</title>
+    <title>toolboxpay - v3.3 Clockwork</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding-bottom: 100px; }
@@ -13,34 +13,30 @@
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        .card { background: #111; border: 1px solid #222; border-radius: 24px; padding: 25px; margin-bottom: 35px; display: block !important; }
-        h2 { color: #ff6600; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 20px 0; font-weight: 900; }
+        .card { background: #111; border: 1px solid #222; border-radius: 24px; padding: 25px; margin-bottom: 35px; position: relative; }
+        
+        /* HEADER FLEX FOR CLOCK */
+        .card-hd { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; }
+        h2 { color: #ff6600; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin: 0; font-weight: 900; }
+        #liveClock { color: #fff; font-size: 14px; font-weight: 900; font-family: monospace; border: 1px solid #333; padding: 4px 10px; border-radius: 6px; background: #000; }
 
         label { display: block; font-size: 11px; color: #777; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
         input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 16px; outline: none; margin-bottom: 15px; }
 
-        /* DASHBOARD STYLING */
         .dash { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 20px; }
         .stat { flex: 1; background: #000; padding: 15px; border-radius: 12px; border: 1px solid #222; }
         .stat-val { font-size: 20px; font-weight: 900; color: #ff6600; display: block; }
         .stat-lbl { font-size: 9px; color: #555; text-transform: uppercase; font-weight: 800; }
 
-        .vat-row { display: flex; justify-content: space-between; align-items: center; background: #080808; border: 1px solid #222; padding: 12px 18px; border-radius: 14px; margin-bottom: 20px; }
-        .sw { position: relative; width: 44px; height: 22px; }
-        .sw input { opacity: 0; width: 0; height: 0; }
-        .sld { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #333; transition: .3s; border-radius: 20px; }
-        .sld:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background: #fff; transition: .3s; border-radius: 50%; }
-        input:checked + .sld { background: #ff6600; }
-        input:checked + .sld:before { transform: translateX(22px); }
-
-        .big-p { font-size: 58px; font-weight: 900; color: #ff6600; text-align: right; letter-spacing: -3px; margin-bottom: 15px; }
         .btn-m { width: 100%; background: #ff6600; color: #000; padding: 20px; border: none; border-radius: 14px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
-
+        
         .job { padding: 20px 0; border-bottom: 1px solid #222; }
         .tag { display: inline-block; padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 900; margin-bottom: 12px; cursor: pointer; }
         .tag-due { background: #000; color: #ff6600; border: 1px solid #ff6600; }
         .tag-paid { background: #2ecc71; color: #000; }
-        .btn-del { color: #444; background: none; border: none; font-size: 10px; margin-top: 15px; cursor: pointer; font-weight: 700; text-transform: uppercase; }
+
+        .img-wrap { position: relative; aspect-ratio: 1; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid #333; }
+        .ts { position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.7); color: #ff6600; font-size: 8px; padding: 2px 5px; border-radius: 3px; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -49,7 +45,10 @@
     <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
 
     <div class="card">
-        <h2>New Quote</h2>
+        <div class="card-hd">
+            <h2>New Quote</h2>
+            <div id="liveClock">00:00:00</div>
+        </div>
         <label>Client Name</label><input type="text" id="cn">
         <label>Labour Description</label><textarea id="dl" style="height:80px;"></textarea>
         <div style="display:flex; gap:10px;">
@@ -58,12 +57,12 @@
         </div>
         <label>Materials (£)</label><input type="number" id="m" oninput="calc()">
         
-        <div class="vat-row">
-            <span style="font-size:12px; font-weight:900;">ADD VAT (20%)</span>
-            <label class="sw"><input type="checkbox" id="v" onchange="calc()"><span class="sld"></span></label>
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#080808; border:1px solid #222; padding:12px; border-radius:14px; margin-bottom:20px;">
+            <span style="font-size:11px; font-weight:900;">ADD VAT (20%)</span>
+            <input type="checkbox" id="v" onchange="calc()" style="width:20px; height:20px; margin:0;">
         </div>
 
-        <div class="big-p" id="tot">£0.00</div>
+        <div id="tot" style="font-size:58px; font-weight:900; color:#ff6600; text-align:right; margin-bottom:15px;">£0.00</div>
         <button class="btn-m" onclick="save()">Save & Log Job</button>
     </div>
 
@@ -78,39 +77,38 @@
     <div class="card">
         <h2>Financial History</h2>
         <div class="dash">
-            <div class="stat">
-                <span class="stat-lbl">Total Invoiced</span>
-                <span class="stat-val" id="totalInvoiced">£0.00</span>
-            </div>
-            <div class="stat">
-                <span class="stat-lbl">Total Paid</span>
-                <span class="stat-val" id="totalPaid" style="color:#2ecc71;">£0.00</span>
-            </div>
+            <div class="stat"><span class="stat-lbl">Invoiced</span><span class="stat-val" id="tInv">£0.00</span></div>
+            <div class="stat"><span class="stat-lbl">Paid</span><span class="stat-val" id="tPai" style="color:#2ecc71;">£0.00</span></div>
         </div>
         <div id="joblist"></div>
     </div>
 
     <div class="card">
         <h2>Business Setup</h2>
-        <label>Business Name</label><input type="text" id="sn" oninput="st('sn',this.value)">
-        <label>Bank Name</label><input type="text" id="sb" oninput="st('sb',this.value)">
-        <label>Sort Code</label><input type="text" id="sc" oninput="st('sc',this.value)">
-        <label>Account No.</label><input type="text" id="an" oninput="st('an',this.value)">
+        <input type="text" id="sn" placeholder="Business Name" oninput="st('sn',this.value)">
+        <input type="text" id="sb" placeholder="Bank Name" oninput="st('sb',this.value)">
+        <input type="text" id="sc" placeholder="Sort Code" oninput="st('sc',this.value)">
+        <input type="text" id="an" placeholder="Account No." oninput="st('an',this.value)">
     </div>
 </div>
 
 <script>
-    const STORAGE_K = "TBP_V31_FOREMAN";
+    const STORAGE_K = "TBP_V33_CLOCK";
     function st(k,v){ localStorage.setItem(STORAGE_K+k,v); }
     function gt(k){ return localStorage.getItem(STORAGE_K+k) || ""; }
 
+    // REAL TIME CLOCK
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('liveClock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
     function calc() {
-        const hrs = parseFloat(document.getElementById('h').value) || 0;
-        const rte = parseFloat(document.getElementById('r').value) || 0;
-        const mat = parseFloat(document.getElementById('m').value) || 0;
-        let total = (hrs * rte) + mat;
-        if(document.getElementById('v').checked) total *= 1.2;
-        document.getElementById('tot').innerText = "£" + total.toFixed(2);
+        const h = parseFloat(document.getElementById('h').value)||0, r = parseFloat(document.getElementById('r').value)||0, m = parseFloat(document.getElementById('m').value)||0;
+        let t = (h*r)+m; if(document.getElementById('v').checked) t*=1.2;
+        document.getElementById('tot').innerText = "£" + t.toFixed(2);
     }
 
     function up(input) {
@@ -118,75 +116,8 @@
             const reader = new FileReader();
             reader.onload = (e) => {
                 let pics = JSON.parse(localStorage.getItem(STORAGE_K+'pics') || '[]');
-                pics.unshift(e.target.result);
+                pics.unshift({src: e.target.result, ts: new Date().toLocaleString('en-GB', {dateStyle:'short', timeStyle:'short'})});
                 localStorage.setItem(STORAGE_K+'pics', JSON.stringify(pics.slice(0, 6)));
                 drawPics();
             };
             reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function drawPics() {
-        const pics = JSON.parse(localStorage.getItem(STORAGE_K+'pics') || '[]');
-        document.getElementById('gallery').innerHTML = pics.map(p => `<div style="aspect-ratio:1; background:#000; border-radius:8px; overflow:hidden; border:1px solid #333;"><img src="${p}" style="width:100%; height:100%; object-fit:cover;"></div>`).join('');
-    }
-
-    function save() {
-        const val = parseFloat(document.getElementById('tot').innerText.replace('£', '')) || 0;
-        const j = {
-            id: Date.now(),
-            n: document.getElementById('cn').value || "Client",
-            l: document.getElementById('dl').value || "Labour",
-            t: val,
-            d: new Date().toLocaleDateString('en-GB'),
-            p: false
-        };
-        let jobs = JSON.parse(localStorage.getItem(STORAGE_K+'jobs') || '[]');
-        jobs.unshift(j);
-        localStorage.setItem(STORAGE_K+'jobs', JSON.stringify(jobs));
-        ['cn','dl','h','r','m'].forEach(i => document.getElementById(i).value = "");
-        document.getElementById('v').checked = false;
-        document.getElementById('tot').innerText = "£0.00";
-        render();
-    }
-
-    function toggleStatus(id) {
-        let jobs = JSON.parse(localStorage.getItem(STORAGE_K+'jobs') || '[]');
-        const i = jobs.findIndex(x => x.id === id);
-        jobs[i].p = !jobs[i].p;
-        localStorage.setItem(STORAGE_K+'jobs', JSON.stringify(jobs));
-        render();
-    }
-
-    function render() {
-        const jobs = JSON.parse(localStorage.getItem(STORAGE_K+'jobs') || '[]');
-        let invTotal = 0;
-        let paidTotal = 0;
-
-        document.getElementById('joblist').innerHTML = jobs.map(j => {
-            invTotal += j.t;
-            if(j.p) paidTotal += j.t;
-            return `
-            <div class="job">
-                <div class="tag ${j.p ? 'tag-paid' : 'tag-due'}" onclick="toggleStatus(${j.id})">${j.p ? 'PAID' : 'DUE'}</div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-weight:900;">${j.n}</span>
-                    <span style="color:#ff6600; font-weight:900; font-size:20px;">£${j.t.toFixed(2)}</span>
-                </div>
-                <div style="font-size:12px; color:#555; margin:4px 0;">${j.d}</div>
-                <button class="btn-del" onclick="if(confirm('Delete?')){let jobs=JSON.parse(localStorage.getItem(STORAGE_K+'jobs')); jobs=jobs.filter(x=>x.id!==${j.id}); localStorage.setItem(STORAGE_K+'jobs', JSON.stringify(jobs)); render();}">Delete Entry</button>
-            </div>`;
-        }).join('') || '<p style="color:#333; text-align:center;">No history.</p>';
-
-        document.getElementById('totalInvoiced').innerText = "£" + invTotal.toFixed(2);
-        document.getElementById('totalPaid').innerText = "£" + paidTotal.toFixed(2);
-    }
-
-    window.onload = () => {
-        ['sn', 'sb', 'sc', 'an'].forEach(i => document.getElementById(i).value = gt(i));
-        drawPics();
-        render();
-    };
-</script>
-</body>
-</html>
