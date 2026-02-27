@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v9.0 [PAYMENT LINK ENABLED]</title>
+    <title>toolboxpay v9.1 [FIXED]</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; --inp: #162130; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -14,8 +14,9 @@
         .logo span { color: var(--org); }
         .logo em { color: #fff; font-style: normal; }
         
+        /* HARD VISIBILITY RULES */
         .screen { display: none !important; }
-        .screen.active { display: block !important; }
+        .active { display: block !important; }
 
         .tile { background: var(--crd); padding: 22px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .tile h3 { color: var(--org); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; font-weight: 800; }
@@ -29,16 +30,12 @@
         .price { color: #fff; font-size: 30px; font-weight: 800; }
         
         .btn-main { width: 100%; padding: 18px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
-        .btn-pay { background: #2ecc71; margin-bottom: 10px; } /* Green for payment */
         
-        .logo-box { background: #000; padding: 25px; border-radius: 10px; border: 2px dashed var(--org); text-align: center; margin-bottom: 15px; }
-        #preview-logo { max-width: 100%; max-height: 80px; display: none; margin: 0 auto 10px auto; }
-
         .summary-card { background: #fff; color: #000; padding: 25px; border-radius: 4px; }
         .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
 
         @media print {
-            .back-btn, .btn-main, .logo, .tag, .logo-box, .tile, .no-print { display: none !important; }
+            .back-btn, .btn-main, .logo, .tag, .tile, .no-print { display: none !important; }
             body { background: white; color: black; padding: 0; }
             .summary-card { border: none; width: 100%; }
         }
@@ -50,19 +47,72 @@
     <div class="logo"><span>toolbox</span><em>pay</em></div>
 
     <div id="scr-dash" class="screen active">
-        <div class="tile" onclick="go('scr-calc')"><div><h3>New Quote</h3></div><span>→</span></div>
-        <div class="tile" onclick="go('scr-hist')"><div><h3>History</h3></div><span>→</span></div>
-        <div class="tile" onclick="go('scr-biz')"><div><h3>Business Setup</h3></div><span>→</span></div>
-        <div class="tile" onclick="go('scr-bank')"><div><h3>Bank Details</h3></div><span>→</span></div>
+        <div class="tile" onclick="sh('scr-calc')"><div><h3>New Quote</h3></div><span>→</span></div>
+        <div class="tile" onclick="sh('scr-hist'); lh();"><div><h3>History</h3></div><span>→</span></div>
+        <div class="tile" onclick="sh('scr-biz')"><div><h3>Business Setup</h3></div><span>→</span></div>
+        <div class="tile" onclick="sh('scr-bank')"><div><h3>Bank Details</h3></div><span>→</span></div>
     </div>
 
     <div id="scr-biz" class="screen">
-        <div class="back-btn" onclick="go('scr-dash')">← BACK</div>
-        <div class="tag">CURRENCY SELECTION</div>
-        <select id="cur" onchange="localStorage.setItem('cur', this.value); updateCurrencyLabels();">
-            <option value="£">British Pound (£)</option>
-            <option value="$">US Dollar ($)</option>
-            <option value="€">Euro (€)</option>
+        <div class="back-btn" onclick="sh('scr-dash')">← BACK</div>
+        <div class="tag">CURRENCY</div>
+        <select id="cur" onchange="localStorage.setItem('cur', this.value); up();">
+            <option value="£">GBP (£)</option>
+            <option value="$">USD ($)</option>
+            <option value="€">EUR (€)</option>
         </select>
-        <div class="tag">BUSINESS LOGO</div>
-        <div class="logo
+        <div class="tag">PROFILE</div>
+        <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
+        <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba',this.value)" style="height:60px;"></textarea>
+        <input type="tel" id="bp" placeholder="Phone" oninput="localStorage.setItem('bp',this.value)">
+        <input type="email" id="be" placeholder="Email" oninput="localStorage.setItem('be',this.value)">
+    </div>
+
+    <div id="scr-bank" class="screen">
+        <div class="back-btn" onclick="sh('scr-dash')">← BACK</div>
+        <div class="tag">BANK DETAILS</div>
+        <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
+        <input type="text" id="bk-s" placeholder="Sort Code" oninput="localStorage.setItem('bk-s',this.value)">
+        <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
+        <div class="tag">PAYMENT LINK</div>
+        <input type="url" id="bk-l" placeholder="Revolut/PayPal Link" oninput="localStorage.setItem('bk-l',this.value)">
+    </div>
+
+    <div id="scr-calc" class="screen">
+        <div class="back-btn" onclick="sh('scr-dash')">← BACK</div>
+        <input type="text" id="cn" placeholder="Customer Name">
+        <input type="number" id="h" placeholder="Hours" oninput="ma()">
+        <input type="number" id="r" placeholder="Rate" oninput="ma()">
+        <input type="number" id="m" placeholder="Materials" oninput="ma()">
+        <div class="total-box"><div id="tot" class="price">£0.00</div></div>
+        <button class="btn-main" onclick="sj()">SAVE QUOTE</button>
+    </div>
+
+    <div id="scr-hist" class="screen">
+        <div class="back-btn" onclick="sh('scr-dash')">← BACK</div>
+        <div id="hl"></div>
+    </div>
+
+    <div id="scr-view" class="screen">
+        <div class="back-btn" onclick="sh('scr-hist')">← BACK</div>
+        <div id="vc" class="summary-card"></div>
+        <div id="pa" class="no-print"></div>
+        <button class="btn-main" onclick="window.print()">PRINT PDF</button>
+    </div>
+</div>
+
+<script>
+    // CORE STABILITY: DIRECT SHOW/HIDE
+    function sh(id) {
+        let s = document.getElementsByClassName('screen');
+        for(let i=0; i<s.length; i++) { s[i].style.setProperty('display', 'none', 'important'); s[i].classList.remove('active'); }
+        document.getElementById(id).style.setProperty('display', 'block', 'important');
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    function cu() { return localStorage.getItem('cur') || '£'; }
+    function up() { document.getElementById('r').placeholder = 'Rate ('+cu()+')'; document.getElementById('m').placeholder = 'Materials ('+cu()+')'; ma(); }
+    
+    function ma() {
+        let h = Number(document.getElementById('h').value)||0, r = Number(document.getElementById('r').value)||0, m = Number(document.getElementById('m').value)||0;
