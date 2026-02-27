@@ -5,125 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>toolboxpay</title>
     <style>
-        :root { --orange: #ff6600; --white: #ffffff; --navy: #0b1521; --card: #1a2635; }
+        :root { --org: #ff6600; --wht: #ffffff; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--wht); font-family: sans-serif; display: flex; justify-content: center; padding: 40px 20px; }
+        .wrapper { width: 100%; max-width: 380px; }
         
-        body { 
-            background-color: var(--navy); 
-            color: var(--white); 
-            font-family: -apple-system, sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            padding: 40px 20px; 
-        }
-
-        .container { width: 100%; max-width: 400px; }
-
         /* Branding */
-        .header { text-align: center; margin-bottom: 30px; }
-        .logo { font-size: 32px; font-weight: 800; }
-        .toolbox { color: var(--orange); }
+        .logo-area { text-align: center; margin-bottom: 30px; font-size: 32px; font-weight: 800; }
+        .logo-area span { color: var(--org); }
 
-        /* Navigation */
-        #back-nav { 
-            display: none; 
-            color: var(--orange); 
-            border: 1px solid var(--orange); 
-            background: none; 
-            padding: 12px; 
-            width: 100%; 
-            border-radius: 8px; 
-            font-weight: 800; 
-            cursor: pointer; 
-            margin-bottom: 20px; 
-        }
+        /* Nav */
+        #top-nav { display: none; color: var(--org); border: 1px solid var(--org); background: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 20px; }
 
-        /* View Switching */
-        .screen-view { display: none; }
-        .screen-active { display: block; }
+        /* Views */
+        .screen { display: none; }
+        .is-visible { display: block; }
 
-        /* Dashboard Item */
-        .menu-item { 
-            background: var(--card); 
-            padding: 25px; 
-            border-radius: 12px; 
-            border: 1px solid #233554; 
-            cursor: pointer; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-        .menu-item h3 { color: var(--orange); text-transform: uppercase; font-size: 16px; }
+        /* Dashboard Tile */
+        .tile { background: var(--crd); padding: 25px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 16px; }
 
-        /* Inputs */
-        .group-label { color: var(--orange); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 5px; }
-        input { 
-            width: 100%; 
-            padding: 15px; 
-            background: var(--card); 
-            border: 1px solid #233554; 
-            color: #fff; 
-            margin-bottom: 15px; 
-            border-radius: 8px; 
-            font-size: 18px; 
-            outline: none; 
-        }
+        /* Calc Styles */
+        .heading { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 5px; }
+        input { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 18px; outline: none; }
 
-        /* Results */
-        .total-banner { border: 2px solid var(--orange); padding: 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
-        .price { color: var(--orange); font-size: 26px; font-weight: 800; }
+        .total-box { border: 2px solid var(--org); padding: 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+        .price-text { color: var(--org); font-size: 26px; font-weight: 800; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <button id="back-nav" onclick="changeView('dash')">← RETURN TO DASHBOARD</button>
-    
-    <div class="header">
-        <h1 class="logo"><span class="toolbox">toolbox</span>pay</h1>
-    </div>
+<div class="wrapper">
+    <button id="top-nav" onclick="toPage('home')">← RETURN TO DASHBOARD</button>
+    <div class="logo-area"><span>toolbox</span>pay</div>
 
-    <div id="dash" class="screen-view screen-active">
-        <div class="menu-item" onclick="changeView('calc')">
+    <div id="home" class="screen is-visible">
+        <div class="tile" onclick="toPage('calc')">
             <div>
                 <h3>Labour & Materials</h3>
                 <p style="font-size:12px; color:#8892b0; margin-top:5px;">Calculate costs and specialising tasks</p>
             </div>
-            <span style="color:var(--orange); font-weight:bold;">→</span>
+            <span style="color:var(--org); font-weight:bold;">→</span>
         </div>
     </div>
 
-    <div id="calc" class="screen-view">
-        <div class="group-label">Labour Costs</div>
-        <input type="number" id="work-hours" placeholder="Hours worked" oninput="calculateTotal()">
-        <input type="number" id="work-rate" placeholder="Hourly rate (£)" oninput="calculateTotal()">
-        
-        <div class="group-label">Materials</div>
-        <input type="number" id="mat-costs" placeholder="Total material costs (£)" oninput="calculateTotal()">
-        
-        <div class="total-banner">
+    <div id="calc" class="screen">
+        <div class="heading">Labour Costs</div>
+        <input type="number" id="v-hrs" placeholder="Hours worked" oninput="vCalc()">
+        <input type="number" id="v-rte" placeholder="Hourly rate (£)" oninput="vCalc()">
+        <div class="heading">Materials</div>
+        <input type="number" id="v-mat" placeholder="Total material costs (£)" oninput="vCalc()">
+        <div class="total-box">
             <span style="font-weight:800; font-size:12px;">TOTAL:</span>
-            <span id="final-sum" class="price">£0.00</span>
+            <span id="v-out" class="price-text">£0.00</span>
         </div>
     </div>
 </div>
 
 <script>
-    // New function names to prevent cache clashing
-    function changeView(screenId) {
-        document.getElementById('dash').classList.remove('screen-active');
-        document.getElementById('calc').classList.remove('screen-active');
+    // Completely fresh function names to kill old cache logic
+    function toPage(pageId) {
+        document.getElementById('home').classList.remove('is-visible');
+        document.getElementById('calc').classList.remove('is-visible');
         
-        document.getElementById(screenId).classList.add('screen-active');
-        document.getElementById('back-nav').style.display = (screenId === 'calc') ? 'block' : 'none';
+        document.getElementById(pageId).classList.add('is-visible');
+        document.getElementById('top-nav').style.display = (pageId === 'calc') ? 'block' : 'none';
+        window.scrollTo(0,0);
     }
 
-    function calculateTotal() {
-        const h = parseFloat(document.getElementById('work-hours').value) || 0;
-        const r = parseFloat(document.getElementById('work-rate').value) || 0;
-        const m = parseFloat(document.getElementById('mat-costs').value) || 0;
+    function vCalc() {
+        const h = parseFloat(document.getElementById('v-hrs').value) || 0;
+        const r = parseFloat(document.getElementById('v-rte').value) || 0;
+        const m = parseFloat(document.getElementById('v-mat').value) || 0;
         const total = (h * r) + m;
-        document.getElementById('final-sum').innerText = '£' + total.toFixed(2);
+        document.getElementById('v-out').innerText = '£' + total.toLocaleString('en-GB', {minimumFractionDigits: 2});
     }
 </script>
 
