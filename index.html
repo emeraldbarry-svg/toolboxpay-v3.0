@@ -26,7 +26,7 @@
             max-width: 550px;
         }
 
-        /* Internal Navigation */
+        /* Fixed Navigation - Toggles view visibility */
         .top-nav {
             margin-bottom: 30px;
             height: 20px;
@@ -38,7 +38,7 @@
             font-weight: 800;
             text-transform: uppercase;
             cursor: pointer;
-            display: none; /* Hidden on main menu */
+            display: none; /* Only visible in sub-views */
         }
 
         /* Branding - Borderless Text Logo */
@@ -60,7 +60,7 @@
         .view-section { display: none; }
         .view-section.active { display: block; }
 
-        /* Dashboard Styles */
+        /* Dashboard Menu Styles */
         .menu-grid {
             display: flex;
             flex-direction: column;
@@ -152,7 +152,7 @@
     </div>
 
     <div id="calculator" class="view-section">
-        <span class="section-label">Labour</span>
+        <span class="section-label">Labour Costs</span>
         <div class="field-group">
             <label>Hours worked</label>
             <input type="number" id="hours" placeholder="0" oninput="calculate()">
@@ -177,10 +177,13 @@
 
 <script>
     function showView(viewId) {
+        // Hide all views
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+        // Show selected view
         document.getElementById(viewId).classList.add('active');
-        document.getElementById('return-btn').style.display = (viewId === 'dashboard') ? 'none' : 'block';
-        window.scrollTo(0,0);
+        // Toggle Return button visibility
+        document.getElementById('return-btn').style.display = (viewId === 'dashboard') ? 'none' : 'inline-block';
+        window.scrollTo(0, 0);
     }
 
     function calculate() {
