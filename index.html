@@ -3,36 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v46.0</title>
+    <title>toolboxpay v47.0</title>
     <style>
-        :root { --o: #ff6600; --b: #000; --g: #1a1a1a; }
-        body { background: var(--b); margin: 0; font-family: sans-serif; color: #fff; overflow: hidden; }
-        
+        /* Zero-Impact CSS to prevent rendering stalls */
+        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; overflow: hidden; }
         #app { width: 100%; max-width: 400px; height: 100vh; margin: 0 auto; display: flex; flex-direction: column; }
         
-        .hdr { padding: 30px 10px; text-align: center; font-weight: 900; font-size: 24px; }
-        .hdr span { color: var(--o); }
+        /* Persistent Header */
+        .hdr { padding: 30px 10px; text-align: center; font-weight: 900; font-size: 24px; border-bottom: 1px solid #222; }
+        .hdr span { color: #ff6600; }
 
-        .view { display: none; flex: 1; overflow-y: auto; padding: 20px; }
+        /* Independent Views */
+        .view { display: none; flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
         .active { display: block; }
 
-        /* INDEPENDENT NAV */
-        .opt { background: var(--g); border: 1px solid #333; padding: 25px; border-radius: 12px; margin-bottom: 10px; color: var(--o); font-weight: 800; display: flex; justify-content: space-between; cursor: pointer; }
+        /* Menu System */
+        .btn-menu { background: #111; border: 1px solid #333; padding: 25px; border-radius: 8px; margin-bottom: 10px; color: #ff6600; font-weight: 800; display: flex; justify-content: space-between; cursor: pointer; text-transform: uppercase; font-size: 13px; }
         
-        .back { color: var(--o); border: 1px solid var(--o); padding: 10px; border-radius: 8px; display: block; text-align: center; margin-bottom: 20px; text-decoration: none; font-size: 12px; font-weight: 800; }
-
-        input, textarea { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #444; background: #000; color: #fff; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        /* Navigation & Forms */
+        .btn-back { color: #ff6600; border: 1px solid #ff6600; padding: 10px; border-radius: 4px; display: block; text-align: center; margin-bottom: 20px; font-size: 11px; font-weight: 800; text-decoration: none; }
         
-        .tax-row { background: var(--g); padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; margin-bottom: 20px; border: 1px solid #333; cursor: pointer; }
-        .tax-row.on { border-color: var(--o); }
-
-        .total { text-align: right; font-size: 50px; font-weight: 900; color: var(--o); margin-bottom: 20px; }
-        .save-btn { width: 100%; padding: 20px; background: var(--o); color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 18px; text-transform: uppercase; }
-
-        .log { background: var(--g); padding: 15px; border-radius: 10px; margin-bottom: 8px; border-left: 4px solid var(--o); display: flex; justify-content: space-between; align-items: center; }
+        h3 { color: #ff6600; font-size: 12px; text-transform: uppercase; margin: 20px 0 10px 0; }
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #333; background: #000; color: #fff; border-radius: 4px; font-size: 16px; box-sizing: border-box; -webkit-appearance: none; }
         
-        #ov { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 100; padding: 20px; box-sizing: border-box; }
-        .paper { background: #fff; color: #000; padding: 25px; height: 90%; overflow-y: auto; }
+        .vat-bar { background: #111; padding: 15px; border-radius: 6px; display: flex; justify-content: space-between; margin: 15px 0; border: 1px solid #333; }
+        .vat-bar.active { border-color: #ff6600; background: #1a0f00; }
+
+        .total-box { text-align: right; font-size: 50px; font-weight: 900; color: #ff6600; margin: 10px 0 20px 0; }
+        .btn-save { width: 100%; padding: 20px; background: #ff6600; color: #000; border: none; border-radius: 8px; font-weight: 900; font-size: 18px; text-transform: uppercase; }
+
+        /* History Listing */
+        .hist-item { background: #111; padding: 15px; border-radius: 6px; margin-bottom: 8px; border-left: 4px solid #ff6600; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Overlay Engine */
+        #ov { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 999; padding: 15px; box-sizing: border-box; }
+        .paper { background: #fff; color: #000; padding: 25px; height: 85%; overflow-y: auto; border-radius: 2px; line-height: 1.4; }
     </style>
 </head>
 <body>
@@ -41,14 +46,14 @@
     <div class="hdr"><span>toolbox</span>pay</div>
 
     <div id="v_menu" class="view active">
-        <div class="opt" onclick="go('q')">New Quote <span>→</span></div>
-        <div class="opt" onclick="go('h')">History <span>→</span></div>
-        <div class="opt" onclick="go('s')">Setup <span>→</span></div>
+        <div class="btn-menu" onclick="go('q')">New Quote <span>→</span></div>
+        <div class="btn-menu" onclick="go('h')">History <span>→</span></div>
+        <div class="btn-menu" onclick="go('s')">Setup <span>→</span></div>
     </div>
 
     <div id="v_q" class="view">
-        <div class="back" onclick="go('menu')">MENU</div>
-        <input type="text" id="q_n" placeholder="Client Name">
-        <textarea id="q_d" placeholder="Description of Labour" style="height:80px"></textarea>
+        <div class="btn-back" onclick="go('menu')">BACK TO MENU</div>
+        <input type="text" id="q_name" placeholder="Client Name">
+        <textarea id="q_desc" placeholder="Description of Labour" style="height:80px"></textarea>
         <div style="display:flex; gap:10px">
-            <input type="number" id="q_h" placeholder="Hours" on
+            <input type="number" id="q_
