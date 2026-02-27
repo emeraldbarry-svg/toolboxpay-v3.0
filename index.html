@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v8.8 [HARD-RESET BUILD]</title>
+    <title>toolboxpay v8.9 [DIRECT-LOAD]</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; --inp: #162130; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; overflow: hidden; position: fixed; width: 100%; }
-        .shell { width: 100%; max-width: 360px; height: 100%; overflow-y: auto; padding-bottom: 50px; }
+        body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; }
+        .shell { width: 100%; max-width: 360px; }
         
         .logo { text-align: center; margin: 10px 0 25px 0; font-size: 26px; font-weight: 800; }
         .logo span { color: var(--org); }
         .logo em { color: #fff; font-style: normal; }
         
-        .screen { display: none; width: 100%; pointer-events: none; opacity: 0; }
-        .screen.active { display: block !important; pointer-events: auto; opacity: 1; }
+        /* HARD OVERRIDE FOR SCREEN VISIBILITY */
+        .screen { display: none !important; }
+        .screen.active { display: block !important; }
 
         .tile { background: var(--crd); padding: 22px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .tile h3 { color: var(--org); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; font-weight: 800; }
@@ -23,7 +24,7 @@
         .back-btn { display: block; width: 100%; padding: 14px; border: 2px solid var(--org); color: var(--org); background: rgba(255,102,0,0.1); border-radius: 8px; font-weight: 800; text-align: center; cursor: pointer; text-transform: uppercase; font-size: 12px; margin-bottom: 20px; }
 
         .tag { color: var(--org); font-size: 10px; font-weight: 800; text-transform: uppercase; margin: 15px 0 8px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 4px; }
-        input, textarea, select { width: 100%; padding: 16px; background: var(--inp); border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 8px; font-size: 16px; outline: none; display: block; }
+        input, textarea, select { width: 100%; padding: 16px; background: var(--inp); border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 8px; font-size: 16px; outline: none; }
         
         .total-box { border: 2px solid var(--org); padding: 20px; border-radius: 12px; text-align: right; background: rgba(255,102,0,0.1); margin: 15px 0; }
         .price { color: #fff; font-size: 30px; font-weight: 800; }
@@ -33,13 +34,12 @@
         .logo-box { background: #000; padding: 25px; border-radius: 10px; border: 2px dashed var(--org); text-align: center; margin-bottom: 15px; }
         #preview-logo { max-width: 100%; max-height: 80px; display: none; margin: 0 auto 10px auto; }
 
-        .summary-card { background: #fff; color: #000; padding: 25px; border-radius: 4px; border: 1px solid #ddd; }
+        .summary-card { background: #fff; color: #000; padding: 25px; border-radius: 4px; }
         .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
 
         @media print {
-            body { position: static; overflow: visible; background: white; color: black; }
-            .shell { max-width: 100%; overflow: visible; }
             .back-btn, .btn-main, .logo, .tag, .logo-box, .tile { display: none !important; }
+            body { background: white; color: black; padding: 0; }
             .summary-card { border: none; width: 100%; }
         }
     </style>
@@ -67,181 +67,3 @@
         <div class="tag">BUSINESS LOGO</div>
         <div class="logo-box">
             <img id="preview-logo" src="" alt="Preview">
-            <input type="file" id="logo-in" accept="image/*" onchange="processLogo(this)" style="display:none">
-            <button class="btn-main" onclick="document.getElementById('logo-in').click()" style="background:#222; font-size:11px; width:auto; padding:12px 25px;">UPLOAD LOGO FILE</button>
-            <p onclick="localStorage.removeItem('user-logo'); location.reload();" style="color:#cc0000; font-size:10px; font-weight:800; margin-top:15px; cursor:pointer;">REMOVE LOGO</p>
-        </div>
-        <div class="tag">COMPANY PROFILE</div>
-        <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
-        <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba',this.value)" style="height:80px;"></textarea>
-        <div class="tag">CONTACT INFORMATION</div>
-        <input type="tel" id="bp" placeholder="Phone Number" oninput="localStorage.setItem('bp',this.value)">
-        <input type="email" id="be" placeholder="Email Address" oninput="localStorage.setItem('be',this.value)">
-        <input type="text" id="bw" placeholder="Website" oninput="localStorage.setItem('bw',this.value)">
-    </div>
-
-    <div id="scr-bank" class="screen">
-        <div class="back-btn" onclick="go('scr-dash')">← BACK</div>
-        <div class="tag">BANK DETAILS</div>
-        <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
-        <input type="text" id="bk-s" placeholder="Sort Code / Routing" oninput="localStorage.setItem('bk-s',this.value)">
-        <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
-    </div>
-
-    <div id="scr-calc" class="screen">
-        <div class="back-btn" onclick="go('scr-dash')">← BACK</div>
-        <input type="text" id="cust-name" placeholder="Customer Name">
-        <input type="number" id="h" placeholder="Hours" oninput="runMath()">
-        <input type="number" id="r" placeholder="Rate" oninput="runMath()">
-        <input type="number" id="m" placeholder="Materials" oninput="runMath()">
-        <div style="background: var(--crd); padding: 18px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--org); margin-bottom:12px;">
-            <span style="font-weight:800; font-size:13px; color:#fff;">ADD VAT (20%)</span>
-            <input type="checkbox" id="vat-toggle" onchange="runMath()" style="width:22px; height:22px;">
-        </div>
-        <div class="total-box"><div id="res-total" class="price">£0.00</div></div>
-        <button class="btn-main" onclick="saveJob()">SAVE QUOTE</button>
-    </div>
-
-    <div id="scr-hist" class="screen">
-        <div class="back-btn" onclick="go('scr-dash')">← BACK</div>
-        <div id="hist-list"></div>
-    </div>
-
-    <div id="scr-view" class="screen">
-        <div class="back-btn" onclick="go('scr-hist')">← BACK</div>
-        <div id="view-content" class="summary-card"></div>
-        <button class="btn-main" onclick="window.print()">PRINT / SAVE PDF</button>
-    </div>
-</div>
-
-<script>
-    // THE UNBREAKABLE NAVIGATION
-    function go(id) {
-        const all = document.querySelectorAll('.screen');
-        all.forEach(s => { s.classList.remove('active'); });
-        
-        const target = document.getElementById(id);
-        if(target) {
-            target.classList.add('active');
-            if(id === 'scr-hist') loadHistory();
-            document.querySelector('.shell').scrollTop = 0;
-        }
-    }
-
-    function getCur() { return localStorage.getItem('cur') || '£'; }
-
-    function updateCurrencyLabels() {
-        const c = getCur();
-        const rateField = document.getElementById('r');
-        const matField = document.getElementById('m');
-        if(rateField) rateField.placeholder = `Rate (${c})`;
-        if(matField) matField.placeholder = `Materials (${c})`;
-        runMath();
-    }
-
-    function processLogo(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                localStorage.setItem('user-logo', e.target.result);
-                renderLogo();
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function renderLogo() {
-        const data = localStorage.getItem('user-logo');
-        const img = document.getElementById('preview-logo');
-        if (data && img) { img.src = data; img.style.display = 'block'; }
-    }
-
-    function runMath() {
-        const h = Number(document.getElementById('h').value) || 0;
-        const r = Number(document.getElementById('r').value) || 0;
-        const m = Number(document.getElementById('m').value) || 0;
-        const total = document.getElementById('vat-toggle').checked ? ((h*r)+m)*1.2 : (h*r)+m;
-        document.getElementById('res-total').innerText = getCur() + total.toFixed(2);
-    }
-
-    function saveJob() {
-        const h = Number(document.getElementById('h').value) || 0;
-        const r = Number(document.getElementById('r').value) || 0;
-        const m = Number(document.getElementById('m').value) || 0;
-        const sub = (h*r)+m;
-        const isVat = document.getElementById('vat-toggle').checked;
-        const total = isVat ? sub * 1.2 : sub;
-        
-        let jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-        jobs.unshift({ 
-            id: Date.now(), 
-            cust: document.getElementById('cust-name').value || 'Client', 
-            h, r, m, sub, isVat, 
-            totalTxt: getCur() + total.toFixed(2), 
-            cur: getCur(), 
-            date: new Date().toLocaleDateString('en-GB') 
-        });
-        localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 50)));
-        go('scr-dash');
-    }
-
-    function loadHistory() {
-        const list = document.getElementById('hist-list');
-        const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-        list.innerHTML = jobs.map(j => `
-            <div class="tile" onclick="viewJob(${j.id})">
-                <div><h3>${j.cust}</h3><p>${j.date} • ${j.totalTxt}</p></div>
-                <span>→</span>
-            </div>
-        `).join('') || '<p style="text-align:center;padding:20px;">No history.</p>';
-    }
-
-    function viewJob(id) {
-        const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-        const j = jobs.find(x => x.id === id);
-        if(!j) return;
-        
-        const logo = localStorage.getItem('user-logo');
-        const bN = localStorage.getItem('bn') || 'Business Name';
-        const bA = localStorage.getItem('ba') || 'Address';
-        const bP = localStorage.getItem('bp') || '';
-        const bE = localStorage.getItem('be') || '';
-        const bW = localStorage.getItem('bw') || '';
-        const bAk = localStorage.getItem('bk-a') || '---';
-        const bS = localStorage.getItem('bk-s') || '---';
-        const bAn = localStorage.getItem('bk-n') || '---';
-        
-        document.getElementById('view-content').innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
-                <div>
-                    <strong style="font-size:16px;">${bN}</strong><br>
-                    <small>${bA}</small><br>
-                    <small>${bP} | ${bE}</small><br>
-                    <small style="color:var(--org); font-weight:bold;">${bW}</small>
-                </div>
-                ${logo ? `<img src="${logo}" style="max-height:60px;">` : ''}
-            </div>
-            <hr style="margin:10px 0; border:0; border-top:1px solid #eee;">
-            <div class="summary-row"><span>Client:</span><strong>${j.cust}</strong></div>
-            <div class="summary-row"><span>Labour:</span><strong>${j.h} hrs @ ${j.cur}${j.r}</strong></div>
-            <div class="summary-row"><span>Materials:</span><strong>${j.cur}${Number(j.m).toFixed(2)}</strong></div>
-            ${j.isVat ? `<div class="summary-row"><span>Tax (20%):</span><strong>${j.cur}${(j.sub*0.2).toFixed(2)}</strong></div>` : ''}
-            <div class="summary-row" style="margin-top:10px; border-top:2px solid #000; padding-top:10px;"><span>Total:</span><strong>${j.totalTxt}</strong></div>
-            <div style="margin-top:15px; font-size:11px; background:#f9f9f9; padding:10px; border:1px solid #eee;">
-                <strong>Payment Details:</strong><br>${bAk} | ${bS} | ${bAn}
-            </div>
-        `;
-        go('scr-view');
-    }
-
-    window.onload = function() {
-        renderLogo();
-        ['bn','ba','bp','be','bw','bk-a','bk-s','bk-n','cur'].forEach(k => {
-            const val = localStorage.getItem(k);
-            if(val && document.getElementById(k)) document.getElementById(k).value = val;
-        });
-        updateCurrencyLabels();
-    };
-</script>
-</body>
-</html>
