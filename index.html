@@ -181,4 +181,18 @@
                 <strong>${localStorage.getItem(DB+'bn') || 'Business'}</strong><br>${localStorage.getItem(DB+'ba') || ''}<hr>
                 Client: ${j.n}<br>Date: ${j.d}<br>
                 <div style="font-size:24px; font-weight:bold; color:var(--orange); text-align:right; margin:15px 0;">Total: ${j.t}</div><hr>
-                Bank: ${localStorage.getItem(DB+'b1') || ''}<br>Sort: ${localStorage.getItem(DB+'b2
+                Bank: ${localStorage.getItem(DB+'b1') || ''}<br>Sort: ${localStorage.getItem(DB+'b2') || ''}<br>Acc: ${localStorage.getItem(DB+'b3') || ''}
+            `;
+            sh('v');
+        }
+
+        window.onload = function() {
+            ['bn','ba','b1','b2','b3','cur'].forEach(k => {
+                var v = localStorage.getItem(DB+k);
+                if(v && document.getElementById('s-'+k)) document.getElementById('s-'+k).value = v;
+            });
+            math();
+        };
+    </script>
+</body>
+</html>
