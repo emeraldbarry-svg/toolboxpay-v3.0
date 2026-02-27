@@ -2,67 +2,88 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v9.3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>toolboxpay v9.4</title>
     <style>
-        body { background: #0b1521; color: white; font-family: sans-serif; padding: 20px; }
-        .logo { color: #ff6600; font-weight: bold; font-size: 24px; text-align: center; margin-bottom: 20px; }
-        .logo span { color: white; }
-        .box { background: #1a2635; padding: 20px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #233554; cursor: pointer; }
-        .btn { background: #ff6600; color: white; padding: 15px; border: none; border-radius: 5px; width: 100%; font-weight: bold; text-transform: uppercase; margin-top: 10px; cursor: pointer; }
-        .back { color: #ff6600; text-decoration: none; display: block; margin-bottom: 20px; font-weight: bold; }
-        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #233554; background: #162130; color: white; font-size: 16px; }
-        .white-card { background: white; color: black; padding: 20px; border-radius: 5px; margin-top: 10px; }
-        .line { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 5px 0; }
-        [hidden] { display: none !important; }
+        body { background: #0b1521; color: white; font-family: sans-serif; margin: 0; padding: 15px; -webkit-text-size-adjust: 100%; }
+        .logo { color: #ff6600; font-weight: 900; font-size: 28px; text-align: center; margin: 10px 0 20px 0; }
+        .logo span { color: white; font-weight: 400; }
+        .tile { background: #1a2635; padding: 25px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #233554; font-weight: bold; color: #ff6600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        .screen { display: none; }
+        .active { display: block !important; }
+        .back { color: #ff6600; font-weight: bold; margin-bottom: 20px; display: inline-block; cursor: pointer; border: 1px solid #ff6600; padding: 10px 20px; border-radius: 5px; }
+        input, textarea, select { width: 100%; padding: 15px; margin: 10px 0; border-radius: 8px; border: 1px solid #233554; background: #162130; color: white; font-size: 16px; display: block; }
+        .btn { background: #ff6600; color: white; padding: 20px; border: none; border-radius: 8px; width: 100%; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .card { background: white; color: black; padding: 20px; border-radius: 5px; margin-top: 15px; line-height: 1.6; }
     </style>
 </head>
 <body>
 
     <div class="logo">toolbox<span>pay</span></div>
 
-    <div id="m">
-        <div class="box" onclick="show('c')">NEW QUOTE →</div>
-        <div class="box" onclick="show('h'); list();">HISTORY →</div>
-        <div class="box" onclick="show('s')">BUSINESS SETUP →</div>
-        <div class="box" onclick="show('b')">BANK DETAILS →</div>
+    <div id="m" class="screen active">
+        <div class="tile" onclick="document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById('c').classList.add('active');">NEW QUOTE →</div>
+        <div class="tile" onclick="document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById('h').classList.add('active'); loadHist();">HISTORY →</div>
+        <div class="tile" onclick="document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById('s').classList.add('active');">BUSINESS SETUP →</div>
+        <div class="tile" onclick="document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById('b').classList.add('active');">BANK DETAILS →</div>
     </div>
 
-    <div id="s" hidden>
-        <div class="back" onclick="show('m')">← BACK</div>
+    <div id="s" class="screen">
+        <div class="back" onclick="location.reload()">← BACK</div>
         <label>Currency</label>
-        <select id="cur" onchange="save('cur', this.value)">
+        <select id="cur" onchange="localStorage.setItem('cur', this.value)">
             <option value="£">GBP (£)</option>
             <option value="$">USD ($)</option>
             <option value="€">EUR (€)</option>
         </select>
-        <label>Business Name</label>
-        <input type="text" id="bn" oninput="save('bn', this.value)">
-        <label>Address</label>
-        <textarea id="ba" oninput="save('ba', this.value)"></textarea>
+        <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn', this.value)">
+        <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba', this.value)"></textarea>
     </div>
 
-    <div id="b" hidden>
-        <div class="back" onclick="show('m')">← BACK</div>
-        <label>Account Name</label>
-        <input type="text" id="b1" oninput="save('b1', this.value)">
-        <label>Sort Code</label>
-        <input type="text" id="b2" oninput="save('b2', this.value)">
-        <label>Account Number</label>
-        <input type="text" id="b3" oninput="save('b3', this.value)">
-        <label>Payment Link</label>
-        <input type="text" id="bl" oninput="save('bl', this.value)">
+    <div id="b" class="screen">
+        <div class="back" onclick="location.reload()">← BACK</div>
+        <input type="text" id="b1" placeholder="Account Name" oninput="localStorage.setItem('b1', this.value)">
+        <input type="text" id="b2" placeholder="Sort Code" oninput="localStorage.setItem('b2', this.value)">
+        <input type="text" id="b3" placeholder="Account Number" oninput="localStorage.setItem('b3', this.value)">
+        <input type="text" id="bl" placeholder="Payment Link" oninput="localStorage.setItem('bl', this.value)">
     </div>
 
-    <div id="c" hidden>
-        <div class="back" onclick="show('m')">← BACK</div>
+    <div id="c" class="screen">
+        <div class="back" onclick="location.reload()">← BACK</div>
         <input type="text" id="cn" placeholder="Customer Name">
-        <input type="number" id="hrs" placeholder="Hours" oninput="math()">
-        <input type="number" id="rte" placeholder="Rate" oninput="math()">
-        <input type="number" id="mat" placeholder="Materials" oninput="math()">
-        <h2 id="out" style="text-align:right">£0.00</h2>
-        <button class="btn" onclick="done()">SAVE QUOTE</button>
+        <input type="number" id="hrs" placeholder="Hours" oninput="doMath()">
+        <input type="number" id="rte" placeholder="Rate" oninput="doMath()">
+        <input type="number" id="mat" placeholder="Materials" oninput="doMath()">
+        <div id="res" style="font-size: 32px; text-align: right; margin: 20px 0; font-weight: bold;">£0.00</div>
+        <button class="btn" onclick="saveQ()">SAVE QUOTE</button>
     </div>
 
-    <div id="h" hidden>
-        <div class="back" onclick="show('m
+    <div id="h" class="screen">
+        <div class="back" onclick="location.reload()">← BACK</div>
+        <div id="h-list"></div>
+    </div>
+
+    <div id="v" class="screen">
+        <div class="back" onclick="document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById('h').classList.add('active');">← BACK</div>
+        <div id="v-cont" class="card"></div>
+        <div id="pay-zone"></div>
+        <button class="btn" onclick="window.print()" style="margin-top:10px;">PRINT PDF</button>
+    </div>
+
+    <script>
+        function doMath() {
+            const c = localStorage.getItem('cur') || '£';
+            const h = Number(document.getElementById('hrs').value)||0;
+            const r = Number(document.getElementById('rte').value)||0;
+            const m = Number(document.getElementById('mat').value)||0;
+            document.getElementById('res').innerText = c + ( (h*r) + m ).toFixed(2);
+        }
+
+        function saveQ() {
+            const c = localStorage.getItem('cur') || '£';
+            const h = Number(document.getElementById('hrs').value)||0;
+            const r = Number(document.getElementById('rte').value)||0;
+            const m = Number(document.getElementById('mat').value)||0;
+            const t = (h*r)+m;
+            let j = JSON.parse(localStorage.getItem('jobs') || '[]');
+            j.unshift({id: Date.
