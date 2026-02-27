@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v6.9</title>
+    <title>toolboxpay v7.0</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -60,7 +60,7 @@
 
 <div class="shell">
     <div id="nav-header"><div class="back-btn" onclick="go('dash')">← BACK TO MAIN MENU</div></div>
-    <div class="logo"><span>toolbox</span><em>pay</em> <small style="font-size: 9px; color: #444;">v6.9</small></div>
+    <div class="logo"><span>toolbox</span><em>pay</em> <small style="font-size: 9px; color: #444;">v7.0</small></div>
 
     <div id="scr-dash" class="screen active">
         <div class="tile" onclick="go('calc')"><div><h3>Labour & Materials</h3><p>New Quote</p></div><span>→</span></div>
@@ -70,3 +70,142 @@
     </div>
 
     <div id="scr-calc" class="screen">
+        <div class="tag">Quote Details</div>
+        <input type="text" id="cust-name" placeholder="Customer Name">
+        <input type="text" id="job-ref" placeholder="Job Reference">
+        <input type="number" id="h" placeholder="Labour Hours" oninput="doMath()" inputmode="decimal">
+        <input type="number" id="r" placeholder="Hourly Rate (£)" oninput="doMath()" inputmode="decimal">
+        <input type="number" id="m" placeholder="Materials Total (£)" oninput="doMath()" inputmode="decimal">
+        
+        <div class="vat-container">
+            <span style="font-size: 13px; font-weight: 800;">ADD VAT (20%)</span>
+            <label class="switch">
+                <input type="checkbox" id="vat-toggle" onchange="doMath()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="total-box">
+            <div id="sub-display" style="font-size: 12px; color: #8892b0; display:none;">Net Subtotal: £0.00</div>
+            <div class="price-label">Total Quote</div>
+            <div id="res-total" class="price">£0.00</div>
+        </div>
+        <button class="btn-main" onclick="saveJob()">Save Quote</button>
+    </div>
+
+    <div id="scr-hist" class="screen">
+        <div class="stats">
+            <div id="hist-total" style="font-size: 24px; font-weight: 800; color: var(--org);">£0.00</div>
+        </div>
+        <div id="hist-list"></div>
+        <button class="btn-main" style="background:#222; margin-top:20px; font-size: 11px;" onclick="clearHist()">Wipe All Records</button>
+    </div>
+
+    <div id="scr-view" class="screen">
+        <div id="view-content" class="summary-card"></div>
+        <button class="btn-main" onclick="window.print()">Print / Save PDF</button>
+        <button class="btn-main" style="background:#333;" onclick="go('hist')">Back</button>
+    </div>
+
+    <div id="scr-biz" class="screen">
+        <div class="tag">Business Profile</div>
+        <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
+        <textarea id="ba" placeholder="Business Address" oninput="localStorage.setItem('ba',this.value)" style="height:100px; width:100%; background:var(--crd); border:1px solid #233554; color:#fff; padding:12px; border-radius:8px;"></textarea>
+        <button class="btn-main" onclick="go('dash')">Save</button>
+    </div>
+
+    <div id="scr-bank" class="screen">
+        <div class="tag">Bank Details</div>
+        <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
+        <input type="text" id="bk-s" placeholder="Sort Code" oninput="localStorage.setItem('bk-s',this.value)">
+        <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
+        <button class="btn-main" onclick="go('dash')">Save</button>
+    </div>
+</div>
+
+<script>
+    function go(id) {
+        var screens = document.getElementsByClassName('screen');
+        for (var i = 0; i < screens.length; i++) { screens[i].classList.remove('active'); }
+        document.getElementById('scr-' + id).classList.add('active');
+        document.getElementById('nav-header').style.display = (id === 'dash') ? 'none' : 'block';
+        if(id === 'hist') loadHist();
+        window.scrollTo(0,0);
+    }
+
+    function doMath() {
+        var h = parseFloat(document.getElementById('h').value) || 0;
+        var r = parseFloat(document.getElementById('r').value) || 0;
+        var m = parseFloat(document.getElementById('m').value) || 0;
+        var sub = (h * r) + m;
+        var isVat = document.getElementById('vat-toggle').checked;
+        var total = isVat ? (sub * 1.20) : sub;
+        document.getElementById('sub-display').style.display = isVat ? 'block' : 'none';
+        document.getElementById('sub-display').innerText = 'Net Subtotal: £' + sub.toFixed(2);
+        document.getElementById('res-total').innerText = '£' + total.toFixed(2);
+    }
+
+    function saveJob() {
+        try {
+            var h = parseFloat(document.getElementById('h').value) || 0;
+            var r = parseFloat(document.getElementById('r').value) || 0;
+            var m = parseFloat(document.getElementById('m').value) || 0;
+            var sub = (h * r) + m;
+            var isVat = document.getElementById('vat-toggle').checked;
+            var vatVal = isVat ? (sub * 0.20) : 0;
+            var total = sub + vatVal;
+
+            var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+            jobs.unshift({ 
+                id: Date.now(), 
+                cust: document.getElementById('cust-name').value || 'Client', 
+                ref: document.getElementById('job-ref').value || 'Job', 
+                h: h, r: r, m: m, sub: sub, vat: vatVal, isVat: isVat,
+                txt: '£' + total.toFixed(2), num: total,
+                date: new Date().toLocaleDateString('en-GB') 
+            });
+            localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 50)));
+            document.getElementById('scr-calc').querySelectorAll('input').forEach(i => i.value = '');
+            document.getElementById('vat-toggle').checked = false;
+            go('dash');
+        } catch(e) { alert('Data error. Wiping history to fix freeze.'); clearHist(); }
+    }
+
+    function loadHist() {
+        var list = document.getElementById('hist-list');
+        var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        var total = 0, html = '';
+        jobs.forEach(j => {
+            total += (j.num || 0);
+            html += `<div class="hist-item" onclick="viewJob(${j.id})">
+                <div style="flex:1"><strong>${j.cust}</strong><br><small>${j.ref} • ${j.txt}</small></div>
+                <button class="del-btn" onclick="event.stopPropagation(); deleteJob(${j.id})">DEL</button>
+            </div>`;
+        });
+        list.innerHTML = html || '<p style="text-align:center;padding:20px;color:#444">No history.</p>';
+        document.getElementById('hist-total').innerText = '£' + total.toFixed(2);
+    }
+
+    function viewJob(id) {
+        var j = JSON.parse(localStorage.getItem('jobs') || '[]').find(x => x.id === id);
+        if(!j) return;
+        var taxHtml = j.isVat ? `<div class="summary-row"><span>VAT (20%):</span><strong>£${j.vat.toFixed(2)}</strong></div>` : '';
+        document.getElementById('view-content').innerHTML = `
+            <strong>${localStorage.getItem('bn') || 'Business'}</strong><hr>
+            <div class="summary-row"><span>Customer:</span><strong>${j.cust}</strong></div>
+            <div class="summary-row"><span>Ref:</span><strong>${j.ref}</strong></div>
+            ${taxHtml}
+            <div class="summary-row" style="font-size:18px;margin-top:10px;border-top:2px solid #000;"><span>Total:</span><strong>${j.txt}</strong></div>`;
+        go('view');
+    }
+
+    function deleteJob(id) {
+        var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        localStorage.setItem('jobs', JSON.stringify(jobs.filter(x => x.id !== id)));
+        loadHist();
+    }
+
+    function clearHist() { localStorage.setItem('jobs', '[]'); location.reload(); }
+
+    window.onload = function() {
+        // FAIL-SAFE: If jobs data is
