@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v6.5</title>
+    <title>toolboxpay v6.6</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; }
         .shell { width: 100%; max-width: 360px; }
         
-        /* Brand Aesthetic */
         .logo { text-align: center; margin: 10px 0 25px 0; font-size: 26px; font-weight: 800; }
         .logo span { color: var(--org); }
         
@@ -36,15 +35,13 @@
         .hist-item { background: var(--crd); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--org); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .del-btn { background: #cc0000; color: white; border: none; padding: 10px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 900; margin-left: 10px; }
 
-        .summary-card { background: #fff; color: #000; padding: 25px; border-radius: 4px; margin-top: 10px; }
+        .summary-card { background: #fff; color: #000; padding: 25px; border-radius: 4px; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
 
-        #repair-kit { display: none; background: #cc0000; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 12px; font-weight: bold; cursor: pointer; }
-
         @media print {
-            body { background: white !important; color: black !important; }
-            #nav-header, .logo, .btn-main, .tag, #repair-kit { display: none !important; }
-            .summary-card { border: none; padding: 0; box-shadow: none; }
+            body { background: white !important; color: black !important; padding: 0; }
+            #nav-header, .logo, .btn-main, .tag { display: none !important; }
+            .summary-card { box-shadow: none; border: none; padding: 0; width: 100%; }
         }
     </style>
 </head>
@@ -52,10 +49,7 @@
 
 <div class="shell">
     <div id="nav-header"><div class="back-btn" onclick="go('dash')">← BACK TO MAIN MENU</div></div>
-
-    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #444;">v6.5</small></div>
-
-    <div id="repair-kit" onclick="fullReset()">⚠️ APP ERROR DETECTED: CLICK TO FIX & RESET</div>
+    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #444;">v6.6</small></div>
 
     <div id="scr-dash" class="screen active">
         <div class="tile" onclick="go('calc')"><div><h3>Labour & Materials</h3><p>New Quote</p></div><span>→</span></div>
@@ -65,52 +59,57 @@
     </div>
 
     <div id="scr-calc" class="screen">
-        <div class="tag">Quote Creator</div>
+        <div class="tag">Create Quote</div>
         <input type="text" id="cust-name" placeholder="Customer Name">
         <input type="text" id="job-ref" placeholder="Job Reference">
         <input type="number" id="h" placeholder="Hours" oninput="doMath()" inputmode="decimal">
         <input type="number" id="r" placeholder="Rate (£)" oninput="doMath()" inputmode="decimal">
         <input type="number" id="m" placeholder="Materials (£)" oninput="doMath()" inputmode="decimal">
         <div class="total-box"><span id="res" class="price">£0.00</span></div>
-        <button class="btn-main" onclick="saveJob()">Save Quote</button>
+        <button class="btn-main" onclick="saveJob()">Save to History</button>
     </div>
 
     <div id="scr-hist" class="screen">
-        <div class="stats"><div id="hist-total" style="font-size: 24px; font-weight: 800; color: var(--org);">£0.00</div></div>
+        <div class="stats">
+            <div style="font-size: 10px; color: #8892b0; margin-bottom: 5px;">TOTAL SAVED REVENUE</div>
+            <div id="hist-total" style="font-size: 24px; font-weight: 800; color: var(--org);">£0.00</div>
+        </div>
         <div id="hist-list"></div>
+        <button class="btn-main" style="background:#222; margin-top:20px; font-size: 11px;" onclick="clearHist()">Wipe All Records</button>
     </div>
 
     <div id="scr-view" class="screen">
+        <div class="tag">Quote Summary</div>
         <div id="view-content" class="summary-card"></div>
         <button class="btn-main" onclick="window.print()">Print / Save PDF</button>
-        <button class="btn-main" style="background:#333;" onclick="go('hist')">Back</button>
+        <button class="btn-main" style="background:#333;" onclick="go('hist')">Back to History</button>
     </div>
 
     <div id="scr-biz" class="screen">
+        <div class="tag">Company Profile</div>
         <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
-        <textarea id="ba" placeholder="Business Address" oninput="localStorage.setItem('ba',this.value)"></textarea>
-        <button class="btn-main" onclick="go('dash')">Save</button>
+        <textarea id="ba" placeholder="Business Address" oninput="localStorage.setItem('ba',this.value)" style="height:100px; width:100%; background:var(--crd); border:1px solid #233554; color:#fff; padding:12px; border-radius:8px;"></textarea>
+        <button class="btn-main" onclick="go('dash')">Save & Return</button>
     </div>
 
     <div id="scr-bank" class="screen">
+        <div class="tag">Bank Details</div>
         <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
         <input type="text" id="bk-s" placeholder="Sort Code" oninput="localStorage.setItem('bk-s',this.value)">
         <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
-        <button class="btn-main" onclick="go('dash')">Save</button>
+        <button class="btn-main" onclick="go('dash')">Save & Return</button>
     </div>
 </div>
 
 <script>
-    // Logic remains identical to v6.4 but with enhanced error catching on Load
     function go(id) {
-        try {
-            var screens = document.getElementsByClassName('screen');
-            for (var i = 0; i < screens.length; i++) { screens[i].classList.remove('active'); }
-            document.getElementById('scr-' + id).classList.add('active');
-            document.getElementById('nav-header').style.display = (id === 'dash') ? 'none' : 'block';
-            if(id === 'hist') loadHist();
-            window.scrollTo(0,0);
-        } catch(e) { document.getElementById('repair-kit').style.display = 'block'; }
+        var screens = document.getElementsByClassName('screen');
+        for (var i = 0; i < screens.length; i++) { screens[i].classList.remove('active'); }
+        var target = document.getElementById('scr-' + id);
+        if(target) target.classList.add('active');
+        document.getElementById('nav-header').style.display = (id === 'dash') ? 'none' : 'block';
+        if(id === 'hist') loadHist();
+        window.scrollTo(0,0);
     }
 
     function doMath() {
@@ -124,41 +123,74 @@
         var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
         jobs.unshift({ 
             id: Date.now(), 
-            cust: document.getElementById('cust-name').value || 'Client', 
-            ref: document.getElementById('job-ref').value || 'Job', 
-            h: document.getElementById('h').value, r: document.getElementById('r').value, m: document.getElementById('m').value,
-            txt: document.getElementById('res').innerText, num: parseFloat(document.getElementById('res').innerText.replace('£','')),
+            cust: document.getElementById('cust-name').value || 'Private Client', 
+            ref: document.getElementById('job-ref').value || 'New Quote', 
+            h: document.getElementById('h').value || 0, 
+            r: document.getElementById('r').value || 0, 
+            m: document.getElementById('m').value || 0, 
+            txt: document.getElementById('res').innerText, 
+            num: parseFloat(document.getElementById('res').innerText.replace('£','')) || 0,
             date: new Date().toLocaleDateString('en-GB') 
         });
-        localStorage.setItem('jobs', JSON.stringify(jobs));
+        localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 50)));
+        document.getElementById('scr-calc').querySelectorAll('input').forEach(i => i.value = '');
         go('dash');
     }
 
     function loadHist() {
         var list = document.getElementById('hist-list');
         var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-        var html = '';
+        var total = 0, html = '';
         jobs.forEach(j => {
+            total += (j.num || 0);
             html += `<div class="hist-item" onclick="viewJob(${j.id})">
-                <div><strong>${j.cust}</strong><br><small>${j.ref}</small></div>
-                <div style="color:var(--org)">${j.txt}</div>
+                <div style="flex:1"><strong>${j.cust || 'Client'}</strong><br><small>${j.ref} • <span style="color:var(--org)">${j.txt}</span></small></div>
+                <button class="del-btn" onclick="event.stopPropagation(); deleteJob(${j.id})">DEL</button>
             </div>`;
         });
-        list.innerHTML = html || 'No quotes saved.';
+        list.innerHTML = html || '<p style="text-align:center;padding:20px;color:#444">No records found.</p>';
+        document.getElementById('hist-total').innerText = '£' + total.toFixed(2);
     }
 
     function viewJob(id) {
-        var j = JSON.parse(localStorage.getItem('jobs')).find(x => x.id === id);
-        document.getElementById('view-content').innerHTML = `<h3>${j.cust}</h3><p>${j.ref}</p><hr>Total: ${j.txt}`;
+        var j = JSON.parse(localStorage.getItem('jobs') || '[]').find(x => x.id === id);
+        if(!j) return;
+        var bN = localStorage.getItem('bn') || 'Business Name';
+        var bA = localStorage.getItem('ba') || 'Address';
+        var bAk = localStorage.getItem('bk-a') || '---';
+        var bS = localStorage.getItem('bk-s') || '---';
+        var bAn = localStorage.getItem('bk-n') || '---';
+        
+        document.getElementById('view-content').innerHTML = `
+            <div style="text-align:right;color:var(--org);font-weight:800;font-size:20px">QUOTE</div>
+            <strong>${bN}</strong><br><small>${bA}</small><hr style="margin:15px 0;border:0;border-top:1px solid #ddd">
+            <div class="summary-row"><span>Customer:</span><strong>${j.cust}</strong></div>
+            <div class="summary-row"><span>Reference:</span><strong>${j.ref}</strong></div>
+            <div class="summary-row"><span>Date:</span><strong>${j.date}</strong></div>
+            <div class="summary-row"><span>Labour:</span><strong>${j.h} hrs @ £${j.r}</strong></div>
+            <div class="summary-row"><span>Materials:</span><strong>£${parseFloat(j.m).toFixed(2)}</strong></div>
+            <div class="summary-row" style="font-size:18px;margin-top:10px;border-top:2px solid #000;padding-top:10px"><span>Total:</span><strong>${j.txt}</strong></div>
+            <div style="margin-top:20px;font-size:11px;color:#333;background:#f9f9f9;padding:10px;border-radius:4px">
+                <strong>Payment Details:</strong><br>${bAk} | Sort: ${bS} | Acc: ${bAn}
+            </div>`;
         go('view');
     }
 
-    function fullReset() { if(confirm('This will wipe all data to fix the freeze. Continue?')) { localStorage.clear(); location.reload(); } }
+    function deleteJob(id) {
+        if(confirm('Delete?')) {
+            var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+            localStorage.setItem('jobs', JSON.stringify(jobs.filter(x => x.id !== id)));
+            loadHist();
+        }
+    }
+
+    function clearHist() { if(confirm('Clear all?')) { localStorage.setItem('jobs', '[]'); loadHist(); } }
 
     window.onload = function() {
-        try {
-            ['bn','ba','bk-a','bk-s','bk-n'].forEach(k => { if(localStorage.getItem(k)) document.getElementById(k).value = localStorage.getItem(k); });
-        } catch(e) { document.getElementById('repair-kit').style.display = 'block'; }
+        ['bn','ba','bk-a','bk-s','bk-n'].forEach(k => {
+            var val = localStorage.getItem(k);
+            if(val && document.getElementById(k)) document.getElementById(k).value = val;
+        });
     };
 </script>
 </body>
