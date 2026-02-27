@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v5.9</title>
+    <title>toolboxpay - v6.0</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
@@ -15,55 +15,55 @@
             overflow-x: hidden;
         }
 
-        /* HEADER & LOGO */
-        .header { text-align: center; padding: 30px 0 10px 0; }
-        .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
+        /* HEADER & CENTERED LOGO */
+        .header { text-align: center; padding: 35px 0 15px 0; }
+        .logo { font-size: 36px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* VERTICAL DASHBOARD STACK */
+        /* VERTICAL STACKED BOXES */
         .stack {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            width: 100%;
-            max-width: 400px;
+            gap: 12px;
+            width: 92%;
+            max-width: 450px;
             margin: 0 auto;
-            padding: 10px 20px 40px 20px;
+            padding-bottom: 50px;
         }
 
-        .tile {
+        .box {
             background: #1e1e1e;
             border: 1px solid #333;
             border-radius: 20px;
-            padding: 25px;
+            padding: 22px;
             display: flex;
             align-items: center;
             cursor: pointer;
             box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-            transition: transform 0.1s;
         }
-        .tile:active { transform: scale(0.98); background: #252525; }
+        .box:active { transform: scale(0.98); background: #252525; }
         
-        /* ICON BOX */
-        .icon-box {
-            width: 50px;
-            height: 50px;
+        /* ICON CIRCLE */
+        .icon-circ {
+            width: 45px;
+            height: 45px;
             background: #000;
-            border-radius: 12px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 20px;
-            font-size: 24px;
+            font-size: 20px;
+            border: 1px solid #333;
         }
 
-        .tile span { 
+        .box span { 
             color: #ff6600; 
             font-weight: 900; 
-            font-size: 16px; 
+            font-size: 15px; 
             text-transform: uppercase; 
-            letter-spacing: 1px; 
+            letter-spacing: 0.5px; 
         }
 
         /* PAGE OVERLAYS */
@@ -83,16 +83,17 @@
             background: #000; color: #ff6600; border: 1px solid #ff6600; 
             padding: 12px 24px; border-radius: 12px; font-weight: 900; 
             width: fit-content; margin-bottom: 25px; cursor: pointer; text-transform: uppercase;
+            font-size: 12px;
         }
 
-        /* CARD STYLE FROM SCREENSHOT */
+        /* INTERNAL CARD STYLE (MATCHING IMAGE_B811F9.PNG) */
         .card { background: #1a1a1a; border-radius: 20px; padding: 25px; border: 1px solid #333; }
-        h2 { color: #ff6600; font-size: 16px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; }
+        h2 { color: #ff6600; font-size: 15px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; letter-spacing: 1px; }
         
-        label { display: block; font-size: 11px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
+        label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
         input, textarea { 
             width: 100%; background: #000; border: 1px solid #333; color: #fff; 
-            padding: 18px; border-radius: 12px; margin-bottom: 20px; outline: none; font-size: 16px; 
+            padding: 16px; border-radius: 12px; margin-bottom: 18px; outline: none; font-size: 16px; 
         }
 
         .save-btn { 
@@ -111,56 +112,56 @@
     </div>
     
     <div class="stack">
-        <div class="tile" onclick="openP('quotes')">
-            <div class="icon-box">📝</div>
+        <div class="box" onclick="openPage('quotes')">
+            <div class="icon-circ">📝</div>
             <span>Job Quotes</span>
         </div>
         
-        <div class="tile" onclick="openP('calc')">
-            <div class="icon-box">🧮</div>
+        <div class="box" onclick="openPage('calc')">
+            <div class="icon-circ">🧮</div>
             <span>Calculator</span>
         </div>
         
-        <div class="tile" onclick="openP('history')">
-            <div class="icon-box">📜</div>
+        <div class="box" onclick="openPage('history')">
+            <div class="icon-circ">📜</div>
             <span>Job History</span>
         </div>
         
-        <div class="tile" onclick="openP('bank')">
-            <div class="icon-box">🏦</div>
+        <div class="box" onclick="openPage('bank')">
+            <div class="icon-circ">🏦</div>
             <span>Bank Setup</span>
         </div>
         
-        <div class="tile" onclick="openP('readme')">
-            <div class="icon-box">📖</div>
+        <div class="box" onclick="openPage('readme')">
+            <div class="icon-circ">📖</div>
             <span>Read Me</span>
         </div>
     </div>
 </div>
 
 <div id="quotes" class="page">
-    <div class="back-btn" onclick="closeP()">← Dashboard</div>
+    <div class="back-btn" onclick="closePage()">← BACK TO DASHBOARD</div>
     <div class="card">
-        <h2>Job Quotes</h2>
+        <h2>New Quote</h2>
         <label>Client Name</label><input type="text" id="cn">
         <label>Labour Description</label><textarea id="dl" style="height:100px;"></textarea>
-        <button class="save-btn" onclick="saveJ()">Save Job</button>
+        <button class="save-btn" onclick="saveJob()">Save Job</button>
     </div>
 </div>
 
 <div id="calc" class="page">
-    <div class="back-btn" onclick="closeP()">← Dashboard</div>
+    <div class="back-btn" onclick="closePage()">← BACK TO DASHBOARD</div>
     <div class="card">
         <h2>Calculator</h2>
-        <label>Hours</label><input type="number" id="h" oninput="runC()">
-        <label>Rate (£)</label><input type="number" id="r" oninput="runC()">
-        <label>Materials (£)</label><input type="number" id="m" oninput="runC()">
+        <label>Hours</label><input type="number" id="h" oninput="runTotal()">
+        <label>Rate (£)</label><input type="number" id="r" oninput="runTotal()">
+        <label>Materials (£)</label><input type="number" id="m" oninput="runTotal()">
         <div id="big-total">£0.00</div>
     </div>
 </div>
 
 <div id="history" class="page">
-    <div class="back-btn" onclick="closeP()">← Dashboard</div>
+    <div class="back-btn" onclick="closePage()">← BACK TO DASHBOARD</div>
     <div class="card">
         <h2>History</h2>
         <div id="joblist"></div>
@@ -168,49 +169,15 @@
 </div>
 
 <div id="bank" class="page">
-    <div class="back-btn" onclick="closeP()">← Dashboard</div>
+    <div class="back-btn" onclick="closePage()">← BACK TO DASHBOARD</div>
     <div class="card">
         <h2>Bank Details</h2>
-        <label>Business Name</label><input type="text" id="sn" oninput="saveB('sn',this.value)">
-        <label>Bank Name</label><input type="text" id="sb" oninput="saveB('sb',this.value)">
-        <label>Sort Code</label><input type="text" id="sc" oninput="saveB('sc',this.value)">
-        <label>Account No.</label><input type="text" id="an" oninput="saveB('an',this.value)">
+        <label>Business Name</label><input type="text" id="sn" oninput="persist('sn',this.value)">
+        <label>Bank Name</label><input type="text" id="sb" oninput="persist('sb',this.value)">
+        <label>Sort Code</label><input type="text" id="sc" oninput="persist('sc',this.value)">
+        <label>Account No.</label><input type="text" id="an" oninput="persist('an',this.value)">
     </div>
 </div>
 
 <div id="readme" class="page">
-    <div class="back-btn" onclick="closeP()">← Dashboard</div>
-    <div class="card">
-        <h2>Read Me</h2>
-        <p style="color:#aaa; line-height:1.6;">Vertical stack mode enabled. Optimized for one-handed mobile use.</p>
-    </div>
-</div>
-
-<script>
-    const KEY = "TBP_V59_STACK";
-    const PREV = ["TBP_V58_FINAL", "TBP_V57_MASTER"];
-
-    function openP(id) { document.getElementById(id).classList.add('active'); }
-    function closeP() { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); }
-
-    function saveB(k,v) { localStorage.setItem(KEY+k,v); }
-    function getB(k) { 
-        let v = localStorage.getItem(KEY+k);
-        if(v) return v;
-        for(let p of PREV){ let o = localStorage.getItem(p+k); if(o) return o; }
-        return "";
-    }
-
-    function runC() {
-        const h = parseFloat(document.getElementById('h').value)||0, 
-              r = parseFloat(document.getElementById('r').value)||0, 
-              m = parseFloat(document.getElementById('m').value)||0;
-        document.getElementById('big-total').innerText = "£" + ((h*r)+m).toFixed(2);
-    }
-
-    window.onload = () => {
-        ['sn', 'sb', 'sc', 'an'].forEach(i => document.getElementById(i).value = getB(i));
-    };
-</script>
-</body>
-</html>
+    <div class="back-
