@@ -25,7 +25,7 @@
             max-width: 550px;
         }
 
-        /* Branding Section - No Boxes */
+        /* Branding Section - Clean, No Boxes */
         .branding {
             margin-bottom: 40px;
             text-align: left;
@@ -82,7 +82,6 @@
             outline: none;
             border-color: var(--orange);
             background-color: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 0 8px rgba(255, 102, 0, 0.2);
         }
         .row {
             display: flex;
@@ -104,13 +103,15 @@
             margin-top: 30px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: transform 0.1s, background-color 0.2s;
         }
-        .btn-submit:hover {
-            background-color: #e65c00;
-        }
-        .btn-submit:active {
-            transform: scale(0.98);
+        .btn-submit:active { transform: scale(0.98); }
+        
+        #status-msg {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 15px;
+            color: #4bb543;
+            display: none;
         }
     </style>
 </head>
@@ -125,30 +126,57 @@
     <form id="settlementForm">
         <span class="section-label">Business Information</span>
         <div class="field-group">
-            <label for="trading-name">Trading Name</label>
-            <input type="text" id="trading-name" placeholder="Enter your business name">
+            <label for="tradingName">Trading Name</label>
+            <input type="text" id="tradingName" placeholder="Enter your business name">
         </div>
 
         <span class="section-label">Bank Details</span>
         <div class="field-group">
-            <label for="acc-holder">Account Holder Name</label>
-            <input type="text" id="acc-holder" placeholder="Name on account">
+            <label for="accHolder">Account Holder Name</label>
+            <input type="text" id="accHolder" placeholder="Name on account">
         </div>
 
         <div class="row">
             <div class="field-group flex-1">
-                <label for="sort-code">Sort Code</label>
-                <input type="text" id="sort-code" placeholder="00-00-00">
+                <label for="sortCode">Sort Code</label>
+                <input type="text" id="sortCode" placeholder="00-00-00">
             </div>
             <div class="field-group flex-2">
-                <label for="acc-number">Account Number</label>
-                <input type="text" id="acc-number" placeholder="8-digit account number">
+                <label for="accNumber">Account Number</label>
+                <input type="text" id="accNumber" placeholder="8-digit account number">
             </div>
         </div>
 
-        <button type="submit" class="btn-submit">Save Settlement Details</button>
+        <button type="button" onclick="saveDetails()" class="btn-submit">Save Settlement Details</button>
+        <div id="status-msg">Details saved securely.</div>
     </form>
 </div>
+
+<script>
+    // Load saved data on page start
+    window.onload = function() {
+        const fields = ['tradingName', 'accHolder', 'sortCode', 'accNumber'];
+        fields.forEach(field => {
+            const savedValue = localStorage.getItem(field);
+            if (savedValue) {
+                document.getElementById(field).value = savedValue;
+            }
+        });
+    };
+
+    // Save data to Local Storage
+    function saveDetails() {
+        const fields = ['tradingName', 'accHolder', 'sortCode', 'accNumber'];
+        fields.forEach(field => {
+            const val = document.getElementById(field).value;
+            localStorage.setItem(field, val);
+        });
+
+        const msg = document.getElementById('status-msg');
+        msg.style.display = 'block';
+        setTimeout(() => { msg.style.display = 'none'; }, 3000);
+    }
+</script>
 
 </body>
 </html>
