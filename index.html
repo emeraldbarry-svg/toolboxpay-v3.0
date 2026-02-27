@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v7.7 [MATHS CALIBRATED]</title>
+    <title>toolboxpay v7.8 [LOGO INTEGRATED]</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -28,7 +28,6 @@
         .tag { color: var(--org); font-size: 10px; font-weight: 800; text-transform: uppercase; margin: 15px 0 8px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 4px; }
         input, textarea { width: 100%; padding: 16px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 8px; font-size: 16px; outline: none; }
         
-        /* UPDATED VAT TOGGLE UI */
         .vat-container { background: #233554; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--org); }
         .total-box { border: 2px solid var(--org); padding: 20px; border-radius: 12px; text-align: right; background: rgba(255,102,0,0.1); margin: 15px 0; }
         .price { color: var(--org); font-size: 30px; font-weight: 800; }
@@ -39,17 +38,25 @@
 
         .summary-card { background: #fff; color: #000; padding: 25px; border-radius: 4px; border: 1px solid #ddd; }
         .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
+        
+        #preview-logo { max-width: 100px; max-height: 60px; margin-bottom: 15px; display: none; }
+
+        @media print {
+            .back-btn, .btn-main, .logo { display: none !important; }
+            body { background: white; color: black; padding: 0; }
+            .summary-card { border: none; width: 100%; }
+        }
     </style>
 </head>
 <body>
 
 <div class="shell">
-    <div class="logo"><span>toolbox</span><em>pay</em> <small style="font-size: 8px; color: #444;">v7.7</small></div>
+    <div class="logo"><span>toolbox</span><em>pay</em> <small style="font-size: 8px; color: #444;">v7.8</small></div>
 
     <div id="scr-dash" class="screen">
         <a href="#scr-calc" class="tile"><div><h3>Labour & Materials</h3><p>New Quote</p></div><span>→</span></a>
         <a href="#scr-hist" class="tile" onclick="loadHistory()"><div><h3>Job History</h3><p>Manage Records</p></div><span>→</span></a>
-        <a href="#scr-biz" class="tile"><div><h3>Business Details</h3><p>Edit Profile</p></div><span>→</span></a>
+        <a href="#scr-biz" class="tile"><div><h3>Business Details</h3><p>Edit Profile & Logo</p></div><span>→</span></a>
         <a href="#scr-bank" class="tile"><div><h3>Bank Details</h3><p>Payment Info</p></div><span>→</span></a>
     </div>
 
@@ -88,12 +95,20 @@
 
     <div id="scr-biz" class="screen">
         <a href="#" class="back-btn">← BACK</a>
+        <div class="tag">Company Logo</div>
+        <div style="background:var(--crd); padding:20px; border-radius:8px; text-align:center; margin-bottom:15px;">
+            <img id="preview-logo" src="" alt="Logo Preview">
+            <input type="file" id="logo-input" accept="image/*" style="display:none" onchange="handleLogo(this)">
+            <button class="btn-main" onclick="document.getElementById('logo-input').click()" style="background:#444; font-size:12px;">Choose Image</button>
+        </div>
+        <div class="tag">Business Profile</div>
         <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
         <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba',this.value)" style="height:100px;"></textarea>
     </div>
 
     <div id="scr-bank" class="screen">
         <a href="#" class="back-btn">← BACK</a>
+        <div class="tag">Payment Details</div>
         <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
         <input type="text" id="bk-s" placeholder="Sort Code" oninput="localStorage.setItem('bk-s',this.value)">
         <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
@@ -101,30 +116,38 @@
 </div>
 
 <script>
-    /** MATH ENGINE CALIBRATION **/
-    function runMath() {
-        // Force conversion to Number to prevent "text stacking"
-        const hours = Number(document.getElementById('h').value) || 0;
-        const rate = Number(document.getElementById('r').value) || 0;
-        const materials = Number(document.getElementById('m').value) || 0;
-        
-        const subtotal = (hours * rate) + materials;
-        const isVatActive = document.getElementById('vat-toggle').checked;
-        
-        let finalTotal = subtotal;
-        let vatAmount = 0;
-
-        if (isVatActive) {
-            vatAmount = subtotal * 0.20;
-            finalTotal = subtotal + vatAmount;
-            document.getElementById('vat-label').style.display = 'block';
-            document.getElementById('vat-label').innerText = 'VAT (20%): £' + vatAmount.toFixed(2);
-        } else {
-            document.getElementById('vat-label').style.display = 'none';
+    function handleLogo(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem('user-logo', e.target.result);
+                displayLogo();
+            };
+            reader.readAsDataURL(input.files[0]);
         }
+    }
 
-        document.getElementById('sub-label').innerText = 'Subtotal (Net): £' + subtotal.toFixed(2);
-        document.getElementById('res-total').innerText = '£' + finalTotal.toFixed(2);
+    function displayLogo() {
+        const logoData = localStorage.getItem('user-logo');
+        if (logoData) {
+            const img = document.getElementById('preview-logo');
+            img.src = logoData;
+            img.style.display = 'inline-block';
+        }
+    }
+
+    function runMath() {
+        const h = Number(document.getElementById('h').value) || 0;
+        const r = Number(document.getElementById('r').value) || 0;
+        const m = Number(document.getElementById('m').value) || 0;
+        const sub = (h * r) + m;
+        const isVat = document.getElementById('vat-toggle').checked;
+        const total = isVat ? sub * 1.2 : sub;
+        
+        document.getElementById('vat-label').style.display = isVat ? 'block' : 'none';
+        if(isVat) document.getElementById('vat-label').innerText = 'VAT (20%): £' + (sub * 0.2).toFixed(2);
+        document.getElementById('sub-label').innerText = 'Subtotal (Net): £' + sub.toFixed(2);
+        document.getElementById('res-total').innerText = '£' + total.toFixed(2);
     }
 
     function saveJob() {
@@ -133,22 +156,19 @@
         const m = Number(document.getElementById('m').value) || 0;
         const isVat = document.getElementById('vat-toggle').checked;
         const sub = (h * r) + m;
-        const vat = isVat ? (sub * 0.20) : 0;
-        const total = sub + vat;
+        const total = isVat ? sub * 1.2 : sub;
 
         let jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
         jobs.unshift({
             id: Date.now(),
             cust: document.getElementById('cust-name').value || 'Client',
             ref: document.getElementById('job-ref').value || 'Job',
-            h, r, m, sub, vat, isVat,
+            h, r, m, sub, isVat,
             totalTxt: '£' + total.toFixed(2),
             date: new Date().toLocaleDateString('en-GB')
         });
 
         localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 50)));
-        
-        // Reset and Go Home
         document.querySelectorAll('#scr-calc input').forEach(i => i.value = '');
         document.getElementById('vat-toggle').checked = false;
         runMath();
@@ -165,49 +185,3 @@
             </div>
         `).join('') || '<p style="text-align:center;padding:20px;">No history.</p>';
     }
-
-    function viewJob(id) {
-        const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-        const j = jobs.find(x => x.id === id);
-        if(!j) return;
-
-        const bN = localStorage.getItem('bn') || 'Business Name';
-        const bA = localStorage.getItem('ba') || 'Address';
-        const bAk = localStorage.getItem('bk-a') || '---';
-        const bS = localStorage.getItem('bk-s') || '---';
-        const bAn = localStorage.getItem('bk-n') || '---';
-
-        document.getElementById('view-content').innerHTML = `
-            <strong>${bN}</strong><br><small>${bA}</small><hr style="margin:10px 0;">
-            <div class="summary-row"><span>Client:</span><strong>${j.cust}</strong></div>
-            <div class="summary-row"><span>Job:</span><strong>${j.ref}</strong></div>
-            <div class="summary-row"><span>Labour:</span><strong>${j.h} hrs @ £${j.r}</strong></div>
-            <div class="summary-row"><span>Materials:</span><strong>£${Number(j.m).toFixed(2)}</strong></div>
-            ${j.isVat ? `<div class="summary-row"><span>VAT (20%):</span><strong>£${Number(j.vat).toFixed(2)}</strong></div>` : ''}
-            <div class="summary-row" style="margin-top:10px; border-top:2px solid #000; padding-top:10px;">
-                <span>Total Due:</span><strong>${j.totalTxt}</strong>
-            </div>
-            <div style="margin-top:15px; font-size:11px; color:#333; background:#f9f9f9; padding:10px; border:1px solid #eee;">
-                <strong>Bank Transfer:</strong><br>${bAk} | Sort: ${bS} | Acc: ${bAn}
-            </div>
-        `;
-        window.location.hash = 'scr-view';
-    }
-
-    function deleteJob(id) {
-        if(confirm('Delete record?')) {
-            let jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-            localStorage.setItem('jobs', JSON.stringify(jobs.filter(x => x.id !== id)));
-            loadHistory();
-        }
-    }
-
-    window.onload = function() {
-        ['bn','ba','bk-a','bk-s','bk-n'].forEach(k => {
-            const val = localStorage.getItem(k);
-            if(val && document.getElementById(k)) document.getElementById(k).value = val;
-        });
-    };
-</script>
-</body>
-</html>
