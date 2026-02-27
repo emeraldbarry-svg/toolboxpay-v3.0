@@ -3,76 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v1.1</title>
+    <title>toolboxpay - v1.2 Expanded</title>
     <style>
-        /* BRANDING: Orange & White on Deep Black */
-        :root { --orange: #ff6600; --white: #ffffff; --bg: #0d0d0d; --card: #1a1a1a; }
+        /* BRANDING: Signature Orange & White on Deep Graphite */
+        :root { --orange: #ff6600; --white: #ffffff; --bg: #050505; --card: #141414; --border: #252525; }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--white); margin: 0; font-family: -apple-system, sans-serif; padding-bottom: 50px; }
+        body { background: var(--bg); color: var(--white); margin: 0; font-family: 'Segoe UI', Helvetica, sans-serif; padding-bottom: 60px; }
         
-        #app { max-width: 480px; margin: 0 auto; padding: 15px; }
+        #app { max-width: 520px; margin: 0 auto; padding: 20px; }
 
-        /* HEADER */
-        .hdr { text-align: center; padding: 45px 0 30px 0; }
-        .logo { font-size: 38px; font-weight: 900; letter-spacing: -1.5px; }
+        /* HEADER SECTION */
+        .hdr { text-align: center; padding: 50px 0 40px 0; }
+        .logo { font-size: 42px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: var(--orange); }
         .logo .w { color: var(--white); }
 
-        /* SPACED CONTAINERS */
+        /* EXPANDED CONTAINERS */
         section { 
             background: var(--card); 
-            border: 1px solid #282828; 
-            border-radius: 14px; 
-            padding: 24px; 
-            margin-bottom: 35px; /* Creates the space between boxes */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid var(--border); 
+            border-radius: 18px; 
+            padding: 30px; 
+            margin-bottom: 40px; /* Increased space between boxes */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
 
-        h2 { color: var(--orange); font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 20px 0; font-weight: 800; }
+        h2 { color: var(--orange); font-size: 14px; text-transform: uppercase; letter-spacing: 2.5px; margin: 0 0 25px 0; font-weight: 800; border-bottom: 1px solid #222; padding-bottom: 10px; }
 
-        /* INPUTS */
-        .group { margin-bottom: 18px; }
-        label { display: block; font-size: 11px; color: #777; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; }
+        /* INPUT FIELDS */
+        .group { margin-bottom: 22px; }
+        label { display: block; font-size: 11px; color: #888; margin-bottom: 10px; text-transform: uppercase; font-weight: 900; letter-spacing: 0.5px; }
         input, textarea { 
             width: 100%; 
-            padding: 16px; 
+            padding: 18px; 
             background: #000; 
             border: 1px solid #333; 
             color: #fff; 
-            border-radius: 10px; 
-            font-size: 16px; 
+            border-radius: 12px; 
+            font-size: 17px; 
             outline: none; 
+            transition: all 0.2s ease;
         }
-        input:focus { border-color: var(--orange); }
+        input:focus { border-color: var(--orange); background: #080808; }
 
-        .flex { display: flex; gap: 12px; }
+        .flex { display: flex; gap: 15px; }
         .flex > div { flex: 1; }
 
-        /* TOTALS & BUTTONS */
-        .calc-area { text-align: right; margin-top: 15px; padding-top: 20px; border-top: 1px solid #333; }
-        .total-val { font-size: 62px; font-weight: 900; color: var(--orange); letter-spacing: -3px; line-height: 1; }
+        /* TOTALS & INTERACTION */
+        .calc-area { text-align: right; margin-top: 20px; padding-top: 25px; border-top: 1px solid #222; }
+        .total-val { font-size: 68px; font-weight: 900; color: var(--orange); letter-spacing: -4px; line-height: 1; margin: 10px 0; }
         
         .btn-save { 
             width: 100%; 
-            padding: 22px; 
+            padding: 24px; 
             background: var(--orange); 
             color: #000; 
             border: none; 
-            border-radius: 10px; 
-            font-size: 18px; 
+            border-radius: 12px; 
+            font-size: 20px; 
             font-weight: 900; 
             text-transform: uppercase; 
             cursor: pointer; 
-            margin-top: 20px; 
+            margin-top: 25px;
+            box-shadow: 0 4px 0 #cc5200;
         }
+        .btn-save:active { transform: translateY(2px); box-shadow: 0 2px 0 #cc5200; }
 
-        /* HISTORY ROWS */
-        .log-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #282828; }
+        /* HISTORY LOGS */
+        .log-item { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #222; }
         .log-item:last-child { border: none; }
-        .log-name { font-weight: 700; font-size: 17px; }
-        .log-date { font-size: 12px; color: #555; margin-top: 2px; }
-        .log-amt { color: var(--orange); font-weight: 900; font-size: 20px; }
+        .log-name { font-weight: 800; font-size: 18px; color: var(--white); }
+        .log-date { font-size: 13px; color: #555; margin-top: 4px; }
+        .log-amt { color: var(--orange); font-weight: 900; font-size: 22px; }
     </style>
 </head>
 <body>
@@ -86,23 +89,23 @@
         <h2>New Quote</h2>
         <div class="group">
             <label>Client Name</label>
-            <input type="text" id="q_n" placeholder="e.g. Smith Res">
+            <input type="text" id="q_n" placeholder="Client Name">
         </div>
         <div class="group">
             <label>Description of Labour</label>
-            <textarea id="q_l" placeholder="Job details..." style="height: 80px;"></textarea>
+            <textarea id="q_l" placeholder="What work are you doing?" style="height: 100px;"></textarea>
         </div>
         <div class="flex">
-            <div class="group"><label>Hours</label><input type="number" id="q_h" oninput="doCalc()"></div>
-            <div class="group"><label>Rate (£)</label><input type="number" id="q_r" oninput="doCalc()"></div>
+            <div class="group"><label>Hours</label><input type="number" id="q_h" oninput="calc()"></div>
+            <div class="group"><label>Rate (£)</label><input type="number" id="q_r" oninput="calc()"></div>
         </div>
         <div class="group">
             <label>Materials Cost (£)</label>
-            <input type="number" id="q_m" oninput="doCalc()">
+            <input type="number" id="q_m" oninput="calc()">
         </div>
 
         <div class="calc-area">
-            <label>Total Estimate</label>
+            <label>Current Quote Total</label>
             <div class="total-val" id="disp">£0.00</div>
             <button class="btn-save" onclick="save()">Save & Log Quote</button>
         </div>
@@ -120,8 +123,8 @@
             <input type="text" id="s_n" oninput="st('n', this.value)">
         </div>
         <div class="group">
-            <label>Address</label>
-            <textarea id="s_a" oninput="st('a', this.value)" style="height: 60px;"></textarea>
+            <label>Business Address</label>
+            <textarea id="s_a" oninput="st('a', this.value)" style="height: 80px;"></textarea>
         </div>
         <div class="group">
             <label>Bank Name</label>
@@ -135,12 +138,12 @@
 </div>
 
 <script>
-    const KEY = "TBP_V1.1_";
+    const KEY = "TBP_CLEAN_V1.2_";
 
     function st(k, v) { localStorage.setItem(KEY+k, v); }
     function gt(k) { return localStorage.getItem(KEY+k) || ""; }
 
-    function doCalc() {
+    function calc() {
         const h = parseFloat(document.getElementById('q_h').value) || 0;
         const r = parseFloat(document.getElementById('q_r').value) || 0;
         const m = parseFloat(document.getElementById('q_m').value) || 0;
@@ -149,7 +152,7 @@
 
     function save() {
         const q = {
-            n: document.getElementById('q_n').value || "Client",
+            n: document.getElementById('q_n').value || "Unnamed Client",
             t: document.getElementById('disp').innerText,
             d: new Date().toLocaleDateString('en-GB')
         };
@@ -161,14 +164,14 @@
         document.getElementById('disp').innerText = "£0.00";
         
         render();
-        alert("Quote Logged.");
+        alert("Quote Successfully Logged.");
     }
 
     function render() {
         const logs = JSON.parse(localStorage.getItem(KEY+'logs') || '[]');
         const container = document.getElementById('hist');
         if (logs.length === 0) {
-            container.innerHTML = '<p style="color:#444; font-size:12px; text-align:center;">No history available.</p>';
+            container.innerHTML = '<p style="color:#333; font-size:14px; text-align:center; padding: 20px;">No quotes logged yet.</p>';
             return;
         }
         container.innerHTML = logs.map(i => `
