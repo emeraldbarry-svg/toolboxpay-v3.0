@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v9.1</title>
+    <title>toolboxpay - v9.3</title>
     <style>
-        /* BRANDING */
+        /* BRANDING & RESET */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         body { background: #4a4a4a; color: #fff; margin: 0; font-family: sans-serif; display: flex; justify-content: center; }
         #app-viewport { width: 100%; max-width: 420px; padding: 20px; min-height: 100vh; position: relative; }
 
-        /* CLOCK & LOGO */
+        /* FIXED ORANGE CLOCK */
         #live-clock { position: absolute; top: 25px; right: 25px; font-size: 14px; font-weight: 900; color: #ff6600; font-family: monospace; }
         .header { text-align: center; padding: 25px 0 15px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
@@ -20,31 +20,45 @@
         .view { display: none; width: 100%; }
         .view.active { display: block; }
 
-        /* DASHBOARD TILES */
-        .stack { display: flex; flex-direction: column; gap: 15px; }
-        .tile { background: #222; border-radius: 20px; padding: 20px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; transition: 0.2s; }
-        .tile:active { transform: scale(0.96); background: #111; }
-        .icon-box { width: 50px; height: 50px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 24px; }
-        .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
+        /* FIXED VERTICAL STACK */
+        .stack { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        .tile { 
+            background: #222; 
+            border-radius: 20px; 
+            padding: 22px; 
+            display: flex; 
+            align-items: center; 
+            cursor: pointer; 
+            border: 1px solid #333;
+            width: 100%; /* Force full width to prevent side-by-side squashing */
+        }
+        .tile:active { transform: scale(0.98); background: #111; }
+        .icon-box { 
+            width: 55px; 
+            height: 55px; 
+            background: #000; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin-right: 20px; 
+            font-size: 26px; 
+            flex-shrink: 0; /* Prevent icons from shrinking */
+        }
+        .tile span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* FORM ELEMENTS */
+        /* UI ELEMENTS */
         .nav-header { padding: 10px 0 20px 0; display: flex; justify-content: space-between; align-items: center; }
         .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 10px 15px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; }
-        .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-bottom: 20px; }
         h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin: 0 0 20px 0; font-weight: 900; }
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
-        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; border: 1px solid #333; }
+        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; }
         
-        /* CALC & TOTALS */
-        .res-box { background: #000; padding: 20px; border-radius: 15px; border-left: 4px solid #ff6600; margin-top: 5px; }
-        .row { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 800; font-size: 13px; }
+        /* DATA BOXES */
+        .res-box { background: #000; padding: 20px; border-radius: 15px; border-left: 4px solid #ff6600; }
         .total-row { font-size: 34px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 15px; border-top: 1px solid #333; padding-top: 10px; }
-        .btn-wa { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; margin-top: 10px; cursor: pointer; font-size: 14px; }
-        
-        /* HISTORY LOG */
-        .hist-card { background: #111; padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #222; position: relative; }
-        .hist-top { display: flex; justify-content: space-between; color: #ff6600; font-weight: 900; font-size: 11px; margin-bottom: 8px; }
-        .del-btn { background: #ff3300; color: #fff; border: none; padding: 5px 10px; border-radius: 5px; font-size: 9px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+        .btn-wa { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -66,18 +80,19 @@
     </div>
 
     <div id="view-calc" class="view">
-        <div class="nav-header">
-            <div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div>
-            <div class="back-btn" style="border-color:#555; color:#888;" onclick="resetCalc()">RESET</div>
-        </div>
+        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
         <div class="card">
             <h2>Business Calc</h2>
-            <label>Day Rate (£)</label><input type="number" id="c-rate" placeholder="0.00" oninput="doC()">
-            <label>Days Worked</label><input type="number" id="c-days" placeholder="0" oninput="doC()">
-            <label>Materials (£)</label><input type="number" id="c-mats" placeholder="0.00" oninput="doC()">
+            <label>Day Rate (£)</label><input type="number" id="c-rate" oninput="doC()">
+            <label>Days Worked</label><input type="number" id="c-days" oninput="doC()">
+            <label>Materials (£)</label><input type="number" id="c-mats" oninput="doC()">
             <div class="res-box">
-                <div class="row"><span>Labour:</span><span id="c-lab" style="color:#ff6600;">£0.00</span></div>
-                <div class="row"><span>VAT (20%):</span><span id="c-vat" style="color:#ff6600;">£0.00</span></div>
+                <div style="display:flex; justify-content:space-between; font-weight:800; font-size:13px; margin-bottom:5px;">
+                    <span>Labour:</span><span id="c-lab" style="color:#ff6600;">£0.00</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-weight:800; font-size:13px;">
+                    <span>VAT (20%):</span><span id="c-vat" style="color:#ff6600;">£0.00</span>
+                </div>
                 <div class="total-row" id="c-tot">£0.00</div>
             </div>
             <button class="btn-wa" onclick="waC()">Share Breakdown</button>
@@ -88,7 +103,18 @@
         <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
         <div class="card">
             <h2>New Quote</h2>
-            <label>Client Name</label><input type="text" id="q-name" placeholder="John Smith">
-            <label>Labour Description</label><textarea id="q-desc" style="height:80px;" placeholder="Full bathroom rewire..."></textarea>
-            <label>Fixed Price (£)</label><input type="number" id="q-price" oninput="upQ()">
-            <div class="total-row"
+            <label>Client Name</label><input type="text" id="q-name">
+            <label>Labour Description</label><textarea id="q-desc" style="height:80px;"></textarea>
+            <label>Price (£)</label><input type="number" id="q-price" oninput="upQ()">
+            <div class="total-row" id="q-tot-d" style="border:none;">£0.00</div>
+            <button class="btn-wa" onclick="waQ()">Send via WhatsApp</button>
+        </div>
+    </div>
+
+    <div id="view-history" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>Job History</h2><p style="color:#666;">No jobs saved.</p></div></div>
+    <div id="view-bank" class="view">
+        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
+        <div class="card">
+            <h2>Bank Setup</h2>
+            <label>Business Name</label><input type="text" id="b-name" oninput="sv('bn',this.value)">
+            <label>Bank</label><input type="text" id="b-bank" oninput="
