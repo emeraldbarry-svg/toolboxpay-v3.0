@@ -3,89 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
     <title>toolboxpay</title>
     <style>
         :root { --org: #ff6600; --wht: #ffffff; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--wht); font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; padding: 40px 20px; }
+        body { 
+            background: var(--bg); 
+            color: var(--wht); 
+            font-family: -apple-system, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh;
+            padding: 40px 20px; 
+        }
         .shell { width: 100%; max-width: 380px; }
+        
+        /* Branding */
         .logo { text-align: center; margin-bottom: 35px; font-size: 34px; font-weight: 800; }
-        .logo span { color: var(--org); }
-        
-        #nav-back { display: none; color: var(--org); border: 1px solid var(--org); background: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 25px; }
-        
-        /* The '.screen' class is used by the JS reset loop */
-        .screen { display: none; }
-        
-        .tile { background: var(--crd); padding: 25px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .logo .org { color: var(--org); }
+
+        #nav-back { 
+            display: none; 
+            color: var(--org); 
+            border: 1px solid var(--org); 
+            background: none; 
+            padding: 12px; 
+            width: 100%; 
+            border-radius: 8px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            margin-bottom: 25px; 
+            text-transform: uppercase; 
+        }
+
+        /* Essential for the reset logic */
+        .page { display: none; }
+
+        .tile { 
+            background: var(--crd); 
+            padding: 25px; 
+            border-radius: 12px; 
+            border: 1px solid #233554; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
         .tile h3 { color: var(--org); text-transform: uppercase; font-size: 16px; }
+
         .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
-        input { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 18px; outline: none; }
-        .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 35px; }
-        .ver-tag { text-align: center; color: #333; font-size: 10px; margin-top: 50px; }
+        input { 
+            width: 100%; 
+            padding: 15px; 
+            background: var(--crd); 
+            border: 1px solid #233554; 
+            color: #fff; 
+            margin-bottom: 15px; 
+            border-radius: 8px; 
+            font-size: 18px; 
+            outline: none; 
+        }
+        .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 35px; background: rgba(255,102,0,0.05); }
     </style>
 </head>
 <body>
 
 <div class="shell">
-    <button id="nav-back" onclick="showScreen('dash')">← RETURN TO DASHBOARD</button>
-    <div class="logo"><span>toolbox</span>pay</div>
+    <button id="nav-back" onclick="swap('dash')">← Return to Dashboard</button>
+    <div class="logo"><span class="org">toolbox</span>pay</div>
 
-    <div id="dash" class="screen" style="display: block;">
-        <div class="tile" onclick="showScreen('calc')">
+    <div id="dash" class="page" style="display: block;">
+        <div class="tile" onclick="swap('calc')">
             <div>
                 <h3>Labour & Materials</h3>
                 <p style="font-size:12px; color:#8892b0; margin-top:4px;">Calculate costs and specialising tasks</p>
             </div>
-            <span style="color:var(--org); font-weight:bold;">→</span>
+            <span style="color:var(--org); font-weight:bold; font-size: 20px;">→</span>
         </div>
     </div>
 
-    <div id="calc" class="screen">
+    <div id="calc" class="page">
         <div class="tag">Labour Costs</div>
-        <input type="number" id="h" placeholder="Hours worked" oninput="doMath()">
-        <input type="number" id="r" placeholder="Hourly rate (£)" oninput="doMath()">
+        <input type="number" id="h" placeholder="Hours worked" oninput="math()">
+        <input type="number" id="r" placeholder="Hourly rate (£)" oninput="math()">
+        
         <div class="tag">Materials</div>
-        <input type="number" id="m" placeholder="Total materials (£)" oninput="doMath()">
+        <input type="number" id="m" placeholder="Total material costs (£)" oninput="math()">
+        
         <div class="total-box">
             <span style="font-weight:800; font-size:12px;">TOTAL:</span>
-            <span id="res" style="color:var(--org); font-size:26px; font-weight:800;">£0.00</span>
+            <span id="final" style="color:var(--org); font-size:26px; font-weight:800;">£0.00</span>
         </div>
     </div>
-
-    <div class="ver-tag">App Version: 3.0.3</div>
 </div>
 
 <script>
-    const APP_VERSION = "3.0.3";
-    console.log("Running version:", APP_VERSION);
-
-    function showScreen(screenId) {
-        // 1. Hide EVERYTHING with the class 'screen'
-        const screens = document.querySelectorAll('.screen');
-        screens.forEach(s => {
-            s.style.display = 'none';
+    function swap(targetId) {
+        // 1. Force-hide EVERY page using direct style commands
+        // This stops 'looping' because it resets the slate completely
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(p => {
+            p.style.display = 'none';
         });
 
-        // 2. Show ONLY the one we want
-        document.getElementById(screenId).style.display = 'block';
+        // 2. Show only the one we want
+        const target = document.getElementById(targetId);
+        target.style.display = 'block';
 
-        // 3. Handle Back Button
-        document.getElementById('nav-back').style.display = (screenId === 'calc') ? 'block' : 'none';
+        // 3. Handle back button
+        const btn = document.getElementById('nav-back');
+        btn.style.display = (targetId === 'calc') ? 'block' : 'none';
+        
         window.scrollTo(0,0);
     }
 
-    function doMath() {
+    function math() {
         const h = parseFloat(document.getElementById('h').value) || 0;
         const r = parseFloat(document.getElementById('r').value) || 0;
         const m = parseFloat(document.getElementById('m').value) || 0;
         const total = (h * r) + m;
-        document.getElementById('res').innerText = '£' + total.toLocaleString('en-GB', {minimumFractionDigits: 2});
+        document.getElementById('final').innerText = '£' + total.toLocaleString('en-GB', {
+            minimumFractionDigits: 2
+        });
     }
 </script>
+
 </body>
 </html>
