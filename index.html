@@ -21,7 +21,8 @@
         .tile p { font-size: 12px; color: #8892b0; margin-top: 4px; }
 
         .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
-        input { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 16px; outline: none; }
+        input, textarea { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 16px; outline: none; font-family: inherit; }
+        textarea { height: 80px; resize: none; }
         
         .vat-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 5px; background: rgba(255,102,0,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,102,0,0.2); }
         
@@ -32,7 +33,8 @@
         .btn-reset { width: 100%; padding: 12px; background: none; border: 1px solid #233554; color: #8892b0; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 600; font-size: 13px; text-transform: uppercase; }
 
         .summary-card { background: #fff; color: #333; padding: 25px; border-radius: 12px; margin-top: 10px; }
-        .summary-card h2 { color: #000; font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .summary-card h2 { color: #000; font-size: 18px; margin-bottom: 4px; }
+        .summary-address { font-size: 12px; color: #666; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; line-height: 1.4; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
     </style>
 </head>
@@ -44,116 +46,11 @@
 
     <div id="dash" class="screen" style="display: block;">
         <div class="tile" onclick="nav('calc')"><div><h3>Labour & Materials</h3><p>Calculate & quote</p></div><span>→</span></div>
-        <div class="tile" onclick="nav('biz')"><div><h3>Business Details</h3><p>Stored company info</p></div><span>→</span></div>
-        <div class="tile" onclick="nav('bank')"><div><h3>Bank Details</h3><p>Payment information</p></div><span>→</span></div>
+        <div class="tile" onclick="nav('biz')"><div><h3>Business Details</h3><p>Company info & address</p></div><span>→</span></div>
+        <div class="tile" onclick="nav('bank')"><div><h3>Bank Details</h3><p>Stored payment info</p></div><span>→</span></div>
     </div>
 
     <div id="calc" class="screen">
         <div class="tag">Labour Costs</div>
         <input type="number" id="h" placeholder="Hours worked" oninput="math()">
-        <input type="number" id="r" placeholder="Hourly rate (£)" oninput="math()">
-        <div class="tag">Materials</div>
-        <input type="number" id="m" placeholder="Total materials (£)" oninput="math()">
-        <div class="vat-row">
-            <span>Add 20% VAT</span>
-            <input type="checkbox" id="v-tog" onchange="math()" style="width:20px; height:20px;">
-        </div>
-        <div class="total-box">
-            <span style="font-weight:800; font-size:12px;">TOTAL:</span>
-            <span id="res" class="price">£0.00</span>
-            <div id="v-msg" style="font-size:12px; color:#8892b0; text-align:right; display:none;">Inc. VAT</div>
-        </div>
-        <button class="btn-main" onclick="gen()">View Quote Summary</button>
-        <button class="btn-reset" onclick="reset()">Reset Figures</button>
-    </div>
-
-    <div id="summary" class="screen">
-        <div class="summary-card">
-            <h2 id="s-biz">Quote Summary</h2>
-            <div class="summary-row"><span>Labour:</span> <span id="s-lab">£0.00</span></div>
-            <div class="summary-row"><span>Materials:</span> <span id="s-mat">£0.00</span></div>
-            <div id="s-v-row" class="summary-row" style="display:none; color:#888;"><span>VAT (20%):</span> <span id="s-v-amt">£0.00</span></div>
-            <div class="summary-row" style="border-top:2px solid #eee; margin-top:15px; padding-top:10px; font-weight:800; color:var(--org); font-size:18px;"><span>Total:</span> <span id="s-tot">£0.00</span></div>
-            
-            <div class="tag" style="color:#666; border-color:#eee; margin-top:20px;">Payment Details</div>
-            <div class="summary-row" style="font-size:12px;"><span>Account Name:</span> <span id="s-acc">---</span></div>
-            <div class="summary-row" style="font-size:12px;"><span>Sort Code:</span> <span id="s-srt">---</span></div>
-            <div class="summary-row" style="font-size:12px;"><span>Account Number:</span> <span id="s-num">---</span></div>
-        </div>
-        <button class="btn-reset" style="background:var(--crd); color:white; border:none; margin-top:20px;" onclick="nav('calc')">Back to Edit</button>
-    </div>
-
-    <div id="biz" class="screen">
-        <div class="tag">Company Information</div>
-        <input type="text" id="biz-name" placeholder="Business Name" oninput="save('biz-name',this.value)">
-        <input type="text" id="biz-email" placeholder="Email Address" oninput="save('biz-email',this.value)">
-        <input type="text" id="biz-phone" placeholder="Phone Number" oninput="save('biz-phone',this.value)">
-    </div>
-
-    <div id="bank" class="screen">
-        <div class="tag">Payment Information</div>
-        <input type="text" id="bank-acc" placeholder="Account Name" oninput="save('bank-acc',this.value)">
-        <input type="text" id="bank-sort" placeholder="Sort Code" oninput="save('bank-sort',this.value)">
-        <input type="text" id="bank-num" placeholder="Account Number" oninput="save('bank-num',this.value)">
-    </div>
-</div>
-
-<script>
-    function nav(id) {
-        document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-        document.getElementById(id).style.display = 'block';
-        document.getElementById('back-btn').style.display = (id === 'dash') ? 'none' : 'block';
-        window.scrollTo(0,0);
-    }
-
-    function math() {
-        const h = parseFloat(document.getElementById('h').value) || 0;
-        const r = parseFloat(document.getElementById('r').value) || 0;
-        const m = parseFloat(document.getElementById('m').value) || 0;
-        const sub = (h * r) + m;
-        const isVat = document.getElementById('v-tog').checked;
-        const vAmt = isVat ? (sub * 0.20) : 0;
-        const total = sub + vAmt;
-        document.getElementById('res').innerText = '£' + total.toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('v-msg').style.display = isVat ? 'block' : 'none';
-        document.getElementById('v-msg').innerText = 'Inc. £' + vAmt.toLocaleString('en-GB', {minimumFractionDigits: 2}) + ' VAT';
-    }
-
-    function save(k, v) { localStorage.setItem(k, v); }
-
-    function gen() {
-        const h = parseFloat(document.getElementById('h').value) || 0;
-        const r = parseFloat(document.getElementById('r').value) || 0;
-        const m = parseFloat(document.getElementById('m').value) || 0;
-        const sub = (h * r) + m;
-        const isVat = document.getElementById('v-tog').checked;
-        const vAmt = isVat ? (sub * 0.20) : 0;
-
-        document.getElementById('s-biz').innerText = localStorage.getItem('biz-name') || 'Quote Summary';
-        document.getElementById('s-lab').innerText = '£' + (h * r).toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('s-mat').innerText = '£' + m.toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('s-v-row').style.display = isVat ? 'flex' : 'none';
-        document.getElementById('s-v-amt').innerText = '£' + vAmt.toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('s-tot').innerText = '£' + (sub + vAmt).toLocaleString('en-GB', {minimumFractionDigits: 2});
-        
-        document.getElementById('s-acc').innerText = localStorage.getItem('bank-acc') || '---';
-        document.getElementById('s-srt').innerText = localStorage.getItem('bank-sort') || '---';
-        document.getElementById('s-num').innerText = localStorage.getItem('bank-num') || '---';
-        nav('summary');
-    }
-
-    function reset() {
-        document.getElementById('h').value = ''; document.getElementById('r').value = '';
-        document.getElementById('m').value = ''; document.getElementById('v-tog').checked = false;
-        math();
-    }
-
-    // Load Data
-    const fields = ['biz-name', 'biz-email', 'biz-phone', 'bank-acc', 'bank-sort', 'bank-num'];
-    fields.forEach(f => {
-        const el = document.getElementById(f);
-        if(el) el.value = localStorage.getItem(f) || '';
-    });
-</script>
-</body>
-</html>
+        <input type="number" id="r
