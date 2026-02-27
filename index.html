@@ -3,20 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v38.0</title>
+    <title>toolboxpay v39.0</title>
     <style>
         :root { --p-org: #ff6600; --p-bg: #0b0b0b; --p-card: #161616; }
         html, body { background: var(--p-bg); margin: 0; padding: 0; height: 100vh; font-family: sans-serif; color: white; display: flex; justify-content: center; align-items: flex-start; overflow: hidden; }
         
-        #shell { background: var(--p-card); width: 385px; height: 92vh; margin-top: 15px; border: 1px solid #333; border-radius: 22px; padding: 25px; box-sizing: border-box; display: flex; flex-direction: column; position: relative; }
+        /* THE STACK - Every screen is a physical layer always in memory */
+        .layer { 
+            background: var(--p-card); width: 385px; height: 92vh; 
+            margin-top: 15px; border: 1px solid #333; border-radius: 22px; 
+            padding: 25px; box-sizing: border-box; 
+            position: absolute; visibility: hidden; opacity: 0; z-index: 1;
+            display: flex; flex-direction: column;
+        }
+        .active-layer { visibility: visible !important; opacity: 1 !important; z-index: 99 !important; }
         
-        .logo { color: var(--p-org); font-weight: 900; font-size: 26px; text-align: center; margin-bottom: 25px; }
+        .logo { color: var(--p-org); font-weight: 900; font-size: 26px; text-align: center; margin-bottom: 25px; pointer-events: none; }
         .logo span { color: #fff; }
-
-        /* IMMUTABLE STATE SYSTEM - Prevents the "Empty Shell" freeze */
-        .page { display: none !important; flex-direction: column; height: 100%; }
-        .page.active { display: flex !important; }
 
         .btn { width: 100%; padding: 18px; margin-bottom: 12px; background: #222; border: 1px solid #444; border-radius: 14px; font-size: 16px; font-weight: bold; text-align: left; color: var(--p-org); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .btn-main { background: var(--p-org) !important; color: #000 !important; border: none; justify-content: center; text-transform: uppercase; }
-        .btn-back { background: none; border: 1.5px solid var(--p-org); color: var(--p-org); text-align: center; padding: 12px; margin-bottom: 2
+        .btn-back { background: none; border: 1.5px solid var(--p-org); color: var(--p-org); text-align: center; padding: 12px; margin-bottom: 20px; width: 100%; border-radius: 10px; cursor: pointer; font-weight: 800; }
+        
+        input, textarea, select { width: 100%; padding: 15px; margin-bottom: 12px; border: 1.5px solid #333; background: #000; color: #fff; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
+        .vat-bar { background: #222; border: 1px solid #333; border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; }
+        .vat-on { border-color: var(--p-org); background: #2a1500; }
+        .toggle { width: 38px; height: 20px; background: #444; border-radius: 12px; }
+        .vat-on .toggle { background: var(--p-org); }
+        .price { text-align: right; font-size: 44px; font-weight: 900; color: var(--p-org); margin: 10px 0; }
+        .paper { background: #fff; color: #000; padding: 25px; border-radius: 8px; font-size: 13px; line-height: 1.4; overflow-y: auto; }
+        .del { background: #311; color: #f55; border: 1px solid #522; padding: 8px 12px; border-radius: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="L_MENU" class="layer active-layer">
+        <div class="logo">toolbox<span>pay</span></div>
+        <button class="btn" onclick="show('L_CALC')">NEW QUOTE <span>→</span></button>
+        <button class="btn" onclick="show('L_HIST'); draw();">HISTORY <span>→</span></button>
+        <button class="btn" onclick="show('L_SET')">BUSINESS SETUP <span>→</span></button>
+        <button class="btn" onclick="show('L_BANK')">BANK DETAILS <span>→</span></button>
+        <button onclick="localStorage.clear(); location.reload();" style="margin-top:auto; background:none; border:none; color:#444; cursor:pointer; font-size:10px;">[ EMERGENCY REPAIR ]</button>
+    </div>
+
+    <div id="L_CALC" class="layer">
+        <div class="logo">toolbox<span>pay</span></div>
+        <button class="btn-back" onclick="show('L_MENU')">← BACK</button>
+        <input type="text" id="i_n" placeholder="Client Name">
+        <textarea id="i_d" placeholder="Description of Labour" style="height:60px;"></textarea>
+        <div style="display:flex; gap:10px;"><input type="number" id="i_h" placeholder="Hours" oninput="run()" style="flex:1;"><input type="number" id="i_r" placeholder="Rate" oninput="run()" style="flex:1;"></div>
+        <input type="number" id="i_m" placeholder="Materials" oninput="run()">
+        <div id="v_bar" class="vat-bar" onclick="togV()">
+            <span id="v_t" style="color:#777; font-weight:bold;">ADD 20% VAT</span>
+            <div class="toggle"></div>
+        </div>
+        <div id="i_tot" class="price">£0.00</div>
+        <button class="btn btn-main" onclick="save()">SAVE QUOTE</button>
+    </div>
+
+    <div id="L_HIST" class="layer">
+        <div class="logo">toolbox<span>pay</span></div>
+        <button class="btn-back" onclick="show('L_MENU')">← BACK</button>
+        <div id="h_list"></div>
+    </div>
+
+    <div id="L_SET" class="layer">
+        <div class="logo">toolbox<span>pay</span></div>
+        <button class="btn-back" onclick="show('L_MENU')">← BACK</button>
+        <input type="text" id="s_bn" placeholder="Business Name" oninput="st('bn', this.value)">
+        <textarea id="s_ba" placeholder="Business Address" oninput="st('ba', this.value)" style="height:60px;"></textarea>
+        <select id="s_cu" onchange="st('cu', this.value); run();">
+            <option value="£">GBP (£)</option>
+            <option value="$">USD ($)</option>
+            <option value="€">EUR (€)</option>
+        </select>
+    </div>
+
+    <div id="L_BANK" class="layer">
+        <div class="logo">toolbox<span>pay</span></div>
+        <button class="btn-back" onclick="show('L_MENU')">← BACK</button>
+        <input type="text" id="s_b1" placeholder="Account Name" oninput="st('b1', this.value)">
+        <input type="text" id="s_b2" placeholder="Sort Code" oninput="st('b2', this.value)">
+        <input type="text" id="s_b3" placeholder="Account Number" oninput="st('b3', this.value)">
+    </div>
+
+    <div id="L_VIEW" class="layer">
+        <div class="logo">toolbox<span>pay</span></div>
+        <button class="btn-back" onclick="show('L_HIST')">← BACK</button>
+        <div id="v_out" class="paper"></div>
+        <button class="btn btn-main" style="margin-top:15px" onclick="window.print()">PRINT / PDF</button>
+    </div>
+
+    <script>
+        const DB = "tb_v39_";
+        let isTax = false;
+
+        function st(k, v) { localStorage.setItem(DB+k, v); }
+        function gt(k) { return localStorage.getItem(DB+k) || ""; }
+
+        function show(id) {
+            const layers = document.querySelectorAll('.layer');
+            layers.forEach(l => l.classList.remove('active-layer'));
+            document.getElementById(id).classList.add('active-layer');
+        }
+
+        function togV() {
+            isTax = !isTax;
+            document.getElementById('v_bar').classList.toggle('vat-on', isTax);
+            document.getElementById('v_t').style.color = isTax ? 'var(--p-org)' : '#777';
+            run();
+        }
+
+        function run() {
+            let cur = gt('cu') || '£';
+            let h = Number(document.getElementById('i_h').value) || 0;
+            let r = Number(document.getElementById('i_r').value
