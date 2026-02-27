@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v3.0 Ironclad</title>
+    <title>toolboxpay - v3.1 Foreman</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding-bottom: 100px; }
         .wrap { max-width: 480px; margin: 0 auto; padding: 15px; }
 
-        /* BRANDING */
         .logo { text-align: center; padding: 40px 0; font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* PHYSICAL BOXES */
         .card { background: #111; border: 1px solid #222; border-radius: 24px; padding: 25px; margin-bottom: 35px; display: block !important; }
         h2 { color: #ff6600; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 20px 0; font-weight: 900; }
 
-        /* INPUTS */
         label { display: block; font-size: 11px; color: #777; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
         input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 16px; outline: none; margin-bottom: 15px; }
-        input:focus { border-color: #ff6600; }
 
-        /* VAT TOGGLE */
+        /* DASHBOARD STYLING */
+        .dash { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 20px; }
+        .stat { flex: 1; background: #000; padding: 15px; border-radius: 12px; border: 1px solid #222; }
+        .stat-val { font-size: 20px; font-weight: 900; color: #ff6600; display: block; }
+        .stat-lbl { font-size: 9px; color: #555; text-transform: uppercase; font-weight: 800; }
+
         .vat-row { display: flex; justify-content: space-between; align-items: center; background: #080808; border: 1px solid #222; padding: 12px 18px; border-radius: 14px; margin-bottom: 20px; }
         .sw { position: relative; width: 44px; height: 22px; }
         .sw input { opacity: 0; width: 0; height: 0; }
@@ -35,27 +36,11 @@
         .big-p { font-size: 58px; font-weight: 900; color: #ff6600; text-align: right; letter-spacing: -3px; margin-bottom: 15px; }
         .btn-m { width: 100%; background: #ff6600; color: #000; padding: 20px; border: none; border-radius: 14px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
 
-        /* HISTORY & WHATSAPP */
         .job { padding: 20px 0; border-bottom: 1px solid #222; }
         .tag { display: inline-block; padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 900; margin-bottom: 12px; cursor: pointer; }
         .tag-due { background: #000; color: #ff6600; border: 1px solid #ff6600; }
         .tag-paid { background: #2ecc71; color: #000; }
-        
-        .btn-wa { 
-            display: block !important; 
-            width: 100%; 
-            background: #25D366 !important; 
-            color: #000 !important; 
-            padding: 16px; 
-            border-radius: 12px; 
-            text-align: center; 
-            text-decoration: none; 
-            font-weight: 900; 
-            font-size: 14px; 
-            margin-top: 15px; 
-            text-transform: uppercase;
-        }
-        .btn-del { color: #555; background: none; border: none; font-size: 10px; margin-top: 15px; cursor: pointer; font-weight: 700; text-transform: uppercase; }
+        .btn-del { color: #444; background: none; border: none; font-size: 10px; margin-top: 15px; cursor: pointer; font-weight: 700; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -66,7 +51,7 @@
     <div class="card">
         <h2>New Quote</h2>
         <label>Client Name</label><input type="text" id="cn">
-        <label>Description of Labour</label><textarea id="dl" style="height:80px;"></textarea>
+        <label>Labour Description</label><textarea id="dl" style="height:80px;"></textarea>
         <div style="display:flex; gap:10px;">
             <div style="flex:1;"><label>Hours</label><input type="number" id="h" oninput="calc()"></div>
             <div style="flex:1;"><label>Rate (£)</label><input type="number" id="r" oninput="calc()"></div>
@@ -91,12 +76,22 @@
     </div>
 
     <div class="card">
-        <h2>Job History</h2>
+        <h2>Financial History</h2>
+        <div class="dash">
+            <div class="stat">
+                <span class="stat-lbl">Total Invoiced</span>
+                <span class="stat-val" id="totalInvoiced">£0.00</span>
+            </div>
+            <div class="stat">
+                <span class="stat-lbl">Total Paid</span>
+                <span class="stat-val" id="totalPaid" style="color:#2ecc71;">£0.00</span>
+            </div>
+        </div>
         <div id="joblist"></div>
     </div>
 
     <div class="card">
-        <h2>Business & Bank Setup</h2>
+        <h2>Business Setup</h2>
         <label>Business Name</label><input type="text" id="sn" oninput="st('sn',this.value)">
         <label>Bank Name</label><input type="text" id="sb" oninput="st('sb',this.value)">
         <label>Sort Code</label><input type="text" id="sc" oninput="st('sc',this.value)">
@@ -105,5 +100,93 @@
 </div>
 
 <script>
-    const STORAGE_K = "TBP_V30_IRON";
-    function st(k
+    const STORAGE_K = "TBP_V31_FOREMAN";
+    function st(k,v){ localStorage.setItem(STORAGE_K+k,v); }
+    function gt(k){ return localStorage.getItem(STORAGE_K+k) || ""; }
+
+    function calc() {
+        const hrs = parseFloat(document.getElementById('h').value) || 0;
+        const rte = parseFloat(document.getElementById('r').value) || 0;
+        const mat = parseFloat(document.getElementById('m').value) || 0;
+        let total = (hrs * rte) + mat;
+        if(document.getElementById('v').checked) total *= 1.2;
+        document.getElementById('tot').innerText = "£" + total.toFixed(2);
+    }
+
+    function up(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                let pics = JSON.parse(localStorage.getItem(STORAGE_K+'pics') || '[]');
+                pics.unshift(e.target.result);
+                localStorage.setItem(STORAGE_K+'pics', JSON.stringify(pics.slice(0, 6)));
+                drawPics();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function drawPics() {
+        const pics = JSON.parse(localStorage.getItem(STORAGE_K+'pics') || '[]');
+        document.getElementById('gallery').innerHTML = pics.map(p => `<div style="aspect-ratio:1; background:#000; border-radius:8px; overflow:hidden; border:1px solid #333;"><img src="${p}" style="width:100%; height:100%; object-fit:cover;"></div>`).join('');
+    }
+
+    function save() {
+        const val = parseFloat(document.getElementById('tot').innerText.replace('£', '')) || 0;
+        const j = {
+            id: Date.now(),
+            n: document.getElementById('cn').value || "Client",
+            l: document.getElementById('dl').value || "Labour",
+            t: val,
+            d: new Date().toLocaleDateString('en-GB'),
+            p: false
+        };
+        let jobs = JSON.parse(localStorage.getItem(STORAGE_K+'jobs') || '[]');
+        jobs.unshift(j);
+        localStorage.setItem(STORAGE_K+'jobs', JSON.stringify(jobs));
+        ['cn','dl','h','r','m'].forEach(i => document.getElementById(i).value = "");
+        document.getElementById('v').checked = false;
+        document.getElementById('tot').innerText = "£0.00";
+        render();
+    }
+
+    function toggleStatus(id) {
+        let jobs = JSON.parse(localStorage.getItem(STORAGE_K+'jobs') || '[]');
+        const i = jobs.findIndex(x => x.id === id);
+        jobs[i].p = !jobs[i].p;
+        localStorage.setItem(STORAGE_K+'jobs', JSON.stringify(jobs));
+        render();
+    }
+
+    function render() {
+        const jobs = JSON.parse(localStorage.getItem(STORAGE_K+'jobs') || '[]');
+        let invTotal = 0;
+        let paidTotal = 0;
+
+        document.getElementById('joblist').innerHTML = jobs.map(j => {
+            invTotal += j.t;
+            if(j.p) paidTotal += j.t;
+            return `
+            <div class="job">
+                <div class="tag ${j.p ? 'tag-paid' : 'tag-due'}" onclick="toggleStatus(${j.id})">${j.p ? 'PAID' : 'DUE'}</div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-weight:900;">${j.n}</span>
+                    <span style="color:#ff6600; font-weight:900; font-size:20px;">£${j.t.toFixed(2)}</span>
+                </div>
+                <div style="font-size:12px; color:#555; margin:4px 0;">${j.d}</div>
+                <button class="btn-del" onclick="if(confirm('Delete?')){let jobs=JSON.parse(localStorage.getItem(STORAGE_K+'jobs')); jobs=jobs.filter(x=>x.id!==${j.id}); localStorage.setItem(STORAGE_K+'jobs', JSON.stringify(jobs)); render();}">Delete Entry</button>
+            </div>`;
+        }).join('') || '<p style="color:#333; text-align:center;">No history.</p>';
+
+        document.getElementById('totalInvoiced').innerText = "£" + invTotal.toFixed(2);
+        document.getElementById('totalPaid').innerText = "£" + paidTotal.toFixed(2);
+    }
+
+    window.onload = () => {
+        ['sn', 'sb', 'sc', 'an'].forEach(i => document.getElementById(i).value = gt(i));
+        drawPics();
+        render();
+    };
+</script>
+</body>
+</html>
