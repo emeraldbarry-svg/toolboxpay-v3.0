@@ -101,4 +101,50 @@
         document.getElementById('res').innerText = '£' + (sub + v).toLocaleString('en-GB', {minimumFractionDigits: 2});
     }
     function gen() {
-        const h =
+        const h = parseFloat(document.getElementById('h').value) || 0;
+        const r = parseFloat(document.getElementById('r').value) || 0;
+        const m = parseFloat(document.getElementById('m').value) || 0;
+        const sub = (h * r) + m;
+        const isV = document.getElementById('v-tog').checked;
+        const v = isV ? (sub * 0.2) : 0;
+        
+        document.getElementById('s-biz').innerText = localStorage.getItem('biz-name') || 'Quote';
+        document.getElementById('s-addr').innerText = localStorage.getItem('biz-addr') || '';
+        document.getElementById('s-lab').innerText = '£' + (h * r).toLocaleString('en-GB', {minimumFractionDigits: 2});
+        document.getElementById('s-mat').innerText = '£' + m.toLocaleString('en-GB', {minimumFractionDigits: 2});
+        document.getElementById('s-v-row').style.display = isV ? 'flex' : 'none';
+        document.getElementById('s-v-amt').innerText = '£' + v.toLocaleString('en-GB', {minimumFractionDigits: 2});
+        document.getElementById('s-tot').innerText = '£' + (sub + v).toLocaleString('en-GB', {minimumFractionDigits: 2});
+        document.getElementById('s-acc').innerText = localStorage.getItem('bank-acc') || '---';
+        document.getElementById('s-srt').innerText = localStorage.getItem('bank-sort') || '---';
+        document.getElementById('s-num').innerText = localStorage.getItem('bank-num') || '---';
+        go('summary');
+    }
+    function copyIt() {
+        const biz = localStorage.getItem('biz-name') || 'Quote';
+        const tot = document.getElementById('s-tot').innerText;
+        const acc = document.getElementById('s-acc').innerText;
+        const srt = document.getElementById('s-srt').innerText;
+        const num = document.getElementById('s-num').innerText;
+        
+        const text = `${biz.toUpperCase()}\n\nTotal: ${tot}\n\nBank Details:\nAcc: ${acc}\nSort: ${srt}\nNo: ${num}`;
+        
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.getElementById('copy-btn');
+            btn.innerText = 'COPIED TO CLIPBOARD!';
+            btn.style.background = '#27ae60';
+            setTimeout(() => {
+                btn.innerText = 'Copy for WhatsApp';
+                btn.style.background = '#ff6600';
+            }, 2000);
+        });
+    }
+    window.onload = function() {
+        ['biz-name', 'biz-addr', 'bank-acc', 'bank-sort', 'bank-num'].forEach(f => {
+            const el = document.getElementById(f);
+            if(el) el.value = localStorage.getItem(f) || '';
+        });
+    }
+</script>
+</body>
+</html>
