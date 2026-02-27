@@ -3,21 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v42.0 - STABLE</title>
+    <title>toolboxpay v43.0 - SEPARATED</title>
     <style>
         :root { --org: #ff6600; --bg: #0b0b0b; --card: #161616; }
         html, body { background: var(--bg); margin: 0; padding: 0; font-family: sans-serif; color: white; display: flex; justify-content: center; }
         
-        /* SINGLE SURFACE ENGINE - Prevents black screen rendering stalls */
-        #app { background: var(--card); width: 400px; min-height: 100vh; padding: 25px; box-sizing: border-box; border: 1px solid #333; }
+        #app { background: var(--card); width: 400px; min-height: 100vh; padding: 25px; box-sizing: border-box; position: relative; }
         
-        .logo { color: var(--org); font-weight: 900; font-size: 28px; text-align: center; margin-bottom: 25px; }
+        .logo { color: var(--org); font-weight: 900; font-size: 28px; text-align: center; margin-bottom: 25px; cursor: pointer; }
         .logo span { color: #fff; }
 
-        .section { border-top: 1px solid #333; padding-top: 20px; margin-top: 25px; }
-        h3 { color: var(--org); font-size: 14px; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; font-weight: 800; }
+        /* Navigation Buttons */
+        .menu-btn { background: #222; border: 1px solid #333; padding: 20px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; text-decoration: none; color: var(--org); font-weight: 800; font-size: 14px; text-transform: uppercase; }
+        .menu-btn:hover { border-color: var(--org); }
 
-        input, textarea, select { width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #333; background: #000; color: #fff; border-radius: 10px; font-size: 16px; box-sizing: border-box; outline: none; }
+        .back-btn { border: 1px solid var(--org); color: var(--org); background: none; width: 100%; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 800; margin-bottom: 20px; }
+
+        /* Section Visibility */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        input, textarea { width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #333; background: #000; color: #fff; border-radius: 10px; font-size: 16px; box-sizing: border-box; outline: none; }
         input:focus { border-color: var(--org); }
         
         .row { display: flex; gap: 10px; }
@@ -29,58 +35,58 @@
         .active .dot { background: var(--org); box-shadow: 0 0 8px var(--org); }
 
         .total { text-align: right; font-size: 52px; font-weight: 900; color: var(--org); margin: 15px 0; letter-spacing: -2px; }
-        
         .main-btn { width: 100%; padding: 20px; background: var(--org); color: #000; border: none; border-radius: 14px; font-size: 18px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
 
         .hist-item { background: #222; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--org); }
-        .del-btn { background: none; border: 1px solid #522; color: #f55; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 12px; }
         .view-btn { background: none; border: 1.5px solid var(--org); color: var(--org); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
         #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999; justify-content: center; align-items: flex-start; padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .paper { background: #fff; color: #000; padding: 35px; width: 100%; max-width: 420px; border-radius: 4px; font-size: 14px; line-height: 1.6; margin-top: 20px; }
-        
-        @media print { body * { visibility: hidden; } #overlay, #overlay * { visibility: visible; } #overlay { position: absolute; left: 0; top: 0; background: white; width: 100%; } .no-print { display: none; } }
     </style>
 </head>
 <body>
 
     <div id="app">
-        <div class="logo">toolbox<span>pay</span></div>
+        <div class="logo" onclick="showView('menu')">toolbox<span>pay</span></div>
 
-        <h3>New Quote</h3>
-        <input type="text" id="in_name" placeholder="Client Name">
-        <textarea id="in_desc" placeholder="Description of Labour" style="height: 70px;"></textarea>
-        <div class="row">
-            <input type="number" id="in_hrs" placeholder="Hours" oninput="math()">
-            <input type="number" id="in_rate" placeholder="Rate" oninput="math()">
-        </div>
-        <input type="number" id="in_mat" placeholder="Materials" oninput="math()">
-        
-        <div id="tax_toggle" class="tax-btn" onclick="toggleVAT()">
-            <span style="font-weight: bold; font-size: 13px; color: #777;">ADD 20% VAT</span>
-            <div class="dot"></div>
+        <div id="view_menu" class="view active">
+            <div class="menu-btn" onclick="showView('quote')">New Quote <span>→</span></div>
+            <div class="menu-btn" onclick="showView('history')">History <span>→</span></div>
+            <div class="menu-btn" onclick="showView('settings')">Business & Bank Setup <span>→</span></div>
         </div>
 
-        <div id="out_total" class="total">£0.00</div>
-        <button class="main-btn" onclick="save()">Save & Log Quote</button>
+        <div id="view_quote" class="view">
+            <button class="back-btn" onclick="showView('menu')">← BACK TO MENU</button>
+            <input type="text" id="in_name" placeholder="Client Name">
+            <textarea id="in_desc" placeholder="Description of Labour" style="height: 70px;"></textarea>
+            <div class="row">
+                <input type="number" id="in_hrs" placeholder="Hours" oninput="math()">
+                <input type="number" id="in_rate" placeholder="Rate" oninput="math()">
+            </div>
+            <input type="number" id="in_mat" placeholder="Materials" oninput="math()">
+            <div id="tax_toggle" class="tax-btn" onclick="toggleVAT()">
+                <span style="font-weight: bold; font-size: 13px; color: #777;">ADD 20% VAT</span>
+                <div class="dot"></div>
+            </div>
+            <div id="out_total" class="total">£0.00</div>
+            <button class="main-btn" onclick="save()">Save Quote</button>
+        </div>
 
-        <div class="section">
-            <h3>Recent Quotes</h3>
+        <div id="view_history" class="view">
+            <button class="back-btn" onclick="showView('menu')">← BACK TO MENU</button>
             <div id="hist_list"></div>
         </div>
 
-        <div class="section">
-            <h3>Business & Bank Details</h3>
+        <div id="view_settings" class="view">
+            <button class="back-btn" onclick="showView('menu')">← BACK TO MENU</button>
             <input type="text" id="s_bn" placeholder="Business Name" oninput="st('bn', this.value)">
             <textarea id="s_ba" placeholder="Business Address" oninput="st('ba', this.value)" style="height:60px;"></textarea>
+            <input type="text" id="s_b1" placeholder="Bank Name" oninput="st('b1', this.value)">
             <div class="row">
-                <input type="text" id="s_b1" placeholder="Bank Name" oninput="st('b1', this.value)">
                 <input type="text" id="s_b2" placeholder="Sort Code" oninput="st('b2', this.value)">
+                <input type="text" id="s_b3" placeholder="Account Number" oninput="st('b3', this.value)">
             </div>
-            <input type="text" id="s_b3" placeholder="Account Number" oninput="st('b3', this.value)">
         </div>
-        
-        <center><button onclick="if(confirm('Reset all?')) { localStorage.clear(); location.reload(); }" style="margin-top:40px; background:none; border:none; color:#333; cursor:pointer; font-size:10px; text-decoration: underline;">[ RESET APPLICATION ]</button></center>
     </div>
 
     <div id="overlay" onclick="this.style.display='none'">
@@ -88,8 +94,14 @@
     </div>
 
     <script>
-        const DB = "tb_v42_final_";
+        const DB = "tb_v43_sep_";
         let isTax = false;
+
+        function showView(v) {
+            document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+            document.getElementById('view_' + v).classList.add('active');
+            if(v === 'history') draw();
+        }
 
         function st(k, v) { localStorage.setItem(DB+k, v); }
         function gt(k) { return localStorage.getItem(DB+k) || ""; }
@@ -113,50 +125,42 @@
             d.unshift({ 
                 id: Date.now(), 
                 n: document.getElementById('in_name').value || 'Client',
-                d: document.getElementById('in_desc').value || 'Labour provided',
+                d: document.getElementById('in_desc').value || 'Labour',
                 t: document.getElementById('out_total').innerText,
                 date: new Date().toLocaleDateString('en-GB')
             });
             localStorage.setItem(DB+'data', JSON.stringify(d.slice(0,25)));
-            draw();
-            alert("Quote Logged.");
+            alert("Saved to History");
+            showView('menu');
         }
 
         function draw() {
             let d = JSON.parse(localStorage.getItem(DB+'data') || '[]');
             document.getElementById('hist_list').innerHTML = d.map(i => `
                 <div class="hist-item">
-                    <span style="flex:1"><strong>${i.n}</strong><br><small style="color:#777">${i.date} — ${i.t}</small></span>
-                    <button class="del-btn" onclick="del(${i.id})" style="margin-right:10px">DEL</button>
+                    <span><strong>${i.n}</strong><br><small>${i.date}</small></span>
                     <button class="view-btn" onclick="view(${i.id})">VIEW</button>
                 </div>
-            `).join('') || '<p style="opacity:0.2; text-align:center;">No history.</p>';
-        }
-
-        function del(id) {
-            if(!confirm("Delete?")) return;
-            let d = JSON.parse(localStorage.getItem(DB+'data') || '[]');
-            localStorage.setItem(DB+'data', JSON.stringify(d.filter(x => x.id !== id)));
-            draw();
+            `).join('') || '<p style="text-align:center; opacity:0.3;">Empty</p>';
         }
 
         function view(id) {
             let q = JSON.parse(localStorage.getItem(DB+'data') || '[]').find(x => x.id === id);
             document.getElementById('print_area').innerHTML = `
-                <center><h1>QUOTE</h1></center><hr>
+                <center><h2>QUOTE</h2></center>
                 <strong>FROM:</strong><br>${gt('bn')}<br>${gt('ba')}<br><br>
-                <strong>TO:</strong> ${q.n}<br><strong>DATE:</strong> ${q.date}<hr>
-                <strong>LABOUR:</strong><br><p>${q.d}</p>
-                <div style="font-size:32px; font-weight:900; color:#ff6600; text-align:right;">TOTAL: ${q.t}</div><hr>
+                <strong>TO:</strong> ${q.n}<hr>
+                <strong>LABOUR:</strong><br>${q.d}<br><br>
+                <div style="font-size:24px; font-weight:900; color:#ff6600;">TOTAL: ${q.t}</div><hr>
                 <strong>BANK:</strong> ${gt('b1')}<br>Sort: ${gt('b2')} | Acc: ${gt('b3')}
-                <br><br><button class="no-print" onclick="window.print()" style="width:100%; padding:15px; background:#ff6600; color:#000; border:none; border-radius:8px; font-weight:bold;">PRINT / PDF</button>
             `;
             document.getElementById('overlay').style.display = 'flex';
         }
 
         window.onload = () => {
-            ['bn','ba','b1','b2','b3'].forEach(k => document.getElementById('s_'+k).value = gt(k));
-            draw();
+            ['bn','ba','b1','b2','b3'].forEach(k => {
+                if(document.getElementById('s_'+k)) document.getElementById('s_'+k).value = gt(k);
+            });
         };
     </script>
 </body>
