@@ -58,4 +58,131 @@
 <body>
 
     <div id="app-shell">
-        <div class
+        <div class="logo">toolbox<span>pay</span></div>
+
+        <div id="scr_m" class="scr active">
+            <button class="tile" onclick="nav('scr_c')">NEW QUOTE <span>→</span></button>
+            <button class="tile" onclick="nav('scr_h'); drawH();">HISTORY <span>→</span></button>
+            <button class="tile" onclick="nav('scr_s')">BUSINESS SETUP <span>→</span></button>
+            <button class="tile" onclick="nav('scr_b')">BANK DETAILS <span>→</span></button>
+            
+            <div style="margin-top:auto; padding-bottom:10px;">
+                <button onclick="localStorage.clear(); location.reload();" style="width:100%; background:none; border:none; color:#444; font-size:10px; cursor:pointer;">[ CITE: CLEAR APP DATA ]</button>
+            </div>
+        </div>
+
+        <div id="scr_c" class="scr">
+            <button class="back-btn" onclick="nav('scr_m')">← BACK</button>
+            <input type="text" id="q_name" placeholder="Client Name">
+            <input type="number" id="q_hrs" placeholder="Labour Hours" oninput="run()">
+            <input type="number" id="q_rte" placeholder="Hourly Rate" oninput="run()">
+            <input type="number" id="q_mat" placeholder="Materials" oninput="run()">
+            <div style="color:var(--org); font-size:12px; margin-bottom:10px;">
+                <input type="checkbox" id="q_vat" onchange="run()"> ADD 20% VAT
+            </div>
+            <div id="q_tot" class="total-area">£0.00</div>
+            <button class="tile btn-org" onclick="save()">SAVE QUOTE</button>
+        </div>
+
+        <div id="scr_h" class="scr">
+            <button class="back-btn" onclick="nav('scr_m')">← BACK</button>
+            <div id="h_list"></div>
+        </div>
+
+        <div id="scr_s" class="scr">
+            <button class="back-btn" onclick="nav('scr_m')">← BACK</button>
+            <input type="text" id="s_bn" placeholder="Business Name" oninput="ls('bn', this.value)">
+            <textarea id="s_ba" placeholder="Address" oninput="ls('ba', this.value)" style="height:60px;"></textarea>
+            <select id="s_cur" onchange="ls('cur', this.value)">
+                <option value="£">GBP (£)</option>
+                <option value="$">USD ($)</option>
+                <option value="€">EUR (€)</option>
+            </select>
+        </div>
+
+        <div id="scr_b" class="scr">
+            <button class="back-btn" onclick="nav('scr_m')">← BACK</button>
+            <input type="text" id="s_b1" placeholder="Account Name" oninput="ls('b1', this.value)">
+            <input type="text" id="s_b2" placeholder="Sort Code" oninput="ls('b2', this.value)">
+            <input type="text" id="s_b3" placeholder="Account Number" oninput="ls('b3', this.value)">
+        </div>
+
+        <div id="scr_v" class="scr">
+            <button class="back-btn" onclick="nav('scr_h')">← BACK</button>
+            <div id="v_out" class="invoice-box"></div>
+            <button class="tile btn-org" style="margin-top:15px" onclick="window.print()">PRINT / PDF</button>
+        </div>
+    </div>
+
+    <script>
+        const P = "v26_";
+        function ls(k, v) { localStorage.setItem(P+k, v); }
+        function lg(k) { return localStorage.getItem(P+k) || ""; }
+
+        function nav(id) {
+            document.querySelectorAll('.scr').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function run() {
+            let sym = lg('cur') || '£';
+            let h = Number(document.getElementById('q_hrs').value) || 0;
+            let r = Number(document.getElementById('q_rte').value) || 0;
+            let m = Number(document.getElementById('q_mat').value) || 0;
+            let total = (h * r) + m;
+            if(document.getElementById('q_vat').checked) total *= 1.2;
+            document.getElementById('q_tot').innerText = sym + total.toFixed(2);
+        }
+
+        function save() {
+            let jobs = JSON.parse(localStorage.getItem(P+'data') || '[]');
+            jobs.unshift({
+                id: Date.now(),
+                n: document.getElementById('q_name').value || 'Client',
+                t: document.getElementById('q_tot').innerText,
+                d: new Date().toLocaleDateString('en-GB')
+            });
+            localStorage.setItem(P+'data', JSON.stringify(jobs.slice(0,20)));
+            nav('scr_m');
+        }
+
+        function drawH() {
+            let jobs = JSON.parse(localStorage.getItem(P+'data') || '[]');
+            document.getElementById('h_list').innerHTML = jobs.map(j => `
+                <div style="display:flex; gap:5px; margin-bottom:8px;">
+                    <button class="tile" style="flex:1; margin-bottom:0;" onclick="view(${j.id})">
+                        ${j.n} <span style="font-size:11px; opacity:0.6;">${j.t}</span>
+                    </button>
+                    <button class="del-btn" onclick="del(${j.id})">X</button>
+                </div>
+            `).join('') || '<p style="text-align:center; font-size:12px;">No history.</p>';
+        }
+
+        function del(id) {
+            if(!confirm("Delete?")) return;
+            let jobs = JSON.parse(localStorage.getItem(P+'data') || '[]');
+            localStorage.setItem(P+'data', JSON.stringify(jobs.filter(x => x.id !== id)));
+            drawH();
+        }
+
+        function view(id) {
+            let j = JSON.parse(localStorage.getItem(P+'data') || '[]').find(x => x.id === id);
+            if(!j) return;
+            document.getElementById('v_out').innerHTML = `
+                <strong>${lg('bn') || 'Business'}</strong><br>${lg('ba')}<hr>
+                Client: ${j.n}<br>Date: ${j.d}<br>
+                <div style="font-size:22px; font-weight:bold; color:var(--org); text-align:right; margin:10px 0;">Total: ${j.t}</div><hr>
+                Bank: ${lg('b1')}<br>Sort: ${lg('b2')}<br>Acc: ${lg('b3')}
+            `;
+            nav('scr_v');
+        }
+
+        window.onload = function() {
+            ['bn','ba','b1','b2','b3','cur'].forEach(k => {
+                if(document.getElementById('s_'+k)) document.getElementById('s_'+k).value = lg(k);
+            });
+            run();
+        };
+    </script>
+</body>
+</html>
