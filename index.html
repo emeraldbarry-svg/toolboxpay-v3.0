@@ -3,41 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v9.4</title>
+    <title>toolboxpay - v9.5</title>
     <style>
         /* CORE BRANDING */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: #4a4a4a; color: #fff; margin: 0; font-family: sans-serif; display: flex; justify-content: center; overflow-x: hidden; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; margin: 0; padding: 0; }
+        body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; }
         #app-viewport { width: 100%; max-width: 420px; padding: 20px; min-height: 100vh; position: relative; }
 
         /* ORANGE CLOCK */
-        #live-clock { position: absolute; top: 25px; right: 25px; font-size: 14px; font-weight: 900; color: #ff6600; font-family: monospace; }
+        #live-clock { position: absolute; top: 25px; right: 25px; font-size: 14px; font-weight: 900; color: #ff6600; font-family: monospace; z-index: 100; }
         .header { text-align: center; padding: 25px 0 15px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* NAVIGATION VIEWS */
-        .view { display: none; width: 100%; animation: fadeIn 0.2s ease; }
-        .view.active { display: block !important; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* THE RELIABLE VIEW SYSTEM */
+        .view { display: none; width: 100%; position: absolute; top: 0; left: 0; padding: 20px; background: #4a4a4a; min-height: 100vh; box-sizing: border-box; }
+        .view.active { display: block !important; z-index: 50; }
+        #view-home { position: relative; display: block; padding: 0; } /* Dashboard is always base */
 
-        /* DASHBOARD STACK */
-        .stack { display: flex; flex-direction: column; gap: 15px; width: 100%; }
-        .tile { background: #222; border-radius: 20px; padding: 22px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; width: 100%; }
-        .tile:active { background: #111; transform: scale(0.98); }
+        /* DASHBOARD TILES */
+        .stack { display: flex; flex-direction: column; gap: 15px; width: 100%; margin-top: 20px; }
+        .tile { background: #222; border-radius: 20px; padding: 22px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; }
         .icon-box { width: 55px; height: 55px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 26px; flex-shrink: 0; }
         .tile span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* CONTAINER STYLES */
-        .nav-header { padding: 10px 0 20px 0; display: flex; justify-content: space-between; }
-        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 10px 15px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; }
-        .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-bottom: 20px; }
-        h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin: 0 0 20px 0; font-weight: 900; }
-        label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
-        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; }
+        /* CONTENT CARDS */
+        .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-top: 20px; }
+        .nav-header { padding-bottom: 10px; }
+        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 12px 20px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; display: inline-block; }
         
-        /* BUSINESS RESULTS */
+        h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin-bottom: 20px; font-weight: 900; }
+        label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
+        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; display: block; }
+        
+        /* TOTALS & BUTTONS */
         .res-box { background: #000; padding: 20px; border-radius: 15px; border-left: 4px solid #ff6600; }
         .total-row { font-size: 34px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 15px; border-top: 1px solid #333; padding-top: 10px; }
-        .btn-wa { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px
+        .btn-wa { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; margin-top: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div id="app-viewport">
+    <div id="live-clock">00:00:00</div>
+
+    <div id="view-home">
+        <div class="header">
+            <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
+        </div>
+        <div class="stack">
+            <div class="tile" onclick="goTo('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
+            <div class="tile" onclick="goTo('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
+            <div class="tile" onclick="goTo('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
+            <div class="tile" onclick="goTo('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
+            <div class="tile" onclick="goTo('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
+        </div>
+    </div>
+
+    <div id="view-quote" class="view">
+        <div class="nav-header"><div class="back-btn" onclick="goTo('view-home')">← DASHBOARD</div></div>
+        <div class="card">
+            <h2>New Quote</h2>
+            <label>Client Name</label><input type="text" id="q-name">
+            <label>Labour Description</label><textarea id="q-desc" style="height:80px;"></textarea>
+            <label>Price (£)</label><input type="number" id="q-price" oninput="document.getElementById('q-disp').innerText='£'+(parseFloat(this.value)||0).toFixed(2)">
+            <div class="total-row" id="q-disp">£0.00</div>
+            <button class="btn-wa">Send via WhatsApp</button>
+        </div>
+    </div>
+
+    <div id="view-calc" class="view">
+        <div class="nav-header"><div class="back-btn" onclick="goTo('view-home')">← DASHBOARD</div></div>
+        <div class="card">
+            <h2>Business Calc</h2>
+            <label>Day Rate (£)</label><input type="number" id="c-rate" oninput="doMath()">
+            <label>Days Worked</label><input type="number" id="c-days" oninput="doMath()">
+            <label>Materials (£)</label><input type="number" id="c-mats" oninput="doMath()">
