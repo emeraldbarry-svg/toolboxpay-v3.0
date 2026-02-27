@@ -3,129 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v12.0</title>
+    <title>toolboxpay v13.0-WIPE</title>
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 15px; background: #fff; color: #000; }
-        .head-logo { color: #ff6600; font-weight: 800; font-size: 26px; text-align: center; margin-bottom: 25px; }
-        .page-view { display: none; }
-        .show-page { display: block !important; }
+        /* RAW NATIVE CSS - No containers or flexbox to avoid skewing */
+        body { font-family: sans-serif; padding: 20px; background: white; color: black; margin: 0; }
+        .logo-text { color: #ff6600; font-weight: 900; font-size: 28px; text-align: center; margin-bottom: 30px; }
         
-        /* Using standard buttons to prevent layout skewing */
-        .tap-btn { width: 100%; padding: 22px; margin-bottom: 12px; font-size: 16px; font-weight: bold; cursor: pointer; border: 1px solid #ccc; border-radius: 8px; background: #f2f2f2; text-align: left; display: block; }
-        .act-btn { background: #ff6600; color: white; border: none; text-align: center; }
-        .nav-back { background: #fff; border: 1px solid #ff6600; color: #ff6600; text-align: center; padding: 12px; text-decoration: none; display: block; margin-bottom: 20px; font-weight: bold; border-radius: 8px; }
+        /* Using native block elements that cannot warp on mobile */
+        .box-screen { display: none; }
+        .box-active { display: block !important; }
         
-        input, textarea, select { width: 100%; padding: 16px; margin: 8px 0 15px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; box-sizing: border-box; display: block; }
-        .big-total { text-align: right; font-size: 30px; font-weight: 800; color: #ff6600; margin: 15px 0; }
-        .final-box { border: 2px solid #000; padding: 15px; font-size: 14px; background: #fff; line-height: 1.4; }
+        .main-button { width: 100%; padding: 25px; margin-bottom: 15px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 10px; font-size: 18px; font-weight: bold; text-align: left; color: #ff6600; cursor: pointer; display: block; }
+        .action-btn { background: #ff6600; color: white; border: none; text-align: center; }
+        .back-link { display: block; padding: 15px; border: 1px solid #ff6600; color: #ff6600; text-decoration: none; text-align: center; margin-bottom: 25px; font-weight: bold; border-radius: 5px; }
+        
+        input, textarea, select { width: 100%; padding: 18px; margin: 10px 0 20px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; display: block; }
+        .price-display { text-align: right; font-size: 32px; font-weight: bold; color: #ff6600; margin: 20px 0; }
+        .output-card { border: 2px solid black; padding: 20px; font-size: 15px; line-height: 1.5; background: white; }
     </style>
 </head>
 <body>
 
-    <div class="head-logo">toolboxpay</div>
+    <div class="logo-text">toolboxpay</div>
 
-    <div id="p-main" class="page-view show-page">
-        <button class="tap-btn" onclick="sw('p-calc')">NEW QUOTE →</button>
-        <button class="tap-btn" onclick="sw('p-hist'); getList();">HISTORY →</button>
-        <button class="tap-btn" onclick="sw('p-biz')">BUSINESS SETUP →</button>
-        <button class="tap-btn" onclick="sw('p-bank')">BANK DETAILS →</button>
+    <div id="scr_main" class="box-screen box-active">
+        <button class="main-button" onclick="goto('scr_calc')">NEW QUOTE →</button>
+        <button class="main-button" onclick="goto('scr_hist'); runHistory();">HISTORY →</button>
+        <button class="main-button" onclick="goto('scr_biz')">BUSINESS SETUP →</button>
+        <button class="main-button" onclick="goto('scr_bank')">BANK DETAILS →</button>
     </div>
 
-    <div id="p-calc" class="page-view">
-        <a href="javascript:location.reload()" class="nav-back">← BACK TO MENU</a>
-        <input type="text" id="in-name" placeholder="Client Name">
-        <input type="number" id="in-hrs" placeholder="Hours" oninput="doSum()">
-        <input type="number" id="in-rte" placeholder="Rate" oninput="doSum()">
-        <input type="number" id="in-mat" placeholder="Materials" oninput="doSum()">
-        <div id="sum-out" class="big-total">£0.00</div>
-        <button class="tap-btn act-btn" onclick="pushQ()">SAVE QUOTE</button>
+    <div id="scr_calc" class="box-screen">
+        <a href="javascript:location.reload()" class="back-link">← CANCEL & EXIT</a>
+        <input type="text" id="q_name" placeholder="Client Name">
+        <input type="number" id="q_hrs" placeholder="Labour Hours" oninput="doMath()">
+        <input type="number" id="q_rte" placeholder="Hourly Rate" oninput="doMath()">
+        <input type="number" id="q_mat" placeholder="Materials Cost" oninput="doMath()">
+        <div id="q_total" class="price-display">£0.00</div>
+        <button class="main-button action-btn" onclick="saveNewQuote()">SAVE QUOTE</button>
     </div>
 
-    <div id="p-hist" class="page-view">
-        <a href="javascript:location.reload()" class="nav-back">← BACK TO MENU</a>
-        <div id="list-area"></div>
+    <div id="scr_hist" class="box-screen">
+        <a href="javascript:location.reload()" class="back-link">← BACK TO MENU</a>
+        <div id="history_list_target"></div>
     </div>
 
-    <div id="p-biz" class="page-view">
-        <a href="javascript:location.reload()" class="nav-back">← BACK TO MENU</a>
-        <label style="font-size:12px;font-weight:bold;">CURRENCY</label>
-        <select id="set-cur" onchange="localStorage.setItem('set-cur', this.value)">
-            <option value="£">British Pound (£)</option>
-            <option value="$">US Dollar ($)</option>
-            <option value="€">Euro (€)</option>
+    <div id="scr_biz" class="box-screen">
+        <a href="javascript:location.reload()" class="back-link">← BACK TO MENU</a>
+        <label style="font-size:12px; font-weight:bold;">CURRENCY</label>
+        <select id="s_cur" onchange="localStorage.setItem('v13_cur', this.value)">
+            <option value="£">GBP (£)</option>
+            <option value="$">USD ($)</option>
+            <option value="€">EUR (€)</option>
         </select>
-        <input type="text" id="set-bn" placeholder="Business Name" oninput="localStorage.setItem('set-bn', this.value)">
-        <textarea id="set-ba" placeholder="Business Address" oninput="localStorage.setItem('set-ba', this.value)"></textarea>
+        <input type="text" id="s_bn" placeholder="Business Name" oninput="localStorage.setItem('v13_bn', this.value)">
+        <textarea id="s_ba" placeholder="Business Address" oninput="localStorage.setItem('v13_ba', this.value)"></textarea>
     </div>
 
-    <div id="p-bank" class="page-view">
-        <a href="javascript:location.reload()" class="nav-back">← BACK TO MENU</a>
-        <input type="text" id="set-b1" placeholder="Account Name" oninput="localStorage.setItem('set-b1', this.value)">
-        <input type="text" id="set-b2" placeholder="Sort Code" oninput="localStorage.setItem('set-b2', this.value)">
-        <input type="text" id="set-b3" placeholder="Account Number" oninput="localStorage.setItem('set-b3', this.value)">
-        <input type="url" id="set-bl" placeholder="Payment Link" oninput="localStorage.setItem('set-bl', this.value)">
-    </div>
-
-    <div id="p-view" class="page-view">
-        <button class="nav-back" onclick="sw('p-hist')">← BACK TO LIST</button>
-        <div id="final-cont" class="final-box"></div>
-        <div id="pay-zone"></div>
-        <button class="tap-btn act-btn" style="margin-top:10px" onclick="window.print()">PRINT / PDF</button>
-    </div>
-
-    <script>
-        // Force screen swap by ID
-        function sw(id) {
-            var all = document.querySelectorAll('.page-view');
-            for(var i=0; i<all.length; i++){ all[i].classList.remove('show-page'); }
-            document.getElementById(id).classList.add('show-page');
-            window.scrollTo(0,0);
-        }
-
-        function doSum() {
-            var c = localStorage.getItem('set-cur') || '£';
-            var h = Number(document.getElementById('in-hrs').value) || 0;
-            var r = Number(document.getElementById('in-rte').value) || 0;
-            var m = Number(document.getElementById('in-mat').value) || 0;
-            document.getElementById('sum-out').innerText = c + ( (h*r)+m ).toFixed(2);
-        }
-
-        function pushQ() {
-            var c = localStorage.getItem('set-cur') || '£';
-            var h = Number(document.getElementById('in-hrs').value) || 0;
-            var r = Number(document.getElementById('in-rte').value) || 0;
-            var m = Number(document.getElementById('in-mat').value) || 0;
-            var t = (h*r)+m;
-            var j = JSON.parse(localStorage.getItem('saved-jobs') || '[]');
-            j.unshift({id: Date.now(), n: document.getElementById('in-name').value||'Client', t: c+t.toFixed(2), d: new Date().toLocaleDateString('en-GB')});
-            localStorage.setItem('saved-jobs', JSON.stringify(j.slice(0,20)));
-            location.reload();
-        }
-
-        function getList() {
-            var j = JSON.parse(localStorage.getItem('saved-jobs') || '[]');
-            document.getElementById('list-area').innerHTML = j.map(function(x) {
-                return '<button class="tap-btn" onclick="openFull('+x.id+')">'+x.n+'<br><small style="color:#666;">'+x.d+' - '+x.t+'</small></button>';
-            }).join('') || '<p style="text-align:center;">No history found.</p>';
-        }
-
-        function openFull(id) {
-            var j = JSON.parse(localStorage.getItem('saved-jobs')||'[]').find(function(x){return x.id === id;});
-            if(!j) return;
-            document.getElementById('final-cont').innerHTML = '<strong>'+(localStorage.getItem('set-bn')||'Business')+'</strong><br>'+(localStorage.getItem('set-ba')||'')+'<hr>Client: '+j.n+'<br>Date: '+j.d+'<br><strong>Total: '+j.t+'</strong><hr>Bank: '+(localStorage.getItem('set-b1')||'')+'<br>Sort Code: '+(localStorage.getItem('set-b2')||'')+'<br>Acc No: '+(localStorage.getItem('set-b3')||'');
-            var link = localStorage.getItem('set-bl');
-            document.getElementById('pay-zone').innerHTML = link ? '<button class="tap-btn act-btn" style="background:#2ecc71; margin-top:10px;" onclick="window.open(\''+link+'\',\'_blank\')">PAY NOW ONLINE</button>' : '';
-            sw('p-view');
-        }
-
-        window.onload = function() {
-            var fields = ['set-bn','set-ba','set-b1','set-b2','set-b3','set-bl','set-cur'];
-            for(var i=0; i<fields.length; i++) {
-                var val = localStorage.getItem(fields[i]);
-                if(val && document.getElementById(fields[i])) { document.getElementById(fields[i]).value = val; }
-            }
-            doSum();
-        };
-    </script>
-</body>
-</html>
+    <div id="scr_bank" class="box-screen">
+        <a href="javascript:location.reload()" class="back-link
