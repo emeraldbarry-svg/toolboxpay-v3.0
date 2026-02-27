@@ -2,84 +2,142 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>toolboxpay v15.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toolboxpay v17.0 - LAPTOP BUILD</title>
     <style>
-        /* THE ULTIMATE RESET: No containers, no floats, no flex. Just vertical blocks. */
-        body { font-family: sans-serif; padding: 15px; background: #fff; color: #000; margin: 0; }
-        .logo-box { color: #ff6600; font-weight: 900; font-size: 24px; text-align: center; margin-bottom: 20px; }
-        
-        /* Direct Block Buttons: These cannot skew as they follow the screen width naturally */
-        .btn-link { display: block; width: 100%; padding: 22px; margin-bottom: 12px; background: #f4f4f4; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: bold; color: #ff6600; text-decoration: none; box-sizing: border-box; }
-        .btn-save { background: #ff6600; color: #fff; border: none; text-align: center; }
-        .btn-back { background: #fff; border: 1px solid #ff6600; color: #ff6600; text-align: center; padding: 10px; font-size: 14px; margin-bottom: 20px; }
+        /* THE DESKTOP FIX: Centers the app on a large screen */
+        body { 
+            background: #222; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            font-family: sans-serif; 
+        }
 
-        .view-panel { display: none; }
-        .view-panel:target { display: block !important; }
-        #home:not(:target) { display: block; }
-        .view-panel:target ~ #home { display: none; }
+        /* This container simulates a phone screen on your laptop */
+        .app-shell { 
+            background: #fff; 
+            width: 100%; 
+            max-width: 450px; 
+            min-height: 100vh; 
+            padding: 20px; 
+            box-sizing: border-box; 
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
 
-        input, textarea, select { width: 100%; padding: 16px; margin: 8px 0 15px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; box-sizing: border-box; display: block; }
-        .total-text { text-align: right; font-size: 32px; font-weight: 900; color: #ff6600; padding: 10px 0; }
-        .receipt-card { border: 2px solid #000; padding: 15px; background: #fff; font-size: 14px; line-height: 1.5; }
+        .logo { color: #ff6600; font-weight: 900; font-size: 28px; text-align: center; margin-bottom: 30px; }
+        .logo span { color: #000; }
+
+        .btn { display: block; width: 100%; padding: 22px; margin-bottom: 15px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 10px; font-size: 17px; font-weight: bold; text-align: left; color: #ff6600; cursor: pointer; }
+        .btn-org { background: #ff6600; color: #fff; border: none; text-align: center; }
+        .btn-back { background: #fff; border: 1px solid #ff6600; color: #ff6600; text-align: center; padding: 10px; margin-bottom: 20px; font-size: 14px; width: 100%; }
+
+        .screen { display: none; }
+        .screen:target { display: block !important; }
+        #dash:not(:target) { display: block; }
+        .screen:target ~ #dash { display: none; }
+
+        input, textarea, select { width: 100%; padding: 18px; margin: 10px 0 20px 0; border: 1px solid #bbb; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        .total { text-align: right; font-size: 34px; font-weight: 900; color: #ff6600; margin: 20px 0; }
+        .card { border: 2px solid #000; padding: 20px; background: #fff; line-height: 1.6; }
     </style>
 </head>
 <body>
 
-    <div class="logo-box">toolboxpay</div>
+    <div class="app-shell">
+        <div class="logo">toolbox<span>pay</span></div>
 
-    <div id="home" class="view-panel">
-        <a href="#quote" class="btn-link">NEW QUOTE →</a>
-        <a href="#history" class="btn-link" onclick="drawH()">HISTORY →</a>
-        <a href="#setup" class="btn-link">BUSINESS SETUP →</a>
-        <a href="#bank" class="btn-link">BANK DETAILS →</a>
-        <button onclick="localStorage.clear(); location.reload();" style="width:100%; background:none; border:none; color:#999; font-size:10px; margin-top:40px;">FORCE APP RESET (CLEARS ALL DATA)</button>
-    </div>
+        <div id="dash" class="screen">
+            <button class="btn" onclick="window.location.hash='quote'">NEW QUOTE →</button>
+            <button class="btn" onclick="window.location.hash='hist'; loadH();">HISTORY →</button>
+            <button class="btn" onclick="window.location.hash='setup'">BUSINESS SETUP →</button>
+            <button class="btn" onclick="window.location.hash='bank'">BANK DETAILS →</button>
+        </div>
 
-    <div id="quote" class="view-panel">
-        <a href="#" class="btn-link btn-back">← BACK TO MENU</a>
-        <input type="text" id="c_name" placeholder="Client Name">
-        <input type="number" id="c_hrs" placeholder="Labour Hours" oninput="calc()">
-        <input type="number" id="c_rte" placeholder="Hourly Rate" oninput="calc()">
-        <input type="number" id="c_mat" placeholder="Materials Cost" oninput="calc()">
-        <div id="c_total" class="total-text">£0.00</div>
-        <button class="btn-link btn-save" onclick="saveQ()">SAVE QUOTE</button>
-    </div>
+        <div id="quote" class="screen">
+            <button class="btn-back" onclick="window.location.hash=''">← BACK</button>
+            <input type="text" id="q-name" placeholder="Customer Name">
+            <input type="number" id="q-hrs" placeholder="Hours" oninput="runM()">
+            <input type="number" id="q-rte" placeholder="Rate" oninput="runM()">
+            <input type="number" id="q-mat" placeholder="Materials" oninput="runM()">
+            <div id="q-out" class="total">£0.00</div>
+            <button class="btn btn-org" onclick="saveQ()">SAVE QUOTE</button>
+        </div>
 
-    <div id="history" class="view-panel">
-        <a href="#" class="btn-link btn-back">← BACK TO MENU</a>
-        <div id="history-target"></div>
-    </div>
+        <div id="hist" class="screen">
+            <button class="btn-back" onclick="window.location.hash=''">← BACK</button>
+            <div id="h-list"></div>
+        </div>
 
-    <div id="setup" class="view-panel">
-        <a href="#" class="btn-link btn-back">← BACK TO MENU</a>
-        <label style="font-size:11px; font-weight:bold;">CURRENCY</label>
-        <select id="s_cur" onchange="localStorage.setItem('v15_cur', this.value)">
-            <option value="£">GBP (£)</option>
-            <option value="$">USD ($)</option>
-            <option value="€">EUR (€)</option>
-        </select>
-        <input type="text" id="s_bn" placeholder="Business Name" oninput="localStorage.setItem('v15_bn', this.value)">
-        <textarea id="s_ba" placeholder="Business Address" oninput="localStorage.setItem('v15_ba', this.value)"></textarea>
-    </div>
+        <div id="setup" class="screen">
+            <button class="btn-back" onclick="window.location.hash=''">← BACK</button>
+            <select id="s-cur" onchange="localStorage.setItem('v17_cur', this.value)">
+                <option value="£">GBP (£)</option>
+                <option value="$">USD ($)</option>
+                <option value="€">EUR (€)</option>
+            </select>
+            <input type="text" id="s-bn" placeholder="Business Name" oninput="localStorage.setItem('v17_bn', this.value)">
+            <textarea id="s-ba" placeholder="Address" oninput="localStorage.setItem('v17_ba', this.value)"></textarea>
+        </div>
 
-    <div id="bank" class="view-panel">
-        <a href="#" class="btn-link btn-back">← BACK TO MENU</a>
-        <input type="text" id="s_b1" placeholder="Account Name" oninput="localStorage.setItem('v15_b1', this.value)">
-        <input type="text" id="s_b2" placeholder="Sort Code" oninput="localStorage.setItem('v15_b2', this.value)">
-        <input type="text" id="s_b3" placeholder="Account Number" oninput="localStorage.setItem('v15_b3', this.value)">
-        <input type="url" id="s_bl" placeholder="Payment Link" oninput="localStorage.setItem('v15_bl', this.value)">
-    </div>
+        <div id="bank" class="screen">
+            <button class="btn-back" onclick="window.location.hash=''">← BACK</button>
+            <input type="text" id="s-b1" placeholder="Account Name" oninput="localStorage.setItem('v17_b1', this.value)">
+            <input type="text" id="s-b2" placeholder="Sort Code" oninput="localStorage.setItem('v17_b2', this.value)">
+            <input type="text" id="s-b3" placeholder="Account Number" oninput="localStorage.setItem('v17_b3', this.value)">
+        </div>
 
-    <div id="view" class="view-panel">
-        <a href="#history" class="btn-link btn-back">← BACK TO HISTORY</a>
-        <div id="v-target" class="receipt-card"></div>
-        <div id="p-target"></div>
-        <button class="btn-link btn-save" style="margin-top:15px" onclick="window.print()">SAVE AS PDF</button>
+        <div id="view" class="screen">
+            <button class="btn-back" onclick="window.location.hash='hist'">← BACK</button>
+            <div id="v-out" class="card"></div>
+            <button class="btn btn-org" style="margin-top:20px" onclick="window.print()">PRINT / PDF</button>
+        </div>
     </div>
 
     <script>
-        const pfx = "v15_";
+        const V = "v17_";
 
-        function calc() {
-            var sym = localStorage.
+        function runM() {
+            var s = localStorage.getItem(V+'cur') || '£';
+            var h = Number(document.getElementById('q-hrs').value) || 0;
+            var r = Number(document.getElementById('q-rte').value) || 0;
+            var m = Number(document.getElementById('q-mat').value) || 0;
+            document.getElementById('q-out').innerText = s + ((h*r)+m).toFixed(2);
+        }
+
+        function saveQ() {
+            var s = localStorage.getItem(V+'cur') || '£';
+            var h = Number(document.getElementById('q-hrs').value) || 0;
+            var r = Number(document.getElementById('q-rte').value) || 0;
+            var m = Number(document.getElementById('q-mat').value) || 0;
+            var jobs = JSON.parse(localStorage.getItem(V+'data') || '[]');
+            jobs.unshift({id: Date.now(), n: document.getElementById('q-name').value || 'Client', t: s + ((h*r)+m).toFixed(2), d: new Date().toLocaleDateString('en-GB')});
+            localStorage.setItem(V+'data', JSON.stringify(jobs.slice(0,30)));
+            location.reload();
+        }
+
+        function loadH() {
+            var jobs = JSON.parse(localStorage.getItem(V+'data') || '[]');
+            document.getElementById('h-list').innerHTML = jobs.map(function(j) {
+                return '<button class="btn" onclick="openQ('+j.id+')">'+j.n+'<br><small>'+j.d+' — '+j.t+'</small></button>';
+            }).join('') || '<p>No history.</p>';
+        }
+
+        function openQ(id) {
+            var jobs = JSON.parse(localStorage.getItem(V+'data') || '[]');
+            var j = jobs.find(x => x.id === id);
+            if(!j) return;
+            document.getElementById('v-out').innerHTML = '<strong>'+(localStorage.getItem(V+'bn')||'Business')+'</strong><br>'+(localStorage.getItem(V+'ba')||'')+'<hr>Client: '+j.n+'<br>Total: '+j.t+'<hr>Bank: '+(localStorage.getItem(V+'b1')||'')+'<br>Sort: '+(localStorage.getItem(V+'b2')||'')+'<br>Acc: '+(localStorage.getItem(V+'b3')||'');
+            window.location.hash = "view";
+        }
+
+        window.onload = function() {
+            ['bn','ba','b1','b2','b3','cur'].forEach(k => {
+                var val = localStorage.getItem(V+k);
+                if(val && document.getElementById('s-'+k)) document.getElementById('s-'+k).value = val;
+            });
+            runM();
+        };
+    </script>
+</body>
+</html>
