@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v8.7</title>
+    <title>toolboxpay - v8.8</title>
     <style>
-        /* BRANDING & THEME [cite: 2020-02-20, 2026-02-21] */
+        /* ORIGINAL BRANDING [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: #4a4a4a; color: #fff; margin: 0; font-family: sans-serif; display: flex; justify-content: center; }
         #app-viewport { width: 100%; max-width: 420px; padding: 20px; min-height: 100vh; position: relative; }
 
-        /* ORANGE CLOCK */
+        /* PERFECT ORANGE CLOCK */
         #live-clock { position: absolute; top: 25px; right: 25px; font-size: 14px; font-weight: 900; color: #ff6600; letter-spacing: 1px; font-family: monospace; }
         .header { text-align: center; padding: 25px 0 15px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
@@ -20,33 +20,28 @@
         .view { display: none; width: 100%; }
         .view.active { display: block; }
 
-        /* DASHBOARD */
+        /* DASHBOARD STACK */
         .stack { display: flex; flex-direction: column; gap: 15px; }
         .tile { background: #222; border-radius: 20px; padding: 20px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; }
         .icon-box { width: 50px; height: 50px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 24px; }
         .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* CARDS & FORMS */
+        /* BUSINESS FORM STYLES */
         .nav-header { padding: 10px 0 20px 0; }
         .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 10px 15px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; }
         .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-bottom: 20px; }
         h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; }
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
-        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; }
-
-        /* CALCULATOR GRID [cite: 2026-02-27] */
-        .calc-screen { background: #000; color: #ff6600; padding: 25px; text-align: right; font-size: 38px; font-weight: 900; border-radius: 15px; margin-bottom: 15px; min-height: 90px; border: 1px solid #333; }
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .c-btn { background: #333; color: #fff; border: none; padding: 22px 10px; border-radius: 12px; font-weight: 900; font-size: 20px; cursor: pointer; }
-        .c-btn.orange { background: #ff6600; color: #000; }
-        .c-btn.wide { grid-column: span 2; background: #fff; color: #000; }
+        input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; outline: none; }
+        
+        /* RESULTS DISPLAY [cite: 2026-02-27] */
+        .result-box { background: #000; padding: 20px; border-radius: 15px; border-left: 4px solid #ff6600; margin-top: 10px; }
+        .result-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 800; }
+        .res-val { color: #ff6600; }
+        .grand-total { font-size: 32px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 10px; border-top: 1px solid #333; padding-top: 10px; }
 
         /* BUTTONS */
-        .btn-wa { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; cursor: pointer; }
-        .btn-save { width: 100%; background: #ff6600; color: #000; padding: 18px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
-        
-        /* HISTORY LIST [cite: 2026-02-27] */
-        .hist-item { background: #000; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid #ff6600; }
+        .btn-wa { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -59,95 +54,58 @@
             <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         </div>
         <div class="stack">
-            <div class="tile" onclick="nav('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
-            <div class="tile" onclick="nav('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
-            <div class="tile" onclick="nav('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
-            <div class="tile" onclick="nav('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
-            <div class="tile" onclick="nav('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
+            <div class="tile" onclick="go('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
+            <div class="tile" onclick="go('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
+            <div class="tile" onclick="go('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
+            <div class="tile" onclick="go('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
+            <div class="tile" onclick="go('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
         </div>
     </div>
 
     <div id="view-calc" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
+        <div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div>
         <div class="card">
-            <h2>Calculator</h2>
-            <div class="calc-screen" id="disp">0</div>
-            <div class="calc-grid">
-                <button class="c-btn orange" onclick="cls()">C</button>
-                <button class="c-btn orange" onclick="op('/')">÷</button>
-                <button class="c-btn orange" onclick="op('*')">×</button>
-                <button class="c-btn orange" onclick="op('-')">-</button>
-                <button class="c-btn" onclick="num('7')">7</button>
-                <button class="c-btn" onclick="num('8')">8</button>
-                <button class="c-btn" onclick="num('9')">9</button>
-                <button class="c-btn orange" onclick="op('+')">+</button>
-                <button class="c-btn" onclick="num('4')">4</button>
-                <button class="c-btn" onclick="num('5')">5</button>
-                <button class="c-btn" onclick="num('6')">6</button>
-                <button class="c-btn" onclick="num('1')">1</button>
-                <button class="c-btn" onclick="num('2')">2</button>
-                <button class="c-btn" onclick="num('3')">3</button>
-                <button class="c-btn" onclick="num('0')">0</button>
-                <button class="c-btn" onclick="num('.')">.</button>
-                <button class="c-btn wide" onclick="equal()">=</button>
+            <h2>Business Calculator</h2>
+            <label>Day Rate (£)</label>
+            <input type="number" id="c-rate" placeholder="0.00" oninput="runCalc()">
+            
+            <label>Days Worked</label>
+            <input type="number" id="c-days" placeholder="0" oninput="runCalc()">
+            
+            <label>Materials Cost (£)</label>
+            <input type="number" id="c-mats" placeholder="0.00" oninput="runCalc()">
+
+            <div class="result-box">
+                <div class="result-row"><span>Labour:</span><span class="res-val" id="res-labour">£0.00</span></div>
+                <div class="result-row"><span>Materials:</span><span class="res-val" id="res-mats">£0.00</span></div>
+                <div class="result-row"><span>VAT (20%):</span><span class="res-val" id="res-vat">£0.00</span></div>
+                <div class="grand-total" id="res-total">£0.00</div>
             </div>
+            
+            <button class="btn-wa" onclick="shareCalc()">Share Breakdown</button>
         </div>
     </div>
 
     <div id="view-quote" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
+        <div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div>
         <div class="card">
             <h2>New Quote</h2>
             <label>Client Name</label><input type="text" id="c-name">
-            <label>Labour Description</label><textarea id="l-desc" style="height:80px;"></textarea>
-            <label>Total Price (£)</label><input type="number" id="p-in" oninput="upT()">
-            <div style="font-size:48px; font-weight:900; color:#ff6600; text-align:right;" id="q-total">£0.00</div>
+            <label>Labour Description</label><input type="text" id="l-desc">
+            <label>Price (£)</label><input type="number" id="p-in" oninput="upQ()">
+            <div class="grand-total" id="q-total" style="border:none;">£0.00</div>
             <button class="btn-wa" onclick="waQ()">Send via WhatsApp</button>
-            <button class="btn-save" onclick="saveJ()">Save Job</button>
         </div>
     </div>
 
-    <div id="view-history" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
-        <div class="card">
-            <h2>Job History</h2>
-            <div id="history-list">
-                <div class="hist-item" style="color:#888;">No jobs saved yet. Quotes you save will appear here.</div>
-            </div>
-        </div>
-    </div>
-
-    <div id="view-bank" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
-        <div class="card">
-            <h2>Bank Setup</h2>
-            <label>Business Name</label><input type="text" id="b-name" oninput="sv('bn',this.value)">
-            <label>Bank Name</label><input type="text" id="b-bank" oninput="sv('bk',this.value)">
-            <label>Sort Code</label><input type="text" id="b-sort" oninput="sv('sc',this.value)">
-            <label>Account No.</label><input type="text" id="b-acc" oninput="sv('an',this.value)">
-            <button class="btn-wa" onclick="waB()">Share Bank Details</button>
-        </div>
-    </div>
-
-    <div id="view-readme" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
-        <div class="card">
-            <h2>Read Me</h2>
-            <p style="color:#ccc; line-height:1.6; font-size:14px;">
-                <strong>toolboxpay v8.7</strong><br><br>
-                1. <strong>Calculator:</strong> Use for quick pricing on-site. [cite: 2026-02-27]<br>
-                2. <strong>Quotes:</strong> Standard British English "Labour" used for all work descriptions. [cite: 2020-02-20]<br>
-                3. <strong>Bank Details:</strong> These are stored locally and will be here next time you open the app. [cite: 2026-02-26]<br>
-                4. <strong>WhatsApp:</strong> Use the green buttons to send quotes or bank info instantly. [cite: 2026-02-27]
-            </p>
-        </div>
-    </div>
+    <div id="view-bank" class="view"><div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div><div class="card"><h2>Bank Setup</h2><label>Business Name</label><input type="text" id="b-name" oninput="sv('bn',this.value)"></div></div>
+    <div id="view-history" class="view"><div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div><div class="card"><h2>Job History</h2><p>Coming soon...</p></div></div>
+    <div id="view-readme" class="view"><div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div><div class="card"><h2>Read Me</h2><p>Original Build Structure v8.8</p></div></div>
 
 </div>
 
 <script>
-    const K = "TBP_V87_FINAL";
-    let exp = "";
+    const K = "TBP_V88_STRUCTURE";
 
     function tick() {
         const d = new Date();
@@ -156,44 +114,40 @@
     }
     setInterval(tick, 1000);
 
-    function nav(id) {
+    function go(id) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
     }
 
-    /* CALC FUNCTIONS [cite: 2026-02-27] */
-    function num(n) { exp += n; document.getElementById('disp').innerText = exp; }
-    function op(o) { exp += " " + o + " "; document.getElementById('disp').innerText = exp; }
-    function cls() { exp = ""; document.getElementById('disp').innerText = "0"; }
-    function equal() {
-        try { 
-            const r = eval(exp); 
-            document.getElementById('disp').innerText = r; 
-            exp = r.toString(); 
-        } catch(e) { document.getElementById('disp').innerText = "Error"; exp = ""; }
+    /* BUSINESS CALC LOGIC [cite: 2026-02-27] */
+    function runCalc() {
+        const rate = parseFloat(document.getElementById('c-rate').value) || 0;
+        const days = parseFloat(document.getElementById('c-days').value) || 0;
+        const mats = parseFloat(document.getElementById('c-mats').value) || 0;
+        
+        const labour = rate * days;
+        const subtotal = labour + mats;
+        const vat = subtotal * 0.20;
+        const total = subtotal + vat;
+
+        document.getElementById('res-labour').innerText = "£" + labour.toFixed(2);
+        document.getElementById('res-mats').innerText = "£" + mats.toFixed(2);
+        document.getElementById('res-vat').innerText = "£" + vat.toFixed(2);
+        document.getElementById('res-total').innerText = "£" + total.toFixed(2);
+    }
+
+    function shareCalc() {
+        const msg = `Job Breakdown:\nLabour: ${document.getElementById('res-labour').innerText}\nMaterials: ${document.getElementById('res-mats').innerText}\nVAT (20%): ${document.getElementById('res-vat').innerText}\nTotal: ${document.getElementById('res-total').innerText}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     function sv(k, v) { localStorage.setItem(K + k, v); }
     function gt(k) { return localStorage.getItem(K + k) || ""; }
-    function upT() { const v = parseFloat(document.getElementById('p-in').value) || 0; document.getElementById('q-total').innerText = "£" + v.toFixed(2); }
-
-    function waQ() {
-        const msg = `Quote from ${gt('bn') || "Business"}:\nLabour: ${document.getElementById('l-desc').value}\nTotal: ${document.getElementById('q-total').innerText}`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    function waB() {
-        const msg = `Bank Details:\nBank: ${gt('bk')}\nSort: ${gt('sc')}\nAcc: ${gt('an')}`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-    }
+    function upQ() { const v = parseFloat(document.getElementById('p-in').value) || 0; document.getElementById('q-total').innerText = "£" + v.toFixed(2); }
 
     window.onload = function() {
         tick();
         document.getElementById('b-name').value = gt('bn');
-        document.getElementById('b-bank').value = gt('bk');
-        document.getElementById('b-sort').value = gt('sc');
-        document.getElementById('b-acc').value = gt('an');
     };
 </script>
 </body>
