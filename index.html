@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v8.1</title>
+    <title>toolboxpay - v8.2</title>
     <style>
-        /* BRANDING */
+        /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             background: #4a4a4a; 
@@ -22,19 +22,6 @@
             max-width: 420px;
             padding: 20px;
             min-height: 100vh;
-            position: relative;
-        }
-
-        /* LIVE CLOCK */
-        #live-clock {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            font-size: 14px;
-            font-weight: 900;
-            color: #ff6600;
-            letter-spacing: 1px;
-            font-family: monospace;
         }
 
         /* LOGO */
@@ -43,6 +30,7 @@
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
+        /* VIEW LOGIC */
         .view { display: none; width: 100%; }
         .view.active { display: block; }
 
@@ -61,7 +49,7 @@
         }
         .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SUB-PAGE NAVIGATION */
+        /* NAVIGATION */
         .nav-header { padding: 10px 0 20px 0; }
         .back-btn { 
             background: #000; color: #ff6600; border: 2px solid #ff6600; 
@@ -80,7 +68,7 @@
         }
         .total-display { font-size: 58px; font-weight: 900; color: #ff6600; text-align: right; margin: 5px 0; }
 
-        /* BUTTONS - HIGH VISIBILITY */
+        /* BUTTONS [cite: 2026-02-27] */
         .btn-wa { 
             width: 100%; background: #25D366; color: #000; padding: 20px; border: none; 
             border-radius: 15px; font-weight: 900; font-size: 14px; text-transform: uppercase; 
@@ -98,7 +86,6 @@
 <div id="app-viewport">
     
     <div id="view-home" class="view active">
-        <div id="live-clock">00:00:00</div>
         <div class="header">
             <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         </div>
@@ -119,7 +106,6 @@
             <label>Labour Description</label><textarea id="l-desc" style="height:80px;" placeholder="Details..."></textarea>
             <label>Total Price (£)</label><input type="number" id="p-in" oninput="upTotal()" placeholder="0.00">
             <div class="total-display" id="q-total">£0.00</div>
-            
             <button class="btn-wa" onclick="sendQuoteWA()">Send via WhatsApp</button>
             <button class="btn-save" onclick="nav('view-home')">Save to History</button>
         </div>
@@ -133,30 +119,58 @@
             <label>Bank Name</label><input type="text" id="b-bank" oninput="sv('bk',this.value)">
             <label>Sort Code</label><input type="text" id="b-sort" oninput="sv('sc',this.value)">
             <label>Account No.</label><input type="text" id="b-acc" oninput="sv('an',this.value)">
-            
             <button class="btn-wa" onclick="sendBankWA()">Share via WhatsApp</button>
         </div>
     </div>
 
-    <div id="view-calc" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>Calculator</h2><p>British Simple Maths Tool coming next.</p></div></div>
-    <div id="view-history" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>History</h2><p>Previous Labour recorded here.</p></div></div>
-    <div id="view-readme" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>Read Me</h2><p>v8.1 Stable Build</p></div></div>
+    <div id="view-calc" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>Calculator</h2></div></div>
+    <div id="view-history" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>History</h2></div></div>
+    <div id="view-readme" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>Read Me</h2><p>v8.2 (Clock Removed)</p></div></div>
 
 </div>
 
 <script>
-    const STORAGE_KEY = "TBP_V81_STABLE";
+    const STORAGE_KEY = "TBP_V82_FINAL";
 
-    function tick() {
-        const now = new Date();
-        const time = now.getHours().toString().padStart(2, '0') + ":" + 
-                     now.getMinutes().toString().padStart(2, '0') + ":" + 
-                     now.getSeconds().toString().padStart(2, '0');
-        const el = document.getElementById('live-clock');
-        if (el) el.innerText = time;
-    }
-    setInterval(tick, 1000);
-
+    // SIMPLE NAV [cite: 2026-02-27]
     function nav(id) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+        const target = document.getElementById(id);
+        if (target) target.classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    // PERSISTENCE [cite: 2026-02-26, 2026-02-27]
+    function sv(k, v) { localStorage.setItem(STORAGE_KEY + k, v); }
+    function gt(k) { return localStorage.getItem(STORAGE_KEY + k) || ""; }
+
+    function upTotal() {
+        const p = parseFloat(document.getElementById('p-in').value) || 0;
+        document.getElementById('q-total').innerText = "£" + p.toFixed(2);
+    }
+
+    // WHATSAPP [cite: 2026-02-27]
+    function sendQuoteWA() {
+        const client = document.getElementById('c-name').value || "Client";
+        const desc = document.getElementById('l-desc').value || "Works";
+        const total = document.getElementById('q-total').innerText;
+        const biz = gt('bn') || "toolboxpay User";
+        const msg = `Hi ${client}, here is your quote from ${biz}:\n\nLabour: ${desc}\nTotal: ${total}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function sendBankWA() {
+        const biz = gt('bn') || "Business";
+        const msg = `Bank Details for ${biz}:\nBank: ${gt('bk')}\nSort Code: ${gt('sc')}\nAccount No: ${gt('an')}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    window.onload = () => {
+        document.getElementById('b-name').value = gt('bn');
+        document.getElementById('b-bank').value = gt('bk');
+        document.getElementById('b-sort').value = gt('sc');
+        document.getElementById('b-acc').value = gt('an');
+    };
+</script>
+</body>
+</html>
