@@ -10,6 +10,7 @@
         body { background: var(--bg); color: var(--wht); font-family: -apple-system, sans-serif; display: flex; justify-content: center; min-height: 100vh; padding: 20px; }
         .shell { width: 100%; max-width: 380px; }
         
+        /* Logo: toolbox in orange, pay in white */
         .logo { text-align: center; margin-bottom: 35px; font-size: 34px; font-weight: 800; letter-spacing: -1px; }
         .logo span { color: var(--org); }
 
@@ -29,10 +30,11 @@
         .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 30px; background: rgba(255,102,0,0.05); }
         .price { color: var(--org); font-size: 26px; font-weight: 800; }
 
+        /* Buttons */
         .btn-main { width: 100%; padding: 16px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: 800; text-transform: uppercase; font-size: 14px; }
         .btn-reset { width: 100%; padding: 12px; background: none; border: 1px solid #233554; color: #8892b0; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 600; font-size: 13px; text-transform: uppercase; }
 
-        /* Summary Styling */
+        /* Summary Styling (Invoice Look) */
         .summary-card { background: var(--wht); color: #333; padding: 25px; border-radius: 12px; margin-top: 10px; }
         .summary-card h2 { color: #000; font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
@@ -82,9 +84,9 @@
             <div class="summary-total">Total: <span id="s-total">£0.00</span></div>
             
             <div class="tag" style="color:#666; border-color:#eee; margin-top:20px;">Payment Details</div>
-            <div class="summary-row" style="font-size:12px;"><span>Account:</span> <span id="s-acc">---</span></div>
+            <div class="summary-row" style="font-size:12px;"><span>Account Name:</span> <span id="s-acc">---</span></div>
             <div class="summary-row" style="font-size:12px;"><span>Sort Code:</span> <span id="s-sort">---</span></div>
-            <div class="summary-row" style="font-size:12px;"><span>Number:</span> <span id="s-num">---</span></div>
+            <div class="summary-row" style="font-size:12px;"><span>Account Number:</span> <span id="s-num">---</span></div>
         </div>
         <button class="btn-reset" style="background:var(--crd); color:white; border:none;" onclick="nav('calc')">Back to Edit</button>
     </div>
@@ -133,7 +135,8 @@
         const m = parseFloat(document.getElementById('m').value) || 0;
         const total = (h * r) + m;
 
-        document.getElementById('s-biz-name').innerText = localStorage.getItem('biz-name') || 'Quote';
+        // Pull stored business/bank data for the summary
+        document.getElementById('s-biz-name').innerText = localStorage.getItem('biz-name') || 'Quote Summary';
         document.getElementById('s-labour').innerText = '£' + (h * r).toLocaleString('en-GB', {minimumFractionDigits: 2});
         document.getElementById('s-materials').innerText = '£' + m.toLocaleString('en-GB', {minimumFractionDigits: 2});
         document.getElementById('s-total').innerText = '£' + total.toLocaleString('en-GB', {minimumFractionDigits: 2});
@@ -144,6 +147,7 @@
         nav('summary');
     }
 
+    // Auto-save logic
     const fields = ['biz-name', 'biz-email', 'biz-phone', 'bank-acc', 'bank-sort', 'bank-num'];
     fields.forEach(f => {
         const el = document.getElementById(f);
