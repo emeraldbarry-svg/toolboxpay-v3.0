@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v3.5</title>
+    <title>toolboxpay v3.5 - Stable</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
@@ -101,36 +101,4 @@
         document.getElementById('res').innerText = '£' + (sub + v).toLocaleString('en-GB', {minimumFractionDigits: 2});
     }
     function gen() {
-        const h = parseFloat(document.getElementById('h').value) || 0;
-        const r = parseFloat(document.getElementById('r').value) || 0;
-        const m = parseFloat(document.getElementById('m').value) || 0;
-        const sub = (h * r) + m;
-        const isV = document.getElementById('v-tog').checked;
-        const v = isV ? (sub * 0.2) : 0;
-        
-        document.getElementById('s-biz').innerText = localStorage.getItem('biz-name') || 'Quote';
-        document.getElementById('s-addr').innerText = localStorage.getItem('biz-addr') || '';
-        document.getElementById('s-lab').innerText = '£' + (h * r).toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('s-mat').innerText = '£' + m.toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('s-v-row').style.display = isV ? 'flex' : 'none';
-        document.getElementById('s-v-amt').innerText = '£' + v.toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('s-tot').innerText = '£' + (sub + v).toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('s-acc').innerText = localStorage.getItem('bank-acc') || '---';
-        document.getElementById('s-srt').innerText = localStorage.getItem('bank-sort') || '---';
-        document.getElementById('s-num').innerText = localStorage.getItem('bank-num') || '---';
-        go('summary');
-    }
-    function copyIt() {
-        const text = `QUOTE\n\nTotal: ${document.getElementById('s-tot').innerText}\n\nBank Details:\nAcc: ${document.getElementById('s-acc').innerText}\nSort: ${document.getElementById('s-srt').innerText}\nNo: ${document.getElementById('s-num').innerText}`;
-        navigator.clipboard.writeText(text).then(() => {
-            alert("Copied to clipboard!");
-        });
-    }
-    window.onload = function() {
-        ['biz-name', 'biz-addr', 'bank-acc', 'bank-sort', 'bank-num'].forEach(f => {
-            document.getElementById(f).value = localStorage.getItem(f) || '';
-        });
-    }
-</script>
-</body>
-</html>
+        const h =
