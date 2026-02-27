@@ -1,6 +1,13 @@
 services:
   - type: static
-    name: toolboxpay-v4.0
+    name: toolboxpay-v3.0
     env: static
-    buildCommand: ""
-    publishPath: "."
+    buildCommand: null
+    publishDir: .
+    routes:
+      - type: rewrite
+        source: /
+        destination: /app-final.html
+      - type: rewrite
+        source: /index.html
+        destination: /app-final.html
