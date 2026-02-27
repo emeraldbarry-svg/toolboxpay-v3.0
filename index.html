@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v6.9</title>
+    <title>toolboxpay - v7.0</title>
     <style>
-        /* BRANDING & THEME [cite: 2020-02-20, 2026-02-21] */
+        /* BRANDING & THEME */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             background: #4a4a4a; 
@@ -31,7 +31,7 @@
         .logo .w { color: #ffffff; }
 
         /* TILES */
-        .stack { display: flex; flex-direction: column; gap: 15px; }
+        .stack { display: flex; flex-direction: column; gap: 15px; padding-bottom: 40px; }
         .tile {
             background: #222;
             border-radius: 20px;
@@ -48,7 +48,7 @@
             display: flex; align-items: center; justify-content: center;
             margin-right: 20px; font-size: 24px;
         }
-        .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; }
+        .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
 
         /* PAGES */
         .back-btn { 
@@ -80,13 +80,13 @@
     </div>
 
 <script>
-    const K = "TBP_V69_FINAL";
+    const K = "TBP_V70_FULL";
 
-    // LOAD SAVED DATA [cite: 2026-02-26]
+    // STORAGE
     function st(k, v) { localStorage.setItem(K + k, v); }
     function gt(k) { return localStorage.getItem(K + k) || ""; }
 
-    // RENDER DASHBOARD
+    // DASHBOARD
     function goHome() {
         document.getElementById('main-container').innerHTML = `
             <div class="header">
@@ -94,13 +94,15 @@
             </div>
             <div class="stack">
                 <div class="tile" onclick="goQuotes()"><div class="icon-box">📝</div><span>Job Quotes</span></div>
+                <div class="tile" onclick="goCalc()"><div class="icon-box">🧮</div><span>Calculator</span></div>
+                <div class="tile" onclick="goHistory()"><div class="icon-box">📜</div><span>Job History</span></div>
                 <div class="tile" onclick="goBank()"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
-                <div class="tile" onclick="alert('Calculator Coming Next')"><div class="icon-box">🧮</div><span>Calculator</span></div>
+                <div class="tile" onclick="goReadMe()"><div class="icon-box">📖</div><span>Read Me</span></div>
             </div>
         `;
     }
 
-    // RENDER QUOTES
+    // NEW QUOTE
     function goQuotes() {
         document.getElementById('main-container').innerHTML = `
             <div class="back-btn" onclick="goHome()">← DASHBOARD</div>
@@ -115,7 +117,25 @@
         `;
     }
 
-    // RENDER BANK
+    // CALCULATOR
+    function goCalc() {
+        document.getElementById('main-container').innerHTML = `
+            <div class="back-btn" onclick="goHome()">← DASHBOARD</div>
+            <div class="card">
+                <h2>Calculator</h2>
+                <label>Hours</label><input type="number" id="ch" oninput="runC()">
+                <label>Rate (£)</label><input type="number" id="cr" oninput="runC()">
+                <div class="total-box" id="cv">£0.00</div>
+            </div>
+        `;
+    }
+    function runC() {
+        const h = parseFloat(document.getElementById('ch').value)||0;
+        const r = parseFloat(document.getElementById('cr').value)||0;
+        document.getElementById('cv').innerText = "£" + (h*r).toFixed(2);
+    }
+
+    // BANK SETUP
     function goBank() {
         document.getElementById('main-container').innerHTML = `
             <div class="back-btn" onclick="goHome()">← DASHBOARD</div>
@@ -124,14 +144,3 @@
                 <label>Business Name</label><input type="text" value="${gt('sn')}" oninput="st('sn',this.value)">
                 <label>Bank Name</label><input type="text" value="${gt('sb')}" oninput="st('sb',this.value)">
                 <label>Sort Code</label><input type="text" value="${gt('sc')}" oninput="st('sc',this.value)">
-                <label>Account No.</label><input type="text" value="${gt('an')}" oninput="st('an',this.value)">
-            </div>
-        `;
-    }
-
-    // Initial Load
-    window.onload = goHome;
-</script>
-
-</body>
-</html>
