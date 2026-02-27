@@ -3,35 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v1.2 Expanded</title>
+    <title>toolboxpay - v1.3 Job History</title>
     <style>
-        /* BRANDING: Signature Orange & White on Deep Graphite */
         :root { --orange: #ff6600; --white: #ffffff; --bg: #050505; --card: #141414; --border: #252525; }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--white); margin: 0; font-family: 'Segoe UI', Helvetica, sans-serif; padding-bottom: 60px; }
+        body { background: var(--bg); color: var(--white); margin: 0; font-family: 'Segoe UI', Helvetica, sans-serif; padding-bottom: 80px; }
         
         #app { max-width: 520px; margin: 0 auto; padding: 20px; }
 
-        /* HEADER SECTION */
         .hdr { text-align: center; padding: 50px 0 40px 0; }
         .logo { font-size: 42px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: var(--orange); }
         .logo .w { color: var(--white); }
 
-        /* EXPANDED CONTAINERS */
         section { 
             background: var(--card); 
             border: 1px solid var(--border); 
             border-radius: 18px; 
             padding: 30px; 
-            margin-bottom: 40px; /* Increased space between boxes */
+            margin-bottom: 40px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
 
         h2 { color: var(--orange); font-size: 14px; text-transform: uppercase; letter-spacing: 2.5px; margin: 0 0 25px 0; font-weight: 800; border-bottom: 1px solid #222; padding-bottom: 10px; }
 
-        /* INPUT FIELDS */
         .group { margin-bottom: 22px; }
         label { display: block; font-size: 11px; color: #888; margin-bottom: 10px; text-transform: uppercase; font-weight: 900; letter-spacing: 0.5px; }
         input, textarea { 
@@ -43,14 +39,12 @@
             border-radius: 12px; 
             font-size: 17px; 
             outline: none; 
-            transition: all 0.2s ease;
         }
-        input:focus { border-color: var(--orange); background: #080808; }
+        input:focus { border-color: var(--orange); }
 
         .flex { display: flex; gap: 15px; }
         .flex > div { flex: 1; }
 
-        /* TOTALS & INTERACTION */
         .calc-area { text-align: right; margin-top: 20px; padding-top: 25px; border-top: 1px solid #222; }
         .total-val { font-size: 68px; font-weight: 900; color: var(--orange); letter-spacing: -4px; line-height: 1; margin: 10px 0; }
         
@@ -68,14 +62,13 @@
             margin-top: 25px;
             box-shadow: 0 4px 0 #cc5200;
         }
-        .btn-save:active { transform: translateY(2px); box-shadow: 0 2px 0 #cc5200; }
 
-        /* HISTORY LOGS */
         .log-item { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #222; }
         .log-item:last-child { border: none; }
         .log-name { font-weight: 800; font-size: 18px; color: var(--white); }
         .log-date { font-size: 13px; color: #555; margin-top: 4px; }
         .log-amt { color: var(--orange); font-weight: 900; font-size: 22px; }
+        .job-desc { font-size: 13px; color: #888; margin-top: 5px; font-style: italic; }
     </style>
 </head>
 <body>
@@ -112,8 +105,13 @@
     </section>
 
     <section>
-        <h2>Recent History</h2>
+        <h2>Recent Quotes</h2>
         <div id="hist"></div>
+    </section>
+
+    <section>
+        <h2>Job History</h2>
+        <div id="job_history"></div>
     </section>
 
     <section>
@@ -138,7 +136,7 @@
 </div>
 
 <script>
-    const KEY = "TBP_CLEAN_V1.2_";
+    const KEY = "TBP_CLEAN_V1.3_";
 
     function st(k, v) { localStorage.setItem(KEY+k, v); }
     function gt(k) { return localStorage.getItem(KEY+k) || ""; }
@@ -153,43 +151,15 @@
     function save() {
         const q = {
             n: document.getElementById('q_n').value || "Unnamed Client",
+            l: document.getElementById('q_l').value || "No labour description provided.",
             t: document.getElementById('disp').innerText,
             d: new Date().toLocaleDateString('en-GB')
         };
+        
         let logs = JSON.parse(localStorage.getItem(KEY+'logs') || '[]');
         logs.unshift(q);
-        localStorage.setItem(KEY+'logs', JSON.stringify(logs.slice(0, 5)));
+        // Keep recent quotes to 5 items, but Job History stores them all
+        localStorage.setItem(KEY+'logs', JSON.stringify(logs));
         
         ['q_n','q_l','q_h','q_r','q_m'].forEach(id => document.getElementById(id).value = "");
         document.getElementById('disp').innerText = "£0.00";
-        
-        render();
-        alert("Quote Successfully Logged.");
-    }
-
-    function render() {
-        const logs = JSON.parse(localStorage.getItem(KEY+'logs') || '[]');
-        const container = document.getElementById('hist');
-        if (logs.length === 0) {
-            container.innerHTML = '<p style="color:#333; font-size:14px; text-align:center; padding: 20px;">No quotes logged yet.</p>';
-            return;
-        }
-        container.innerHTML = logs.map(i => `
-            <div class="log-item">
-                <div><div class="log-name">${i.n}</div><div class="log-date">${i.d}</div></div>
-                <div class="log-amt">${i.t}</div>
-            </div>
-        `).join('');
-    }
-
-    window.onload = () => {
-        document.getElementById('s_n').value = gt('n');
-        document.getElementById('s_a').value = gt('a');
-        document.getElementById('s_b').value = gt('b');
-        document.getElementById('s_sc').value = gt('sc');
-        document.getElementById('s_an').value = gt('an');
-        render();
-    };
-</script>
-</body>
-</html>
