@@ -3,120 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v2.1 Solid</title>
+    <title>toolboxpay - v2.2 Super-Structure</title>
     <style>
-        /* FORCE COLOUR THEME */
-        :root { 
-            --orange: #ff6600 !important; 
-            --white: #ffffff !important; 
-            --bg: #000000 !important; 
-            --card: #151515 !important; 
-            --border: #333333 !important; 
-        }
-        
+        /* REINFORCED STYLING - FORCING BOX VISIBILITY */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            background-color: var(--bg) !important; 
-            color: var(--white) !important; 
+            background-color: #000000 !important; 
+            color: #ffffff !important; 
             margin: 0; 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            padding-bottom: 100px; 
+            font-family: 'Segoe UI', Helvetica, sans-serif; 
+            padding-bottom: 80px;
         }
-        
-        .main-container { 
-            max-width: 500px; 
+
+        .container { 
+            max-width: 480px; 
             margin: 0 auto; 
-            padding: 20px; 
-            display: block !important; 
+            padding: 15px;
         }
 
-        /* HEADER */
-        .hdr { text-align: center; padding: 40px 0; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
-        .logo { font-size: 42px; font-weight: 900; letter-spacing: -2px; }
-        .logo .o { color: var(--orange); }
-        .logo .w { color: var(--white); }
+        /* HEADER LOGO */
+        .header-area { text-align: center; padding: 50px 0 30px 0; }
+        .logo-text { font-size: 40px; font-weight: 900; letter-spacing: -2px; }
+        .logo-text span { color: #ff6600; }
 
-        /* REINFORCED BOXES */
-        section { 
+        /* THE BOXES - REINFORCED BORDERS */
+        .main-box {
+            background-color: #111111 !important;
+            border: 1px solid #222222 !important;
+            border-radius: 24px !important;
+            padding: 30px !important;
+            margin-bottom: 40px !important;
             display: block !important;
-            background-color: var(--card) !important; 
-            border: 2px solid var(--border) !important; 
-            border-radius: 20px !important; 
-            padding: 30px !important; 
-            margin-bottom: 40px !important; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7) !important;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
 
-        h2 { 
-            color: var(--orange) !important; 
-            font-size: 14px; 
+        .box-title {
+            color: #ff6600 !important;
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        /* INPUTS & LABELS */
+        .input-group { margin-bottom: 20px; }
+        label { 
+            display: block; 
+            font-size: 11px; 
+            color: #888; 
+            margin-bottom: 10px; 
             text-transform: uppercase; 
-            letter-spacing: 2px; 
-            margin: 0 0 20px 0; 
             font-weight: 900; 
-            border-bottom: 2px solid var(--orange); 
-            padding-bottom: 8px; 
-            display: inline-block;
-        }
-
-        /* UI ELEMENTS */
-        .field { margin-bottom: 20px; }
-        label { display: block; font-size: 11px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; font-weight: 800; }
-        
-        input, textarea { 
-            width: 100% !important; 
-            padding: 16px !important; 
-            background-color: #000 !important; 
-            border: 1px solid #444 !important; 
-            color: #fff !important; 
-            border-radius: 12px !important; 
-            font-size: 17px !important; 
-            outline: none; 
-        }
-
-        .split { display: flex; gap: 15px; }
-        .split > div { flex: 1; }
-
-        .big-total { 
-            font-size: 60px; 
-            font-weight: 900; 
-            color: var(--orange); 
-            text-align: right; 
-            margin: 20px 0; 
-            letter-spacing: -3px; 
         }
         
-        .btn-action { 
-            width: 100%; 
-            padding: 22px; 
-            background-color: var(--orange) !important; 
-            color: #000 !important; 
-            border: none; 
-            border-radius: 12px; 
-            font-size: 20px; 
-            font-weight: 900; 
-            text-transform: uppercase; 
-            cursor: pointer; 
+        input, textarea {
+            width: 100% !important;
+            background-color: #000 !important;
+            border: 1px solid #333 !important;
+            color: #fff !important;
+            padding: 18px !important;
+            border-radius: 12px !important;
+            font-size: 17px !important;
+            outline: none;
+        }
+
+        .row-flex { display: flex; gap: 12px; }
+        .row-flex div { flex: 1; }
+
+        .price-display {
+            font-size: 64px;
+            font-weight: 900;
+            color: #ff6600;
+            text-align: right;
+            margin: 15px 0;
+            letter-spacing: -3px;
+        }
+
+        .btn-orange {
+            width: 100%;
+            background-color: #ff6600 !important;
+            color: #000 !important;
+            padding: 22px !important;
+            border: none;
+            border-radius: 15px !important;
+            font-size: 18px !important;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
         }
 
         /* PHOTO GRID */
-        .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .pic { aspect-ratio: 1; background: #000; border: 1px solid #333; border-radius: 8px; overflow: hidden; }
-        .pic img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .photo-item { aspect-ratio: 1; background: #000; border: 1px solid #333; border-radius: 10px; overflow: hidden; }
+        .photo-item img { width: 100%; height: 100%; object-fit: cover; }
         
-        .upl { 
-            display: block; width: 100%; padding: 15px; background: #222; color: var(--orange); 
-            text-align: center; border-radius: 10px; border: 1px dashed var(--orange); cursor: pointer; font-weight: 800;
+        .upload-trigger {
+            display: block; width: 100%; padding: 15px; background: #1a1a1a; color: #ff6600;
+            text-align: center; border-radius: 10px; border: 1px dashed #ff6600; cursor: pointer; font-weight: 800;
         }
 
-        /* LOGS */
-        .entry { padding: 20px 0; border-bottom: 1px solid #333; }
-        .entry-top { display: flex; justify-content: space-between; align-items: center; }
-        .entry-n { font-weight: 800; font-size: 18px; }
-        .entry-p { color: var(--orange); font-weight: 900; font-size: 22px; }
-        .tag { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 900; margin-bottom: 10px; }
-        .tag-due { background: #000; color: var(--orange); border: 1px solid var(--orange); }
-        .tag-ok { background: #2ecc71; color: #000; }
+        /* HISTORY ROWS */
+        .job-card { padding: 20px 0; border-bottom: 1px solid #222; }
+        .job-head { display: flex; justify-content: space-between; align-items: center; }
+        .job-price { color: #ff6600; font-weight: 900; font-size: 22px; }
+        .status-tag { display: inline-block; padding: 4px 10px; border-radius: 5px; font-size: 10px; font-weight: 900; margin-bottom: 10px; cursor: pointer; }
+        .due { background: #000; color: #ff6600; border: 1px solid #ff6600; }
+        .paid { background: #2ecc71; color: #000; }
         
-        .btn-
+        .btn-action { background: #222; color: #fff; border: 1px solid #333; padding: 10px 15px; border-radius: 8px; font-size: 12px; margin-top: 10px; margin-right: 5px; cursor: pointer; }
+
+        @media print {
+            body { background: white !important; color: black !important; }
+            .container { max-width: 100%; }
+            .header-area, .btn-orange, .upload-trigger, .main-box:not(#box-hist), .btn-action { display: none !important; }
+            .main-box { border: none !important; background: white !important; padding: 0 !important; }
+            .job-price { color: black !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="header-area">
+        <div class="logo-text"><span>toolbox</span>pay</div>
+    </div>
+
+    <div class="main-box" id="box-quote">
+        <div class="box-title">New Quote</div>
+        <div class="input-group"><label>Client Name</label><input type="text" id="cn"></div>
+        <div class="input-group"><label>Description of Labour</label><textarea id="dl" style="height: 100px;"></textarea></div>
+        <div class="row-flex">
+            <div class="input-group"><label>Hours</label><input type="number" id="h" oninput="run()"></div>
+            <div class="input-group"><label>Rate (£)</label><input type="number" id="r" oninput="run()"></div>
+        </div>
+        <div class="input-group"><label>Materials (£)</label><input type="number" id="m" oninput="run()"></div>
+        <div class="price-display" id="tot">£0.00</div>
+        <button class="btn-orange" onclick="saveJob()">Save & Log Quote</button>
+    </div>
+
+    <div class="main-box" id="box-photo">
+        <div class="box-title">Job Photos</div>
+        <label class="upload-trigger">+ ADD PHOTO<input type="file" accept="image/*" style="display:none;" onchange="handleImg(this)"></label>
+        <div class="photo-grid" id="gallery"></div>
+    </div>
+
+    <div class="main-box" id="box-hist">
+        <div class="box-title">Recent History</div>
+        <div id="job-list"></div>
+    </div>
+
+    <div class="main-box" id="box-setup">
+        <div class="box-title">Business & Bank Setup</div>
+        <div class="input-group"><label>Business Name</label><input type="text" id="bn" oninput="set('bn', this.value)"></div>
+        <div class="input-group"><label>Address</label><textarea id="ba" oninput="set('ba', this.value)" style="height: 80px;"></textarea></div>
+        <div class="row-flex">
+            <div class="input-group"><label>Bank</label><input type="text" id="bk" oninput="set('bk', this.value)"></div>
+            <div class="input-group"><label>Sort Code</label><input type="text" id="sc" oninput="set('sc', this.value)"></div>
+        </div>
+        <div class="input-group"><label>Account No.</label><input type="text" id="an" oninput="set('an', this.value)"></div>
+    </div>
+
+</div>
+
+<script>
+    const STORAGE_KEY = "TOOLBOX_V22_FINAL";
+
+    function set(k, v) { localStorage.setItem(STORAGE_KEY+k, v); }
+    function get(k) { return localStorage.getItem(STORAGE_KEY+k) || ""; }
+
+    function run() {
+        const hr = parseFloat(document.getElementById('h').value) || 0;
+        const rt = parseFloat(document.getElementById('r').value) || 0;
+        const mt = parseFloat(document.getElementById('m').value) || 0;
+        document.getElementById('tot').innerText = "£" + ((hr * rt) + mt).toFixed(2);
+    }
+
+    function handleImg(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                let current = JSON.parse(localStorage.getItem(STORAGE_KEY+'pics') || '[]');
+                current.unshift(e.target.result);
+                localStorage.setItem(STORAGE_KEY+'pics', JSON.stringify(current.slice(0, 9)));
+                renderPics();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function renderPics() {
+        const pics = JSON.parse(localStorage.getItem(STORAGE_KEY+'pics') || '[]');
+        document.getElementById('gallery').innerHTML = pics.map(s => `<div class="photo-item"><img src="${s}"></div>`).join('');
