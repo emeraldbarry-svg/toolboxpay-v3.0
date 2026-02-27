@@ -3,41 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v8.5</title>
+    <title>toolboxpay - v8.7</title>
     <style>
-        /* CORE THEME [cite: 2020-02-20] */
+        /* BRANDING & THEME */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { 
-            background: #4a4a4a; 
-            color: #fff; 
-            margin: 0; 
-            font-family: sans-serif; 
-            display: flex;
-            justify-content: center;
-        }
+        body { background: #4a4a4a; color: #fff; margin: 0; font-family: sans-serif; display: flex; justify-content: center; }
+        #app-viewport { width: 100%; max-width: 420px; padding: 20px; min-height: 100vh; position: relative; }
 
-        /* 420PX VIEWPORT */
-        #app-viewport {
-            width: 100%;
-            max-width: 420px;
-            padding: 20px;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        /* PERFECTED CLOCK */
-        #live-clock {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            font-size: 14px;
-            font-weight: 900;
-            color: #ff6600;
-            letter-spacing: 1px;
-            font-family: monospace;
-        }
-
-        /* BRANDING */
+        /* ORANGE CLOCK */
+        #live-clock { position: absolute; top: 25px; right: 25px; font-size: 14px; font-weight: 900; color: #ff6600; letter-spacing: 1px; font-family: monospace; }
         .header { text-align: center; padding: 25px 0 15px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
@@ -46,44 +20,33 @@
         .view { display: none; width: 100%; }
         .view.active { display: block; }
 
-        /* VERTICAL STACK */
+        /* DASHBOARD */
         .stack { display: flex; flex-direction: column; gap: 15px; }
-        .tile {
-            background: #222; border-radius: 20px; padding: 20px;
-            display: flex; align-items: center; cursor: pointer;
-            border: 1px solid #333; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-        .tile:active { background: #111; transform: scale(0.98); }
-        .icon-box {
-            width: 50px; height: 50px; background: #000; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            margin-right: 20px; font-size: 24px;
-        }
+        .tile { background: #222; border-radius: 20px; padding: 20px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; }
+        .icon-box { width: 50px; height: 50px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 24px; }
         .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SUB-PAGE STYLES */
+        /* CARDS & FORMS */
         .nav-header { padding: 10px 0 20px 0; }
-        .back-btn { 
-            background: #000; color: #ff6600; border: 2px solid #ff6600; 
-            padding: 10px 15px; border-radius: 10px; font-weight: 900; 
-            cursor: pointer; text-transform: uppercase; font-size: 11px;
-            width: fit-content;
-        }
-        .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; }
+        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 10px 15px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; }
+        .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-bottom: 20px; }
         h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; }
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
-        input, textarea { 
-            width: 100%; background: #000; border: 1px solid #333; color: #fff; 
-            padding: 18px; border-radius: 15px; margin-bottom: 15px; outline: none; font-size: 16px; 
-        }
-        .total-display { font-size: 58px; font-weight: 900; color: #ff6600; text-align: right; margin: 5px 0; }
+        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; }
 
-        /* WHATSAPP BUTTON [cite: 2026-02-27] */
-        .btn-wa { 
-            width: 100%; background: #25D366; color: #000; padding: 20px; border: none; 
-            border-radius: 15px; font-weight: 900; font-size: 14px; text-transform: uppercase; 
-            cursor: pointer; margin-bottom: 10px;
-        }
+        /* CALCULATOR GRID */
+        .calc-screen { background: #000; color: #ff6600; padding: 25px; text-align: right; font-size: 38px; font-weight: 900; border-radius: 15px; margin-bottom: 15px; min-height: 90px; border: 1px solid #333; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .c-btn { background: #333; color: #fff; border: none; padding: 22px 10px; border-radius: 12px; font-weight: 900; font-size: 20px; cursor: pointer; }
+        .c-btn.orange { background: #ff6600; color: #000; }
+        .c-btn.wide { grid-column: span 2; background: #fff; color: #000; }
+
+        /* BUTTONS */
+        .btn-wa { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; cursor: pointer; }
+        .btn-save { width: 100%; background: #ff6600; color: #000; padding: 18px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
+        
+        /* HISTORY LIST */
+        .hist-item { background: #000; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid #ff6600; }
     </style>
 </head>
 <body>
@@ -96,89 +59,34 @@
             <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         </div>
         <div class="stack">
-            <div class="tile" onclick="go('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
-            <div class="tile" onclick="go('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
-            <div class="tile" onclick="go('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
-            <div class="tile" onclick="go('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
-            <div class="tile" onclick="go('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
+            <div class="tile" onclick="nav('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
+            <div class="tile" onclick="nav('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
+            <div class="tile" onclick="nav('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
+            <div class="tile" onclick="nav('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
+            <div class="tile" onclick="nav('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
         </div>
     </div>
 
-    <div id="view-quote" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div>
+    <div id="view-calc" class="view">
+        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
         <div class="card">
-            <h2>New Quote</h2>
-            <label>Client Name</label><input type="text" id="c-name">
-            <label>Labour Description</label><textarea id="l-desc" style="height:80px;"></textarea>
-            <label>Total Price (£)</label><input type="number" id="p-in" oninput="up()">
-            <div class="total-display" id="q-total">£0.00</div>
-            <button class="btn-wa" onclick="waQ()">Send via WhatsApp</button>
-            <button class="back-btn" style="width:100%; padding:15px;" onclick="go('view-home')">Save Job</button>
-        </div>
-    </div>
-
-    <div id="view-bank" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div>
-        <div class="card">
-            <h2>Bank Setup</h2>
-            <label>Business Name</label><input type="text" id="b-name" oninput="sv('bn',this.value)">
-            <label>Bank Name</label><input type="text" id="b-bank" oninput="sv('bk',this.value)">
-            <label>Sort Code</label><input type="text" id="b-sort" oninput="sv('sc',this.value)">
-            <label>Account No.</label><input type="text" id="b-acc" oninput="sv('an',this.value)">
-            <button class="btn-wa" onclick="waB()">Share via WhatsApp</button>
-        </div>
-    </div>
-
-    <div id="view-calc" class="view"><div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div><div class="card"><h2>Calculator</h2></div></div>
-    <div id="view-history" class="view"><div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div><div class="card"><h2>History</h2></div></div>
-    <div id="view-readme" class="view"><div class="nav-header"><div class="back-btn" onclick="go('view-home')">← DASHBOARD</div></div><div class="card"><h2>Read Me</h2><p>v8.5 Perfected.</p></div></div>
-
-</div>
-
-<script>
-    const K = "TBP_V85_MASTER";
-
-    function tick() {
-        const n = new Date();
-        const t = n.getHours().toString().padStart(2, '0') + ":" + 
-                  n.getMinutes().toString().padStart(2, '0') + ":" + 
-                  n.getSeconds().toString().padStart(2, '0');
-        const el = document.getElementById('live-clock');
-        if (el) el.innerText = t;
-    }
-    setInterval(tick, 1000);
-
-    function go(id) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
-    }
-
-    function sv(k, v) { localStorage.setItem(K + k, v); }
-    function gt(k) { return localStorage.getItem(K + k) || ""; }
-
-    function up() {
-        const v = parseFloat(document.getElementById('p-in').value) || 0;
-        document.getElementById('q-total').innerText = "£" + v.toFixed(2);
-    }
-
-    function waQ() {
-        const msg = `Quote from ${gt('bn') || "toolboxpay"}:\nLabour: ${document.getElementById('l-desc').value}\nTotal: ${document.getElementById('q-total').innerText}`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    function waB() {
-        const msg = `Bank Details for ${gt('bn') || "Business"}:\nBank: ${gt('bk')}\nSort: ${gt('sc')}\nAcc: ${gt('an')}`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    window.onload = function() {
-        tick();
-        document.getElementById('b-name').value = gt('bn');
-        document.getElementById('b-bank').value = gt('bk');
-        document.getElementById('b-sort').value = gt('sc');
-        document.getElementById('b-acc').value = gt('an');
-    };
-</script>
-</body>
-</html>
+            <h2>Calculator</h2>
+            <div class="calc-screen" id="disp">0</div>
+            <div class="calc-grid">
+                <button class="c-btn orange" onclick="cls()">C</button>
+                <button class="c-btn orange" onclick="op('/')">÷</button>
+                <button class="c-btn orange" onclick="op('*')">×</button>
+                <button class="c-btn orange" onclick="op('-')">-</button>
+                <button class="c-btn" onclick="num('7')">7</button>
+                <button class="c-btn" onclick="num('8')">8</button>
+                <button class="c-btn" onclick="num('9')">9</button>
+                <button class="c-btn orange" onclick="op('+')">+</button>
+                <button class="c-btn" onclick="num('4')">4</button>
+                <button class="c-btn" onclick="num('5')">5</button>
+                <button class="c-btn" onclick="num('6')">6</button>
+                <button class="c-btn" onclick="num('1')">1</button>
+                <button class="c-btn" onclick="num('2')">2</button>
+                <button class="c-btn" onclick="num('3')">3</button>
+                <button class="c-btn" onclick="num('0')">0</button>
+                <button class="c-btn" onclick="num('.')">.</button>
+                <button class="c-btn wide" onclick
