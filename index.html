@@ -25,23 +25,25 @@
             max-width: 550px;
         }
 
-        /* Restored Navigation */
+        /* Fixed Navigation Link */
         .top-nav {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
         }
         .return-link {
             color: var(--orange);
             text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            display: inline-block;
         }
         .return-link:hover {
-            text-decoration: underline;
+            color: var(--white);
         }
 
-        /* Branding Section - Clean, No Boxes */
+        /* Branding Section - Borderless */
         .branding {
             margin-bottom: 40px;
             text-align: left;
@@ -92,17 +94,12 @@
             color: var(--white);
             font-size: 16px;
             box-sizing: border-box;
-            transition: all 0.2s ease;
         }
         input:focus {
             outline: none;
             border-color: var(--orange);
-            background-color: rgba(255, 255, 255, 0.12);
         }
-        .row {
-            display: flex;
-            gap: 15px;
-        }
+        .row { display: flex; gap: 15px; }
         .flex-1 { flex: 1; }
         .flex-2 { flex: 2; }
 
@@ -118,10 +115,7 @@
             cursor: pointer;
             margin-top: 30px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
-        .btn-submit:active { transform: scale(0.98); }
-        
         #status-msg {
             text-align: center;
             font-size: 14px;
@@ -135,7 +129,7 @@
 
 <div class="container">
     <div class="top-nav">
-        <a href="index.html" class="return-link">← Return to Dashboard</a>
+        <a href="/" class="return-link">← Return to Dashboard</a>
     </div>
 
     <div class="branding">
@@ -147,7 +141,7 @@
         <span class="section-label">Business Information</span>
         <div class="field-group">
             <label for="tradingName">Trading Name</label>
-            <input type="text" id="tradingName" placeholder="Enter your business name">
+            <input type="text" id="tradingName" placeholder="Enter business name">
         </div>
 
         <span class="section-label">Bank Details</span>
@@ -163,7 +157,7 @@
             </div>
             <div class="field-group flex-2">
                 <label for="accNumber">Account Number</label>
-                <input type="text" id="accNumber" placeholder="8-digit account number">
+                <input type="text" id="accNumber" placeholder="8-digit number">
             </div>
         </div>
 
@@ -177,19 +171,15 @@
         const fields = ['tradingName', 'accHolder', 'sortCode', 'accNumber'];
         fields.forEach(field => {
             const savedValue = localStorage.getItem(field);
-            if (savedValue) {
-                document.getElementById(field).value = savedValue;
-            }
+            if (savedValue) document.getElementById(field).value = savedValue;
         });
     };
 
     function saveDetails() {
         const fields = ['tradingName', 'accHolder', 'sortCode', 'accNumber'];
         fields.forEach(field => {
-            const val = document.getElementById(field).value;
-            localStorage.setItem(field, val);
+            localStorage.setItem(field, document.getElementById(field).value);
         });
-
         const msg = document.getElementById('status-msg');
         msg.style.display = 'block';
         setTimeout(() => { msg.style.display = 'none'; }, 3000);
