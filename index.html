@@ -2,141 +2,151 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v17.0 - LAPTOP BUILD</title>
+    <title>toolboxpay v18.0</title>
     <style>
-        /* THE DESKTOP FIX: Centers the app on a large screen */
-        body { 
-            background: #222; 
+        /* This CSS is designed specifically for Laptop/Desktop browsers */
+        html, body { 
+            background-color: #1a1a1a !important; 
             margin: 0; 
+            padding: 0; 
+            height: 100%; 
             display: flex; 
             justify-content: center; 
-            font-family: sans-serif; 
+            align-items: center;
         }
 
-        /* This container simulates a phone screen on your laptop */
-        .app-shell { 
-            background: #fff; 
-            width: 100%; 
-            max-width: 450px; 
-            min-height: 100vh; 
-            padding: 20px; 
-            box-sizing: border-box; 
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        /* This creates a physical "Phone" box on your laptop screen */
+        #app-container { 
+            background: white !important; 
+            width: 400px !important; /* Fixed width prevents stretching */
+            height: 85vh; 
+            border: 8px solid #333; 
+            border-radius: 20px; 
+            overflow-y: auto; 
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            font-family: sans-serif;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        .logo { color: #ff6600; font-weight: 900; font-size: 28px; text-align: center; margin-bottom: 30px; }
+        .logo { color: #ff6600; font-weight: 900; font-size: 24px; text-align: center; margin-bottom: 25px; }
         .logo span { color: #000; }
 
-        .btn { display: block; width: 100%; padding: 22px; margin-bottom: 15px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 10px; font-size: 17px; font-weight: bold; text-align: left; color: #ff6600; cursor: pointer; }
+        .btn { display: block; width: 100%; padding: 18px; margin-bottom: 12px; background: #f2f2f2; border: 1px solid #ccc; border-radius: 10px; font-size: 16px; font-weight: bold; text-align: left; color: #ff6600; cursor: pointer; }
         .btn-org { background: #ff6600; color: #fff; border: none; text-align: center; }
-        .btn-back { background: #fff; border: 1px solid #ff6600; color: #ff6600; text-align: center; padding: 10px; margin-bottom: 20px; font-size: 14px; width: 100%; }
+        .btn-back { background: #fff; border: 1px solid #ff6600; color: #ff6600; text-align: center; padding: 8px; margin-bottom: 15px; width: 100%; font-size: 12px; }
 
-        .screen { display: none; }
-        .screen:target { display: block !important; }
-        #dash:not(:target) { display: block; }
-        .screen:target ~ #dash { display: none; }
+        .scr { display: none; }
+        .active { display: block !important; }
 
-        input, textarea, select { width: 100%; padding: 18px; margin: 10px 0 20px 0; border: 1px solid #bbb; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-        .total { text-align: right; font-size: 34px; font-weight: 900; color: #ff6600; margin: 20px 0; }
-        .card { border: 2px solid #000; padding: 20px; background: #fff; line-height: 1.6; }
+        input, textarea, select { width: 100%; padding: 14px; margin: 8px 0 15px 0; border: 1px solid #bbb; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
+        .total-box { text-align: right; font-size: 28px; font-weight: 900; color: #ff6600; margin: 15px 0; }
+        .card { border: 1px solid #000; padding: 15px; line-height: 1.4; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <div class="app-shell">
+    <div id="app-container">
         <div class="logo">toolbox<span>pay</span></div>
 
-        <div id="dash" class="screen">
-            <button class="btn" onclick="window.location.hash='quote'">NEW QUOTE →</button>
-            <button class="btn" onclick="window.location.hash='hist'; loadH();">HISTORY →</button>
-            <button class="btn" onclick="window.location.hash='setup'">BUSINESS SETUP →</button>
-            <button class="btn" onclick="window.location.hash='bank'">BANK DETAILS →</button>
+        <div id="d" class="scr active">
+            <button class="btn" onclick="sh('c')">NEW QUOTE →</button>
+            <button class="btn" onclick="sh('h'); lh();">HISTORY →</button>
+            <button class="btn" onclick="sh('s')">BUSINESS SETUP →</button>
+            <button class="btn" onclick="sh('b')">BANK DETAILS →</button>
+            <button onclick="localStorage.clear(); location.reload();" style="width:100%; background:none; border:none; color:#ccc; font-size:9px; margin-top:30px;">[ CLEAR CACHE ]</button>
         </div>
 
-        <div id="quote" class="screen">
-            <button class="btn-back" onclick="window.location.hash=''">← BACK</button>
-            <input type="text" id="q-name" placeholder="Customer Name">
-            <input type="number" id="q-hrs" placeholder="Hours" oninput="runM()">
-            <input type="number" id="q-rte" placeholder="Rate" oninput="runM()">
-            <input type="number" id="q-mat" placeholder="Materials" oninput="runM()">
-            <div id="q-out" class="total">£0.00</div>
-            <button class="btn btn-org" onclick="saveQ()">SAVE QUOTE</button>
+        <div id="c" class="scr">
+            <button class="btn-back" onclick="sh('d')">← BACK</button>
+            <input type="text" id="cn" placeholder="Client Name">
+            <input type="number" id="hrs" placeholder="Hours" oninput="m()">
+            <input type="number" id="rte" placeholder="Rate" oninput="m()">
+            <input type="number" id="mat" placeholder="Materials" oninput="m()">
+            <div id="out" class="total-box">£0.00</div>
+            <button class="btn btn-org" onclick="sq()">SAVE QUOTE</button>
         </div>
 
-        <div id="hist" class="screen">
-            <button class="btn-back" onclick="window.location.hash=''">← BACK</button>
+        <div id="h" class="scr">
+            <button class="btn-back" onclick="sh('d')">← BACK</button>
             <div id="h-list"></div>
         </div>
 
-        <div id="setup" class="screen">
-            <button class="btn-back" onclick="window.location.hash=''">← BACK</button>
-            <select id="s-cur" onchange="localStorage.setItem('v17_cur', this.value)">
+        <div id="s" class="scr">
+            <button class="btn-back" onclick="sh('d')">← BACK</button>
+            <select id="cur" onchange="localStorage.setItem('v18_cur', this.value)">
                 <option value="£">GBP (£)</option>
                 <option value="$">USD ($)</option>
                 <option value="€">EUR (€)</option>
             </select>
-            <input type="text" id="s-bn" placeholder="Business Name" oninput="localStorage.setItem('v17_bn', this.value)">
-            <textarea id="s-ba" placeholder="Address" oninput="localStorage.setItem('v17_ba', this.value)"></textarea>
+            <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('v18_bn', this.value)">
+            <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('v18_ba', this.value)"></textarea>
         </div>
 
-        <div id="bank" class="screen">
-            <button class="btn-back" onclick="window.location.hash=''">← BACK</button>
-            <input type="text" id="s-b1" placeholder="Account Name" oninput="localStorage.setItem('v17_b1', this.value)">
-            <input type="text" id="s-b2" placeholder="Sort Code" oninput="localStorage.setItem('v17_b2', this.value)">
-            <input type="text" id="s-b3" placeholder="Account Number" oninput="localStorage.setItem('v17_b3', this.value)">
+        <div id="b" class="scr">
+            <button class="btn-back" onclick="sh('d')">← BACK</button>
+            <input type="text" id="b1" placeholder="Account Name" oninput="localStorage.setItem('v18_b1', this.value)">
+            <input type="text" id="b2" placeholder="Sort Code" oninput="localStorage.setItem('v18_b2', this.value)">
+            <input type="text" id="b3" placeholder="Account Number" oninput="localStorage.setItem('v18_b3', this.value)">
         </div>
 
-        <div id="view" class="screen">
-            <button class="btn-back" onclick="window.location.hash='hist'">← BACK</button>
+        <div id="v" class="scr">
+            <button class="btn-back" onclick="sh('h')">← BACK</button>
             <div id="v-out" class="card"></div>
-            <button class="btn btn-org" style="margin-top:20px" onclick="window.print()">PRINT / PDF</button>
+            <button class="btn btn-org" style="margin-top:15px" onclick="window.print()">PRINT / PDF</button>
         </div>
     </div>
 
     <script>
-        const V = "v17_";
+        const KEY = "v18_";
 
-        function runM() {
-            var s = localStorage.getItem(V+'cur') || '£';
-            var h = Number(document.getElementById('q-hrs').value) || 0;
-            var r = Number(document.getElementById('q-rte').value) || 0;
-            var m = Number(document.getElementById('q-mat').value) || 0;
-            document.getElementById('q-out').innerText = s + ((h*r)+m).toFixed(2);
+        function sh(id) {
+            const ss = ['d','c','h','s','b','v'];
+            ss.forEach(x => document.getElementById(x).classList.remove('active'));
+            document.getElementById(id).classList.add('active');
         }
 
-        function saveQ() {
-            var s = localStorage.getItem(V+'cur') || '£';
-            var h = Number(document.getElementById('q-hrs').value) || 0;
-            var r = Number(document.getElementById('q-rte').value) || 0;
-            var m = Number(document.getElementById('q-mat').value) || 0;
-            var jobs = JSON.parse(localStorage.getItem(V+'data') || '[]');
-            jobs.unshift({id: Date.now(), n: document.getElementById('q-name').value || 'Client', t: s + ((h*r)+m).toFixed(2), d: new Date().toLocaleDateString('en-GB')});
-            localStorage.setItem(V+'data', JSON.stringify(jobs.slice(0,30)));
+        function m() {
+            var sy = localStorage.getItem(KEY+'cur') || '£';
+            var h = Number(document.getElementById('hrs').value) || 0;
+            var r = Number(document.getElementById('rte').value) || 0;
+            var mt = Number(document.getElementById('mat').value) || 0;
+            document.getElementById('out').innerText = sy + ((h*r)+mt).toFixed(2);
+        }
+
+        function sq() {
+            var sy = localStorage.getItem(KEY+'cur') || '£';
+            var h = Number(document.getElementById('hrs').value) || 0;
+            var r = Number(document.getElementById('rte').value) || 0;
+            var mt = Number(document.getElementById('mat').value) || 0;
+            var j = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
+            j.unshift({id: Date.now(), n: document.getElementById('cn').value || 'Client', t: sy + ((h*r)+mt).toFixed(2), d: new Date().toLocaleDateString('en-GB')});
+            localStorage.setItem(KEY+'data', JSON.stringify(j.slice(0,30)));
             location.reload();
         }
 
-        function loadH() {
-            var jobs = JSON.parse(localStorage.getItem(V+'data') || '[]');
-            document.getElementById('h-list').innerHTML = jobs.map(function(j) {
-                return '<button class="btn" onclick="openQ('+j.id+')">'+j.n+'<br><small>'+j.d+' — '+j.t+'</small></button>';
+        function lh() {
+            var j = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
+            document.getElementById('h-list').innerHTML = j.map(function(x) {
+                return '<button class="btn" onclick="vq('+x.id+')">'+x.n+'<br><small>'+x.d+' — '+x.t+'</small></button>';
             }).join('') || '<p>No history.</p>';
         }
 
-        function openQ(id) {
-            var jobs = JSON.parse(localStorage.getItem(V+'data') || '[]');
-            var j = jobs.find(x => x.id === id);
-            if(!j) return;
-            document.getElementById('v-out').innerHTML = '<strong>'+(localStorage.getItem(V+'bn')||'Business')+'</strong><br>'+(localStorage.getItem(V+'ba')||'')+'<hr>Client: '+j.n+'<br>Total: '+j.t+'<hr>Bank: '+(localStorage.getItem(V+'b1')||'')+'<br>Sort: '+(localStorage.getItem(V+'b2')||'')+'<br>Acc: '+(localStorage.getItem(V+'b3')||'');
-            window.location.hash = "view";
+        function vq(id) {
+            var j = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
+            var x = j.find(z => z.id === id);
+            if(!x) return;
+            document.getElementById('v-out').innerHTML = '<strong>'+(localStorage.getItem(KEY+'bn')||'Business')+'</strong><br>'+(localStorage.getItem(KEY+'ba')||'')+'<hr>Client: '+x.n+'<br>Total: '+x.t+'<hr>Bank: '+(localStorage.getItem(KEY+'b1')||'')+'<br>Sort: '+(localStorage.getItem(KEY+'b2')||'')+'<br>Acc: '+(localStorage.getItem(KEY+'b3')||'');
+            sh('v');
         }
 
         window.onload = function() {
             ['bn','ba','b1','b2','b3','cur'].forEach(k => {
-                var val = localStorage.getItem(V+k);
-                if(val && document.getElementById('s-'+k)) document.getElementById('s-'+k).value = val;
+                var val = localStorage.getItem(KEY+k);
+                if(val && document.getElementById(k)) document.getElementById(k).value = val;
             });
-            runM();
+            m();
         };
     </script>
 </body>
