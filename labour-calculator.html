@@ -26,27 +26,26 @@
             max-width: 550px;
         }
 
-        /* Fixed Navigation Link - Styled for Visibility */
+        /* Top Navigation - High Visibility */
         .top-nav {
             margin-bottom: 30px;
             padding-top: 10px;
         }
-        .return-btn {
-            background: none;
-            border: none;
+        .return-link {
             color: var(--orange);
-            font-size: 14px;
+            text-decoration: none;
+            font-size: 15px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
+            letter-spacing: 1.2px;
+            display: inline-block;
+            border: 1px solid var(--orange);
+            padding: 8px 15px;
+            border-radius: 4px;
         }
-        .return-btn:hover {
+        .return-link:hover {
+            background-color: var(--orange);
             color: var(--white);
-            text-decoration: underline;
         }
 
         /* Branding - Clean & Borderless */
@@ -62,7 +61,6 @@
         .toolbox { color: var(--orange); }
         .pay { color: var(--white); }
         
-        /* Form Styling */
         .section-label {
             color: var(--orange);
             font-size: 13px;
@@ -116,7 +114,7 @@
 
 <div class="container">
     <div class="top-nav">
-        <button onclick="window.location.href='/'" class="return-btn">← RETURN TO DASHBOARD</button>
+        <a href="index.html" class="return-link">← RETURN TO DASHBOARD</a>
     </div>
 
     <div class="branding">
