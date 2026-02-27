@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v24.0 - HISTORY EDIT BUILD</title>
+    <title>toolboxpay v25.0</title>
     <style>
         :root { --orange: #ff6600; --bg: #0b0b0b; --card: #161616; --text: #ffffff; }
 
@@ -58,6 +58,7 @@
             border-radius: 8px; font-size: 16px; box-sizing: border-box; 
         }
 
+        .tax-toggle { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; font-size: 14px; color: var(--orange); }
         .total { text-align: right; font-size: 32px; font-weight: 900; color: var(--orange); margin: 20px 0; }
         .card-white { background: #fff; color: #000; padding: 20px; border-radius: 5px; font-size: 14px; }
     </style>
@@ -84,6 +85,10 @@
             <input type="number" id="q-h" placeholder="Labour Hours" oninput="math()">
             <input type="number" id="q-r" placeholder="Hourly Rate" oninput="math()">
             <input type="number" id="q-m" placeholder="Materials" oninput="math()">
+            <div class="tax-toggle">
+                <input type="checkbox" id="q-tax" onchange="math()" style="width:auto; margin:0;">
+                <label for="q-tax">ADD 20% VAT</label>
+            </div>
             <div id="q-t" class="total">£0.00</div>
             <button class="tile btn-org" onclick="save()">SAVE QUOTE</button>
         </div>
@@ -96,103 +101,18 @@
 
         <div id="s" class="scr">
             <button class="back-link" onclick="sh('m')">← BACK</button>
-            <select id="s-cur" onchange="localStorage.setItem('v24_cur', this.value)">
+            <select id="s-cur" onchange="localStorage.setItem('v25_cur', this.value)">
                 <option value="£">GBP (£)</option>
                 <option value="$">USD ($)</option>
                 <option value="€">EUR (€)</option>
             </select>
-            <input type="text" id="s-bn" placeholder="Business Name" oninput="localStorage.setItem('v24_bn', this.value)">
-            <textarea id="s-ba" placeholder="Business Address" oninput="localStorage.setItem('v24_ba', this.value)" style="height:80px;"></textarea>
+            <input type="text" id="s-bn" placeholder="Business Name" oninput="localStorage.setItem('v25_bn', this.value)">
+            <textarea id="s-ba" placeholder="Business Address" oninput="localStorage.setItem('v25_ba', this.value)" style="height:80px;"></textarea>
         </div>
 
         <div id="b" class="scr">
             <button class="back-link" onclick="sh('m')">← BACK</button>
-            <input type="text" id="s-b1" placeholder="Account Name" oninput="localStorage.setItem('v24_b1', this.value)">
-            <input type="text" id="s-b2" placeholder="Sort Code" oninput="localStorage.setItem('v24_b2', this.value)">
-            <input type="text" id="s-b3" placeholder="Account Number" oninput="localStorage.setItem('v24_b3', this.value)">
+            <input type="text" id="s-b1" placeholder="Account Name" oninput="localStorage.setItem('v25_b1', this.value)">
+            <input type="text" id="s-b2" placeholder="Sort Code" oninput="localStorage.setItem('v25_b2', this.value)">
+            <input type="text" id="s-b3" placeholder="Account Number" oninput="localStorage.setItem('v25_b3', this.value)">
         </div>
-
-        <div id="v" class="scr">
-            <button class="back-link" onclick="sh('h')">← BACK</button>
-            <div id="v-paper" class="card-white"></div>
-            <button class="tile btn-org" style="margin-top:20px" onclick="window.print()">PRINT / PDF</button>
-        </div>
-    </div>
-
-    <script>
-        const DB = "v24_";
-
-        function sh(id) {
-            ['m','c','h','s','b','v'].forEach(s => document.getElementById(s).classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        function math() {
-            var sym = localStorage.getItem(DB+'cur') || '£';
-            var h = Number(document.getElementById('q-h').value) || 0;
-            var r = Number(document.getElementById('q-r').value) || 0;
-            var m = Number(document.getElementById('q-m').value) || 0;
-            document.getElementById('q-t').innerText = sym + ((h*r)+m).toFixed(2);
-        }
-
-        function save() {
-            var jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
-            jobs.unshift({
-                id: Date.now(),
-                n: document.getElementById('q-n').value || 'Client',
-                t: document.getElementById('q-t').innerText,
-                d: new Date().toLocaleDateString('en-GB')
-            });
-            localStorage.setItem(DB+'data', JSON.stringify(jobs.slice(0,30)));
-            sh('m');
-        }
-
-        function lh() {
-            var jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
-            document.getElementById('h-list').innerHTML = jobs.map(j => `
-                <div style="display:flex; gap:10px;">
-                    <button class="tile" style="flex:1" onclick="viewQ(${j.id})">
-                        ${j.n} <span style="font-size:12px; opacity:0.6;">${j.t}</span>
-                    </button>
-                    <button class="btn-del" onclick="delJob(${j.id})">DEL</button>
-                </div>
-            `).join('') || '<p style="text-align:center">Empty.</p>';
-        }
-
-        function delJob(id) {
-            if(!confirm("Delete this quote?")) return;
-            var jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
-            jobs = jobs.filter(x => x.id !== id);
-            localStorage.setItem(DB+'data', JSON.stringify(jobs));
-            lh();
-        }
-
-        function clearAll() {
-            if(!confirm("Wipe all history? This cannot be undone.")) return;
-            localStorage.setItem(DB+'data', '[]');
-            lh();
-        }
-
-        function viewQ(id) {
-            var j = JSON.parse(localStorage.getItem(DB+'data') || '[]').find(x => x.id === id);
-            if(!j) return;
-            document.getElementById('v-paper').innerHTML = `
-                <div style="text-align:center; font-weight:bold; margin-bottom:15px;">QUOTE</div>
-                <strong>${localStorage.getItem(DB+'bn') || 'Business'}</strong><br>${localStorage.getItem(DB+'ba') || ''}<hr>
-                Client: ${j.n}<br>Date: ${j.d}<br>
-                <div style="font-size:24px; font-weight:bold; color:var(--orange); text-align:right; margin:15px 0;">Total: ${j.t}</div><hr>
-                Bank: ${localStorage.getItem(DB+'b1') || ''}<br>Sort: ${localStorage.getItem(DB+'b2') || ''}<br>Acc: ${localStorage.getItem(DB+'b3') || ''}
-            `;
-            sh('v');
-        }
-
-        window.onload = function() {
-            ['bn','ba','b1','b2','b3','cur'].forEach(k => {
-                var v = localStorage.getItem(DB+k);
-                if(v && document.getElementById('s-'+k)) document.getElementById('s-'+k).value = v;
-            });
-            math();
-        };
-    </script>
-</body>
-</html>
