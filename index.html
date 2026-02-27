@@ -3,78 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
     <title>toolboxpay</title>
     <style>
         :root { --org: #ff6600; --wht: #ffffff; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            background: var(--bg); 
-            color: var(--wht); 
-            font-family: -apple-system, sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            min-height: 100vh;
-            padding: 40px 20px; 
-        }
+        body { background: var(--bg); color: var(--wht); font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; padding: 40px 20px; }
         .shell { width: 100%; max-width: 380px; }
-        
-        /* Branding */
         .logo { text-align: center; margin-bottom: 35px; font-size: 34px; font-weight: 800; }
         .logo .org { color: var(--org); }
+        #btn-back { display: none; color: var(--org); border: 1px solid var(--org); background: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 25px; text-transform: uppercase; }
+        
+        /* Rigidly hidden by default */
+        .view-screen { display: none !important; }
 
-        #nav-back { 
-            display: none; 
-            color: var(--org); 
-            border: 1px solid var(--org); 
-            background: none; 
-            padding: 12px; 
-            width: 100%; 
-            border-radius: 8px; 
-            font-weight: 800; 
-            cursor: pointer; 
-            margin-bottom: 25px; 
-            text-transform: uppercase; 
-        }
-
-        /* Essential for the reset logic */
-        .page { display: none; }
-
-        .tile { 
-            background: var(--crd); 
-            padding: 25px; 
-            border-radius: 12px; 
-            border: 1px solid #233554; 
-            cursor: pointer; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
+        .tile { background: var(--crd); padding: 25px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .tile h3 { color: var(--org); text-transform: uppercase; font-size: 16px; }
-
         .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
-        input { 
-            width: 100%; 
-            padding: 15px; 
-            background: var(--crd); 
-            border: 1px solid #233554; 
-            color: #fff; 
-            margin-bottom: 15px; 
-            border-radius: 8px; 
-            font-size: 18px; 
-            outline: none; 
-        }
+        input { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 18px; outline: none; }
         .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 35px; background: rgba(255,102,0,0.05); }
     </style>
 </head>
 <body>
 
 <div class="shell">
-    <button id="nav-back" onclick="swap('dash')">← Return to Dashboard</button>
+    <button id="btn-back" onclick="show('view-dash')">← Return to Dashboard</button>
     <div class="logo"><span class="org">toolbox</span>pay</div>
 
-    <div id="dash" class="page" style="display: block;">
-        <div class="tile" onclick="swap('calc')">
+    <div id="view-dash" class="view-screen" style="display: block;">
+        <div class="tile" onclick="show('view-calc')">
             <div>
                 <h3>Labour & Materials</h3>
                 <p style="font-size:12px; color:#8892b0; margin-top:4px;">Calculate costs and specialising tasks</p>
@@ -83,38 +39,31 @@
         </div>
     </div>
 
-    <div id="calc" class="page">
+    <div id="view-calc" class="view-screen">
         <div class="tag">Labour Costs</div>
         <input type="number" id="h" placeholder="Hours worked" oninput="math()">
         <input type="number" id="r" placeholder="Hourly rate (£)" oninput="math()">
-        
         <div class="tag">Materials</div>
         <input type="number" id="m" placeholder="Total material costs (£)" oninput="math()">
-        
         <div class="total-box">
             <span style="font-weight:800; font-size:12px;">TOTAL:</span>
-            <span id="final" style="color:var(--org); font-size:26px; font-weight:800;">£0.00</span>
+            <span id="res" style="color:var(--org); font-size:26px; font-weight:800;">£0.00</span>
         </div>
     </div>
 </div>
 
 <script>
-    function swap(targetId) {
-        // 1. Force-hide EVERY page using direct style commands
-        // This stops 'looping' because it resets the slate completely
-        const pages = document.querySelectorAll('.page');
-        pages.forEach(p => {
-            p.style.display = 'none';
+    function show(id) {
+        // 1. Nuclear Reset: Hide every screen using the new class name
+        document.querySelectorAll('.view-screen').forEach(s => {
+            s.style.setProperty('display', 'none', 'important');
         });
 
-        // 2. Show only the one we want
-        const target = document.getElementById(targetId);
-        target.style.display = 'block';
+        // 2. Show the target
+        document.getElementById(id).style.setProperty('display', 'block', 'important');
 
-        // 3. Handle back button
-        const btn = document.getElementById('nav-back');
-        btn.style.display = (targetId === 'calc') ? 'block' : 'none';
-        
+        // 3. Toggle back button
+        document.getElementById('btn-back').style.display = (id === 'view-calc') ? 'block' : 'none';
         window.scrollTo(0,0);
     }
 
@@ -123,11 +72,8 @@
         const r = parseFloat(document.getElementById('r').value) || 0;
         const m = parseFloat(document.getElementById('m').value) || 0;
         const total = (h * r) + m;
-        document.getElementById('final').innerText = '£' + total.toLocaleString('en-GB', {
-            minimumFractionDigits: 2
-        });
+        document.getElementById('res').innerText = '£' + total.toLocaleString('en-GB', {minimumFractionDigits: 2});
     }
 </script>
-
 </body>
 </html>
