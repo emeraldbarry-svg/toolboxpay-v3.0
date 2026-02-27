@@ -25,7 +25,6 @@
             max-width: 550px;
         }
 
-        /* Fixed Navigation Link */
         .top-nav {
             margin-bottom: 25px;
             padding-bottom: 10px;
@@ -37,16 +36,10 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            display: inline-block;
-        }
-        .return-link:hover {
-            color: var(--white);
         }
 
-        /* Branding Section - Borderless */
         .branding {
             margin-bottom: 40px;
-            text-align: left;
         }
         .logo-text {
             font-size: 32px;
@@ -64,7 +57,6 @@
             font-weight: 600;
         }
 
-        /* Form Styling */
         .section-label {
             color: var(--orange);
             font-size: 13px;
@@ -161,6 +153,18 @@
             </div>
         </div>
 
+        <span class="section-label">Labour Calculations</span>
+        <div class="row">
+            <div class="field-group flex-1">
+                <label for="hours">Hours Worked</label>
+                <input type="number" id="hours" placeholder="0">
+            </div>
+            <div class="field-group flex-1">
+                <label for="rate">Hourly Rate (£)</label>
+                <input type="number" id="rate" placeholder="0.00">
+            </div>
+        </div>
+
         <button type="button" onclick="saveDetails()" class="btn-submit">Save Settlement Details</button>
         <div id="status-msg">Details saved securely.</div>
     </form>
@@ -168,7 +172,7 @@
 
 <script>
     window.onload = function() {
-        const fields = ['tradingName', 'accHolder', 'sortCode', 'accNumber'];
+        const fields = ['tradingName', 'accHolder', 'sortCode', 'accNumber', 'hours', 'rate'];
         fields.forEach(field => {
             const savedValue = localStorage.getItem(field);
             if (savedValue) document.getElementById(field).value = savedValue;
@@ -176,15 +180,4 @@
     };
 
     function saveDetails() {
-        const fields = ['tradingName', 'accHolder', 'sortCode', 'accNumber'];
-        fields.forEach(field => {
-            localStorage.setItem(field, document.getElementById(field).value);
-        });
-        const msg = document.getElementById('status-msg');
-        msg.style.display = 'block';
-        setTimeout(() => { msg.style.display = 'none'; }, 3000);
-    }
-</script>
-
-</body>
-</html>
+        const fields = ['trading
