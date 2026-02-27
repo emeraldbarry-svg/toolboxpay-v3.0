@@ -3,38 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v6.3</title>
+    <title>toolboxpay - v6.4</title>
     <style>
+        /* BASE THEME */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: #4a4a4a; color: #fff; margin: 0; font-family: sans-serif; height: 100vh; overflow-x: hidden; }
+        body { 
+            background: #4a4a4a; 
+            color: #fff; 
+            margin: 0; 
+            font-family: sans-serif; 
+            height: 100vh;
+            overflow-x: hidden;
+        }
 
-        /* HEADER & LOGO */
+        /* LOGO & HEADER */
         .header { text-align: center; padding: 30px 0 10px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* THE VERTICAL STACK */
-        .stack { display: flex; flex-direction: column; gap: 15px; width: 90%; max-width: 420px; margin: 0 auto; padding-bottom: 50px; }
-        .btn-tile { background: #222; border-radius: 20px; padding: 20px; display: flex; align-items: center; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.4); border: 1px solid #333; }
+        /* CONTAINERS - Fixed Width for consistency */
+        .app-container {
+            width: 90%;
+            max-width: 420px; /* Prevents stretching */
+            margin: 0 auto;
+        }
+
+        /* THE DASHBOARD STACK */
+        .stack { display: flex; flex-direction: column; gap: 15px; padding-bottom: 50px; }
+        .btn-tile {
+            background: #222;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border: 1px solid #333;
+        }
         .btn-tile:active { transform: scale(0.97); background: #2a2a2a; }
-        .icon-sq { width: 55px; height: 55px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 25px; font-size: 28px; }
+        .icon-sq {
+            width: 55px; height: 55px; background: #000; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 25px; font-size: 28px;
+        }
         .btn-tile span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* PAGES & CARDS */
-        .page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #4a4a4a; display: none; flex-direction: column; padding: 20px; z-index: 1000; overflow-y: auto; }
+        /* PAGES */
+        .page {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #4a4a4a;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
         .page.active { display: flex; }
-        .back-btn { background: #000; color: #ff6600; border: 1px solid #ff6600; padding: 14px 24px; border-radius: 12px; font-weight: 900; margin-bottom: 25px; cursor: pointer; text-transform: uppercase; width: fit-content; font-size: 12px; }
-        .card { background: #1a1a1a; border-radius: 22px; padding: 25px; border: 1px solid #333; margin-bottom: 20px; }
+
+        /* INTERNAL FORM STYLE */
+        .back-btn { 
+            background: #000; color: #ff6600; border: 1px solid #ff6600; 
+            padding: 12px 20px; border-radius: 10px; font-weight: 900; 
+            margin-bottom: 25px; cursor: pointer; text-transform: uppercase;
+            width: fit-content; font-size: 11px;
+        }
+
+        .card { 
+            background: #1a1a1a; 
+            border-radius: 22px; 
+            padding: 25px; 
+            border: 1px solid #333; 
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
         h2 { color: #ff6600; font-size: 16px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; }
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
-        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 12px; margin-bottom: 20px; outline: none; font-size: 16px; }
-        .save-btn { width: 100%; background: #ff6600; color: #000; padding: 22px; border: none; border-radius: 15px; font-weight: 900; font-size: 22px; text-transform: uppercase; cursor: pointer; }
-        .total-text { font-size: 64px; font-weight: 900; color: #ff6600; text-align: right; margin: 15px 0; }
+        
+        input, textarea { 
+            width: 100%; background: #000; border: 1px solid #333; color: #fff; 
+            padding: 18px; border-radius: 12px; margin-bottom: 20px; outline: none; font-size: 16px; 
+        }
 
-        /* INVOICE MODAL */
-        #inv-view { background: #fff; color: #000; padding: 40px; border-radius: 0; }
-        .inv-head { border-bottom: 2px solid #ff6600; padding-bottom: 10px; margin-bottom: 20px; }
+        .save-btn { 
+            width: 100%; background: #ff6600; color: #000; padding: 22px; border: none; 
+            border-radius: 15px; font-weight: 900; font-size: 22px; text-transform: uppercase; cursor: pointer;
+        }
+
+        .total-display { font-size: 64px; font-weight: 900; color: #ff6600; text-align: right; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -43,41 +101,6 @@
     <div class="header">
         <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
     </div>
-    <div class="stack">
+    <div class="app-container stack">
         <div class="btn-tile" onclick="openP('quotes')"><div class="icon-sq">📝</div><span>Job Quotes</span></div>
-        <div class="btn-tile" onclick="openP('calc')"><div class="icon-sq">🧮</div><span>Calculator</span></div>
-        <div class="btn-tile" onclick="openP('history')"><div class="icon-sq">📜</div><span>Job History</span></div>
-        <div class="btn-tile" onclick="openP('bank')"><div class="icon-sq">🏦</div><span>Bank Setup</span></div>
-    </div>
-</div>
-
-<div id="quotes" class="page">
-    <div class="back-btn" onclick="closeP()">← Dashboard</div>
-    <div class="card">
-        <h2>New Quote</h2>
-        <label>Client Name</label><input type="text" id="cn">
-        <label>Labour Description</label><textarea id="dl" style="height:100px;"></textarea>
-        <label>Total Price (£)</label><input type="number" id="tp" oninput="upQ()">
-        <div class="total-text" id="q-tot">£0.00</div>
-        <button class="save-btn" onclick="saveJ()">Save & Print</button>
-    </div>
-</div>
-
-<div id="calc" class="page">
-    <div class="back-btn" onclick="closeP()">← Dashboard</div>
-    <div class="card">
-        <h2>Quick Calculator</h2>
-        <div style="display:flex; gap:10px;">
-            <div style="flex:1;"><label>Hours</label><input type="number" id="h" oninput="doC()"></div>
-            <div style="flex:1;"><label>Rate</label><input type="number" id="r" oninput="doC()"></div>
-        </div>
-        <label>Materials</label><input type="number" id="m" oninput="doC()">
-        <div class="total-text" id="c-tot">£0.00</div>
-    </div>
-</div>
-
-<div id="bank" class="page">
-    <div class="back-btn" onclick="closeP()">← Dashboard</div>
-    <div class="card">
-        <h2>Business & Bank Setup</h2>
-        <label>Business Name
+        <div class="btn-tile" onclick="openP('calc')"><div class="icon
