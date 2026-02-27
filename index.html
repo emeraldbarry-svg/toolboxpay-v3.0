@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v43.0 - SEPARATED</title>
+    <title>toolboxpay v43.0 - INDEPENDENT</title>
     <style>
         :root { --org: #ff6600; --bg: #0b0b0b; --card: #161616; }
         html, body { background: var(--bg); margin: 0; padding: 0; font-family: sans-serif; color: white; display: flex; justify-content: center; }
         
-        #app { background: var(--card); width: 400px; min-height: 100vh; padding: 25px; box-sizing: border-box; position: relative; }
+        #app { background: var(--card); width: 400px; min-height: 100vh; padding: 25px; box-sizing: border-box; position: relative; border-left: 1px solid #333; border-right: 1px solid #333; }
         
-        .logo { color: var(--org); font-weight: 900; font-size: 28px; text-align: center; margin-bottom: 25px; cursor: pointer; }
+        .logo { color: var(--org); font-weight: 900; font-size: 28px; text-align: center; margin-bottom: 25px; }
         .logo span { color: #fff; }
 
-        /* Navigation Buttons */
-        .menu-btn { background: #222; border: 1px solid #333; padding: 20px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; text-decoration: none; color: var(--org); font-weight: 800; font-size: 14px; text-transform: uppercase; }
-        .menu-btn:hover { border-color: var(--org); }
+        /* NAVIGATION MENU */
+        .nav-card { background: #222; border: 1px solid #333; padding: 20px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--org); font-weight: 800; text-transform: uppercase; font-size: 13px; }
+        .nav-card:hover { border-color: var(--org); background: #2a1500; }
+        .back-link { color: var(--org); text-decoration: none; font-size: 12px; font-weight: 800; display: inline-block; margin-bottom: 20px; cursor: pointer; border: 1px solid var(--org); padding: 8px 15px; border-radius: 8px; }
 
-        .back-btn { border: 1px solid var(--org); color: var(--org); background: none; width: 100%; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 800; margin-bottom: 20px; }
-
-        /* Section Visibility */
+        /* ENGINE SEPARATION */
         .view { display: none; }
         .view.active { display: block; }
 
+        h3 { color: var(--org); font-size: 14px; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; font-weight: 800; }
         input, textarea { width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #333; background: #000; color: #fff; border-radius: 10px; font-size: 16px; box-sizing: border-box; outline: none; }
         input:focus { border-color: var(--org); }
         
@@ -47,16 +47,17 @@
 <body>
 
     <div id="app">
-        <div class="logo" onclick="showView('menu')">toolbox<span>pay</span></div>
+        <div class="logo">toolbox<span>pay</span></div>
 
         <div id="view_menu" class="view active">
-            <div class="menu-btn" onclick="showView('quote')">New Quote <span>→</span></div>
-            <div class="menu-btn" onclick="showView('history')">History <span>→</span></div>
-            <div class="menu-btn" onclick="showView('settings')">Business & Bank Setup <span>→</span></div>
+            <div class="nav-card" onclick="go('quote')">Create New Quote <span>+</span></div>
+            <div class="nav-card" onclick="go('history')">View Quote History <span>▤</span></div>
+            <div class="nav-card" onclick="go('settings')">Business & Bank Setup <span>⚙</span></div>
         </div>
 
         <div id="view_quote" class="view">
-            <button class="back-btn" onclick="showView('menu')">← BACK TO MENU</button>
+            <div class="back-link" onclick="go('menu')">← MENU</div>
+            <h3>New Quote</h3>
             <input type="text" id="in_name" placeholder="Client Name">
             <textarea id="in_desc" placeholder="Description of Labour" style="height: 70px;"></textarea>
             <div class="row">
@@ -73,19 +74,23 @@
         </div>
 
         <div id="view_history" class="view">
-            <button class="back-btn" onclick="showView('menu')">← BACK TO MENU</button>
+            <div class="back-link" onclick="go('menu')">← MENU</div>
+            <h3>Logged Quotes</h3>
             <div id="hist_list"></div>
         </div>
 
         <div id="view_settings" class="view">
-            <button class="back-btn" onclick="showView('menu')">← BACK TO MENU</button>
+            <div class="back-link" onclick="go('menu')">← MENU</div>
+            <h3>Business Details</h3>
             <input type="text" id="s_bn" placeholder="Business Name" oninput="st('bn', this.value)">
             <textarea id="s_ba" placeholder="Business Address" oninput="st('ba', this.value)" style="height:60px;"></textarea>
+            <h3>Bank Details</h3>
             <input type="text" id="s_b1" placeholder="Bank Name" oninput="st('b1', this.value)">
             <div class="row">
                 <input type="text" id="s_b2" placeholder="Sort Code" oninput="st('b2', this.value)">
                 <input type="text" id="s_b3" placeholder="Account Number" oninput="st('b3', this.value)">
             </div>
+            <p style="font-size: 11px; color: #555; text-align: center; margin-top: 30px;">Details auto-save on entry.</p>
         </div>
     </div>
 
@@ -94,11 +99,11 @@
     </div>
 
     <script>
-        const DB = "tb_v43_sep_";
+        const DB = "tb_v43_ind_";
         let isTax = false;
 
-        function showView(v) {
-            document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+        function go(v) {
+            document.querySelectorAll('.view').forEach(e => e.classList.remove('active'));
             document.getElementById('view_' + v).classList.add('active');
             if(v === 'history') draw();
         }
@@ -113,55 +118,4 @@
         }
 
         function math() {
-            let h = Number(document.getElementById('in_hrs').value) || 0;
-            let r = Number(document.getElementById('in_rate').value) || 0;
-            let m = Number(document.getElementById('in_mat').value) || 0;
-            let tot = (h * r) + m; if(isTax) tot *= 1.2;
-            document.getElementById('out_total').innerText = "£" + tot.toFixed(2);
-        }
-
-        function save() {
-            let d = JSON.parse(localStorage.getItem(DB+'data') || '[]');
-            d.unshift({ 
-                id: Date.now(), 
-                n: document.getElementById('in_name').value || 'Client',
-                d: document.getElementById('in_desc').value || 'Labour',
-                t: document.getElementById('out_total').innerText,
-                date: new Date().toLocaleDateString('en-GB')
-            });
-            localStorage.setItem(DB+'data', JSON.stringify(d.slice(0,25)));
-            alert("Saved to History");
-            showView('menu');
-        }
-
-        function draw() {
-            let d = JSON.parse(localStorage.getItem(DB+'data') || '[]');
-            document.getElementById('hist_list').innerHTML = d.map(i => `
-                <div class="hist-item">
-                    <span><strong>${i.n}</strong><br><small>${i.date}</small></span>
-                    <button class="view-btn" onclick="view(${i.id})">VIEW</button>
-                </div>
-            `).join('') || '<p style="text-align:center; opacity:0.3;">Empty</p>';
-        }
-
-        function view(id) {
-            let q = JSON.parse(localStorage.getItem(DB+'data') || '[]').find(x => x.id === id);
-            document.getElementById('print_area').innerHTML = `
-                <center><h2>QUOTE</h2></center>
-                <strong>FROM:</strong><br>${gt('bn')}<br>${gt('ba')}<br><br>
-                <strong>TO:</strong> ${q.n}<hr>
-                <strong>LABOUR:</strong><br>${q.d}<br><br>
-                <div style="font-size:24px; font-weight:900; color:#ff6600;">TOTAL: ${q.t}</div><hr>
-                <strong>BANK:</strong> ${gt('b1')}<br>Sort: ${gt('b2')} | Acc: ${gt('b3')}
-            `;
-            document.getElementById('overlay').style.display = 'flex';
-        }
-
-        window.onload = () => {
-            ['bn','ba','b1','b2','b3'].forEach(k => {
-                if(document.getElementById('s_'+k)) document.getElementById('s_'+k).value = gt(k);
-            });
-        };
-    </script>
-</body>
-</html>
+            let h = Number(
