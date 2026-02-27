@@ -3,6 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toolboxpay v3.8 - Emergency Reset</title>
+    <style>
+        :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: var(--bg); color: #fff; padding: 20px; }
+        .shell { max-width: 400px; margin: 0 auto; }
+        .logo { text-align: center; margin-bottom: 30px; font-size: 30px; font-weight: 800; }
+        .logo span { color: var(--org); }
+        .section { background: var(--crd); border: 1px solid #233554; border-radius: 12px; padding: 20px; margin-bottom: 25px; }
+        .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; display: block; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 5px; }
+        input, textarea { width: 100%; padding: 12px; background: #0b1521; border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 6px; font-size: 16px; }
+        .btn-main { width: 100%; padding: 15px; background: var(--org); border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
+        #res-box { border: 2px solid var(--org); padding: 15px; border-radius: 8px; text-align: right; background: rgba(255,102,0,0.05); margin-top: 10px; font-size: 24px; font-weight: 800; color: var(--org); }
+    </style>
+</head>
+<body>
+
+<div class="shell">
+    <div class="logo"><span>toolbox</span>pay <small style="font-size: 10px; color: #8892b0;">v3.8</small></div>
+
+    <div class="section">
+        <span class="tag">Business Info</span>
+        <input type="text" id="b-n" placeholder="Business Name" oninput="calc()">
+        <textarea id="b-a" placeholder="Address" oninput="calc()"></textarea>
+    </div>
+
+    <div class="section">
+        <span class="tag">Bank Info</span>
+        <input type="text" id="acc" placeholder="Account Name" oninput="calc()">
+        <input type="text" id="srt" placeholder="Sort Code" oninput="calc()">
+        <input type="text" id="num" placeholder="Account Number" oninput="calc()">
+    </div>
+
+    <div class="section">
+        <span class="tag">Labour & Materials</span>
+        <input type="number" id="h" placeholder="Hours" oninput="calc()">
+        <input type="number" id="r" placeholder="Rate (£)" oninput="calc()">
+        <input type="number" id="m" placeholder="Materials (£)" oninput="calc()">
+        <div style="display:flex; justify-content: space-between; align-items: center;">
+            <span>Add 20% VAT</span>
+            <input type="checkbox" id="v" onchange="calc()" style="width:20px; height:20px;">
+        </div>
+        <div id="res-box">£0.00</div>
+        <button class="btn-main" style="margin-top:20px;" onclick="cp()">Copy Quote</button>
+    </div>
+</div>
+
+<script>
+    function calc() {
+        const h = parseFloat(document.getElementById('h').value) || 0;
+        const r = parseFloat(document.getElementById('r').value) || 0;
+        const m = parseFloat(document.getElementById('m').value) || 0;
+        let tot = (h * r) + m;
+        if(document.getElementById('v').checked) tot *= 1.2;
+        document.getElementById('res-box').innerText = '£' + tot.toLocaleString('en-GB', {minimumFractionDigits: 2});
+        
+        // Save fields
+        const f = ['b-n', 'b-a', 'acc', 'srt', 'num'];
+        f.forEach(id => localStorage.setItem(id, document.getElementById(id).value));
+    }
+
+    function cp() {
+        const text = `${document.getElementById('b-n').value}\nTotal: ${document.getElementById('res-box').innerText}\nBank: ${document.getElementById('acc').value} / ${document.getElementById('srt').value} / ${document.getElementById('num').value}`;
+        navigator.clipboard.writeText(text).then(() => alert('Copied!'));
+    }
+
+    window.onload = function() {
+        ['b-n', 'b-a', 'acc', 'srt', 'num'].forEach(id => {
+            document.getElementById(id).value = localStorage.getItem(id) || '';
+        });
+        calc();
+    }
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>toolboxpay v3.7 - Flat Build</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
