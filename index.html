@@ -26,7 +26,7 @@
             max-width: 550px;
         }
 
-        /* Navigation Link - Internal Toggle Only */
+        /* Persistent Navigation */
         .top-nav {
             margin-bottom: 30px;
             height: 25px;
@@ -38,206 +38,10 @@
             font-weight: 800;
             text-transform: uppercase;
             cursor: pointer;
-            display: none; /* Only shows when sub-sections are active */
+            display: none; /* Only visible when not on dashboard */
         }
 
         /* Branding - Clean & Borderless */
-        .branding {
-            margin-bottom: 40px;
-            margin-top: 10px;
-            text-align: center;
-        }
-        .logo-text {
-            font-size: 42px;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            margin: 0;
-        }
-        .toolbox { color: var(--orange); }
-        .pay { color: var(--white); }
-
-        /* View Containers */
-        .view-section { display: none; }
-        .view-section.active { display: block; }
-
-        /* Dashboard Menu Styles */
-        .menu-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .menu-btn {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 25px;
-            border-radius: 12px;
-            color: var(--white);
-            text-align: left;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .menu-btn:hover { border-color: var(--orange); }
-        .menu-btn h3 { margin: 0; color: var(--orange); text-transform: uppercase; font-size: 18px; }
-        .menu-btn p { margin: 5px 0 0 0; font-size: 13px; color: #8892b0; }
-
-        /* Calculator Styles */
-        .section-label {
-            color: var(--orange);
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin: 30px 0 15px 0;
-            display: block;
-            border-bottom: 1px solid rgba(255, 102, 0, 0.3);
-            padding-bottom: 8px;
-        }
-        .field-group { margin-bottom: 20px; }
-        label { display: block; font-size: 14px; margin-bottom: 10px; }
-        input {
-            width: 100%;
-            padding: 14px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--white);
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        .results-card {
-            background-color: var(--card-bg);
-            border: 2px solid var(--orange);
-            border-radius: 10px;
-            padding: 25px;
-            margin-top: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .total-val {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--orange);
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="top-nav">
-        <span id="return-btn" onclick="showView('dashboard')">← RETURN TO DASHBOARD</span>
-    </div>
-
-    <div class="branding">
-        <h1 class="logo-text"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
-    </div>
-
-    <div id="dashboard" class="view-section active">
-        <div class="menu-grid">
-            <div class="menu-btn" onclick="showView('labour-view')">
-                <div>
-                    <h3>Labour & Materials</h3>
-                    <p>Calculate costs and specialising tasks</p>
-                </div>
-                <span style="font-size: 18px;">→</span>
-            </div>
-        </div>
-    </div>
-
-    <div id="labour-view" class="view-section">
-        <span class="section-label">Labour Costs</span>
-        <div class="field-group">
-            <label>Hours worked</label>
-            <input type="number" id="hours" placeholder="0" oninput="calculate()">
-        </div>
-        <div class="field-group">
-            <label>Hourly rate (£)</label>
-            <input type="number" id="rate" placeholder="0.00" oninput="calculate()">
-        </div>
-
-        <span class="section-label">Materials</span>
-        <div class="field-group">
-            <label>Total material costs (£)</label>
-            <input type="number" id="mats" placeholder="0.00" oninput="calculate()">
-        </div>
-
-        <div class="results-card">
-            <span style="font-weight: 700;">TOTAL:</span>
-            <span id="grand-total" class="total-val">£0.00</span>
-        </div>
-    </div>
-</div>
-
-<script>
-    function showView(viewId) {
-        // Hide all sections
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-        // Show target section
-        document.getElementById(viewId).classList.add('active');
-        // Toggle Return button visibility
-        document.getElementById('return-btn').style.display = (viewId === 'dashboard') ? 'none' : 'inline-block';
-        window.scrollTo(0, 0);
-    }
-
-    function calculate() {
-        const h = parseFloat(document.getElementById('hours').value) || 0;
-        const r = parseFloat(document.getElementById('rate').value) || 0;
-        const m = parseFloat(document.getElementById('mats').value) || 0;
-        const total = (h * r) + m;
-        document.getElementById('grand-total').innerText = '£' + total.toLocaleString('en-GB', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-    }
-</script>
-
-</body>
-</html><!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - Command Centre</title>
-    <style>
-        :root {
-            --orange: #ff6600;
-            --white: #ffffff;
-            --dark-bg: #0b1521;
-            --card-bg: #1a2635;
-            --border-color: #233554;
-        }
-        body {
-            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--white);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            width: 100%;
-            max-width: 550px;
-        }
-
-        /* View Navigation */
-        .top-nav {
-            margin-bottom: 30px;
-            height: 25px;
-        }
-        #return-btn {
-            color: var(--orange);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 800;
-            text-transform: uppercase;
-            cursor: pointer;
-            display: none; /* Only shows when calculator is active */
-        }
-
-        /* Branding - Borderless Text Logo */
         .branding {
             margin-bottom: 40px;
             margin-top: 10px;
@@ -280,7 +84,6 @@
             color: var(--orange); 
             text-transform: uppercase; 
             font-size: 18px; 
-            letter-spacing: 0.5px;
         }
         .menu-card p { margin: 5px 0 0 0; font-size: 13px; color: #8892b0; }
 
@@ -342,7 +145,7 @@
                     <h3>Labour & Materials</h3>
                     <p>Calculate costs and specialising tasks</p>
                 </div>
-                <span style="font-size: 18px;">→</span>
+                <span style="font-size: 20px;">→</span>
             </div>
         </div>
     </div>
@@ -351,17 +154,17 @@
         <span class="section-label">Labour Costs</span>
         <div class="field-group">
             <label>Hours worked</label>
-            <input type="number" id="hours" placeholder="0" oninput="calculate()">
+            <input type="number" id="hours" placeholder="0" oninput="doCalc()">
         </div>
         <div class="field-group">
             <label>Hourly rate (£)</label>
-            <input type="number" id="rate" placeholder="0.00" oninput="calculate()">
+            <input type="number" id="rate" placeholder="0.00" oninput="doCalc()">
         </div>
 
         <span class="section-label">Materials</span>
         <div class="field-group">
             <label>Total material costs (£)</label>
-            <input type="number" id="materials" placeholder="0.00" oninput="calculate()">
+            <input type="number" id="mats" placeholder="0.00" oninput="doCalc()">
         </div>
 
         <div class="results-card">
@@ -373,19 +176,19 @@
 
 <script>
     function showView(viewId) {
-        // Hide all views
+        // Toggle visibility
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-        // Show selected view
         document.getElementById(viewId).classList.add('active');
-        // Toggle return button visibility
+        
+        // Toggle Return Link
         document.getElementById('return-btn').style.display = (viewId === 'dashboard') ? 'none' : 'inline-block';
         window.scrollTo(0, 0);
     }
 
-    function calculate() {
+    function doCalc() {
         const h = parseFloat(document.getElementById('hours').value) || 0;
         const r = parseFloat(document.getElementById('rate').value) || 0;
-        const m = parseFloat(document.getElementById('materials').value) || 0;
+        const m = parseFloat(document.getElementById('mats').value) || 0;
         const total = (h * r) + m;
         document.getElementById('grand-total').innerText = '£' + total.toLocaleString('en-GB', {
             minimumFractionDigits: 2,
