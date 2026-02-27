@@ -2,196 +2,174 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - Command Centre</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>toolboxpay</title>
     <style>
         :root {
             --orange: #ff6600;
             --white: #ffffff;
             --dark-bg: #0b1521;
             --card-bg: #1a2635;
-            --border-color: #233554;
+            --border: #233554;
         }
         body {
-            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--dark-bg);
             color: var(--white);
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             justify-content: center;
         }
-        .container {
-            width: 100%;
-            max-width: 550px;
-        }
+        .container { width: 100%; max-width: 400px; }
 
-        /* Fixed Navigation Toggles */
-        .top-nav {
-            margin-bottom: 25px;
-            height: 25px;
-        }
-        #return-btn {
-            color: var(--orange);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 800;
-            text-transform: uppercase;
-            cursor: pointer;
-            display: none; /* Only shows when in the calculator screen */
-        }
-
-        /* Branding - Clean Borderless Text */
-        .branding {
-            margin-bottom: 40px;
-            text-align: center;
-        }
-        .logo-text {
-            font-size: 42px;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            margin: 0;
-        }
-        .toolbox { color: var(--orange); }
-        .pay { color: var(--white); }
-
-        /* Screen Visibility Control */
-        .screen { display: none; }
-        .screen.active { display: block; }
-
-        /* Dashboard Screen Styles */
-        .menu-grid {
+        /* Compact Header & Navigation */
+        .header {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
         }
+        #return-link {
+            align-self: flex-start;
+            color: var(--orange);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: none; /* Only visible in Calculator */
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 0;
+        }
+        .logo .toolbox { color: var(--orange); }
+
+        /* View Switching Control */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* Compact Dashboard Menu */
         .menu-card {
             background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 25px;
-            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 18px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: 0.2s;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .menu-card:hover { border-color: var(--orange); }
         .menu-card h3 { 
             margin: 0; 
             color: var(--orange); 
+            font-size: 16px; 
             text-transform: uppercase; 
-            font-size: 18px; 
         }
-        .menu-card p { margin: 5px 0 0 0; font-size: 13px; color: #8892b0; }
+        .menu-card p { margin: 3px 0 0 0; font-size: 12px; color: #8892b0; }
 
-        /* Calculator Screen Styles */
-        .section-label {
+        /* Compact Calculator Fields */
+        .label-row {
             color: var(--orange);
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            margin: 30px 0 15px 0;
-            display: block;
-            border-bottom: 1px solid rgba(255, 102, 0, 0.3);
-            padding-bottom: 8px;
+            margin: 20px 0 10px 0;
+            border-bottom: 1px solid rgba(255, 102, 0, 0.2);
+            padding-bottom: 5px;
         }
-        .field-group { margin-bottom: 20px; }
-        label { display: block; font-size: 14px; margin-bottom: 10px; }
+        .input-group { margin-bottom: 12px; }
+        label { display: block; font-size: 13px; margin-bottom: 6px; }
         input {
             width: 100%;
-            padding: 14px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--white);
-            font-size: 16px;
+            padding: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            color: #fff;
+            font-size: 15px;
             box-sizing: border-box;
         }
-        .results-box {
-            background-color: var(--card-bg);
+
+        /* Result Box */
+        .result-box {
+            background: var(--card-bg);
             border: 2px solid var(--orange);
-            border-radius: 10px;
-            padding: 25px;
-            margin-top: 30px;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .total-amount {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--orange);
-        }
+        .total-val { font-size: 22px; font-weight: 800; color: var(--orange); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="top-nav">
-        <span id="return-btn" onclick="toggleScreen('dashboard')">← RETURN TO DASHBOARD</span>
+    <div class="header">
+        <span id="return-link" onclick="swap('dash')">← RETURN TO DASHBOARD</span>
+        <h1 class="logo"><span class="toolbox">toolbox</span>pay</h1>
     </div>
 
-    <div class="branding">
-        <h1 class="logo-text"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
-    </div>
-
-    <div id="dashboard" class="screen active">
-        <div class="menu-grid">
-            <div class="menu-card" onclick="toggleScreen('labour-calculator')">
-                <div>
-                    <h3>Labour & Materials</h3>
-                    <p>Calculate costs and specialising tasks</p>
-                </div>
-                <span style="font-size: 20px;">→</span>
+    <div id="dash" class="view active">
+        <div class="menu-card" onclick="swap('calc')">
+            <div>
+                <h3>Labour & Materials</h3>
+                <p>Calculate costs and specialising tasks</p>
             </div>
+            <span style="color:var(--orange)">→</span>
         </div>
     </div>
 
-    <div id="labour-calculator" class="screen">
-        <span class="section-label">Labour Costs</span>
-        <div class="field-group">
+    <div id="calc" class="view">
+        <div class="label-row">Labour Costs</div>
+        <div class="input-group">
             <label>Hours worked</label>
-            <input type="number" id="hours" placeholder="0" oninput="doSum()">
+            <input type="number" id="h" placeholder="0" oninput="update()">
         </div>
-        <div class="field-group">
+        <div class="input-group">
             <label>Hourly rate (£)</label>
-            <input type="number" id="rate" placeholder="0.00" oninput="doSum()">
+            <input type="number" id="r" placeholder="0.00" oninput="update()">
         </div>
 
-        <span class="section-label">Materials</span>
-        <div class="field-group">
+        <div class="label-row">Materials</div>
+        <div class="input-group">
             <label>Total material costs (£)</label>
-            <input type="number" id="mats" placeholder="0.00" oninput="doSum()">
+            <input type="number" id="m" placeholder="0.00" oninput="update()">
         </div>
 
-        <div class="results-box">
-            <span style="font-weight: 700;">TOTAL:</span>
-            <span id="grand-total" class="total-amount">£0.00</span>
+        <div class="result-box">
+            <span style="font-weight:700; font-size:14px;">TOTAL:</span>
+            <span id="res" class="total-val">£0.00</span>
         </div>
     </div>
 </div>
 
 <script>
-    function toggleScreen(screenId) {
-        // Hide all screens
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        // Show selected screen
-        document.getElementById(screenId).classList.add('active');
+    function swap(id) {
+        // Toggle screens
+        document.getElementById('dash').classList.remove('active');
+        document.getElementById('calc').classList.remove('active');
+        document.getElementById(id).classList.add('active');
         
-        // Show/Hide the "Return to Dashboard" text
-        const btn = document.getElementById('return-btn');
-        btn.style.display = (screenId === 'dashboard') ? 'none' : 'inline-block';
-        window.scrollTo(0, 0);
+        // Show/Hide Return link
+        document.getElementById('return-link').style.display = (id === 'dash') ? 'none' : 'block';
+        window.scrollTo(0,0);
     }
 
-    function doSum() {
-        const h = parseFloat(document.getElementById('hours').value) || 0;
-        const r = parseFloat(document.getElementById('rate').value) || 0;
-        const m = parseFloat(document.getElementById('mats').value) || 0;
-        const sum = (h * r) + m;
-        document.getElementById('grand-total').innerText = '£' + sum.toLocaleString('en-GB', {
-            minimumFractionDigits: 2, 
+    function update() {
+        const h = parseFloat(document.getElementById('h').value) || 0;
+        const r = parseFloat(document.getElementById('r').value) || 0;
+        const m = parseFloat(document.getElementById('m').value) || 0;
+        const total = (h * r) + m;
+        document.getElementById('res').innerText = '£' + total.toLocaleString('en-GB', {
+            minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
     }
