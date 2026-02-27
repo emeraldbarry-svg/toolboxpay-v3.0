@@ -2,143 +2,102 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>toolboxpay v9.8</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toolboxpay v9.9</title>
     <style>
-        /* THE RESET: Native styling to prevent browser scaling errors */
-        body { font-family: sans-serif; padding: 15px; margin: 0; background: #fff; color: #000; }
-        .logo { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 20px; color: #ff6600; }
-        .logo span { color: #000; }
-
-        /* NATIVE BUTTONS: Highest compatibility for mobile */
-        button { width: 100%; padding: 18px; margin-bottom: 10px; font-size: 16px; font-weight: bold; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #f0f0f0; text-align: left; }
-        .btn-org { background: #ff6600; color: white; border: none; text-align: center; }
-        .btn-back { background: #fff; border: 1px solid #ff6600; color: #ff6600; text-align: center; padding: 8px; }
-
+        /* MINIMALIST CSS: No graphical containers to prevent freezing */
+        body { font-family: sans-serif; padding: 15px; background: white; color: black; line-height: 1.4; }
+        .logo { color: #ff6600; font-weight: bold; font-size: 24px; text-align: center; margin-bottom: 20px; }
+        .nav-link { display: block; padding: 20px; background: #eee; border: 1px solid #ccc; margin-bottom: 10px; text-decoration: none; color: #ff6600; font-weight: bold; border-radius: 5px; }
         .screen { display: none; }
-        .active { display: block !important; }
-
-        label { display: block; margin-top: 10px; font-weight: bold; font-size: 12px; text-transform: uppercase; }
-        input, textarea, select { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; box-sizing: border-box; }
-        
-        .total { text-align: right; font-size: 28px; font-weight: bold; color: #ff6600; margin: 15px 0; }
-        .card { border: 2px solid #000; padding: 15px; background: #fff; }
+        .active { display: block; }
+        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; box-sizing: border-box; font-size: 16px; }
+        .btn-action { width: 100%; padding: 15px; background: #ff6600; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 10px; }
+        .result { font-size: 24px; font-weight: bold; text-align: right; color: #ff6600; margin: 10px 0; }
+        .box { border: 1px solid black; padding: 15px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="logo">toolbox<span>pay</span></div>
+<div class="logo">toolboxpay</div>
 
-    <div id="m" class="screen active">
-        <button onclick="sh('c')">NEW QUOTE →</button>
-        <button onclick="sh('h'); lh();">HISTORY →</button>
-        <button onclick="sh('s')">BUSINESS SETUP →</button>
-        <button onclick="sh('b')">BANK DETAILS →</button>
-    </div>
+<div id="scr_1" class="screen active">
+    <a href="javascript:void(0)" class="nav-link" onclick="sh('scr_2')">NEW QUOTE →</a>
+    <a href="javascript:void(0)" class="nav-link" onclick="sh('scr_3'); lh();">HISTORY →</a>
+    <a href="javascript:void(0)" class="nav-link" onclick="sh('scr_4')">BUSINESS SETUP →</a>
+    <a href="javascript:void(0)" class="nav-link" onclick="sh('scr_5')">BANK DETAILS →</a>
+</div>
 
-    <div id="s" class="screen">
-        <button class="btn-back" onclick="sh('m')">← BACK</button>
-        <label>Currency</label>
-        <select id="cur" onchange="localStorage.setItem('cur', this.value)">
-            <option value="£">British Pound (£)</option>
-            <option value="$">US Dollar ($)</option>
-            <option value="€">Euro (€)</option>
-        </select>
-        <label>Business Name</label>
-        <input type="text" id="bn" oninput="localStorage.setItem('bn', this.value)">
-        <label>Address</label>
-        <textarea id="ba" oninput="localStorage.setItem('ba', this.value)"></textarea>
-    </div>
+<div id="scr_2" class="screen">
+    <a href="javascript:void(0)" onclick="sh('scr_1')">← BACK</a>
+    <input type="text" id="cn" placeholder="Customer Name">
+    <input type="number" id="h" placeholder="Hours" oninput="ma()">
+    <input type="number" id="r" placeholder="Rate" oninput="ma()">
+    <input type="number" id="m" placeholder="Materials" oninput="ma()">
+    <div id="out" class="result">£0.00</div>
+    <button class="btn-action" onclick="sq()">SAVE QUOTE</button>
+</div>
 
-    <div id="b" class="screen">
-        <button class="btn-back" onclick="sh('m')">← BACK</button>
-        <label>Account Name</label>
-        <input type="text" id="b1" oninput="localStorage.setItem('b1', this.value)">
-        <label>Sort Code</label>
-        <input type="text" id="b2" oninput="localStorage.setItem('b2', this.value)">
-        <label>Account Number</label>
-        <input type="text" id="b3" oninput="localStorage.setItem('b3', this.value)">
-        <label>Payment Link</label>
-        <input type="url" id="bl" oninput="localStorage.setItem('bl', this.value)">
-    </div>
+<div id="scr_3" class="screen">
+    <a href="javascript:void(0)" onclick="sh('scr_1')">← BACK</a>
+    <div id="h_list"></div>
+</div>
 
-    <div id="c" class="screen">
-        <button class="btn-back" onclick="sh('m')">← BACK</button>
-        <input type="text" id="cn" placeholder="Client Name">
-        <input type="number" id="hrs" placeholder="Hours" oninput="ma()">
-        <input type="number" id="rte" placeholder="Rate" oninput="ma()">
-        <input type="number" id="mat" placeholder="Materials" oninput="ma()">
-        <div id="out" class="total">£0.00</div>
-        <button class="btn-org" onclick="sq()">SAVE QUOTE</button>
-    </div>
+<div id="scr_4" class="screen">
+    <a href="javascript:void(0)" onclick="sh('scr_1')">← BACK</a>
+    <label>Currency</label>
+    <select id="cur" onchange="localStorage.setItem('cur', this.value)">
+        <option value="£">GBP (£)</option>
+        <option value="$">USD ($)</option>
+        <option value="€">EUR (€)</option>
+    </select>
+    <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn', this.value)">
+    <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba', this.value)"></textarea>
+</div>
 
-    <div id="h" class="screen">
-        <button class="btn-back" onclick="sh('m')">← BACK</button>
-        <div id="h-list"></div>
-    </div>
+<div id="scr_5" class="screen">
+    <a href="javascript:void(0)" onclick="sh('scr_1')">← BACK</a>
+    <input type="text" id="b1" placeholder="Account Name" oninput="localStorage.setItem('b1', this.value)">
+    <input type="text" id="b2" placeholder="Sort Code" oninput="localStorage.setItem('b2', this.value)">
+    <input type="text" id="b3" placeholder="Account Number" oninput="localStorage.setItem('b3', this.value)">
+    <input type="url" id="bl" placeholder="Payment Link" oninput="localStorage.setItem('bl', this.value)">
+</div>
 
-    <div id="v" class="screen">
-        <button class="btn-back" onclick="sh('h')">← BACK</button>
-        <div id="vc" class="card"></div>
-        <div id="pa"></div>
-        <button class="btn-org" style="margin-top:10px" onclick="window.print()">PRINT / PDF</button>
-    </div>
+<div id="scr_6" class="screen">
+    <a href="javascript:void(0)" onclick="sh('scr_3')">← BACK</a>
+    <div id="vc" class="box"></div>
+    <div id="pa"></div>
+    <button class="btn-action" onclick="window.print()">PRINT / PDF</button>
+</div>
 
-    <script>
-        // Use direct display manipulation for maximum stability
-        function sh(id) {
-            const ss = ['m','s','b','c','h','v'];
-            ss.forEach(s => document.getElementById(s).style.display = 'none');
-            document.getElementById(id).style.display = 'block';
-            window.scrollTo(0,0);
-        }
+<script>
+    function sh(id) {
+        var s = document.getElementsByClassName('screen');
+        for(var i=0; i<s.length; i++) { s[i].style.display = 'none'; }
+        document.getElementById(id).style.display = 'block';
+        window.scrollTo(0,0);
+    }
 
-        function ma() {
-            const sy = localStorage.getItem('cur') || '£';
-            const h = Number(document.getElementById('hrs').value)||0;
-            const r = Number(document.getElementById('rte').value)||0;
-            const m = Number(document.getElementById('mat').value)||0;
-            document.getElementById('out').innerText = sy + ((h*r)+m).toFixed(2);
-        }
+    function ma() {
+        var cur = localStorage.getItem('cur') || '£';
+        var h = Number(document.getElementById('h').value) || 0;
+        var r = Number(document.getElementById('r').value) || 0;
+        var m = Number(document.getElementById('m').value) || 0;
+        document.getElementById('out').innerText = cur + ( (h*r)+m ).toFixed(2);
+    }
 
-        function sq() {
-            const sy = localStorage.getItem('cur') || '£';
-            const h = Number(document.getElementById('hrs').value)||0;
-            const r = Number(document.getElementById('rte').value)||0;
-            const m = Number(document.getElementById('mat').value)||0;
-            const t = (h*r)+m;
-            let j = JSON.parse(localStorage.getItem('jobs') || '[]');
-            j.unshift({id: Date.now(), n: document.getElementById('cn').value||'Client', t: sy+t.toFixed(2), d: new Date().toLocaleDateString('en-GB')});
-            localStorage.setItem('jobs', JSON.stringify(j.slice(0,20)));
-            sh('m');
-        }
+    function sq() {
+        var cur = localStorage.getItem('cur') || '£';
+        var h = Number(document.getElementById('h').value) || 0;
+        var r = Number(document.getElementById('r').value) || 0;
+        var m = Number(document.getElementById('m').value) || 0;
+        var t = (h*r)+m;
+        var j = JSON.parse(localStorage.getItem('jobs') || '[]');
+        j.unshift({id: Date.now(), n: document.getElementById('cn').value||'Client', t: cur+t.toFixed(2), d: new Date().toLocaleDateString('en-GB')});
+        localStorage.setItem('jobs', JSON.stringify(j.slice(0,20)));
+        sh('scr_1');
+    }
 
-        function lh() {
-            let j = JSON.parse(localStorage.getItem('jobs') || '[]');
-            document.getElementById('h-list').innerHTML = j.map(x => `
-                <button onclick="vq(${x.id})">${x.n}<br><small style="color:#666;">${x.d} • ${x.t}</small></button>
-            `).join('') || '<p>No history.</p>';
-        }
-
-        function vq(id) {
-            let j = JSON.parse(localStorage.getItem('jobs')||'[]').find(x => x.id === id);
-            if(!j) return;
-            document.getElementById('vc').innerHTML = `
-                <strong>${localStorage.getItem('bn')||'Business'}</strong><br>${localStorage.getItem('ba')||''}<hr>
-                Client: ${j.n}<br>Date: ${j.d}<br><strong>Total: ${j.t}</strong><hr>
-                Bank: ${localStorage.getItem('b1')}<br>Sort Code: ${localStorage.getItem('b2')}<br>Account: ${localStorage.getItem('b3')}
-            `;
-            const lnk = localStorage.getItem('bl');
-            document.getElementById('pa').innerHTML = lnk ? `<button class="btn-org" style="background:#2ecc71; margin-top:10px; text-align:center;" onclick="window.open('${lnk}','_blank')">PAY NOW</button>` : '';
-            sh('v');
-        }
-
-        window.onload = function() {
-            ['bn','ba','b1','b2','b3','bl','cur'].forEach(k => {
-                let v = localStorage.getItem(k); if(v) document.getElementById(k).value = v;
-            });
-            ma();
-        };
-    </script>
-</body>
-</html>
+    function lh() {
+        var j = JSON.parse(localStorage.getItem('jobs') || '[]');
+        document.getElementById('h_list').innerHTML = j.map(function(x)
