@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v7.5</title>
+    <title>toolboxpay - v7.6</title>
     <style>
-        /* CORE THEME */
+        /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             background: #4a4a4a; 
@@ -16,7 +16,7 @@
             justify-content: center;
         }
 
-        /* 420PX VIEWPORT */
+        /* THE 420PX VIEWPORT */
         #app-viewport {
             width: 100%;
             max-width: 420px;
@@ -25,7 +25,7 @@
             position: relative;
         }
 
-        /* LIVE CLOCK STYLE - TOP RIGHT */
+        /* THE CLOCK - TOP RIGHT [cite: 2026-02-27] */
         #live-clock {
             position: absolute;
             top: 25px;
@@ -33,21 +33,21 @@
             font-size: 14px;
             font-weight: 900;
             color: #ff6600;
-            font-variant-numeric: tabular-nums;
             letter-spacing: 1px;
+            font-family: monospace;
         }
 
-        /* LOGO */
+        /* HEADER */
         .header { text-align: center; padding: 25px 0 15px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* NAV LOGIC */
+        /* VIEW VISIBILITY */
         .view { display: none; width: 100%; }
         .view.active { display: block; }
 
-        /* DASHBOARD TILES */
+        /* DASHBOARD STACK */
         .stack { display: flex; flex-direction: column; gap: 15px; }
         .tile {
             background: #222;
@@ -67,7 +67,7 @@
         }
         .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* PAGE ELEMENTS */
+        /* SUB-PAGE ELEMENTS */
         .back-btn { 
             background: #000; color: #ff6600; border: 2px solid #ff6600; 
             padding: 10px 15px; border-radius: 8px; font-weight: 900; 
@@ -101,28 +101,28 @@
             <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         </div>
         <div class="stack">
-            <div class="tile" onclick="openNav('view-quotes')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
-            <div class="tile" onclick="openNav('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
-            <div class="tile" onclick="openNav('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
-            <div class="tile" onclick="openNav('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
-            <div class="tile" onclick="openNav('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
+            <div class="tile" onclick="navTo('view-quotes')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
+            <div class="tile" onclick="navTo('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
+            <div class="tile" onclick="navTo('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
+            <div class="tile" onclick="navTo('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
+            <div class="tile" onclick="navTo('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
         </div>
     </div>
 
     <div id="view-quotes" class="view">
-        <div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div>
+        <div class="back-btn" onclick="navTo('view-home')">← DASHBOARD</div>
         <div class="card">
             <h2>New Quote</h2>
             <label>Client Name</label><input type="text" id="cn">
             <label>Labour Description</label><textarea id="dl" style="height:100px;"></textarea>
-            <label>Price (£)</label><input type="number" id="tp" oninput="updateTotal()">
+            <label>Price (£)</label><input type="number" id="tp" oninput="updatePrice()">
             <div class="total-display" id="q-val">£0.00</div>
-            <button class="save-btn" onclick="openNav('view-home')">SAVE JOB</button>
+            <button class="save-btn" onclick="navTo('view-home')">SAVE JOB</button>
         </div>
     </div>
 
     <div id="view-bank" class="view">
-        <div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div>
+        <div class="back-btn" onclick="navTo('view-home')">← DASHBOARD</div>
         <div class="card">
             <h2>Bank Setup</h2>
             <label>Business Name</label><input type="text" id="bn" oninput="saveMem('bn',this.value)">
@@ -132,40 +132,47 @@
         </div>
     </div>
 
-    <div id="view-calc" class="view"><div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div><div class="card"><h2>Calculator</h2><p>Working...</p></div></div>
-    <div id="view-history" class="view"><div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div><div class="card"><h2>History</h2><p>Saved Quotes appear here.</p></div></div>
-    <div id="view-readme" class="view"><div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div><div class="card"><h2>Read Me</h2><p>v7.5 Clock Enabled.</p></div></div>
+    <div id="view-calc" class="view"><div class="back-btn" onclick="navTo('view-home')">← DASHBOARD</div><div class="card"><h2>Calculator</h2><p>Coming Soon</p></div></div>
+    <div id="view-history" class="view"><div class="back-btn" onclick="navTo('view-home')">← DASHBOARD</div><div class="card"><h2>History</h2><p>Coming Soon</p></div></div>
+    <div id="view-readme" class="view"><div class="back-btn" onclick="navTo('view-home')">← DASHBOARD</div><div class="card"><h2>Read Me</h2><p>v7.6 Stable</p></div></div>
 
 </div>
 
 <script>
-    const STORAGE_KEY = "TBP_V75_CLOCK";
+    const K = "TBP_V76_FINAL";
 
-    // CLOCK LOGIC
-    function startClock() {
-        const clockEl = document.getElementById('live-clock');
-        setInterval(() => {
-            const now = new Date();
-            clockEl.innerText = now.toLocaleTimeString('en-GB', { hour12: false });
-        }, 1000);
-    }
-
-    function openNav(id) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+    // NAVIGATION [cite: 2026-02-27]
+    function navTo(id) {
+        const views = document.getElementsByClassName('view');
+        for (let i = 0; i < views.length; i++) {
+            views[i].style.display = 'none';
+        }
+        document.getElementById(id).style.display = 'block';
         window.scrollTo(0,0);
     }
 
-    function saveMem(k, v) { localStorage.setItem(STORAGE_KEY + k, v); }
-    function loadMem(k) { return localStorage.getItem(STORAGE_KEY + k) || ""; }
+    // CLOCK [cite: 2026-02-27]
+    function tick() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const s = String(now.getSeconds()).padStart(2, '0');
+        const clock = document.getElementById('live-clock');
+        if (clock) clock.innerText = h + ":" + m + ":" + s;
+    }
+    setInterval(tick, 1000);
 
-    function updateTotal() {
+    // DATA [cite: 2026-02-26]
+    function saveMem(k, v) { localStorage.setItem(K + k, v); }
+    function loadMem(k) { return localStorage.getItem(K + k) || ""; }
+
+    function updatePrice() {
         const val = parseFloat(document.getElementById('tp').value) || 0;
         document.getElementById('q-val').innerText = "£" + val.toFixed(2);
     }
 
     window.onload = () => {
-        startClock();
+        tick();
         ['bn', 'bk', 'sc', 'an'].forEach(id => {
             const el = document.getElementById(id);
             if(el) el.value = loadMem(id);
