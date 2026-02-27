@@ -8,16 +8,17 @@
         :root { --org: #ff6600; --bg: #0b0b0b; --card: #161616; }
         html, body { background: var(--bg); margin: 0; padding: 0; font-family: sans-serif; color: white; display: flex; justify-content: center; }
         
-        /* SINGLE SURFACE ENGINE - No screen switching to prevent freezes */
-        #app { background: var(--card); width: 400px; min-height: 100vh; padding: 25px; box-sizing: border-box; border: 1px solid #333; }
+        /* SINGLE SURFACE ENGINE - Prevents black screen freezes */
+        #app { background: var(--card); width: 400px; min-height: 100vh; padding: 25px; box-sizing: border-box; border: 1px solid #333; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         
         .logo { color: var(--org); font-weight: 900; font-size: 28px; text-align: center; margin-bottom: 25px; }
         .logo span { color: #fff; }
 
         .section { border-top: 1px solid #333; padding-top: 20px; margin-top: 25px; }
-        h3 { color: var(--org); font-size: 14px; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
+        h3 { color: var(--org); font-size: 14px; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; font-weight: 800; }
 
-        input, textarea, select { width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #333; background: #000; color: #fff; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
+        input, textarea, select { width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #333; background: #000; color: #fff; border-radius: 10px; font-size: 16px; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--org); }
         
         .row { display: flex; gap: 10px; }
         .row input { flex: 1; }
@@ -25,20 +26,21 @@
         .tax-btn { background: #222; border: 1px solid #444; padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; margin-bottom: 15px; }
         .tax-btn.active { border-color: var(--org); background: #2a1500; }
         .dot { width: 14px; height: 14px; background: #444; border-radius: 50%; }
-        .active .dot { background: var(--org); }
+        .active .dot { background: var(--org); box-shadow: 0 0 8px var(--org); }
 
-        .total { text-align: right; font-size: 52px; font-weight: 900; color: var(--org); margin: 15px 0; }
+        .total { text-align: right; font-size: 52px; font-weight: 900; color: var(--org); margin: 15px 0; letter-spacing: -2px; }
         
         .main-btn { width: 100%; padding: 20px; background: var(--org); color: #000; border: none; border-radius: 14px; font-size: 18px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+        .main-btn:hover { background: #ff8533; }
 
         .hist-item { background: #222; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--org); }
         .del-btn { background: none; border: 1px solid #522; color: #f55; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 12px; }
         .view-btn { background: none; border: 1.5px solid var(--org); color: var(--org); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
         #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999; justify-content: center; align-items: flex-start; padding: 20px; box-sizing: border-box; overflow-y: auto; }
-        .paper { background: #fff; color: #000; padding: 30px; width: 100%; max-width: 400px; border-radius: 4px; font-size: 14px; line-height: 1.5; margin-top: 20px; }
+        .paper { background: #fff; color: #000; padding: 35px; width: 100%; max-width: 420px; border-radius: 4px; font-size: 14px; line-height: 1.6; margin-top: 20px; }
         
-        @media print { body * { visibility: hidden; } #overlay, #overlay * { visibility: visible; } #overlay { position: absolute; left: 0; top: 0; background: white; } .no-print { display: none; } }
+        @media print { body * { visibility: hidden; } #overlay, #overlay * { visibility: visible; } #overlay { position: absolute; left: 0; top: 0; background: white; width: 100%; } .no-print { display: none; } }
     </style>
 </head>
 <body>
@@ -48,72 +50,4 @@
 
         <h3>New Quote</h3>
         <input type="text" id="in_name" placeholder="Client Name">
-        <textarea id="in_desc" placeholder="Description of Labour" style="height: 70px;"></textarea>
-        <div class="row">
-            <input type="number" id="in_hrs" placeholder="Hours" oninput="math()">
-            <input type="number" id="in_rate" placeholder="Rate" oninput="math()">
-        </div>
-        <input type="number" id="in_mat" placeholder="Materials" oninput="math()">
-        
-        <div id="tax_toggle" class="tax-btn" onclick="toggleVAT()">
-            <span style="font-weight: bold; font-size: 13px;">ADD 20% VAT</span>
-            <div class="dot"></div>
-        </div>
-
-        <div id="out_total" class="total">£0.00</div>
-        <button class="main-btn" onclick="save()">Save & Log Quote</button>
-
-        <div class="section">
-            <h3>Recent Quotes</h3>
-            <div id="hist_list"></div>
-        </div>
-
-        <div class="section">
-            <h3>Business & Bank Details</h3>
-            <input type="text" id="s_bn" placeholder="Business Name" oninput="st('bn', this.value)">
-            <textarea id="s_ba" placeholder="Business Address" oninput="st('ba', this.value)" style="height:60px;"></textarea>
-            <div class="row">
-                <input type="text" id="s_b1" placeholder="Bank Name" oninput="st('b1', this.value)">
-                <input type="text" id="s_b2" placeholder="Sort Code" oninput="st('b2', this.value)">
-            </div>
-            <input type="text" id="s_b3" placeholder="Account Number" oninput="st('b3', this.value)">
-        </div>
-        
-        <center><button onclick="localStorage.clear(); location.reload();" style="margin-top:40px; background:none; border:none; color:#333; cursor:pointer; font-size:10px;">[ RESET APP ]</button></center>
-    </div>
-
-    <div id="overlay" onclick="this.style.display='none'">
-        <div class="paper" id="print_area" onclick="event.stopPropagation()"></div>
-    </div>
-
-    <script>
-        const DB = "tb_v42_";
-        let isTax = false;
-
-        function st(k, v) { localStorage.setItem(DB+k, v); }
-        function gt(k) { return localStorage.getItem(DB+k) || ""; }
-
-        function toggleVAT() {
-            isTax = !isTax;
-            document.getElementById('tax_toggle').classList.toggle('active', isTax);
-            math();
-        }
-
-        function math() {
-            let h = Number(document.getElementById('in_hrs').value) || 0;
-            let r = Number(document.getElementById('in_rate').value) || 0;
-            let m = Number(document.getElementById('in_mat').value) || 0;
-            let tot = (h * r) + m; if(isTax) tot *= 1.2;
-            document.getElementById('out_total').innerText = "£" + tot.toFixed(2);
-        }
-
-        function save() {
-            let d = JSON.parse(localStorage.getItem(DB+'data') || '[]');
-            d.unshift({ 
-                id: Date.now(), 
-                n: document.getElementById('in_name').value || 'Client',
-                d: document.getElementById('in_desc').value || 'Labour',
-                t: document.getElementById('out_total').innerText,
-                date: new Date().toLocaleDateString('en-GB')
-            });
-            localStorage.setItem(DB+'data',
+        <textarea id="in_
