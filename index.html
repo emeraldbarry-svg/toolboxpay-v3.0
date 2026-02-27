@@ -14,7 +14,6 @@
         .logo span { color: var(--org); }
 
         #back-btn { display: none; color: var(--org); border: 1px solid var(--org); background: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 25px; text-transform: uppercase; }
-        
         .screen { display: none; }
         
         .tile { background: var(--crd); padding: 25px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
@@ -23,11 +22,9 @@
         .arrow { color: var(--org); font-weight: bold; font-size: 20px; }
 
         .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
-        input { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 16px; outline: none; transition: border 0.3s; }
-        input:focus { border-color: var(--org); }
+        input { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 16px; outline: none; }
         
-        /* VAT Toggle Styling */
-        .vat-row { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 0 5px; }
+        .vat-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 5px; background: rgba(255,102,0,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,102,0,0.2); }
         .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #233554; transition: .4s; border-radius: 34px; }
@@ -36,9 +33,35 @@
         input:checked + .slider:before { transform: translateX(24px); }
 
         .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; flex-direction: column; gap: 5px; margin-top: 20px; background: rgba(255,102,0,0.05); }
-        .price-label { font-weight: 800; font-size: 12px; color: var(--wht); }
         .price { color: var(--org); font-size: 26px; font-weight: 800; text-align: right; }
-        .vat-breakdown { font-size: 12px; color: #8892b0; text-align: right; }
 
-        .btn-main { width: 100%; padding: 16px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: 800; text-transform: uppercase; font-size: 14px; }
-        .btn-reset { width: 100%; padding: 12px; background: none; border: 1px solid #233554; color: #8892b0; border-radius: 8px; margin-top: 10px; cursor: pointer; font-
+        .btn-main { width: 100%; padding: 16px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
+        .btn-reset { width: 100%; padding: 12px; background: none; border: 1px solid #233554; color: #8892b0; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 600; font-size: 13px; text-transform: uppercase; }
+
+        .summary-card { background: var(--wht); color: #333; padding: 25px; border-radius: 12px; margin-top: 10px; }
+        .summary-card h2 { color: #000; font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .summary-total { border-top: 2px solid #eee; margin-top: 15px; padding-top: 10px; font-weight: 800; font-size: 18px; color: var(--org); }
+    </style>
+</head>
+<body>
+<div class="shell">
+    <button id="back-btn" onclick="nav('dash')">← Return to Dashboard</button>
+    <div class="logo"><span>toolbox</span>pay</div>
+
+    <div id="dash" class="screen" style="display: block;">
+        <div class="tile" onclick="nav('calc')"><div><h3>Labour & Materials</h3><p>Calculate & quote</p></div><span class="arrow">→</span></div>
+        <div class="tile" onclick="nav('biz')"><div><h3>Business Details</h3><p>Stored company info</p></div><span class="arrow">→</span></div>
+        <div class="tile" onclick="nav('bank')"><div><h3>Bank Details</h3><p>Payment information</p></div><span class="arrow">→</span></div>
+    </div>
+
+    <div id="calc" class="screen">
+        <div class="tag">Labour Costs</div>
+        <input type="number" id="h" placeholder="Hours worked" oninput="math()">
+        <input type="number" id="r" placeholder="Hourly rate (£)" oninput="math()">
+        <div class="tag">Materials</div>
+        <input type="number" id="m" placeholder="Total materials (£)" oninput="math()">
+        <div class="vat-row"><span>Add VAT (20%)</span><label class="switch"><input type="checkbox" id="vat-toggle" onchange="math()"><span class="slider"></span></label></div>
+        <div class="total-box"><div style="display:flex; justify-content: space-between; align-items: center;"><span style="font-weight:800; font-size:12px;">TOTAL:</span><span id="res" class="price">£0.00</span></div><div id="vat-info" style="font-size:12px; color:#8892b0; text-align:right; display:none;">Inc. £0.00 VAT</div></div>
+        <button class="btn-main" onclick="genSummary()">View Quote Summary</button>
+        <button class="btn-reset" onclick="resetCalc()">Reset Figures</
