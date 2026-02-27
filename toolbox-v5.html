@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Toolbox Pay | Command Centre v5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --t-orange: #FF9500; --t-midnight: #141D36; }
+        
+        /* KILLING ALL CACHED BORDERS */
+        * { border: none !important; box-shadow: none !important; outline: none !important; margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            background-color: var(--t-midnight); 
+            color: #FFFFFF; 
+            font-family: 'Inter', sans-serif; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .master-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 12px; }
+
+        /* BRANDING: ORANGE & WHITE ONLY */
+        .brand-header { text-align: center; padding: 40px 0 20px 0; background: transparent !important; }
+        .logo-orange { font-size: 42px; font-weight: 900; color: var(--t-orange); text-transform: uppercase; letter-spacing: -0.05em; }
+        .logo-white { font-size: 42px; font-weight: 900; color: #FFFFFF; text-transform: uppercase; letter-spacing: -0.05em; }
+        .tagline { font-size: 10px; font-weight: 900; color: #94A3B8; letter-spacing: 0.3em; text-transform: uppercase; margin-top: 5px; }
+
+        /* THE 5-TAB NAVIGATION */
+        .nav-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 149, 0, 0.2) !important;
+            border-radius: 20px !important;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .nav-card:hover { border-color: var(--t-orange) !important; background: rgba(30, 41, 59, 0.7); }
+
+        .icon-v5 { 
+            width: 52px; height: 52px; 
+            background: rgba(255, 149, 0, 0.1); 
+            border-radius: 14px !important; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 24px; 
+        }
+
+        .label-v5 { font-size: 16px; font-weight: 900; text-transform: uppercase; color: #FFFFFF; }
+        .sublabel-v5 { font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-top: 2px; }
+
+        /* CHAT WIDGET: PERSISTENT ORANGE BUBBLE */
+        .chat-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 65px;
+            height: 65px;
+            background-color: var(--t-orange) !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 99999 !important;
+            box-shadow: 0 10px 30px rgba(255, 149, 0, 0.4) !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-fab" onclick="alert('Support Chat Opening...')">💬</div>
+
+    <div class="master-container">
+        <div class="brand-header">
+            <span class="logo-orange">TOOLBOX</span><span class="logo-white">PAY</span>
+            <p class="tagline">Command Centre</p>
+        </div>
+
+        <a href="record-v5.html" class="nav-card">
+            <div class="icon-v5">💰</div>
+            <div>
+                <div class="label-v5">New Settlement</div>
+                <div class="sublabel-v5">Calculate labour & costs</div>
+            </div>
+        </a>
+
+        <a href="photos-v5.html" class="nav-card">
+            <div class="icon-v5">📸</div>
+            <div>
+                <div class="label-v5">Photos & Evidence</div>
+                <div class="sublabel-v5">Site photos & documentation</div>
+            </div>
+        </a>
+
+        <a href="history-v5.html" class="nav-card">
+            <div class="icon-v5">📜</div>
+            <div>
+                <div class="label-v5">Job History</div>
+                <div class="sublabel-v5">View previous work records</div>
+            </div>
+        </a>
+
+        <a href="profile-v5.html" class="nav-card">
+            <div class="icon-v5">⚒️</div>
+            <div>
+                <div class="label-v5">Business Profile</div>
+                <div class="sublabel-v5">Bank details & QR code</div>
+            </div>
+        </a>
+
+        <a href="lock-v5.html" class="nav-card">
+            <div class="icon-v5">🔒</div>
+            <div>
+                <div class="label-v5">Lock System</div>
+                <div class="sublabel-v5">Secure local records</div>
+            </div>
+        </a>
+    </div>
+
+</body>
+</html>
