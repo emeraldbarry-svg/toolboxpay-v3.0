@@ -5,28 +5,157 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>toolboxpay - Command Centre</title>
     <style>
-        :root { --orange: #ff6600; --white: #ffffff; --dark-bg: #0b1521; --card-bg: #1a2635; --border-color: #233554; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--dark-bg); color: var(--white); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { width: 100%; max-width: 500px; text-align: center; }
-        .logo-text { font-size: 42px; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 40px; }
+        :root {
+            --orange: #ff6600;
+            --white: #ffffff;
+            --dark-bg: #0b1521;
+            --card-bg: #1a2635;
+            --border-color: #233554;
+        }
+        body {
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--white);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 550px;
+        }
+
+        /* Top Navigation - Internal Toggle */
+        .top-nav {
+            margin-bottom: 30px;
+            display: none; /* Hidden on main dashboard */
+        }
+        .return-link {
+            color: var(--orange);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        /* Branding - Clean & Borderless */
+        .branding {
+            margin-bottom: 40px;
+            margin-top: 20px;
+        }
+        .logo-text {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin: 0;
+        }
         .toolbox { color: var(--orange); }
         .pay { color: var(--white); }
-        .menu-item { background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; text-decoration: none; color: var(--white); display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
-        .menu-item:hover { border-color: var(--orange); }
-        .menu-item h2 { margin: 0; font-size: 18px; text-transform: uppercase; color: var(--orange); }
-        .menu-item p { margin: 5px 0 0 0; font-size: 13px; color: #8892b0; }
+
+        /* Dashboard Menu Styles */
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .menu-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 12px;
+            color: var(--white);
+            text-align: left;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-btn:hover { border-color: var(--orange); }
+        .menu-btn h3 { margin: 0; color: var(--orange); text-transform: uppercase; font-size: 18px; }
+        .menu-btn p { margin: 5px 0 0 0; font-size: 13px; color: #8892b0; }
+
+        /* Section Visibility Logic */
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
+        /* Calculator Styles */
+        .section-label {
+            color: var(--orange);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 30px 0 15px 0;
+            display: block;
+            border-bottom: 1px solid rgba(255, 102, 0, 0.3);
+            padding-bottom: 8px;
+        }
+        .field-group { margin-bottom: 20px; }
+        label { display: block; font-size: 14px; margin-bottom: 10px; }
+        input {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--white);
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .results-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--orange);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--orange);
+        }
     </style>
 </head>
 <body>
+
 <div class="container">
-    <h1 class="logo-text"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
-    <a href="labour-calculator.html" class="menu-item">
-        <div style="text-align: left;">
-            <h2>Labour & Materials</h2>
-            <p>Calculate costs and specialising tasks</p>
+    <div id="nav-container" class="top-nav">
+        <span onclick="showView('dashboard')" class="return-link">← RETURN TO DASHBOARD</span>
+    </div>
+
+    <div class="branding">
+        <h1 class="logo-text"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
+    </div>
+
+    <div id="dashboard" class="view-section active">
+        <div class="menu-grid">
+            <div class="menu-btn" onclick="showView('calculator')">
+                <div>
+                    <h3>Labour & Materials</h3>
+                    <p>Calculate costs and specialising tasks</p>
+                </div>
+                <span>→</span>
+            </div>
+            </div>
+    </div>
+
+    <div id="calculator" class="view-section">
+        <span class="section-label">Labour Costs</span>
+        <div class="field-group">
+            <label>Hours worked</label>
+            <input type="number" id="hours" placeholder="0" oninput="calc()">
         </div>
-        <span>→</span>
-    </a>
-</div>
-</body>
-</html>
+        <div class="field-group">
+            <label>Hourly rate (£)</label>
+            <input type="number" id="rate" placeholder="0.00" oninput="calc()">
+        </div>
+
+        <span class="section-label">Materials</span>
+        <div class="field-group">
+            <label>Total material costs (£)</label>
+            <input type="number" id="mats" placeholder="0.00" oninput="calc()">
