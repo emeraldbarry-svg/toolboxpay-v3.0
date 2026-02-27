@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v7.6</title>
+    <title>toolboxpay - v7.7</title>
     <style>
-        /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
+        /* CORE THEME [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             background: #4a4a4a; 
@@ -16,25 +16,12 @@
             justify-content: center;
         }
 
-        /* THE 420PX VIEWPORT */
+        /* 420PX VIEWPORT */
         #app-viewport {
             width: 100%;
             max-width: 420px;
             padding: 20px;
             min-height: 100vh;
-            position: relative;
-        }
-
-        /* THE CLOCK - TOP RIGHT [cite: 2026-02-27] */
-        #live-clock {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            font-size: 14px;
-            font-weight: 900;
-            color: #ff6600;
-            letter-spacing: 1px;
-            font-family: monospace;
         }
 
         /* HEADER */
@@ -84,11 +71,21 @@
             width: 100%; background: #000; border: 1px solid #333; color: #fff; 
             padding: 18px; border-radius: 15px; margin-bottom: 20px; outline: none; font-size: 16px; 
         }
-        .total-display { font-size: 64px; font-weight: 900; color: #ff6600; text-align: right; margin: 15px 0; }
-        .save-btn { 
-            width: 100%; background: #ff6600; color: #000; padding: 22px; border: none; 
-            border-radius: 18px; font-weight: 900; font-size: 20px; text-transform: uppercase; cursor: pointer;
+
+        /* WHATSAPP & SAVE BUTTONS */
+        .btn-wa { 
+            width: 100%; background: #25D366; color: #000; padding: 18px; border: none; 
+            border-radius: 15px; font-weight: 900; font-size: 14px; text-transform: uppercase; 
+            cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
+        .btn-wa:active { background: #1ebd5e; }
+
+        .btn-save { 
+            width: 100%; background: #ff6600; color: #000; padding: 18px; border: none; 
+            border-radius: 15px; font-weight: 900; font-size: 14px; text-transform: uppercase; cursor: pointer;
+        }
+
+        .total-display { font-size: 64px; font-weight: 900; color: #ff6600; text-align: right; margin: 15px 0; }
     </style>
 </head>
 <body>
@@ -96,7 +93,6 @@
 <div id="app-viewport">
     
     <div id="view-home" class="view active">
-        <div id="live-clock">00:00:00</div>
         <div class="header">
             <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         </div>
@@ -113,11 +109,12 @@
         <div class="back-btn" onclick="navTo('view-home')">← DASHBOARD</div>
         <div class="card">
             <h2>New Quote</h2>
-            <label>Client Name</label><input type="text" id="cn">
-            <label>Labour Description</label><textarea id="dl" style="height:100px;"></textarea>
+            <label>Client Name</label><input type="text" id="cn" placeholder="e.g. Smith">
+            <label>Labour Description</label><textarea id="dl" style="height:80px;" placeholder="Details..."></textarea>
             <label>Price (£)</label><input type="number" id="tp" oninput="updatePrice()">
             <div class="total-display" id="q-val">£0.00</div>
-            <button class="save-btn" onclick="navTo('view-home')">SAVE JOB</button>
+            <button class="btn-wa" onclick="shareQuote()">Send via WhatsApp</button>
+            <button class="btn-save" onclick="navTo('view-home')">Save to History</button>
         </div>
     </div>
 
@@ -129,19 +126,19 @@
             <label>Bank Name</label><input type="text" id="bk" oninput="saveMem('bk',this.value)">
             <label>Sort Code</label><input type="text" id="sc" oninput="saveMem('sc',this.value)">
             <label>Account No.</label><input type="text" id="an" oninput="saveMem('an',this.value)">
+            <button class="btn-wa" style="margin-top:10px;" onclick="shareBank()">Send Details via WhatsApp</button>
         </div>
     </div>
 
-    <div id="view-calc" class="view"><div class="back-btn" onclick="navTo('view-home')">← DASHBOARD</div><div class="card"><h2>Calculator</h2><p>Coming Soon</p></div></div>
-    <div id="view-history" class="view"><div class="back-btn" onclick="navTo('view-home')">← DASHBOARD</div><div class="card"><h2>History</h2><p>Coming Soon</p></div></div>
-    <div id="view-readme" class="view"><div class="back-btn" onclick="navTo('view-home')">← DASHBOARD</div><div class="card"><h2>Read Me</h2><p>v7.6 Stable</p></div></div>
+    <div id="view-calc" class="view"><div class="back-btn" onclick="navTo('view-home')">← DASHBOARD</div><div class="card"><h2>Calculator</h2><p>Feature loading...</p></div></div>
+    <div id="view-history" class="view"><div class="back-btn" onclick="navTo('view-home')">← DASHBOARD</div><div class="card"><h2>History</h2><p>Feature loading...</p></div></div>
+    <div id="view-readme" class="view"><div class="back-btn" onclick="navTo('view-home')">← DASHBOARD</div><div class="card"><h2>Read Me</h2><p>v7.7 WhatsApp Active.</p></div></div>
 
 </div>
 
 <script>
-    const K = "TBP_V76_FINAL";
+    const K = "TBP_V77_WHATSAPP";
 
-    // NAVIGATION [cite: 2026-02-27]
     function navTo(id) {
         const views = document.getElementsByClassName('view');
         for (let i = 0; i < views.length; i++) {
@@ -151,18 +148,28 @@
         window.scrollTo(0,0);
     }
 
-    // CLOCK [cite: 2026-02-27]
-    function tick() {
-        const now = new Date();
-        const h = String(now.getHours()).padStart(2, '0');
-        const m = String(now.getMinutes()).padStart(2, '0');
-        const s = String(now.getSeconds()).padStart(2, '0');
-        const clock = document.getElementById('live-clock');
-        if (clock) clock.innerText = h + ":" + m + ":" + s;
+    // WHATSAPP QUOTE [cite: 2026-02-27]
+    function shareQuote() {
+        const client = document.getElementById('cn').value || "Client";
+        const labour = document.getElementById('dl').value || "Works";
+        const price = document.getElementById('q-val').innerText;
+        const biz = loadMem('bn') || "toolboxpay User";
+        
+        const text = `Hi ${client}, here is your quote from ${biz}.\n\nLabour: ${labour}\nTotal: ${price}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
-    setInterval(tick, 1000);
 
-    // DATA [cite: 2026-02-26]
+    // WHATSAPP BANK [cite: 2026-02-27]
+    function shareBank() {
+        const biz = loadMem('bn') || "My Business";
+        const bank = loadMem('bk');
+        const sort = loadMem('sc');
+        const acc = loadMem('an');
+        
+        const text = `Bank Details for ${biz}:\nBank: ${bank}\nSort Code: ${sort}\nAccount No: ${acc}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
     function saveMem(k, v) { localStorage.setItem(K + k, v); }
     function loadMem(k) { return localStorage.getItem(K + k) || ""; }
 
@@ -172,7 +179,6 @@
     }
 
     window.onload = () => {
-        tick();
         ['bn', 'bk', 'sc', 'an'].forEach(id => {
             const el = document.getElementById(id);
             if(el) el.value = loadMem(id);
