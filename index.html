@@ -59,3 +59,105 @@
         <div id="tax_toggle" class="tax-btn" onclick="toggleVAT()">
             <span style="font-weight: bold; font-size: 13px; color: #777;">ADD 20% VAT</span>
             <div class="dot"></div>
+        </div>
+
+        <div id="out_total" class="total">£0.00</div>
+        <button class="main-btn" onclick="save()">Save & Log Quote</button>
+
+        <div class="section">
+            <h3>Recent Quotes</h3>
+            <div id="hist_list"></div>
+        </div>
+
+        <div class="section">
+            <h3>Business & Bank Details</h3>
+            <input type="text" id="s_bn" placeholder="Business Name" oninput="st('bn', this.value)">
+            <textarea id="s_ba" placeholder="Business Address" oninput="st('ba', this.value)" style="height:60px;"></textarea>
+            <div class="row">
+                <input type="text" id="s_b1" placeholder="Bank Name" oninput="st('b1', this.value)">
+                <input type="text" id="s_b2" placeholder="Sort Code" oninput="st('b2', this.value)">
+            </div>
+            <input type="text" id="s_b3" placeholder="Account Number" oninput="st('b3', this.value)">
+        </div>
+        
+        <center><button onclick="if(confirm('Reset all?')) { localStorage.clear(); location.reload(); }" style="margin-top:40px; background:none; border:none; color:#333; cursor:pointer; font-size:10px; text-decoration: underline;">[ RESET APPLICATION ]</button></center>
+    </div>
+
+    <div id="overlay" onclick="this.style.display='none'">
+        <div class="paper" id="print_area" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <script>
+        const DB = "tb_v42_final_";
+        let isTax = false;
+
+        function st(k, v) { localStorage.setItem(DB+k, v); }
+        function gt(k) { return localStorage.getItem(DB+k) || ""; }
+
+        function toggleVAT() {
+            isTax = !isTax;
+            document.getElementById('tax_toggle').classList.toggle('active', isTax);
+            math();
+        }
+
+        function math() {
+            let h = Number(document.getElementById('in_hrs').value) || 0;
+            let r = Number(document.getElementById('in_rate').value) || 0;
+            let m = Number(document.getElementById('in_mat').value) || 0;
+            let tot = (h * r) + m; if(isTax) tot *= 1.2;
+            document.getElementById('out_total').innerText = "£" + tot.toFixed(2);
+        }
+
+        function save() {
+            let d = JSON.parse(localStorage.getItem(DB+'data') || '[]');
+            d.unshift({ 
+                id: Date.now(), 
+                n: document.getElementById('in_name').value || 'Client',
+                d: document.getElementById('in_desc').value || 'Labour provided',
+                t: document.getElementById('out_total').innerText,
+                date: new Date().toLocaleDateString('en-GB')
+            });
+            localStorage.setItem(DB+'data', JSON.stringify(d.slice(0,25)));
+            draw();
+            alert("Quote Logged.");
+        }
+
+        function draw() {
+            let d = JSON.parse(localStorage.getItem(DB+'data') || '[]');
+            document.getElementById('hist_list').innerHTML = d.map(i => `
+                <div class="hist-item">
+                    <span style="flex:1"><strong>${i.n}</strong><br><small style="color:#777">${i.date} — ${i.t}</small></span>
+                    <button class="del-btn" onclick="del(${i.id})" style="margin-right:10px">DEL</button>
+                    <button class="view-btn" onclick="view(${i.id})">VIEW</button>
+                </div>
+            `).join('') || '<p style="opacity:0.2; text-align:center;">No history.</p>';
+        }
+
+        function del(id) {
+            if(!confirm("Delete?")) return;
+            let d = JSON.parse(localStorage.getItem(DB+'data') || '[]');
+            localStorage.setItem(DB+'data', JSON.stringify(d.filter(x => x.id !== id)));
+            draw();
+        }
+
+        function view(id) {
+            let q = JSON.parse(localStorage.getItem(DB+'data') || '[]').find(x => x.id === id);
+            document.getElementById('print_area').innerHTML = `
+                <center><h1>QUOTE</h1></center><hr>
+                <strong>FROM:</strong><br>${gt('bn')}<br>${gt('ba')}<br><br>
+                <strong>TO:</strong> ${q.n}<br><strong>DATE:</strong> ${q.date}<hr>
+                <strong>LABOUR:</strong><br><p>${q.d}</p>
+                <div style="font-size:32px; font-weight:900; color:#ff6600; text-align:right;">TOTAL: ${q.t}</div><hr>
+                <strong>BANK:</strong> ${gt('b1')}<br>Sort: ${gt('b2')} | Acc: ${gt('b3')}
+                <br><br><button class="no-print" onclick="window.print()" style="width:100%; padding:15px; background:#ff6600; color:#000; border:none; border-radius:8px; font-weight:bold;">PRINT / PDF</button>
+            `;
+            document.getElementById('overlay').style.display = 'flex';
+        }
+
+        window.onload = () => {
+            ['bn','ba','b1','b2','b3'].forEach(k => document.getElementById('s_'+k).value = gt(k));
+            draw();
+        };
+    </script>
+</body>
+</html>
