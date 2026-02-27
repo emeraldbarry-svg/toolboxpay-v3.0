@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v5.0</title>
+    <title>toolboxpay v5.1</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -23,14 +23,19 @@
         .total-box { border: 2px solid var(--org); padding: 18px; border-radius: 12px; text-align: right; background: rgba(255,102,0,0.05); margin: 15px 0; }
         .price { color: var(--org); font-size: 24px; font-weight: 800; }
         .btn-main { width: 100%; padding: 16px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 8px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
-        .hist-item { background: var(--crd); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--org); }
+        
+        /* History Items */
+        .hist-item { background: var(--crd); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--org); display: flex; justify-content: space-between; align-items: center; }
+        .hist-info { flex: 1; }
+        .del-btn { background: #ff4444; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 800; margin-left: 10px; }
+        .stats-box { background: rgba(255,102,0,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; border: 1px dashed var(--org); }
     </style>
 </head>
 <body>
 
 <div class="shell">
     <div class="nav-bar"><button id="back-btn" onclick="go('dash')">← BACK</button></div>
-    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #8892b0;">v5.0</small></div>
+    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #8892b0;">v5.1</small></div>
 
     <div id="scr-dash" class="screen active">
         <div class="tile" onclick="go('calc')"><div><h3>Labour & Materials</h3><p>Create Quote</p></div><span>→</span></div>
@@ -42,89 +47,4 @@
     <div id="scr-calc" class="screen">
         <div class="tag">Quote Details</div>
         <input type="text" id="job-ref" placeholder="Job Reference (e.g. 12 High St)">
-        <input type="number" id="h" placeholder="Hours" oninput="doMath()" inputmode="decimal">
-        <input type="number" id="r" placeholder="Rate (£)" oninput="doMath()" inputmode="decimal">
-        <input type="number" id="m" placeholder="Materials (£)" oninput="doMath()" inputmode="decimal">
-        <div class="total-box"><span id="res" class="price">£0.00</span></div>
-        <button class="btn-main" onclick="saveJob()">Save Quote</button>
-    </div>
-
-    <div id="scr-hist" class="screen">
-        <div class="tag">Recent History</div>
-        <div id="hist-list"></div>
-        <button class="btn-main" style="background:#333; margin-top:20px;" onclick="clearHist()">Clear All</button>
-    </div>
-
-    <div id="scr-biz" class="screen">
-        <div class="tag">Business Info</div>
-        <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
-        <textarea id="ba" placeholder="Business Address" oninput="localStorage.setItem('ba',this.value)" style="height:80px; width:100%; background:var(--crd); color:#fff; border-radius:8px; padding:12px; border:1px solid #233554; font-size:16px;"></textarea>
-        <button class="btn-main" onclick="go('dash')">Save & Return</button>
-    </div>
-
-    <div id="scr-bank" class="screen">
-        <div class="tag">Bank Details</div>
-        <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
-        <input type="text" id="bk-s" placeholder="Sort Code" oninput="localStorage.setItem('bk-s',this.value)">
-        <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
-        <button class="btn-main" onclick="go('dash')">Save & Return</button>
-    </div>
-</div>
-
-<script>
-    function go(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        const target = document.getElementById('scr-' + id);
-        if(target) target.classList.add('active');
-        document.getElementById('back-btn').style.display = (id === 'dash') ? 'none' : 'block';
-        if(id === 'hist') loadHist();
-        window.scrollTo(0,0);
-    }
-
-    function doMath() {
-        const h = parseFloat(document.getElementById('h').value) || 0;
-        const r = parseFloat(document.getElementById('r').value) || 0;
-        const m = parseFloat(document.getElementById('m').value) || 0;
-        document.getElementById('res').innerText = '£' + ((h * r) + m).toLocaleString('en-GB', {minimumFractionDigits: 2});
-    }
-
-    function saveJob() {
-        try {
-            const ref = document.getElementById('job-ref').value || 'Untitled Job';
-            const total = document.getElementById('res').innerText;
-            const date = new Date().toLocaleDateString('en-GB');
-            const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-            jobs.unshift({ ref, total, date });
-            localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 15)));
-            alert('Quote Saved');
-            go('dash');
-        } catch(e) { alert('Error saving job. Memory might be full.'); }
-    }
-
-    function loadHist() {
-        const list = document.getElementById('hist-list');
-        const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-        if(!jobs.length) {
-            list.innerHTML = '<p style="color:#8892b0; font-size:12px; text-align:center;">No history found.</p>';
-            return;
-        }
-        list.innerHTML = jobs.map(j => `
-            <div class="hist-item">
-                <div style="font-weight:800; color:white; font-size:14px;">${j.ref}</div>
-                <div style="display:flex; justify-content:space-between; margin-top:5px; font-size:12px; color:#8892b0;">
-                    <span>${j.date}</span><span style="color:var(--org); font-weight:800;">${j.total}</span>
-                </div>
-            </div>`).join('');
-    }
-
-    function clearHist() { if(confirm('Wipe history?')) { localStorage.setItem('jobs', '[]'); loadHist(); } }
-
-    window.onload = () => {
-        ['bn','ba','bk-a','bk-s','bk-n'].forEach(id => {
-            const val = localStorage.getItem(id);
-            if(val && document.getElementById(id)) document.getElementById(id).value = val;
-        });
-    };
-</script>
-</body>
-</html>
+        <input type="number"
