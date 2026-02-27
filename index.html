@@ -3,30 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v7.5 - STABLE</title>
+    <title>toolboxpay v7.6 [STABILITY PATCH]</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; }
         .shell { width: 100%; max-width: 360px; }
         
+        /* LOGO & BRANDING */
         .logo { text-align: center; margin: 10px 0 25px 0; font-size: 26px; font-weight: 800; }
         .logo span { color: var(--org); }
         .logo em { color: #fff; font-style: normal; }
         
-        .nav-bar { display: none; margin-bottom: 15px; }
-        .back-btn { width: 100%; padding: 14px; border: 2px solid var(--org); color: var(--org); background: rgba(255,102,0,0.1); border-radius: 8px; font-weight: 800; cursor: pointer; text-align: center; text-transform: uppercase; font-size: 13px; }
-
+        /* NAVIGATION */
         .screen { display: none; }
         .screen:target { display: block !important; }
-        #scr-dash { display: block; } /* Default screen */
+        #scr-dash { display: block; }
         #scr-dash:has(~ .screen:target) { display: none; }
 
-        /* ORIGINAL TILES */
-        .tile { background: var(--crd); padding: 22px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; text-decoration: none; }
+        /* UI COMPONENTS */
+        .tile { background: var(--crd); padding: 22px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; text-decoration: none; color: inherit; }
         .tile h3 { color: var(--org); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; }
         .tile p { font-size: 11px; color: #8892b0; margin-top: 4px; }
-        .tile span { color: #fff; font-weight: 800; }
+        
+        .back-btn { display: block; width: 100%; padding: 14px; border: 2px solid var(--org); color: var(--org); background: rgba(255,102,0,0.1); border-radius: 8px; font-weight: 800; text-align: center; text-decoration: none; text-transform: uppercase; font-size: 12px; margin-bottom: 20px; }
 
         .tag { color: var(--org); font-size: 10px; font-weight: 800; text-transform: uppercase; margin: 15px 0 8px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 4px; }
         input, textarea { width: 100%; padding: 16px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 8px; font-size: 16px; outline: none; }
@@ -36,63 +36,113 @@
         .price { color: var(--org); font-size: 30px; font-weight: 800; }
         
         .btn-main { width: 100%; padding: 18px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
+        .del-btn { background: #cc0000; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 10px; font-weight: 900; }
+
+        /* VIEW CARD */
+        .summary-card { background: #fff; color: #000; padding: 25px; border-radius: 4px; border: 1px solid #ddd; }
+        .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
     </style>
 </head>
 <body>
 
 <div class="shell">
-    <div class="logo"><span>toolbox</span><em>pay</em> <small style="font-size: 9px; color: #444;">v7.5</small></div>
+    <div class="logo"><span>toolbox</span><em>pay</em> <small style="font-size: 8px; color: #444;">v7.6 HARDENED</small></div>
 
     <div id="scr-dash" class="screen">
         <a href="#scr-calc" class="tile"><div><h3>Labour & Materials</h3><p>New Quote</p></div><span>→</span></a>
         <a href="#scr-hist" class="tile" onclick="loadHistory()"><div><h3>Job History</h3><p>Manage Records</p></div><span>→</span></a>
         <a href="#scr-biz" class="tile"><div><h3>Business Details</h3><p>Edit Profile</p></div><span>→</span></a>
         <a href="#scr-bank" class="tile"><div><h3>Bank Details</h3><p>Payment Info</p></div><span>→</span></a>
-        
-        <button onclick="localStorage.clear(); location.reload();" style="width:100%; background:none; border:1px solid #333; color:#444; padding:10px; margin-top:50px; border-radius:8px; font-size:10px;">FORCE RESET APP</button>
+        <button onclick="localStorage.clear(); location.reload();" style="width:100%; background:none; border:1px solid #333; color:#444; padding:10px; margin-top:40px; border-radius:8px; font-size:9px;">SYSTEM RESET (WIPE DATA)</button>
     </div>
 
     <div id="scr-calc" class="screen">
-        <a href="#" class="back-btn" style="display:block; text-decoration:none; margin-bottom:15px;">← BACK TO DASHBOARD</a>
-        <div class="tag">Quote Creator</div>
+        <a href="#" class="back-btn">← BACK TO DASHBOARD</a>
+        <div class="tag">Quote Details</div>
         <input type="text" id="cust-name" placeholder="Customer Name">
+        <input type="text" id="job-ref" placeholder="Job Reference">
         <input type="number" id="h" placeholder="Labour Hours" oninput="runMath()">
         <input type="number" id="r" placeholder="Hourly Rate (£)" oninput="runMath()">
         <input type="number" id="m" placeholder="Materials (£)" oninput="runMath()">
         
         <div class="vat-container">
             <span style="font-weight:800; font-size:13px;">ADD VAT (20%)</span>
-            <input type="checkbox" id="vat-toggle" onchange="runMath()" style="width:25px; height:25px; accent-color:var(--org);">
+            <input type="checkbox" id="vat-toggle" onchange="runMath()" style="width:24px; height:24px; accent-color:var(--org);">
         </div>
 
         <div class="total-box">
             <div id="res-total" class="price">£0.00</div>
         </div>
-        <button class="btn-main" onclick="saveJob()">Save Quote</button>
+        <button class="btn-main" onclick="saveJob()">Save & Authorise</button>
     </div>
 
     <div id="scr-hist" class="screen">
-        <a href="#" class="back-btn" style="display:block; text-decoration:none; margin-bottom:15px;">← BACK</a>
+        <a href="#" class="back-btn">← BACK</a>
         <div id="hist-list"></div>
     </div>
 
+    <div id="scr-view" class="screen">
+        <a href="#scr-hist" class="back-btn">← BACK TO HISTORY</a>
+        <div id="view-content" class="summary-card"></div>
+        <button class="btn-main" onclick="window.print()" style="margin-top:20px;">Print / Save PDF</button>
+    </div>
+
     <div id="scr-biz" class="screen">
-        <a href="#" class="back-btn" style="display:block; text-decoration:none; margin-bottom:15px;">← BACK</a>
-        <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
-        <textarea id="ba" placeholder="Business Address" oninput="localStorage.setItem('ba',this.value)" style="height:100px;"></textarea>
-        <button class="btn-main" onclick="window.location.hash=''">Save & Return</button>
+        <a href="#" class="back-btn">← BACK</a>
+        <div class="tag">Business Profile</div>
+        <input type="text" id="bn" placeholder="Business Name" oninput="safeSave('bn',this.value)">
+        <textarea id="ba" placeholder="Address" oninput="safeSave('ba',this.value)" style="height:100px;"></textarea>
     </div>
 
     <div id="scr-bank" class="screen">
-        <a href="#" class="back-btn" style="display:block; text-decoration:none; margin-bottom:15px;">← BACK</a>
-        <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
-        <input type="text" id="bk-s" placeholder="Sort Code" oninput="localStorage.setItem('bk-s',this.value)">
-        <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
-        <button class="btn-main" onclick="window.location.hash=''">Save & Return</button>
+        <a href="#" class="back-btn">← BACK</a>
+        <div class="tag">Payment Details</div>
+        <input type="text" id="bk-a" placeholder="Account Name" oninput="safeSave('bk-a',this.value)">
+        <input type="text" id="bk-s" placeholder="Sort Code" oninput="safeSave('bk-s',this.value)">
+        <input type="text" id="bk-n" placeholder="Account Number" oninput="safeSave('bk-n',this.value)">
     </div>
 </div>
 
 <script>
+    /** 1. ERROR BOUNDARY **/
+    window.onerror = function(msg) {
+        alert("App encountered an error. Please refresh. Error: " + msg);
+        return false;
+    };
+
+    const SCHEMA_VERSION = 2;
+
+    /** 2. SAFE STORAGE WRAPPERS **/
+    function safeLoad(key, defaultVal = []) {
+        try {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : defaultVal;
+        } catch (e) {
+            console.warn("Storage corrupted for key: " + key);
+            return defaultVal;
+        }
+    }
+
+    function safeSave(key, val) {
+        try {
+            localStorage.setItem(key, typeof val === 'string' ? val : JSON.stringify(val));
+        } catch (e) {
+            alert("Memory full. Could not save details.");
+        }
+    }
+
+    /** 3. SCHEMA MIGRATION LAYER **/
+    function migrate(job) {
+        if (!job.schemaVersion || job.schemaVersion < 2) {
+            job.isVat = job.isVat ?? false;
+            job.vatVal = job.vatVal ?? 0;
+            job.sub = job.sub ?? 0;
+            job.schemaVersion = 2;
+        }
+        return job;
+    }
+
+    /** 4. ENGINE **/
     function runMath() {
         const h = parseFloat(document.getElementById('h').value) || 0;
         const r = parseFloat(document.getElementById('r').value) || 0;
@@ -103,13 +153,89 @@
     }
 
     function saveJob() {
-        const total = document.getElementById('res-total').innerText;
-        let jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-        jobs.unshift({ 
-            id: Date.now(), 
-            cust: document.getElementById('cust-name').value || 'Client', 
-            txt: total, 
-            date: new Date().toLocaleDateString('en-GB') 
+        const h = parseFloat(document.getElementById('h').value) || 0;
+        const r = parseFloat(document.getElementById('r').value) || 0;
+        const m = parseFloat(document.getElementById('m').value) || 0;
+        const sub = (h * r) + m;
+        const isVat = document.getElementById('vat-toggle').checked;
+        const total = isVat ? sub * 1.2 : sub;
+
+        let jobs = safeLoad('jobs');
+        const newJob = {
+            id: Date.now(),
+            schemaVersion: SCHEMA_VERSION,
+            cust: document.getElementById('cust-name').value || 'Client',
+            ref: document.getElementById('job-ref').value || 'Job',
+            h, r, m, sub, isVat,
+            totalTxt: '£' + total.toFixed(2),
+            date: new Date().toLocaleDateString('en-GB')
+        };
+
+        jobs.unshift(newJob);
+        safeSave('jobs', jobs.slice(0, 50));
+        
+        // Reset inputs
+        document.querySelectorAll('#scr-calc input').forEach(i => i.value = '');
+        document.getElementById('vat-toggle').checked = false;
+        window.location.hash = ''; 
+    }
+
+    function loadHistory() {
+        const list = document.getElementById('hist-list');
+        let jobs = safeLoad('jobs').map(migrate); // Clean data on load
+        
+        list.innerHTML = jobs.map(j => `
+            <div class="tile" onclick="viewJob(${j.id})">
+                <div><h3>${j.cust}</h3><p>${j.ref} • ${j.totalTxt}</p></div>
+                <button class="del-btn" onclick="event.stopPropagation(); deleteJob(${j.id})">DEL</button>
+            </div>
+        `).join('') || '<p style="text-align:center;padding:20px;color:#444;">No history.</p>';
+    }
+
+    function viewJob(id) {
+        const jobs = safeLoad('jobs').map(migrate);
+        const j = jobs.find(x => x.id === id);
+        if(!j) return;
+
+        const bN = localStorage.getItem('bn') || 'Business Name';
+        const bA = localStorage.getItem('ba') || 'Address';
+        const bAk = localStorage.getItem('bk-a') || '---';
+        const bS = localStorage.getItem('bk-s') || '---';
+        const bAn = localStorage.getItem('bk-n') || '---';
+
+        const vatHtml = j.isVat ? `<div class="summary-row"><span>VAT (20%):</span><strong>£${(j.sub * 0.2).toFixed(2)}</strong></div>` : '';
+
+        document.getElementById('view-content').innerHTML = `
+            <strong>${bN}</strong><br><small>${bA}</small><hr style="margin:10px 0;">
+            <div class="summary-row"><span>Client:</span><strong>${j.cust}</strong></div>
+            <div class="summary-row"><span>Job:</span><strong>${j.ref}</strong></div>
+            <div class="summary-row"><span>Labour:</span><strong>${j.h} hrs @ £${j.r}</strong></div>
+            <div class="summary-row"><span>Materials:</span><strong>£${j.m.toFixed(2)}</strong></div>
+            ${vatHtml}
+            <div class="summary-row" style="margin-top:10px; border-top:2px solid #000; padding-top:10px;">
+                <span>Total Due:</span><strong>${j.totalTxt}</strong>
+            </div>
+            <div style="margin-top:15px; font-size:11px; color:#333; background:#f9f9f9; padding:10px;">
+                Bank: ${bAk} | Sort: ${bS} | Acc: ${bAn}
+            </div>
+        `;
+        window.location.hash = 'scr-view';
+    }
+
+    function deleteJob(id) {
+        if(confirm('Delete record?')) {
+            let jobs = safeLoad('jobs');
+            safeSave('jobs', jobs.filter(x => x.id !== id));
+            loadHistory();
+        }
+    }
+
+    window.onload = function() {
+        ['bn','ba','bk-a','bk-s','bk-n'].forEach(k => {
+            const val = localStorage.getItem(k);
+            if(val && document.getElementById(k)) document.getElementById(k).value = val;
         });
-        localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 20)));
-        window.location.hash
+    };
+</script>
+</body>
+</html>
