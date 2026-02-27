@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v5.4</title>
+    <title>toolboxpay - v5.6</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
@@ -11,91 +11,111 @@
             color: #fff; 
             margin: 0; 
             font-family: sans-serif; 
-            padding: 15px; 
-            padding-bottom: 120px; /* Safety gap for mobile bars */
+            overflow: hidden; 
         }
-        .wrap { width: 100%; max-width: 480px; margin: 0 auto; }
         
-        .logo { text-align: center; padding: 15px 0; font-size: 30px; font-weight: 900; letter-spacing: -1.5px; }
+        /* DASHBOARD GRID */
+        .dash-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        .logo-area { text-align: center; padding: 30px 0 10px 0; }
+        .logo { font-size: 32px; font-weight: 900; letter-spacing: -1.5px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* THE FOUR BOXES */
-        .card { 
-            background: #1e1e1e; 
-            border-radius: 18px; 
-            padding: 20px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-            display: block !important;
+        /* TILES */
+        .tile {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 20px;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
         }
-        
-        h2 { color: #ff6600; font-size: 13px; text-transform: uppercase; letter-spacing: 1.2px; margin: 0 0 15px 0; font-weight: 900; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        label { display: block; font-size: 10px; color: #888; margin-bottom: 5px; font-weight: 800; text-transform: uppercase; }
-        
-        input, textarea { 
-            width: 100%; background: #000; border: 1px solid #333; color: #fff; 
-            padding: 15px; border-radius: 12px; font-size: 16px; margin-bottom: 12px; outline: none; 
+        .tile:active { transform: scale(0.95); background: #252525; }
+        .tile span { color: #ff6600; font-weight: 900; font-size: 11px; text-transform: uppercase; margin-top: 10px; text-align: center; padding: 0 5px; }
+        .tile i { font-size: 30px; }
+
+        /* SUB-PAGES */
+        .page {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #4a4a4a;
+            display: none;
+            overflow-y: auto;
+            padding: 20px;
+            z-index: 100;
         }
+        .page.active { display: block; }
 
-        .btn-m { 
-            width: 100%; background: #ff6600; color: #000; padding: 20px; border: none; 
-            border-radius: 14px; font-size: 19px; font-weight: 900; text-transform: uppercase; cursor: pointer; 
-        }
+        .back-btn { background: #000; color: #ff6600; border: 1px solid #ff6600; padding: 10px 20px; border-radius: 10px; font-weight: 900; margin-bottom: 20px; cursor: pointer; display: inline-block; }
 
-        .dash { display: flex; gap: 10px; margin-bottom: 15px; }
-        .stat { flex: 1; background: #000; padding: 15px; border-radius: 12px; border: 1px solid #222; text-align: center; }
-        .stat-val { font-size: 20px; font-weight: 900; color: #ff6600; }
-        .stat-lbl { font-size: 8px; color: #555; text-transform: uppercase; font-weight: 800; }
+        .card { background: #1e1e1e; border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid #333; }
+        h2 { color: #ff6600; font-size: 14px; text-transform: uppercase; margin: 0 0 15px 0; border-bottom: 1px solid #333; padding-bottom: 8px; }
+        label { display: block; font-size: 10px; color: #888; margin-bottom: 5px; font-weight: 800; }
+        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 15px; border-radius: 10px; margin-bottom: 15px; outline: none; }
+        .btn-main { width: 100%; background: #ff6600; color: #000; padding: 18px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; }
 
-        #tot { font-size: 52px; font-weight: 900; color: #ff6600; text-align: right; margin-bottom: 15px; }
-
-        .job { padding: 15px 0; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
-        .tag { padding: 8px 14px; border-radius: 8px; font-size: 10px; font-weight: 900; cursor: pointer; }
-        .tag-due { background: #000; color: #ff6600; border: 1px solid #ff6600; }
-        .tag-paid { background: #2ecc71; color: #000; }
-
-        .gallery { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .img-box { aspect-ratio: 1; background: #000; border-radius: 8px; border: 1px solid #333; overflow: hidden; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+        #tot { font-size: 40px; font-weight: 900; color: #ff6600; text-align: right; }
     </style>
 </head>
 <body>
-<div class="wrap">
-    <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
 
+<div id="home">
+    <div class="logo-area"><div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div></div>
+    <div class="dash-container">
+        <div class="tile" onclick="openPage('p1')"><i>📝</i><span>Job Quotes</span></div>
+        <div class="tile" onclick="openPage('p2')"><i>🧮</i><span>Calculator</span></div>
+        <div class="tile" onclick="openPage('p3')"><i>📜</i><span>Job History</span></div>
+        <div class="tile" onclick="openPage('p4')"><i>🏦</i><span>Bank Setup</span></div>
+        <div class="tile" style="grid-column: span 2; aspect-ratio: auto; padding: 20px;" onclick="openPage('p5')"><i>📖</i><span>Read Me / Help</span></div>
+    </div>
+</div>
+
+<div id="p1" class="page">
+    <div class="back-btn" onclick="closePage()">← BACK</div>
     <div class="card">
         <h2>New Quote</h2>
         <label>Client Name</label><input type="text" id="cn">
         <label>Labour Description</label><textarea id="dl" style="height:60px;"></textarea>
-        <div style="display:flex; gap:10px;">
-            <div style="flex:1;"><label>Hours</label><input type="number" id="h" oninput="calc()"></div>
-            <div style="flex:1;"><label>Rate (£)</label><input type="number" id="r" oninput="calc()"></div>
-        </div>
+        <button class="btn-main" onclick="saveJob()">Save Quote</button>
+    </div>
+</div>
+
+<div id="p2" class="page">
+    <div class="back-btn" onclick="closePage()">← BACK</div>
+    <div class="card">
+        <h2>Calculator</h2>
+        <label>Hours</label><input type="number" id="h" oninput="calc()">
+        <label>Rate (£)</label><input type="number" id="r" oninput="calc()">
         <label>Materials (£)</label><input type="number" id="m" oninput="calc()">
         <div id="tot">£0.00</div>
-        <button class="btn-m" onclick="save()">Save Job</button>
     </div>
+</div>
 
+<div id="p3" class="page">
+    <div class="back-btn" onclick="closePage()">← BACK</div>
     <div class="card">
-        <h2>Job Photos</h2>
-        <label style="display:block; width:100%; padding:15px; border:1px dashed #ff6600; text-align:center; border-radius:10px; color:#ff6600; cursor:pointer; font-weight:800;">
-            + ADD PHOTO<input type="file" accept="image/*" style="display:none;" onchange="up(this)">
-        </label>
-        <div id="gallery" class="gallery"></div>
-    </div>
-
-    <div class="card">
-        <h2>Job History</h2>
-        <div class="dash">
-            <div class="stat"><span class="stat-val" id="t-inv">£0.00</span><span class="stat-lbl">Invoiced</span></div>
-            <div class="stat"><span class="stat-val" id="t-paid" style="color:#2ecc71;">£0.00</span><span class="stat-lbl">Paid</span></div>
-        </div>
+        <h2>History</h2>
         <div id="joblist"></div>
     </div>
+</div>
 
+<div id="p4" class="page">
+    <div class="back-btn" onclick="closePage()">← BACK</div>
     <div class="card">
-        <h2>Business & Bank Setup</h2>
+        <h2>Bank Details</h2>
         <label>Business Name</label><input type="text" id="sn" oninput="st('sn',this.value)">
         <label>Bank Name</label><input type="text" id="sb" oninput="st('sb',this.value)">
         <label>Sort Code</label><input type="text" id="sc" oninput="st('sc',this.value)">
@@ -103,9 +123,25 @@
     </div>
 </div>
 
+<div id="p5" class="page">
+    <div class="back-btn" onclick="closePage()">← BACK</div>
+    <div class="card">
+        <h2>Help & Info</h2>
+        <p style="font-size: 14px; color: #ccc; line-height: 1.6;">
+            Welcome to <b>toolboxpay</b>. <br><br>
+            * Use <b>Quotes</b> to log new jobs. <br>
+            * Use <b>Calculator</b> for quick pricing. <br>
+            * Your <b>Bank Details</b> are saved automatically for your invoices.
+        </p>
+    </div>
+</div>
+
 <script>
-    const CUR = "TBP_V54_ORIGINAL";
-    const KEYS = ["TBP_V53_MOBILE", "TBP_V52_PRO", "TBP_V51_RESTORED"];
+    const CUR = "TBP_V56_DASH";
+    const KEYS = ["TBP_V55_PURE", "TBP_V54_ORIGINAL"];
+
+    function openPage(id) { document.getElementById(id).classList.add('active'); }
+    function closePage() { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); }
 
     function st(k,v){ localStorage.setItem(CUR+k,v); }
     function gt(k){ 
@@ -125,33 +161,9 @@
         document.getElementById('tot').innerText = "£" + ((h*r)+m).toFixed(2);
     }
 
-    function render() {
-        let jb = JSON.parse(localStorage.getItem(CUR+'j') || '[]');
-        if(jb.length === 0) {
-            for(let key of KEYS) {
-                let old = localStorage.getItem(key+'j');
-                if(old) { jb = JSON.parse(old); break; }
-            }
-        }
-        let i = 0, p = 0;
-        const list = document.getElementById('joblist');
-        list.innerHTML = jb.map(j => {
-            i += j.t; if(j.p) p += j.t;
-            return `<div class="job"><div style="font-weight:900;">${j.n}<br><small style="color:#ff6600;">£${j.t.toFixed(2)}</small></div><div class="tag ${j.p?'tag-paid':'tag-due'}" onclick="tog(${j.id})">${j.p?'PAID':'DUE'}</div></div>`;
-        }).join('') || '<p style="text-align:center; color:#444; font-size:12px;">No history.</p>';
-        document.getElementById('t-inv').innerText = "£" + i.toFixed(2);
-        document.getElementById('t-paid').innerText = "£" + p.toFixed(2);
-
-        let pics = JSON.parse(localStorage.getItem(CUR+'p') || '[]');
-        if(pics.length === 0) {
-            for(let key of KEYS) {
-                let old = localStorage.getItem(key+'p');
-                if(old) { pics = JSON.parse(old); break; }
-            }
-        }
-        document.getElementById('gallery').innerHTML = pics.map(x => `<div class="img-box"><img src="${x}"></div>`).join('');
-    }
-
-    function save() {
-        const val = parseFloat(document.getElementById('tot').innerText.replace('£', '')) || 0;
-        const j = { id: Date
+    window.onload = () => {
+        ['sn', 'sb', 'sc', 'an'].forEach(i => document.getElementById(i).value = gt(i));
+    };
+</script>
+</body>
+</html>
