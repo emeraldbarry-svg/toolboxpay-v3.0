@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v8.0</title>
+    <title>toolboxpay - v8.1</title>
     <style>
         /* BRANDING */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -116,7 +116,7 @@
         <div class="card">
             <h2>New Quote</h2>
             <label>Client Name</label><input type="text" id="c-name" placeholder="John Smith">
-            <label>Labour Description</label><textarea id="l-desc" style="height:80px;" placeholder="Full rewire..."></textarea>
+            <label>Labour Description</label><textarea id="l-desc" style="height:80px;" placeholder="Details..."></textarea>
             <label>Total Price (£)</label><input type="number" id="p-in" oninput="upTotal()" placeholder="0.00">
             <div class="total-display" id="q-total">£0.00</div>
             
@@ -138,16 +138,15 @@
         </div>
     </div>
 
-    <div id="view-calc" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>Calculator</h2></div></div>
-    <div id="view-history" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>History</h2></div></div>
-    <div id="view-readme" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>Read Me</h2><p>v8.0 WhatsApp Ready</p></div></div>
+    <div id="view-calc" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>Calculator</h2><p>British Simple Maths Tool coming next.</p></div></div>
+    <div id="view-history" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>History</h2><p>Previous Labour recorded here.</p></div></div>
+    <div id="view-readme" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>Read Me</h2><p>v8.1 Stable Build</p></div></div>
 
 </div>
 
 <script>
-    const STORAGE_KEY = "TBP_V80_PRO";
+    const STORAGE_KEY = "TBP_V81_STABLE";
 
-    // CLOCK
     function tick() {
         const now = new Date();
         const time = now.getHours().toString().padStart(2, '0') + ":" + 
@@ -158,38 +157,6 @@
     }
     setInterval(tick, 1000);
 
-    // NAV
     function nav(id) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
-    }
-
-    // PERSISTENCE
-    function sv(k, v) { localStorage.setItem(STORAGE_KEY + k, v); }
-    function gt(k) { return localStorage.getItem(STORAGE_KEY + k) || ""; }
-
-    function upTotal() {
-        const p = parseFloat(document.getElementById('p-in').value) || 0;
-        document.getElementById('q-total').innerText = "£" + p.toFixed(2);
-    }
-
-    // WHATSAPP FUNCTIONS
-    function sendQuoteWA() {
-        const client = document.getElementById('c-name').value || "Client";
-        const desc = document.getElementById('l-desc').value || "Works";
-        const total = document.getElementById('q-total').innerText;
-        const biz = gt('bn') || "toolboxpay User";
-        const msg = `Hi ${client}, here is your quote from ${biz}:\n\nLabour: ${desc}\nTotal: ${total}`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    function sendBankWA() {
-        const biz = gt('bn') || "Business";
-        const msg = `Bank Details for ${biz}:\nBank: ${gt('bk')}\nSort Code: ${gt('sc')}\nAccount No: ${gt('an')}`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    window.onload = () => {
-        tick();
-        document.getElementById('b-name').value
