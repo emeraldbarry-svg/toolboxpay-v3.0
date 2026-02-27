@@ -21,7 +21,7 @@
         .logo { text-align: center; margin-bottom: 35px; font-size: 34px; font-weight: 800; }
         .logo .org { color: var(--org); }
 
-        #btn-nav { 
+        #btn-back { 
             display: none; 
             color: var(--org); 
             border: 1px solid var(--org); 
@@ -35,8 +35,8 @@
             text-transform: uppercase; 
         }
 
-        /* Absolute Visibility Logic */
-        .screen { display: none; }
+        /* Rigid Visibility Logic */
+        .screen { display: none !important; }
         .is-active { display: block !important; }
 
         .tile { 
@@ -52,7 +52,6 @@
         .tile h3 { color: var(--org); text-transform: uppercase; font-size: 16px; }
 
         .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
-        label { display: block; font-size: 13px; margin-bottom: 8px; color: #8892b0; }
         input { 
             width: 100%; 
             padding: 15px; 
@@ -71,11 +70,11 @@
 <body>
 
 <div class="shell">
-    <button id="btn-nav" onclick="to('dash')">← Return to Dashboard</button>
+    <button id="btn-back" onclick="navTo('dash')">← Return to Dashboard</button>
     <div class="logo"><span class="org">toolbox</span>pay</div>
 
     <div id="dash" class="screen is-active">
-        <div class="tile" onclick="to('calc')">
+        <div class="tile" onclick="navTo('calc')">
             <div>
                 <h3>Labour & Materials</h3>
                 <p style="font-size:12px; color:#8892b0; margin-top:4px;">Calculate costs and specialising tasks</p>
@@ -86,14 +85,11 @@
 
     <div id="calc" class="screen">
         <div class="tag">Labour Costs</div>
-        <label>Hours worked</label>
-        <input type="number" id="hrs" placeholder="0" oninput="math()">
-        <label>Hourly rate (£)</label>
-        <input type="number" id="rte" placeholder="0.00" oninput="math()">
+        <input type="number" id="h" placeholder="Hours worked" oninput="math()">
+        <input type="number" id="r" placeholder="Hourly rate (£)" oninput="math()">
         
         <div class="tag">Materials</div>
-        <label>Total material costs (£)</label>
-        <input type="number" id="mat" placeholder="0.00" oninput="math()">
+        <input type="number" id="m" placeholder="Total materials (£)" oninput="math()">
         
         <div class="res-box">
             <span style="font-weight:800; font-size:12px;">TOTAL:</span>
@@ -103,30 +99,29 @@
 </div>
 
 <script>
-    function to(target) {
-        // Hide both screens first to break any looping
-        document.getElementById('dash').classList.remove('is-active');
-        document.getElementById('calc').classList.remove('is-active');
-        
-        // Show only the target
-        document.getElementById(target).classList.add('is-active');
-        
-        // Toggle nav button
-        document.getElementById('btn-nav').style.display = (target === 'calc') ? 'block' : 'none';
+    function navTo(id) {
+        // 1. Force-hide EVERY screen to break the loop
+        document.querySelectorAll('.screen').forEach(s => {
+            s.classList.remove('is-active');
+        });
+
+        // 2. Show only the target
+        document.getElementById(id).classList.add('is-active');
+
+        // 3. Toggle back button
+        document.getElementById('btn-back').style.display = (id === 'calc') ? 'block' : 'none';
         window.scrollTo(0,0);
     }
 
     function math() {
-        const h = parseFloat(document.getElementById('hrs').value) || 0;
-        const r = parseFloat(document.getElementById('rte').value) || 0;
-        const m = parseFloat(document.getElementById('mat').value) || 0;
+        const h = parseFloat(document.getElementById('h').value) || 0;
+        const r = parseFloat(document.getElementById('r').value) || 0;
+        const m = parseFloat(document.getElementById('m').value) || 0;
         const total = (h * r) + m;
         document.getElementById('final').innerText = '£' + total.toLocaleString('en-GB', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
+            minimumFractionDigits: 2
         });
     }
 </script>
-
 </body>
 </html>
