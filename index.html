@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v3.4 - Share Feature</title>
+    <title>toolboxpay v3.4 - Fixed</title>
     <script>
-        // STABLE CORE v3.4
+        // FORCED STABLE LOAD v3.4
         function nav_v34(id) {
             const screens = document.querySelectorAll('.screen');
             for(let i = 0; i < screens.length; i++) {
@@ -39,8 +39,8 @@
             const isVat = document.getElementById('v-tog').checked;
             const vAmt = isVat ? (sub * 0.20) : 0;
 
-            document.getElementById('s-biz').innerText = localStorage.getItem('biz-name') || 'Company Name';
-            document.getElementById('s-addr').innerText = localStorage.getItem('biz-addr') || 'Address Not Set';
+            document.getElementById('s-biz').innerText = localStorage.getItem('biz-name') || 'Quote';
+            document.getElementById('s-addr').innerText = localStorage.getItem('biz-addr') || '';
             document.getElementById('s-lab').innerText = '£' + (h * r).toLocaleString('en-GB', {minimumFractionDigits: 2});
             document.getElementById('s-mat').innerText = '£' + m.toLocaleString('en-GB', {minimumFractionDigits: 2});
             
@@ -60,7 +60,6 @@
             nav_v34('summary');
         }
 
-        // NEW: COPY TO CLIPBOARD FUNCTION
         function copyQuote() {
             const biz = localStorage.getItem('biz-name') || 'Quote';
             const lab = document.getElementById('s-lab').innerText;
@@ -71,16 +70,18 @@
             const srt = document.getElementById('s-srt').innerText;
             const num = document.getElementById('s-num').innerText;
 
-            const text = `** ${biz} - Quote **\n\nLabour: ${lab}\nMaterials: ${mat}\n${vat}Total: ${tot}\n\n-- Payment Details --\nAcc: ${acc}\nSort: ${srt}\nNo: ${num}`;
+            const text = `${biz.toUpperCase()}\n\nLabour: ${lab}\nMaterials: ${mat}\n${vat}TOTAL: ${tot}\n\nBANK DETAILS:\nAcc: ${acc}\nSort: ${srt}\nNo: ${num}`;
             
             navigator.clipboard.writeText(text).then(() => {
                 const btn = document.getElementById('copy-btn');
-                btn.innerText = 'COPIED TO CLIPBOARD!';
+                btn.innerText = 'COPIED!';
                 btn.style.background = '#27ae60';
                 setTimeout(() => {
-                    btn.innerText = 'COPY FOR WHATSAPP/TEXT';
+                    btn.innerText = 'COPY FOR WHATSAPP';
                     btn.style.background = '#ff6600';
-                }, 2000);
+                }, 1500);
+            }).catch(err => {
+                alert("Please manually copy the text.");
             });
         }
     </script>
@@ -101,9 +102,4 @@
         input:focus, textarea:focus { border-color: var(--org); }
         textarea { height: 80px; resize: none; }
         .vat-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 5px; background: rgba(255,102,0,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,102,0,0.2); }
-        .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; flex-direction: column; gap: 5px; margin-top: 20px; background: rgba(255,102,0,0.05); }
-        .price { color: var(--org); font-size: 26px; font-weight: 800; text-align: right; }
-        .btn-main { width: 100%; padding: 18px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: 800; text-transform: uppercase; transition: 0.3s; }
-        .summary-card { background: #fff; color: #333; padding: 25px; border-radius: 12px; margin-top: 10px; }
-        .summary-card h2 { color: #000; font-size: 18px; margin-bottom: 4px; }
-        .summary-address { font-size: 12px; color: #
+        .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 1
