@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v10.1</title>
+    <title>toolboxpay - v10.2</title>
     <style>
-        /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
+        /* BRANDING */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
+        body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; }
         #app-viewport { width: 100%; max-width: 420px; padding: 20px; position: relative; }
 
         /* HEADER */
@@ -16,42 +16,61 @@
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* VIEW NAVIGATION [cite: 2026-02-27] */
+        /* NAVIGATION */
         .view { display: none; width: 100%; }
         #view-home { display: block; } 
 
-        /* TILES */
-        .stack { display: flex; flex-direction: column; gap: 15px; }
-        .tile { background: #222; border-radius: 20px; padding: 22px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; }
-        .icon-box { width: 55px; height: 55px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 26px; pointer-events: none; }
-        .tile span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; pointer-events: none; }
+        /* DASHBOARD TILES */
+        .stack { display: flex; flex-direction: column; gap: 12px; }
+        .tile { background: #222; border-radius: 18px; padding: 18px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; }
+        .icon-box { width: 50px; height: 50px; background: #000; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 24px; pointer-events: none; }
+        .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; pointer-events: none; }
 
-        /* CARDS & INPUTS */
-        .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-top: 10px; }
-        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 10px 15px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; margin-bottom: 20px; display: inline-block; }
+        /* CARDS & FORMS */
+        .card { background: #1e1e1e; border-radius: 25px; padding: 25px; border: 1px solid #333; margin-top: 10px; }
+        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 10px 15px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; margin-bottom: 15px; display: inline-block; }
         
         h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin-bottom: 20px; font-weight: 900; }
-        label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
-        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; display: block; }
+        label { display: block; font-size: 10px; color: #888; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; }
+        input, textarea, select { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 12px; font-size: 16px; display: block; }
         
-        /* PRICE DISPLAY */
-        .total-display { font-size: 50px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 20px; }
-        .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
+        .total-display { font-size: 45px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 15px; }
+        .btn-green { width: 100%; background: #25D366; color: #000; padding: 18px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
+        
+        /* CLIENT LIST STYLING */
+        .client-item { background: #000; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 3px solid #ff6600; }
+        .client-item p { margin: 0; font-size: 14px; }
+        .client-item b { color: #ff6600; font-size: 16px; }
     </style>
 </head>
 <body>
 
 <div id="app-viewport">
-    <div class="time-header"><span id="live-clock">00:00:00</span><span>00:00:00</span></div>
+    <div class="time-header"><span id="live-clock">00:00:00</span><span>v10.2</span></div>
 
     <div id="view-home" class="view">
         <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         <div class="stack">
             <div class="tile" data-nav="view-quote"><div class="icon-box">📝</div><span>Job Quotes</span></div>
+            <div class="tile" data-nav="view-clients"><div class="icon-box">👥</div><span>Client Database</span></div>
             <div class="tile" data-nav="view-calc"><div class="icon-box">🧮</div><span>Calculator</span></div>
-            <div class="tile" data-nav="view-history"><div class="icon-box">📜</div><span>Job History</span></div>
             <div class="tile" data-nav="view-bank"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
             <div class="tile" data-nav="view-readme"><div class="icon-box">📖</div><span>Read Me</span></div>
+        </div>
+    </div>
+
+    <div id="view-clients" class="view">
+        <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
+        <div class="card">
+            <h2>Add New Client</h2>
+            <label>Full Name</label><input type="text" id="cl-name">
+            <label>Site Address</label><textarea id="cl-addr" style="height:60px;"></textarea>
+            <label>Phone Number</label><input type="text" id="cl-phone">
+            <button class="btn-green" style="background:#ff6600;" onclick="saveClient()">Save Client</button>
+        </div>
+        <div class="card" style="margin-top:20px;">
+            <h2>Existing Clients</h2>
+            <div id="client-list"></div>
         </div>
     </div>
 
@@ -59,94 +78,92 @@
         <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
         <div class="card">
             <h2>New Quote</h2>
-            <label>Client Name</label><input type="text" id="q-name" placeholder="John Smith">
-            <label>Labour Description</label><textarea id="q-desc" style="height:100px;"></textarea>
-            <label>Price (£)</label><input type="number" id="q-price" oninput="updatePrice()">
+            <label>Select Client</label>
+            <select id="q-client-select" onchange="autoFillClient()"><option value="">-- Choose Client --</option></select>
+            
+            <label>Client Name (Manual)</label><input type="text" id="q-name">
+            <label>Labour Description</label><textarea id="q-desc" style="height:80px;"></textarea>
+            <label>Price (£)</label><input type="number" id="q-price" oninput="updateQ()">
             <div class="total-display" id="q-total">£0.00</div>
             <button class="btn-green" onclick="shareQuote()">Send Quote</button>
         </div>
     </div>
 
-    <div id="view-calc" class="view">
-        <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
-        <div class="card">
-            <h2>Calculator</h2>
-            <label>Day Rate (£)</label><input type="number" id="c-rate" oninput="runCalc()">
-            <label>Days Worked</label><input type="number" id="c-days" oninput="runCalc()">
-            <label>Materials (£)</label><input type="number" id="c-mats" oninput="runCalc()">
-            <div class="total-display" id="c-total" style="font-size:35px;">£0.00</div>
-        </div>
-    </div>
-
+    <div id="view-calc" class="view"><div class="back-btn" data-nav="view-home">← DASHBOARD</div><div class="card"><h2>Calculator</h2><label>Day Rate</label><input type="number" id="c-rate" oninput="runC()"><label>Days</label><input type="number" id="c-days" oninput="runC()"><div class="total-display" id="c-total">£0.00</div></div></div>
+    
     <div id="view-bank" class="view">
         <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
         <div class="card">
             <h2>Bank Setup</h2>
-            <label>Business Name</label><input type="text" id="b-name" oninput="saveData('bn',this.value)">
-            <label>Bank Name</label><input type="text" id="b-bank" oninput="saveData('bk',this.value)">
-            <label>Sort Code</label><input type="text" id="b-sort" oninput="saveData('sc',this.value)">
-            <label>Account No.</label><input type="text" id="b-acc" oninput="saveData('an',this.value)">
+            <label>Business Name</label><input type="text" id="b-name" oninput="saveB('bn',this.value)">
+            <label>Sort Code</label><input type="text" id="b-sort" oninput="saveB('sc',this.value)">
+            <label>Account No.</label><input type="text" id="b-acc" oninput="saveB('an',this.value)">
         </div>
     </div>
 
-    <div id="view-history" class="view"><div class="back-btn" data-nav="view-home">← DASHBOARD</div><div class="card"><h2>Job History</h2><p style="color:#666;">No saved records.</p></div></div>
-    <div id="view-readme" class="view">
-        <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
-        <div class="card">
-            <h2>Read Me</h2>
-            <p style="color:#ccc; font-size:14px;"><strong>v10.1 Trade Ready</strong><br><br>All labour spellings are British English [cite: 2020-02-20]. VAT is set at 20% [cite: 2026-02-27].</p>
-        </div>
-    </div>
+    <div id="view-readme" class="view"><div class="back-btn" data-nav="view-home">← DASHBOARD</div><div class="card"><h2>Read Me</h2><p>v10.2 Client Database Integration Active.</p></div></div>
+
 </div>
 
 <script>
-    /* GLOBAL NAVIGATION [cite: 2026-02-27] */
+    /* NAVIGATION */
     document.addEventListener('click', function(e) {
         const target = e.target.closest('[data-nav]');
         if (target) {
             const id = target.getAttribute('data-nav');
             document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
             document.getElementById(id).style.display = 'block';
+            if(id === 'view-quote') refreshClientDropdown();
             window.scrollTo(0,0);
         }
     });
 
-    /* LOGIC FUNCTIONS [cite: 2026-02-27] */
-    function updatePrice() {
-        const val = parseFloat(document.getElementById('q-price').value) || 0;
-        document.getElementById('q-total').innerText = "£" + val.toFixed(2);
+    /* CLIENT LOGIC */
+    let clients = JSON.parse(localStorage.getItem('TBP_CLIENTS') || "[]");
+
+    function saveClient() {
+        const name = document.getElementById('cl-name').value;
+        const addr = document.getElementById('cl-addr').value;
+        const phone = document.getElementById('cl-phone').value;
+        if(!name) return alert("Enter a name");
+        
+        clients.push({ name, addr, phone });
+        localStorage.setItem('TBP_CLIENTS', JSON.stringify(clients));
+        
+        document.getElementById('cl-name').value = '';
+        document.getElementById('cl-addr').value = '';
+        document.getElementById('cl-phone').value = '';
+        renderClients();
     }
 
-    function runCalc() {
+    function renderClients() {
+        const list = document.getElementById('client-list');
+        list.innerHTML = clients.map(c => `<div class="client-item"><b>${c.name}</b><p>${c.addr}</p><p>${c.phone}</p></div>`).join('');
+    }
+
+    function refreshClientDropdown() {
+        const sel = document.getElementById('q-client-select');
+        sel.innerHTML = '<option value="">-- Choose Client --</option>' + 
+            clients.map((c, i) => `<option value="${i}">${c.name}</option>`).join('');
+    }
+
+    function autoFillClient() {
+        const idx = document.getElementById('q-client-select').value;
+        if(idx !== "") {
+            document.getElementById('q-name').value = clients[idx].name;
+            document.getElementById('q-desc').value = "Work for: " + clients[idx].addr;
+        }
+    }
+
+    /* OTHER LOGIC */
+    function updateQ() { document.getElementById('q-total').innerText = "£" + (parseFloat(document.getElementById('q-price').value) || 0).toFixed(2); }
+    function runC() { 
         const r = parseFloat(document.getElementById('c-rate').value) || 0;
         const d = parseFloat(document.getElementById('c-days').value) || 0;
-        const m = parseFloat(document.getElementById('c-mats').value) || 0;
-        const total = (r * d) + m;
-        document.getElementById('c-total').innerText = "£" + (total * 1.2).toFixed(2) + " (Inc VAT)";
+        document.getElementById('c-total').innerText = "£" + (r * d * 1.2).toFixed(2); 
     }
-
-    /* PERSISTENCE [cite: 2026-02-26] */
-    function saveData(k, v) { localStorage.setItem('TBP101_' + k, v); }
-    function loadData(k) { return localStorage.getItem('TBP101_' + k) || ""; }
-
-    function shareQuote() {
-        const msg = `Quote for ${document.getElementById('q-name').value}:\n${document.getElementById('q-desc').value}\nTotal: ${document.getElementById('q-total').innerText}`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-    }
+    function saveB(k, v) { localStorage.setItem('TBP_B_'+k, v); }
 
     function tick() {
         const d = new Date();
-        document.getElementById('live-clock').innerText = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0') + ":" + d.getSeconds().toString().padStart(2,'0');
-    }
-    setInterval(tick, 1000);
-
-    window.onload = function() {
-        tick();
-        document.getElementById('b-name').value = loadData('bn');
-        document.getElementById('b-bank').value = loadData('bk');
-        document.getElementById('b-sort').value = loadData('sc');
-        document.getElementById('b-acc').value = loadData('an');
-    };
-</script>
-</body>
-</html>
+        document.getElementById('live-clock').innerText = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(
