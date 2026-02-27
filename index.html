@@ -3,52 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v10.0</title>
+    <title>toolboxpay - v10.1</title>
     <style>
-        /* BRANDING & THEME [cite: 2020-02-20, 2026-02-21] */
+        /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; }
+        body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
         #app-viewport { width: 100%; max-width: 420px; padding: 20px; position: relative; }
 
-        /* HEADER & CLOCK */
-        #live-clock { position: absolute; top: 25px; right: 25px; font-size: 14px; font-weight: 900; color: #ff6600; font-family: monospace; }
-        .header { text-align: center; padding: 25px 0 15px 0; }
-        .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; margin-bottom: 20px; }
+        /* HEADER */
+        .time-header { display: flex; justify-content: space-between; font-size: 14px; font-weight: 900; color: #ff6600; font-family: monospace; padding: 10px 0; }
+        .logo { text-align: center; font-size: 38px; font-weight: 900; letter-spacing: -2px; margin: 10px 0 25px 0; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* VIEW SYSTEM [cite: 2026-02-27] */
+        /* VIEW NAVIGATION [cite: 2026-02-27] */
         .view { display: none; width: 100%; }
         #view-home { display: block; } 
 
-        /* DASHBOARD TILES */
-        .stack { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        /* TILES */
+        .stack { display: flex; flex-direction: column; gap: 15px; }
         .tile { background: #222; border-radius: 20px; padding: 22px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; }
         .icon-box { width: 55px; height: 55px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 26px; pointer-events: none; }
         .tile span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; pointer-events: none; }
 
-        /* FORMS & CARDS */
+        /* CARDS & INPUTS */
         .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-top: 10px; }
-        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 12px 20px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; margin-bottom: 20px; display: inline-block; }
+        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 10px 15px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; margin-bottom: 20px; display: inline-block; }
         
         h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin-bottom: 20px; font-weight: 900; }
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
         input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; display: block; }
         
-        /* RESULTS STYLING [cite: 2026-02-27] */
-        .res-box { background: #000; padding: 20px; border-radius: 15px; border-left: 4px solid #ff6600; margin-bottom: 15px; }
-        .res-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: #999; }
-        .total-row { font-size: 34px; color: #ff6600; font-weight: 900; text-align: right; border-top: 1px solid #333; padding-top: 10px; }
-        .btn-action { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 14px; margin-top: 10px; }
+        /* PRICE DISPLAY */
+        .total-display { font-size: 50px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 20px; }
+        .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div id="app-viewport">
-    <div id="live-clock">00:00:00</div>
+    <div class="time-header"><span id="live-clock">00:00:00</span><span>00:00:00</span></div>
 
     <div id="view-home" class="view">
-        <div class="header"><div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div></div>
+        <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         <div class="stack">
             <div class="tile" data-nav="view-quote"><div class="icon-box">📝</div><span>Job Quotes</span></div>
             <div class="tile" data-nav="view-calc"><div class="icon-box">🧮</div><span>Calculator</span></div>
@@ -62,28 +59,22 @@
         <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
         <div class="card">
             <h2>New Quote</h2>
-            <label>Client Name</label><input type="text" id="q-name" placeholder="Enter Name">
-            <label>Labour Description</label><textarea id="q-desc" style="height:80px;" placeholder="Describe the work..."></textarea>
-            <label>Price (£)</label><input type="number" id="q-val" oninput="updateQ()">
-            <div class="total-row" id="q-total">£0.00</div>
-            <button class="btn-action" onclick="sendWA('quote')">Send Quote via WhatsApp</button>
+            <label>Client Name</label><input type="text" id="q-name" placeholder="John Smith">
+            <label>Labour Description</label><textarea id="q-desc" style="height:100px;"></textarea>
+            <label>Price (£)</label><input type="number" id="q-price" oninput="updatePrice()">
+            <div class="total-display" id="q-total">£0.00</div>
+            <button class="btn-green" onclick="shareQuote()">Send Quote</button>
         </div>
     </div>
 
     <div id="view-calc" class="view">
         <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
         <div class="card">
-            <h2>Business Calc</h2>
-            <label>Day Rate (£)</label><input type="number" id="c-rate" oninput="runC()">
-            <label>Days Worked</label><input type="number" id="c-days" oninput="runC()">
-            <label>Materials (£)</label><input type="number" id="c-mats" oninput="runC()">
-            <div class="res-box">
-                <div class="res-row"><span>Labour:</span><span id="res-lab">£0.00</span></div>
-                <div class="res-row"><span>Materials:</span><span id="res-mat">£0.00</span></div>
-                <div class="res-row"><span>VAT (20%):</span><span id="res-vat">£0.00</span></div>
-                <div class="total-row" id="res-tot">£0.00</div>
-            </div>
-            <button class="btn-action" onclick="sendWA('calc')">Share Breakdown</button>
+            <h2>Calculator</h2>
+            <label>Day Rate (£)</label><input type="number" id="c-rate" oninput="runCalc()">
+            <label>Days Worked</label><input type="number" id="c-days" oninput="runCalc()">
+            <label>Materials (£)</label><input type="number" id="c-mats" oninput="runCalc()">
+            <div class="total-display" id="c-total" style="font-size:35px;">£0.00</div>
         </div>
     </div>
 
@@ -91,35 +82,25 @@
         <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
         <div class="card">
             <h2>Bank Setup</h2>
-            <label>Business Name</label><input type="text" id="bn" oninput="saveB('bn',this.value)">
-            <label>Bank Name</label><input type="text" id="bk" oninput="saveB('bk',this.value)">
-            <label>Sort Code</label><input type="text" id="sc" oninput="saveB('sc',this.value)">
-            <label>Account No.</label><input type="text" id="an" oninput="saveB('an',this.value)">
+            <label>Business Name</label><input type="text" id="b-name" oninput="saveData('bn',this.value)">
+            <label>Bank Name</label><input type="text" id="b-bank" oninput="saveData('bk',this.value)">
+            <label>Sort Code</label><input type="text" id="b-sort" oninput="saveData('sc',this.value)">
+            <label>Account No.</label><input type="text" id="b-acc" oninput="saveData('an',this.value)">
         </div>
     </div>
 
-    <div id="view-history" class="view">
-        <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
-        <div class="card"><h2>Job History</h2><p style="color:#666;">No saved jobs yet.</p></div>
-    </div>
-
+    <div id="view-history" class="view"><div class="back-btn" data-nav="view-home">← DASHBOARD</div><div class="card"><h2>Job History</h2><p style="color:#666;">No saved records.</p></div></div>
     <div id="view-readme" class="view">
         <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
         <div class="card">
             <h2>Read Me</h2>
-            <p style="color:#ccc; font-size:14px; line-height:1.6;">
-                <strong>Version 10.0 Professional Suite</strong><br><br>
-                • <strong>Labour:</strong> Spellings are strictly British English [cite: 2020-02-20].<br>
-                • <strong>Autosave:</strong> Bank details save as you type [cite: 2026-02-26].<br>
-                • <strong>VAT:</strong> Calculated at standard 20% rate [cite: 2026-02-27].
-            </p>
+            <p style="color:#ccc; font-size:14px;"><strong>v10.1 Trade Ready</strong><br><br>All labour spellings are British English [cite: 2020-02-20]. VAT is set at 20% [cite: 2026-02-27].</p>
         </div>
     </div>
-
 </div>
 
 <script>
-    /* GLOBAL NAVIGATION FIX [cite: 2026-02-27] */
+    /* GLOBAL NAVIGATION [cite: 2026-02-27] */
     document.addEventListener('click', function(e) {
         const target = e.target.closest('[data-nav]');
         if (target) {
@@ -130,36 +111,26 @@
         }
     });
 
-    /* CALC LOGIC [cite: 2026-02-27] */
-    function runC() {
+    /* LOGIC FUNCTIONS [cite: 2026-02-27] */
+    function updatePrice() {
+        const val = parseFloat(document.getElementById('q-price').value) || 0;
+        document.getElementById('q-total').innerText = "£" + val.toFixed(2);
+    }
+
+    function runCalc() {
         const r = parseFloat(document.getElementById('c-rate').value) || 0;
         const d = parseFloat(document.getElementById('c-days').value) || 0;
         const m = parseFloat(document.getElementById('c-mats').value) || 0;
-        const lab = r * d, sub = lab + m, vat = sub * 0.2, tot = sub + vat;
-        document.getElementById('res-lab').innerText = "£" + lab.toFixed(2);
-        document.getElementById('res-mat').innerText = "£" + m.toFixed(2);
-        document.getElementById('res-vat').innerText = "£" + vat.toFixed(2);
-        document.getElementById('res-tot').innerText = "£" + tot.toFixed(2);
+        const total = (r * d) + m;
+        document.getElementById('c-total').innerText = "£" + (total * 1.2).toFixed(2) + " (Inc VAT)";
     }
 
-    /* QUOTE LOGIC */
-    function updateQ() {
-        const v = parseFloat(document.getElementById('q-val').value) || 0;
-        document.getElementById('q-total').innerText = "£" + v.toFixed(2);
-    }
+    /* PERSISTENCE [cite: 2026-02-26] */
+    function saveData(k, v) { localStorage.setItem('TBP101_' + k, v); }
+    function loadData(k) { return localStorage.getItem('TBP101_' + k) || ""; }
 
-    /* BANK PERSISTENCE [cite: 2026-02-26] */
-    function saveB(k, v) { localStorage.setItem('TBP10_' + k, v); }
-    function loadB(k) { return localStorage.getItem('TBP10_' + k) || ""; }
-
-    /* WHATSAPP SHARE [cite: 2026-02-27] */
-    function sendWA(type) {
-        let msg = "";
-        if(type === 'quote') {
-            msg = `Quote for ${document.getElementById('q-name').value}:\n${document.getElementById('q-desc').value}\nTotal: ${document.getElementById('q-total').innerText}`;
-        } else {
-            msg = `Breakdown:\nLabour: ${document.getElementById('res-lab').innerText}\nMaterials: ${document.getElementById('res-mat').innerText}\nVAT: ${document.getElementById('res-vat').innerText}\nTotal: ${document.getElementById('res-tot').innerText}`;
-        }
+    function shareQuote() {
+        const msg = `Quote for ${document.getElementById('q-name').value}:\n${document.getElementById('q-desc').value}\nTotal: ${document.getElementById('q-total').innerText}`;
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
@@ -171,7 +142,10 @@
 
     window.onload = function() {
         tick();
-        ['bn','bk','sc','an'].forEach(id => document.getElementById(id).value = loadB(id));
+        document.getElementById('b-name').value = loadData('bn');
+        document.getElementById('b-bank').value = loadData('bk');
+        document.getElementById('b-sort').value = loadData('sc');
+        document.getElementById('b-acc').value = loadData('an');
     };
 </script>
 </body>
