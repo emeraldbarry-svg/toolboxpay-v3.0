@@ -2,127 +2,142 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toolbox Pay | Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toolboxpay - Dashboard</title>
     <style>
-        :root { --t-orange: #FF9500; --t-midnight: #141D36; }
-        
-        /* NUCLEAR RESET: KILL ALL OLD GHOST STYLES */
-        * { border: none !important; box-shadow: none !important; outline: none !important; margin: 0; padding: 0; box-sizing: border-box; }
-
-        body { 
-            background-color: var(--t-midnight); 
-            color: #FFFFFF; 
-            font-family: 'Inter', sans-serif; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
+        :root {
+            --orange: #ff6600;
+            --white: #ffffff;
+            --dark-bg: #0b1521;
+            --card-bg: #1a2635;
+            --border-color: #233554;
+        }
+        body {
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--white);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
+        .container {
+            width: 100%;
+            max-width: 550px;
+            text-align: center;
+        }
 
-        .hub-shell { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 12px; }
+        /* Branding - Clean & Borderless */
+        .branding {
+            margin-bottom: 50px;
+        }
+        .logo-text {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin: 0;
+        }
+        .toolbox { color: var(--orange); }
+        .pay { color: var(--white); }
+        
+        .welcome-text {
+            color: #8892b0;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
 
-        /* BRANDING: ORANGE & WHITE */
-        .brand-hub { text-align: center; padding: 40px 0 20px 0; }
-        .t-org { font-size: 42px; font-weight: 900; color: var(--t-orange); text-transform: uppercase; letter-spacing: -0.05em; }
-        .p-wht { font-size: 42px; font-weight: 900; color: #FFFFFF; text-transform: uppercase; letter-spacing: -0.05em; }
-        .tag-hub { font-size: 10px; font-weight: 900; color: #94A3B8; letter-spacing: 0.3em; text-transform: uppercase; margin-top: 5px; }
+        /* Dashboard Menu */
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 40px;
+        }
 
-        /* THE 5 MENU TABS */
-        .hub-item {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(255, 149, 0, 0.2) !important;
-            border-radius: 20px !important;
-            padding: 20px;
+        .menu-item {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--white);
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 15px;
-            text-decoration: none;
-            color: inherit;
+            justify-content: space-between;
         }
 
-        .hub-icon { 
-            width: 50px; height: 50px; 
-            background: rgba(255, 149, 0, 0.1); 
-            border-radius: 14px !important; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 22px; 
+        .menu-item:hover {
+            border-color: var(--orange);
+            transform: translateY(-3px);
+            background-color: #1f2d3d;
         }
 
-        .hub-text-title { font-size: 16px; font-weight: 900; text-transform: uppercase; }
-        .hub-text-desc { font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-top: 2px; }
+        .menu-item h2 {
+            margin: 0;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-        /* CHAT WIDGET - THE ORANGE BUBBLE */
-        .chat-bubble {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background-color: var(--t-orange) !important;
-            border-radius: 50% !important;
-            display: flex !important;
+        .menu-item p {
+            margin: 5px 0 0 0;
+            font-size: 13px;
+            color: #8892b0;
+        }
+
+        .icon-circle {
+            width: 45px;
+            height: 45px;
+            background-color: rgba(255, 102, 0, 0.1);
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            cursor: pointer;
-            z-index: 99999;
-            box-shadow: 0 10px 25px rgba(255, 149, 0, 0.4) !important;
+            color: var(--orange);
+            font-size: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="chat-bubble" onclick="alert('Help Chat Opening...')">💬</div>
+<div class="container">
+    <div class="branding">
+        <h1 class="logo-text"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
+        <div class="welcome-text">Command Centre</div>
+    </div>
 
-    <div class="hub-shell">
-        <div class="brand-hub">
-            <span class="t-org">TOOLBOX</span><span class="p-wht">PAY</span>
-            <p class="tag-hub">Command Centre</p>
-        </div>
-
-        <a href="index.html" class="hub-item">
-            <div class="hub-icon">💰</div>
-            <div>
-                <div class="hub-text-title">New Settlement</div>
-                <div class="hub-text-desc">Calculate labour & costs</div>
+    <div class="menu-grid">
+        <a href="index.html" class="menu-item">
+            <div style="text-align: left;">
+                <h2>Settlement Profile</h2>
+                <p>Manage business and bank details</p>
             </div>
+            <div class="icon-circle">🏢</div>
         </a>
 
-        <a href="photos.html" class="hub-item">
-            <div class="hub-icon">📸</div>
-            <div>
-                <div class="hub-text-title">Photos & Evidence</div>
-                <div class="hub-text-desc">Site images & records</div>
+        <a href="quote.html" class="menu-item">
+            <div style="text-align: left;">
+                <h2>Quotes</h2>
+                <p>Generate new client estimates</p>
             </div>
+            <div class="icon-circle">📄</div>
         </a>
 
-        <a href="history.html" class="hub-item">
-            <div class="hub-icon">📜</div>
-            <div>
-                <div class="hub-text-title">Job History</div>
-                <div class="hub-text-desc">Archive of previous work</div>
+        <a href="#" class="menu-item">
+            <div style="text-align: left;">
+                <h2>Labour Calculator</h2>
+                <p>Calculate hours and specialising costs</p>
             </div>
-        </a>
-
-        <a href="profile.html" class="hub-item">
-            <div class="hub-icon">⚒️</div>
-            <div>
-                <div class="hub-text-title">Business Profile</div>
-                <div class="hub-text-desc">Bank details & QR Code</div>
-            </div>
-        </a>
-
-        <a href="lock.html" class="hub-item">
-            <div class="hub-icon">🔒</div>
-            <div>
-                <div class="hub-text-title">Lock System</div>
-                <div class="hub-text-desc">Secure your local data</div>
-            </div>
+            <div class="icon-circle">⚙️</div>
         </a>
     </div>
+</div>
 
 </body>
 </html>
