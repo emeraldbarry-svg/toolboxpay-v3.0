@@ -2,102 +2,254 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <title>toolboxpay v19.0 - DESKTOP FIX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toolboxpay v19.0 - RECOVERY BUILD</title>
     <style>
-        /* Forces a dark background so you can see if the update worked */
-        html, body { background: #111; margin: 0; height: 100%; display: flex; justify-content: center; align-items: center; font-family: sans-serif; }
-        
-        /* The "Phone" frame for your laptop screen */
-        #mobile-frame { 
-            background: white; 
-            width: 380px; 
-            height: 80vh; 
-            border-radius: 15px; 
-            box-shadow: 0 0 40px rgba(0,0,0,0.7); 
-            padding: 25px; 
-            overflow-y: auto; 
-            position: relative;
+        /* THE VISUAL RESET: A hard Charcoal, Orange, and Black theme */
+        :root {
+            --charcoal: #111111;
+            --orange: #ff6600;
+            --dark-card: #1c1c1c;
+            --input-bg: #151515;
+            --white: #ffffff;
         }
 
-        .logo { color: #ff6600; font-weight: 900; font-size: 24px; text-align: center; margin-bottom: 30px; }
-        .logo span { color: #000; }
+        /* 1. Reset all styles to stop ghosting/overlaps */
+        html, body, div, span, h1, p, button, input {
+            margin: 0; padding: 0; border: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            color: var(--white);
+        }
 
-        /* Solid block buttons to prevent the "ghosting" seen in your screenshots */
-        .tile { width: 100%; padding: 20px; margin-bottom: 12px; background: #f4f4f4; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: bold; text-align: left; color: #ff6600; cursor: pointer; display: block; }
-        .tile-org { background: #ff6600; color: white; border: none; text-align: center; }
-        .back-link { width: 100%; padding: 10px; margin-bottom: 20px; background: #fff; border: 1px solid #ff6600; color: #ff6600; font-weight: bold; cursor: pointer; border-radius: 5px; }
+        /* 2. Forces the dark background on the entire screen */
+        body {
+            background-color: var(--charcoal) !important;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
 
-        input, textarea, select { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; box-sizing: border-box; }
-        .price { text-align: right; font-size: 32px; font-weight: 900; color: #ff6600; margin: 20px 0; }
+        /* 3. A fixed vertical shell to contain the app and prevent stretching */
+        #app-shell {
+            width: 100%;
+            max-width: 380px; /* Forces phone width on laptops */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 4. Correct branding colours as seen in image_0.png */
+        .logo {
+            color: var(--orange);
+            font-weight: 900;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 25px;
+            text-transform: none;
+        }
+        .logo span {
+            color: var(--white);
+        }
+
+        /* Screens are hidden by default to prevent overlap */
+        .screen {
+            display: none !important;
+        }
+        /* Active screen is shown and cleared */
+        .active {
+            display: block !important;
+            clear: both;
+        }
+
+        /* 5. Block-style Tiles that use native rendering to prevent "Freezing" */
+        button, a.tile {
+            width: 100%;
+            padding: 22px;
+            margin-bottom: 12px;
+            background: var(--dark-card) !important;
+            color: var(--white) !important;
+            border: 1px solid #333 !important;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: left;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button:hover { background: #2a2a2a !important; }
+
+        /* A distinct Back button with clear orange lines */
+        .back-btn {
+            border: 1px solid var(--orange) !important;
+            color: var(--orange) !important;
+            background: var(--input-bg) !important;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            justify-content: center;
+        }
+
+        /* Calculator Styling with High-Contrast fields */
+        input, textarea, select {
+            width: 100%;
+            padding: 16px;
+            background: var(--input-bg) !important;
+            border: 1px solid #333;
+            color: var(--white) !important;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .total-box {
+            text-align: right;
+            margin: 20px 0;
+            color: var(--orange);
+            font-size: 36px;
+            font-weight: 900;
+        }
+
+        /* Full White high-contrast Invoice view for saving as PDF */
+        .invoice-card {
+            background: var(--white);
+            color: #000;
+            padding: 20px;
+            border: 1px solid #ccc;
+            line-height: 1.5;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="mobile-frame">
+    <div id="app-shell">
         <div class="logo">toolbox<span>pay</span></div>
-        <div id="app-content">
-            </div>
+
+        <div id="scr_main" class="screen active">
+            <button onclick="goto('scr_calc')"><span>NEW QUOTE</span><span>→</span></button>
+            <button onclick="goto('scr_hist'); loadHistory();"><span>HISTORY</span><span>→</span></button>
+            <button onclick="goto('scr_setup')"><span>BUSINESS SETUP</span><span>→</span></button>
+            <button onclick="goto('scr_bank')"><span>BANK DETAILS</span><span>→</span></button>
+            <button onclick="localStorage.clear(); location.reload();" style="border:none !important; text-align:center; justify-content:center; text-transform:lowercase; margin-top:40px; color:#555 !important;">[ cite: Clear App Memory ]</button>
+        </div>
+
+        <div id="scr_calc" class="screen">
+            <button class="back-btn" onclick="goto('scr_main')">← BACK</button>
+            <input type="text" id="cust_name" placeholder="Customer Name">
+            <input type="number" id="lab_hrs" placeholder="Labour Hours" oninput="runMath()">
+            <input type="number" id="lab_rte" placeholder="Hourly Rate" oninput="runMath()">
+            <input type="number" id="mat_cost" placeholder="Materials Cost" oninput="runMath()">
+            <div id="total_display" class="total-box">£0.00</div>
+            <button class="back-btn" style="background:var(--orange) !important; color:#000 !important; border:none !important;" onclick="saveJob()">SAVE QUOTE</button>
+        </div>
+
+        <div id="scr_hist" class="screen">
+            <button class="back-btn" onclick="goto('scr_main')">← BACK</button>
+            <div id="hist_list"></div>
+        </div>
+
+        <div id="scr_setup" class="screen">
+            <button class="back-btn" onclick="goto('scr_main')">← BACK</button>
+            <label style="color:var(--orange); font-size:11px; font-weight:800; display:block; text-transform:uppercase;">CURRENCY</label>
+            <select id="cur" onchange="localStorage.setItem('cur_v19', this.value)">
+                <option value="£">GBP (£)</option>
+                <option value="$">USD ($)</option>
+                <option value="€">EUR (€)</option>
+            </select>
+            <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn_v19', this.value)">
+            <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba_v19', this.value)"></textarea>
+        </div>
+
+        <div id="scr_bank" class="screen">
+            <button class="back-btn" onclick="goto('scr_main')">← BACK</button>
+            <input type="text" id="bk1" placeholder="Account Name" oninput="localStorage.setItem('bk1_v19', this.value)">
+            <input type="text" id="bk2" placeholder="Sort Code" oninput="localStorage.setItem('bk2_v19', this.value)">
+            <input type="text" id="bk3" placeholder="Account Number" oninput="localStorage.setItem('bk3_v19', this.value)">
+        </div>
+
+        <div id="scr_view" class="screen">
+            <button class="back-btn" onclick="goto('scr_hist')">← BACK</button>
+            <div id="invoice_content" class="invoice-card"></div>
+            <button class="back-btn" style="background:var(--orange) !important; color:#000 !important; border:none !important; margin-top:20px;" onclick="window.print()">PRINT / PDF</button>
+        </div>
     </div>
 
     <script>
-        const KEY = "v19_";
+        // Use unique storage keys for v19 to bypass cache
+        const prefix = "_v19";
 
-        // This function WIPES the screen before loading a new one
-        function show(screen) {
-            const container = document.getElementById('app-content');
-            container.innerHTML = ""; // This kills the "ghosting" from your screenshot
-
-            if(screen === 'menu') {
-                container.innerHTML = `
-                    <button class="tile" onclick="show('quote')">NEW QUOTE →</button>
-                    <button class="tile" onclick="show('history')">HISTORY →</button>
-                    <button class="tile" onclick="show('setup')">BUSINESS SETUP →</button>
-                    <button class="tile" onclick="show('bank')">BANK DETAILS →</button>
-                `;
-            } 
-            else if(screen === 'quote') {
-                container.innerHTML = `
-                    <button class="back-link" onclick="show('menu')">← BACK</button>
-                    <input type="text" id="in-n" placeholder="Client Name">
-                    <input type="number" id="in-h" placeholder="Hours" oninput="math()">
-                    <input type="number" id="in-r" placeholder="Rate" oninput="math()">
-                    <input type="number" id="in-m" placeholder="Materials" oninput="math()">
-                    <div id="in-t" class="price">£0.00</div>
-                    <button class="tile tile-org" onclick="save()">SAVE QUOTE</button>
-                `;
-            }
-            else if(screen === 'setup') {
-                container.innerHTML = `
-                    <button class="back-link" onclick="show('menu')">← BACK</button>
-                    <select id="set-c" onchange="localStorage.setItem('${KEY}cur', this.value)">
-                        <option value="£">GBP (£)</option>
-                        <option value="$">USD ($)</option>
-                        <option value="€">EUR (€)</option>
-                    </select>
-                    <input type="text" id="set-bn" placeholder="Business Name" oninput="localStorage.setItem('${KEY}bn', this.value)" value="${localStorage.getItem(KEY+'bn')||''}">
-                    <textarea id="set-ba" placeholder="Address" oninput="localStorage.setItem('${KEY}ba', this.value)">${localStorage.getItem(KEY+'ba')||''}</textarea>
-                `;
-            }
+        // WIPES and shows a screen
+        function goto(id) {
+            // Physically wipes old screen memory before drawing new one
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            // Draws new screen and clears anything underneath it
+            const target = document.getElementById(id);
+            target.classList.add('active');
+            window.scrollTo(0,0);
         }
 
-        function math() {
-            var s = localStorage.getItem(KEY+'cur') || '£';
-            var h = Number(document.getElementById('in-h').value) || 0;
-            var r = Number(document.getElementById('in-r').value) || 0;
-            var m = Number(document.getElementById('in-m').value) || 0;
-            document.getElementById('in-t').innerText = s + ((h*r)+m).toFixed(2);
+        function runMath() {
+            const sym = localStorage.getItem('cur'+prefix) || '£';
+            const hrs = Number(document.getElementById('lab_hrs').value) || 0;
+            const rte = Number(document.getElementById('lab_rte').value) || 0;
+            const mat = Number(document.getElementById('mat_cost').value) || 0;
+            document.getElementById('total_display').innerText = sym + ((hrs * rte) + mat).toFixed(2);
         }
 
-        function save() {
-            var jobs = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
-            var total = document.getElementById('in-t').innerText;
-            jobs.unshift({n: document.getElementById('in-n').value, t: total, d: new Date().toLocaleDateString()});
-            localStorage.setItem(KEY+'data', JSON.stringify(jobs.slice(0,20)));
-            show('menu');
+        function saveJob() {
+            const sym = localStorage.getItem('cur'+prefix) || '£';
+            const hrs = Number(document.getElementById('lab_hrs').value) || 0;
+            const rte = Number(document.getElementById('lab_rte').value) || 0;
+            const mat = Number(document.getElementById('mat_cost').value) || 0;
+            const total = sym + ((hrs * rte) + mat).toFixed(2);
+            
+            var jobs = JSON.parse(localStorage.getItem('jobs'+prefix) || '[]');
+            jobs.unshift({id: Date.now(), name: document.getElementById('cust_name').value || 'Client', total: total, date: new Date().toLocaleDateString()});
+            localStorage.setItem('jobs'+prefix, JSON.stringify(jobs.slice(0,30)));
+            goto('scr_main');
         }
 
-        // Start the app on the menu
-        window.onload = () => show('menu');
+        function loadHistory() {
+            var jobs = JSON.parse(localStorage.getItem('jobs'+prefix) || '[]');
+            document.getElementById('hist_list').innerHTML = jobs.map(j => `
+                <button onclick="viewQuote(${j.id})"><span>${j.name}</span><span style="font-size:11px; color:#aaa;">${j.date} — ${j.total}</span></button>
+            `).join('') || '<p style="text-align:center;">No history.</p>';
+        }
+
+        function viewQuote(id) {
+            var jobs = JSON.parse(localStorage.getItem('jobs'+prefix) || '[]');
+            var j = jobs.find(item => item.id === id);
+            if(!j) return;
+            
+            document.getElementById('invoice_content').innerHTML = `
+                <div style="display:flex; justify-content:space-between">
+                    <div><strong>${localStorage.getItem('bn'+prefix) || 'Business'}</strong><br>${localStorage.getItem('ba'+prefix) || ''}</div>
+                </div>
+                <hr style="margin:15px 0;">
+                <div>Client: ${j.name}<br>Date: ${j.date}</div>
+                <div style="font-size:24px; font-weight:900; color:var(--orange); text-align:right; margin:15px 0;">Total Due: ${j.total}</div>
+                <hr style="margin:15px 0;">
+                <div style="font-size:11px; color:#555">Bank Details:<br>Name: ${localStorage.getItem('bk1'+prefix) || ''}<br>Sort: ${localStorage.getItem('bk2'+prefix) || ''}<br>Acc: ${localStorage.getItem('bk3'+prefix) || ''}</div>
+            `;
+            goto('scr_view');
+        }
+
+        // AUTO-LOAD saved business details on start
+        window.onload = function() {
+            ['bn','ba','bk1','bk2','bk3','cur'].forEach(k => {
+                var v = localStorage.getItem(k+prefix);
+                if(v && document.getElementById(k)) document.getElementById(k).value = v;
+            });
+            runMath();
+        };
     </script>
 </body>
 </html>
