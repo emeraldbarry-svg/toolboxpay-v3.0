@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v7.3</title>
+    <title>toolboxpay - v7.4</title>
     <style>
-        /* CORE BRANDING */
+        /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             background: #4a4a4a; 
@@ -14,6 +14,7 @@
             font-family: sans-serif; 
             display: flex;
             justify-content: center;
+            overflow-x: hidden;
         }
 
         /* THE CONSTRAINED 420PX VIEWPORT */
@@ -22,6 +23,7 @@
             max-width: 420px;
             padding: 20px;
             min-height: 100vh;
+            position: relative;
         }
 
         /* LOGO */
@@ -30,7 +32,7 @@
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* PAGE VISIBILITY */
+        /* NAVIGATION LOGIC - Hides pages unless active [cite: 2026-02-27] */
         .view { display: none; width: 100%; }
         .view.active { display: block; }
 
@@ -104,7 +106,7 @@
             <h2>New Quote</h2>
             <label>Client Name</label><input type="text" id="cn">
             <label>Labour Description</label><textarea id="dl" style="height:100px;"></textarea>
-            <label>Price (£)</label><input type="number" id="tp" oninput="runTotal()">
+            <label>Price (£)</label><input type="number" id="tp" oninput="updateTotal()">
             <div class="total-display" id="q-val">£0.00</div>
             <button class="save-btn" onclick="openNav('view-home')">SAVE JOB</button>
         </div>
@@ -114,45 +116,55 @@
         <div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div>
         <div class="card">
             <h2>Bank Setup</h2>
-            <label>Business Name</label><input type="text" id="bn" oninput="saveData('bn',this.value)">
-            <label>Bank Name</label><input type="text" id="bk" oninput="saveData('bk',this.value)">
-            <label>Sort Code</label><input type="text" id="sc" oninput="saveData('sc',this.value)">
-            <label>Account No.</label><input type="text" id="an" oninput="saveData('an',this.value)">
+            <label>Business Name</label><input type="text" id="bn" oninput="saveMem('bn',this.value)">
+            <label>Bank Name</label><input type="text" id="bk" oninput="saveMem('bk',this.value)">
+            <label>Sort Code</label><input type="text" id="sc" oninput="saveMem('sc',this.value)">
+            <label>Account No.</label><input type="text" id="an" oninput="saveMem('an',this.value)">
         </div>
     </div>
 
-    <div id="view-calc" class="view"><div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div><div class="card"><h2>Calculator</h2><p>Coming Soon</p></div></div>
-    <div id="view-history" class="view"><div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div><div class="card"><h2>Job History</h2><p>Coming Soon</p></div></div>
-    <div id="view-readme" class="view"><div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div><div class="card"><h2>Read Me</h2><p>v7.3 Foundation</p></div></div>
+    <div id="view-calc" class="view">
+        <div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div>
+        <div class="card"><h2>Calculator</h2><p style="color:#888;">Simple maths tool coming next.</p></div>
+    </div>
+
+    <div id="view-history" class="view">
+        <div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div>
+        <div class="card"><h2>Job History</h2><p style="color:#888;">Previous quotes will appear here.</p></div>
+    </div>
+
+    <div id="view-readme" class="view">
+        <div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div>
+        <div class="card"><h2>Read Me</h2><p style="color:#888;">v7.4 Stable Build.</p></div>
+    </div>
 
 </div>
 
 <script>
-    const K = "TBP_V73_STABLE";
+    const STORAGE_KEY = "TBP_V74_STABLE";
 
+    // Standard Navigation: Only shows the requested page [cite: 2026-02-27]
     function openNav(id) {
-        // Hide all
-        const views = document.getElementsByClassName('view');
-        for (let i = 0; i < views.length; i++) {
-            views[i].style.display = 'none';
-        }
-        // Show selected
-        document.getElementById(id).style.display = 'block';
+        const views = document.querySelectorAll('.view');
+        views.forEach(v => v.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
         window.scrollTo(0, 0);
     }
 
-    function saveData(k, v) { localStorage.setItem(K + k, v); }
-    function loadData(k) { return localStorage.getItem(K + k) || ""; }
+    // Persistence: Saves bank details [cite: 2026-02-26, 2026-02-27]
+    function saveMem(k, v) { localStorage.setItem(STORAGE_KEY + k, v); }
+    function loadMem(k) { return localStorage.getItem(STORAGE_KEY + k) || ""; }
 
-    function runTotal() {
+    function updateTotal() {
         const val = parseFloat(document.getElementById('tp').value) || 0;
         document.getElementById('q-val').innerText = "£" + val.toFixed(2);
     }
 
+    // Load saved details when the app opens
     window.onload = () => {
         ['bn', 'bk', 'sc', 'an'].forEach(id => {
             const el = document.getElementById(id);
-            if(el) el.value = loadData(id);
+            if(el) el.value = loadMem(id);
         });
     };
 </script>
