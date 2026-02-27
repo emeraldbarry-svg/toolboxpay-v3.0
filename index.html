@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v7.4</title>
+    <title>toolboxpay - v7.5</title>
     <style>
-        /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
+        /* CORE THEME */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             background: #4a4a4a; 
@@ -14,10 +14,9 @@
             font-family: sans-serif; 
             display: flex;
             justify-content: center;
-            overflow-x: hidden;
         }
 
-        /* THE CONSTRAINED 420PX VIEWPORT */
+        /* 420PX VIEWPORT */
         #app-viewport {
             width: 100%;
             max-width: 420px;
@@ -26,13 +25,25 @@
             position: relative;
         }
 
+        /* LIVE CLOCK STYLE - TOP RIGHT */
+        #live-clock {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            font-size: 14px;
+            font-weight: 900;
+            color: #ff6600;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 1px;
+        }
+
         /* LOGO */
-        .header { text-align: center; padding: 20px 0; }
+        .header { text-align: center; padding: 25px 0 15px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* NAVIGATION LOGIC - Hides pages unless active [cite: 2026-02-27] */
+        /* NAV LOGIC */
         .view { display: none; width: 100%; }
         .view.active { display: block; }
 
@@ -56,7 +67,7 @@
         }
         .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SUB-PAGE ELEMENTS */
+        /* PAGE ELEMENTS */
         .back-btn { 
             background: #000; color: #ff6600; border: 2px solid #ff6600; 
             padding: 10px 15px; border-radius: 8px; font-weight: 900; 
@@ -69,14 +80,11 @@
         }
         h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; }
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
-        
         input, textarea { 
             width: 100%; background: #000; border: 1px solid #333; color: #fff; 
             padding: 18px; border-radius: 15px; margin-bottom: 20px; outline: none; font-size: 16px; 
         }
-
         .total-display { font-size: 64px; font-weight: 900; color: #ff6600; text-align: right; margin: 15px 0; }
-        
         .save-btn { 
             width: 100%; background: #ff6600; color: #000; padding: 22px; border: none; 
             border-radius: 18px; font-weight: 900; font-size: 20px; text-transform: uppercase; cursor: pointer;
@@ -88,6 +96,7 @@
 <div id="app-viewport">
     
     <div id="view-home" class="view active">
+        <div id="live-clock">00:00:00</div>
         <div class="header">
             <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         </div>
@@ -123,35 +132,30 @@
         </div>
     </div>
 
-    <div id="view-calc" class="view">
-        <div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div>
-        <div class="card"><h2>Calculator</h2><p style="color:#888;">Simple maths tool coming next.</p></div>
-    </div>
-
-    <div id="view-history" class="view">
-        <div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div>
-        <div class="card"><h2>Job History</h2><p style="color:#888;">Previous quotes will appear here.</p></div>
-    </div>
-
-    <div id="view-readme" class="view">
-        <div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div>
-        <div class="card"><h2>Read Me</h2><p style="color:#888;">v7.4 Stable Build.</p></div>
-    </div>
+    <div id="view-calc" class="view"><div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div><div class="card"><h2>Calculator</h2><p>Working...</p></div></div>
+    <div id="view-history" class="view"><div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div><div class="card"><h2>History</h2><p>Saved Quotes appear here.</p></div></div>
+    <div id="view-readme" class="view"><div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div><div class="card"><h2>Read Me</h2><p>v7.5 Clock Enabled.</p></div></div>
 
 </div>
 
 <script>
-    const STORAGE_KEY = "TBP_V74_STABLE";
+    const STORAGE_KEY = "TBP_V75_CLOCK";
 
-    // Standard Navigation: Only shows the requested page [cite: 2026-02-27]
-    function openNav(id) {
-        const views = document.querySelectorAll('.view');
-        views.forEach(v => v.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        window.scrollTo(0, 0);
+    // CLOCK LOGIC
+    function startClock() {
+        const clockEl = document.getElementById('live-clock');
+        setInterval(() => {
+            const now = new Date();
+            clockEl.innerText = now.toLocaleTimeString('en-GB', { hour12: false });
+        }, 1000);
     }
 
-    // Persistence: Saves bank details [cite: 2026-02-26, 2026-02-27]
+    function openNav(id) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
     function saveMem(k, v) { localStorage.setItem(STORAGE_KEY + k, v); }
     function loadMem(k) { return localStorage.getItem(STORAGE_KEY + k) || ""; }
 
@@ -160,8 +164,8 @@
         document.getElementById('q-val').innerText = "£" + val.toFixed(2);
     }
 
-    // Load saved details when the app opens
     window.onload = () => {
+        startClock();
         ['bn', 'bk', 'sc', 'an'].forEach(id => {
             const el = document.getElementById(id);
             if(el) el.value = loadMem(id);
