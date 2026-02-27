@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v8.9 [DIRECT-LOAD]</title>
+    <title>toolboxpay v9.0 [PAYMENT LINK ENABLED]</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; --inp: #162130; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -14,7 +14,6 @@
         .logo span { color: var(--org); }
         .logo em { color: #fff; font-style: normal; }
         
-        /* HARD OVERRIDE FOR SCREEN VISIBILITY */
         .screen { display: none !important; }
         .screen.active { display: block !important; }
 
@@ -30,6 +29,7 @@
         .price { color: #fff; font-size: 30px; font-weight: 800; }
         
         .btn-main { width: 100%; padding: 18px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
+        .btn-pay { background: #2ecc71; margin-bottom: 10px; } /* Green for payment */
         
         .logo-box { background: #000; padding: 25px; border-radius: 10px; border: 2px dashed var(--org); text-align: center; margin-bottom: 15px; }
         #preview-logo { max-width: 100%; max-height: 80px; display: none; margin: 0 auto 10px auto; }
@@ -38,7 +38,7 @@
         .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
 
         @media print {
-            .back-btn, .btn-main, .logo, .tag, .logo-box, .tile { display: none !important; }
+            .back-btn, .btn-main, .logo, .tag, .logo-box, .tile, .no-print { display: none !important; }
             body { background: white; color: black; padding: 0; }
             .summary-card { border: none; width: 100%; }
         }
@@ -65,5 +65,4 @@
             <option value="€">Euro (€)</option>
         </select>
         <div class="tag">BUSINESS LOGO</div>
-        <div class="logo-box">
-            <img id="preview-logo" src="" alt="Preview">
+        <div class="logo
