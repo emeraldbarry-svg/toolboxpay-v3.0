@@ -9,19 +9,29 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); color: var(--wht); font-family: -apple-system, sans-serif; display: flex; justify-content: center; min-height: 100vh; padding: 40px 20px; }
         .shell { width: 100%; max-width: 380px; }
+        
+        /* Branding: toolbox (orange) pay (white) */
         .logo { text-align: center; margin-bottom: 35px; font-size: 34px; font-weight: 800; }
         .logo span { color: var(--org); }
+
         #back-btn { display: none; color: var(--org); border: 1px solid var(--org); background: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 25px; text-transform: uppercase; }
+        
         .screen { display: none; }
+        
         .tile { background: var(--crd); padding: 25px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 14px; }
+        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
+        .tile p { font-size: 12px; color: #8892b0; margin-top: 4px; }
+        .arrow { color: var(--org); font-weight: bold; font-size: 20px; }
+
         .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
         input { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 16px; outline: none; }
+        
         .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 30px; background: rgba(255,102,0,0.05); }
         .price { color: var(--org); font-size: 26px; font-weight: 800; }
     </style>
 </head>
 <body>
+
 <div class="shell">
     <button id="back-btn" onclick="nav('dash')">← Return to Dashboard</button>
     <div class="logo"><span>toolbox</span>pay</div>
@@ -30,13 +40,25 @@
         <div class="tile" onclick="nav('calc')">
             <div>
                 <h3>Labour & Materials</h3>
-                <p style="font-size:12px; color:#8892b0; margin-top:4px;">Calculate costs and specialising tasks</p>
+                <p>Calculate costs and specialising tasks</p>
             </div>
-            <span style="color:var(--org); font-size: 20px;">→</span>
+            <span class="arrow">→</span>
         </div>
+
         <div class="tile" onclick="nav('biz')">
-            <div><h3>Business Details</h3><p style="font-size:12px; color:#8892b0;">Stored for your quotes</p></div>
-            <span style="color:var(--org); font-size: 20px;">→</span>
+            <div>
+                <h3>Business Details</h3>
+                <p>Company name and contact info</p>
+            </div>
+            <span class="arrow">→</span>
+        </div>
+
+        <div class="tile" onclick="nav('bank')">
+            <div>
+                <h3>Bank Details</h3>
+                <p>Account info for payments</p>
+            </div>
+            <span class="arrow">→</span>
         </div>
     </div>
 
@@ -45,18 +67,25 @@
         <input type="number" id="h" placeholder="Hours worked" oninput="math()">
         <input type="number" id="r" placeholder="Hourly rate (£)" oninput="math()">
         <div class="tag">Materials</div>
-        <input type="number" id="m" placeholder="Total materials (£)" oninput="math()">
+        <input type="number" id="m" placeholder="Total material costs (£)" oninput="math()">
         <div class="total-box">
-            <span style="font-weight:800; font-size:11px;">TOTAL:</span>
+            <span style="font-weight:800; font-size:12px;">TOTAL:</span>
             <span id="res" class="price">£0.00</span>
         </div>
     </div>
 
     <div id="biz" class="screen">
-        <div class="tag">Business Info</div>
-        <input type="text" id="b-name" placeholder="Company Name">
-        <input type="text" id="b-sort" placeholder="Sort Code">
-        <input type="text" id="b-acc" placeholder="Account Number">
+        <div class="tag">Company Information</div>
+        <input type="text" id="biz-name" placeholder="Business Name">
+        <input type="text" id="biz-email" placeholder="Email Address">
+        <input type="text" id="biz-phone" placeholder="Phone Number">
+    </div>
+
+    <div id="bank" class="screen">
+        <div class="tag">Payment Information</div>
+        <input type="text" id="bank-acc" placeholder="Account Name">
+        <input type="text" id="bank-sort" placeholder="Sort Code">
+        <input type="text" id="bank-num" placeholder="Account Number">
     </div>
 </div>
 
@@ -65,21 +94,27 @@
         document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
         document.getElementById(id).style.display = 'block';
         document.getElementById('back-btn').style.display = (id === 'dash') ? 'none' : 'block';
+        window.scrollTo(0,0);
     }
+
     function math() {
         const h = parseFloat(document.getElementById('h').value) || 0;
         const r = parseFloat(document.getElementById('r').value) || 0;
         const m = parseFloat(document.getElementById('m').value) || 0;
-        document.getElementById('res').innerText = '£' + ((h * r) + m).toLocaleString('en-GB', {minimumFractionDigits: 2});
+        const total = (h * r) + m;
+        document.getElementById('res').innerText = '£' + total.toLocaleString('en-GB', {minimumFractionDigits: 2});
     }
-    // Logic to remember business and bank details automatically
-    ['b-name', 'b-sort', 'b-acc'].forEach(id => {
-        const el = document.getElementById(id);
+
+    // Auto-save logic to remember details automatically
+    const fields = ['biz-name', 'biz-email', 'biz-phone', 'bank-acc', 'bank-sort', 'bank-num'];
+    fields.forEach(f => {
+        const el = document.getElementById(f);
         if(el) {
-            el.value = localStorage.getItem(id) || '';
-            el.oninput = () => localStorage.setItem(id, el.value);
+            el.value = localStorage.getItem(f) || '';
+            el.oninput = () => localStorage.setItem(f, el.value);
         }
     });
 </script>
+
 </body>
 </html>
