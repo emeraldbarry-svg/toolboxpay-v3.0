@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v11.1</title>
+    <title>toolboxpay - v11.2</title>
     <style>
-        /* THEME & RESET */
+        /* BRANDING */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; }
-        #app-viewport { width: 100%; max-width: 420px; padding: 20px; position: relative; }
+        #app-viewport { width: 100%; max-width: 420px; padding: 20px; }
 
-        /* HEADER */
+        /* HEADER - CLOCKS TOTALLY DELETED */
         .header { text-align: center; padding: 40px 0 30px 0; }
-        .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
+        .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; cursor: default; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
@@ -22,11 +22,11 @@
 
         /* TILES */
         .stack { display: flex; flex-direction: column; gap: 15px; }
-        .tile { background: #222; border-radius: 20px; padding: 25px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; width: 100%; text-align: left; }
-        .icon-box { width: 50px; height: 50px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 24px; }
-        .tile span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; }
+        .tile { background: #222; border-radius: 20px; padding: 25px; display: flex; align-items: center; border: 1px solid #333; width: 100%; text-decoration: none; cursor: pointer; }
+        .icon-box { width: 50px; height: 50px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 24px; pointer-events: none; }
+        .tile span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; pointer-events: none; }
 
-        /* FORMS */
+        /* FORM CARDS */
         .card { background: #1e1e1e; border-radius: 25px; padding: 25px; border: 1px solid #333; margin-top: 10px; }
         .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 12px 20px; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 12px; margin-bottom: 20px; display: inline-block; }
         
@@ -49,96 +49,6 @@
 
     <div id="view-home" class="view">
         <div class="stack">
-            <button class="tile" onclick="openBox('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></button>
-            <button class="tile" onclick="openBox('view-clients')"><div class="icon-box">👥</div><span>Clients</span></button>
-            <button class="tile" onclick="openBox('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></button>
-            <button class="tile" onclick="openBox('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></button>
-        </div>
-    </div>
-
-    <div id="view-clients" class="view">
-        <div class="back-btn" onclick="openBox('view-home')">← DASHBOARD</div>
-        <div class="card">
-            <label>Full Name</label><input type="text" id="cn">
-            <label>Address</label><textarea id="ca" style="height:60px;"></textarea>
-            <button class="btn-green" style="background:#ff6600;" onclick="addC()">Save Client</button>
-        </div>
-        <div id="cl-list" style="margin-top:20px;"></div>
-    </div>
-
-    <div id="view-quote" class="view">
-        <div class="back-btn" onclick="openBox('view-home')">← DASHBOARD</div>
-        <div class="card">
-            <label>Labour Description</label><textarea id="qd" style="height:100px;"></textarea>
-            <label>Price (£)</label><input type="number" id="qp" oninput="upQ()">
-            <div class="total-display" id="qt">£0.00</div>
-            <button class="btn-green">Send Quote</button>
-        </div>
-    </div>
-
-    <div id="view-calc" class="view">
-        <div class="back-btn" onclick="openBox('view-home')">← DASHBOARD</div>
-        <div class="card">
-            <label>Day Rate (£)</label><input type="number" id="cr" oninput="upC()">
-            <label>Days Worked</label><input type="number" id="cd" oninput="upC()">
-            <div class="total-display" id="ct">£0.00</div>
-        </div>
-    </div>
-
-    <div id="view-bank" class="view">
-        <div class="back-btn" onclick="openBox('view-home')">← DASHBOARD</div>
-        <div class="card">
-            <label>Business Name</label><input type="text" id="bn" oninput="ls('bn',this.value)">
-            <label>Sort Code</label><input type="text" id="sc" oninput="ls('sc',this.value)">
-            <label>Account No.</label><input type="text" id="an" oninput="ls('an',this.value)">
-        </div>
-    </div>
-</div>
-
-<script>
-    /* OVERRIDE NAVIGATION */
-    function openBox(id) {
-        // Force-hide everything using a hard loop
-        const all = document.querySelectorAll('.view');
-        all.forEach(v => v.style.display = 'none');
-        // Force-show the target
-        const target = document.getElementById(id);
-        if(target) target.style.display = 'block';
-    }
-
-    /* DATA STORAGE */
-    let clients = JSON.parse(localStorage.getItem('TBP_C') || "[]");
-    function addC() {
-        const n = document.getElementById('cn').value;
-        const a = document.getElementById('ca').value;
-        if(!n) return;
-        clients.push({n, a});
-        localStorage.setItem('TBP_C', JSON.stringify(clients));
-        document.getElementById('cn').value = '';
-        document.getElementById('ca').value = '';
-        showC();
-    }
-    function showC() {
-        document.getElementById('cl-list').innerHTML = clients.map((c, i) => `
-            <div class="cli-row"><div><b>${c.n}</b><br><small>${c.a}</small></div>
-            <div style="color:red;" onclick="delC(${i})">DEL</div></div>`).join('');
-    }
-    function delC(i) { clients.splice(i, 1); localStorage.setItem('TBP_C', JSON.stringify(clients)); showC(); }
-
-    function upQ() { document.getElementById('qt').innerText = "£" + (parseFloat(document.getElementById('qp').value) || 0).toFixed(2); }
-    function upC() {
-        const r = parseFloat(document.getElementById('cr').value) || 0;
-        const d = parseFloat(document.getElementById('cd').value) || 0;
-        document.getElementById('ct').innerText = "£" + (r * d * 1.2).toFixed(2);
-    }
-    function ls(k, v) { localStorage.setItem('TBP_B_'+k, v); }
-
-    window.onload = function() {
-        showC();
-        document.getElementById('bn').value = localStorage.getItem('TBP_B_bn') || "";
-        document.getElementById('sc').value = localStorage.getItem('TBP_B_sc') || "";
-        document.getElementById('an').value = localStorage.getItem('TBP_B_an') || "";
-    };
-</script>
-</body>
-</html>
+            <div class="tile" onclick="forceOpen('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
+            <div class="tile" onclick="forceOpen('view-clients')"><div class="icon-box">👥</div><span>Clients</span></div>
+            <div class="tile" onclick="forceOpen('view-calc')"><div class="icon-box)️">🧮</div><span>Calculator
