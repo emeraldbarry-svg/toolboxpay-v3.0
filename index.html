@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v3.5 - High Stability</title>
+    <title>toolboxpay v3.5 - Gold Master</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -25,6 +25,7 @@
         .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; flex-direction: column; gap: 5px; margin-top: 20px; background: rgba(255,102,0,0.05); }
         .price { color: var(--org); font-size: 26px; font-weight: 800; text-align: right; }
         .btn-main { width: 100%; padding: 18px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
+        .btn-sec { width: 100%; padding: 12px; background: none; border: 1px solid #233554; color: #8892b0; border-radius: 8px; margin-top: 10px; cursor: pointer; font-size: 12px; }
         .summary-card { background: #fff; color: #333; padding: 25px; border-radius: 12px; margin-top: 10px; }
         .summary-card h2 { color: #000; font-size: 18px; margin-bottom: 4px; }
         .summary-address { font-size: 12px; color: #666; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; white-space: pre-wrap; line-height: 1.4; }
@@ -51,6 +52,7 @@
         <div class="vat-row"><span>Add 20% VAT</span><input type="checkbox" id="v-tog" onchange="doMath()" style="width:24px; height:24px;"></div>
         <div class="total-box"><span style="font-size:12px;">TOTAL:</span><span id="res" class="price">£0.00</span></div>
         <button class="btn-main" onclick="gen()">View Summary</button>
+        <button class="btn-sec" onclick="resetCalc()">Clear Figures</button>
     </div>
 
     <div id="summary" class="screen">
@@ -87,7 +89,6 @@
 </div>
 
 <script>
-    // NAVIGATION
     function go(id) {
         try {
             const screens = document.getElementsByClassName('screen');
@@ -98,10 +99,8 @@
         } catch(e) { console.error("Nav Error", e); }
     }
 
-    // STORAGE
     function set(k, v) { localStorage.setItem(k, v); }
 
-    // CALCULATIONS
     function doMath() {
         const h = parseFloat(document.getElementById('h').value) || 0;
         const r = parseFloat(document.getElementById('r').value) || 0;
@@ -111,54 +110,4 @@
         document.getElementById('res').innerText = '£' + (sub + v).toLocaleString('en-GB', {minimumFractionDigits: 2});
     }
 
-    // GENERATE SUMMARY
-    function gen() {
-        const h = parseFloat(document.getElementById('h').value) || 0;
-        const r = parseFloat(document.getElementById('r').value) || 0;
-        const m = parseFloat(document.getElementById('m').value) || 0;
-        const sub = (h * r) + m;
-        const isV = document.getElementById('v-tog').checked;
-        const v = isV ? (sub * 0.2) : 0;
-        
-        document.getElementById('s-biz').innerText = localStorage.getItem('biz-name') || 'Quote';
-        document.getElementById('s-addr').innerText = localStorage.getItem('biz-addr') || '';
-        document.getElementById('s-lab').innerText = '£' + (h * r).toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('s-mat').innerText = '£' + m.toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('s-v-row').style.display = isV ? 'flex' : 'none';
-        document.getElementById('s-v-amt').innerText = '£' + v.toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('s-tot').innerText = '£' + (sub + v).toLocaleString('en-GB', {minimumFractionDigits: 2});
-        
-        document.getElementById('s-acc').innerText = localStorage.getItem('bank-acc') || '---';
-        document.getElementById('s-srt').innerText = localStorage.getItem('bank-sort') || '---';
-        document.getElementById('s-num').innerText = localStorage.getItem('bank-num') || '---';
-        go('summary');
-    }
-
-    // CLIPBOARD
-    function copyIt() {
-        const biz = localStorage.getItem('biz-name') || 'Quote';
-        const tot = document.getElementById('s-tot').innerText;
-        const acc = document.getElementById('s-acc').innerText;
-        const srt = document.getElementById('s-srt').innerText;
-        const num = document.getElementById('s-num').innerText;
-        
-        const text = `${biz.toUpperCase()}\n\nTotal: ${tot}\n\nBank Details:\nAcc: ${acc}\nSort: ${srt}\nNo: ${num}`;
-        
-        navigator.clipboard.writeText(text).then(() => {
-            const btn = document.getElementById('copy-btn');
-            btn.innerText = 'COPIED!';
-            btn.style.background = '#27ae60';
-            setTimeout(() => {
-                btn.innerText = 'Copy for WhatsApp';
-                btn.style.background = '#ff6600';
-            }, 1500);
-        });
-    }
-
-    // INITIAL LOAD
-    window.onload = function() {
-        const keys = ['biz-name', 'biz-addr', 'bank-acc', 'bank-sort', 'bank-num'];
-        keys.forEach(k => {
-            const el = document.getElementById(k);
-            if(el) el.value = localStorage.getItem(k) || '';
-        });
+    function resetCalc() {
