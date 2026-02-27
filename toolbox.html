@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toolboxpay</title>
+    <style>
+        :root { --org: #ff6600; --wht: #ffffff; --bg: #0b1521; --crd: #1a2635; }
+        
+        /* Mobile-First Centering for Laptop Screens */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: var(--bg); 
+            color: var(--wht); 
+            font-family: -apple-system, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh;
+            padding: 40px 20px; 
+        }
+        .app-container { width: 100%; max-width: 380px; }
+
+        /* Branding: toolbox (orange) pay (white) */
+        .logo { text-align: center; margin-bottom: 35px; font-size: 34px; font-weight: 800; }
+        .logo span { color: var(--org); }
+
+        #btn-back { 
+            display: none; 
+            color: var(--org); 
+            border: 1px solid var(--org); 
+            background: none; 
+            padding: 12px; 
+            width: 100%; 
+            border-radius: 8px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            margin-bottom: 25px; 
+            text-transform: uppercase; 
+        }
+
+        .view { display: none; }
+        .active { display: block; }
+
+        /* Dashboard Card */
+        .tile { 
+            background: var(--crd); 
+            padding: 25px; 
+            border-radius: 12px; 
+            border: 1px solid #233554; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 16px; }
+
+        /* Calculator Styles */
+        .header-tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
+        label { display: block; font-size: 13px; margin-bottom: 8px; }
+        input { 
+            width: 100%; 
+            padding: 15px; 
+            background: var(--crd); 
+            border: 1px solid #233554; 
+            color: #fff; 
+            margin-bottom: 15px; 
+            border-radius: 8px; 
+            font-size: 18px; 
+            outline: none; 
+        }
+
+        .result-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 35px; }
+        .price-tag { color: var(--org); font-size: 26px; font-weight: 800; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <button id="btn-back" onclick="navTo('dash')">← Return to Dashboard</button>
+    <div class="logo"><span>toolbox</span>pay</div>
+
+    <div id="dash" class="view active">
+        <div class="tile" onclick="navTo('calc')">
+            <div>
+                <h3>Labour & Materials</h3>
+                <p style="font-size:12px; color:#8892b0; margin-top:4px;">Calculate costs and specialising tasks</p>
+            </div>
+            <span style="color:var(--org); font-weight:bold; font-size: 20px;">→</span>
+        </div>
+    </div>
+
+    <div id="calc" class="view">
+        <div class="header-tag">Labour Costs</div>
+        <label>Hours worked</label>
+        <input type="number" id="h" placeholder="0" oninput="calculate()">
+        <label>Hourly rate (£)</label>
+        <input type="number" id="r" placeholder="0.00" oninput="calculate()">
+        
+        <div class="header-tag">Materials</div>
+        <label>Total material costs (£)</label>
+        <input type="number" id="m" placeholder="0.00" oninput="calculate()">
+        
+        <div class="result-box">
+            <span style="font-weight:800; font-size:12px;">TOTAL:</span>
+            <span id="res" class="price-tag">£0.00</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function navTo(screen) {
+        document.getElementById('dash').classList.remove('active');
+        document.getElementById('calc').classList.remove('active');
+        document.getElementById(screen).classList.add('active');
+        document.getElementById('btn-back').style.display = (screen === 'calc') ? 'block' : 'none';
+        window.scrollTo(0,0);
+    }
+
+    function calculate() {
+        const hours = parseFloat(document.getElementById('h').value) || 0;
+        const rate = parseFloat(document.getElementById('r').value) || 0;
+        const materials = parseFloat(document.getElementById('m').value) || 0;
+        const total = (hours * rate) + materials;
+        document.getElementById('res').innerText = '£' + total.toLocaleString('en-GB', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+</script>
+
+</body>
+</html>
