@@ -3,34 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v7.3</title>
+    <title>toolboxpay v7.4</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; }
-        .shell { width: 100%; max-width: 360px; }
+        .shell { width: 100%; max-width: 360px; position: relative; }
         
-        /* LOGO STYLING */
         .logo { text-align: center; margin: 10px 0 25px 0; font-size: 26px; font-weight: 800; }
         .logo span { color: var(--org); }
         .logo em { color: #fff; font-style: normal; }
         
         /* NAVIGATION HEADER */
         #nav-header { display: none; margin-bottom: 15px; }
-        .back-btn { width: 100%; padding: 12px; border: 2px solid var(--org); color: var(--org); background: rgba(255,102,0,0.05); border-radius: 8px; font-weight: 800; cursor: pointer; text-align: center; text-transform: uppercase; font-size: 12px; }
+        .back-btn { width: 100%; padding: 14px; border: 2px solid var(--org); color: var(--org); background: rgba(255,102,0,0.1); border-radius: 8px; font-weight: 800; cursor: pointer; text-align: center; text-transform: uppercase; font-size: 13px; }
 
-        .screen { display: none; }
+        .screen { display: none; width: 100%; }
         .active { display: block !important; }
 
-        /* ORIGINAL TILE LAYOUT */
-        .tile { background: var(--crd); padding: 22px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; }
-        .tile p { font-size: 11px; color: #8892b0; margin-top: 4px; }
+        /* TILES */
+        .tile { background: var(--crd); padding: 22px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; transition: 0.2s; }
+        .tile:active { background: #233554; transform: scale(0.98); }
+        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; pointer-events: none; }
+        .tile p { font-size: 11px; color: #8892b0; margin-top: 4px; pointer-events: none; }
 
         .tag { color: var(--org); font-size: 10px; font-weight: 800; text-transform: uppercase; margin: 15px 0 8px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 4px; }
-        input, textarea { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 8px; font-size: 16px; outline: none; display: block; }
+        input, textarea { width: 100%; padding: 16px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 8px; font-size: 16px; outline: none; -webkit-appearance: none; }
         
-        /* VAT TOGGLE SECTION */
+        /* VAT TOGGLE */
         .vat-container { background: #233554; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--org); }
         .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -40,145 +40,22 @@
         input:checked + .slider:before { transform: translateX(22px); }
 
         .total-box { border: 2px solid var(--org); padding: 20px; border-radius: 12px; text-align: right; background: rgba(255,102,0,0.1); margin: 15px 0; }
-        .price-label { font-size: 11px; color: #8892b0; text-transform: uppercase; }
-        .price { color: var(--org); font-size: 28px; font-weight: 800; }
+        .price { color: var(--org); font-size: 30px; font-weight: 800; }
         
-        .btn-main { width: 100%; padding: 18px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
-        .del-btn { background: #cc0000; color: white; border: none; padding: 10px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 900; margin-left: 10px; }
+        .btn-main { width: 100%; padding: 18px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; font-size: 14px; }
+        .del-btn { background: #cc0000; color: white; border: none; padding: 10px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 900; }
 
         .summary-card { background: #fff; color: #000; padding: 25px; border-radius: 4px; margin-top: 10px; border: 1px solid #ddd; }
         .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
 
         @media print {
             body { background: white !important; color: black !important; padding: 0; }
-            #nav-header, .logo, .btn-main, .tag, .vat-container { display: none !important; }
+            #nav-header, .logo, .btn-main, .tag, .vat-container, .tile { display: none !important; }
             .summary-card { border: none; padding: 0; width: 100%; box-shadow: none; }
         }
     </style>
 </head>
 <body>
 
-<div class="shell">
-    <div id="nav-header"><div class="back-btn" onclick="go('dash')">← BACK TO MAIN MENU</div></div>
-    
-    <div class="logo"><span>toolbox</span><em>pay</em> <small style="font-size: 9px; color: #444;">v7.3</small></div>
-
-    <div id="scr-dash" class="screen active">
-        <div class="tile" onclick="go('calc')"><div><h3>Labour & Materials</h3><p>New Quote</p></div><span>→</span></div>
-        <div class="tile" onclick="go('hist')"><div><h3>Job History</h3><p>Manage Records</p></div><span>→</span></div>
-        <div class="tile" onclick="go('biz')"><div><h3>Business Details</h3><p>Edit Profile</p></div><span>→</span></div>
-        <div class="tile" onclick="go('bank')"><div><h3>Bank Details</h3><p>Payment Info</p></div><span>→</span></div>
-        
-        <div class="tile" onclick="if(confirm('Wipe everything?')) {localStorage.clear(); location.reload();}" style="border-color: #cc0000; margin-top: 40px; opacity: 0.6;">
-            <div><h3 style="color: #cc0000;">Emergency Reset</h3><p>Wipe all data if app freezes</p></div>
-        </div>
-    </div>
-
-    <div id="scr-calc" class="screen">
-        <div class="tag">Quote Details</div>
-        <input type="text" id="cust-name" placeholder="Customer Name">
-        <input type="text" id="job-ref" placeholder="Job Reference">
-        <input type="number" id="h" placeholder="Labour Hours" oninput="doMath()" inputmode="decimal">
-        <input type="number" id="r" placeholder="Hourly Rate (£)" oninput="doMath()" inputmode="decimal">
-        <input type="number" id="m" placeholder="Materials Total (£)" oninput="doMath()" inputmode="decimal">
-        
-        <div class="vat-container">
-            <span style="font-size: 13px; font-weight: 800;">ADD VAT (20%)</span>
-            <label class="switch">
-                <input type="checkbox" id="vat-toggle" onchange="doMath()">
-                <span class="slider"></span>
-            </label>
-        </div>
-
-        <div class="total-box">
-            <div id="sub-display" style="font-size: 12px; color: #8892b0; display:none;">Net Subtotal: £0.00</div>
-            <div class="price-label">Total Quote</div>
-            <div id="res-total" class="price">£0.00</div>
-        </div>
-        <button class="btn-main" onclick="saveJob()">Save Quote</button>
-    </div>
-
-    <div id="scr-hist" class="screen">
-        <div class="tag">Saved Quotes</div>
-        <div id="hist-list"></div>
-        <button class="btn-main" style="background:#222; margin-top:20px; font-size: 11px;" onclick="if(confirm('Clear all?')){localStorage.setItem('jobs','[]'); loadHist();}">Clear History</button>
-    </div>
-
-    <div id="scr-view" class="screen">
-        <div id="view-content" class="summary-card"></div>
-        <button class="btn-main" onclick="window.print()">Print / Save PDF</button>
-        <button class="btn-main" style="background:#333;" onclick="go('hist')">Back to History</button>
-    </div>
-
-    <div id="scr-biz" class="screen">
-        <div class="tag">Company Profile</div>
-        <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
-        <textarea id="ba" placeholder="Business Address" oninput="localStorage.setItem('ba',this.value)" style="height:100px; width:100%; background:var(--crd); border:1px solid #233554; color:#fff; padding:12px; border-radius:8px;"></textarea>
-        <button class="btn-main" onclick="go('dash')">Save & Return</button>
-    </div>
-
-    <div id="scr-bank" class="screen">
-        <div class="tag">Bank Details</div>
-        <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
-        <input type="text" id="bk-s" placeholder="Sort Code" oninput="localStorage.setItem('bk-s',this.value)">
-        <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
-        <button class="btn-main" onclick="go('dash')">Save & Return</button>
-    </div>
-</div>
-
-<script>
-    function go(id) {
-        const screens = document.querySelectorAll('.screen');
-        screens.forEach(s => s.classList.remove('active'));
-        document.getElementById('scr-' + id).classList.add('active');
-        document.getElementById('nav-header').style.display = (id === 'dash') ? 'none' : 'block';
-        if(id === 'hist') loadHist();
-        window.scrollTo(0,0);
-    }
-
-    function doMath() {
-        const h = parseFloat(document.getElementById('h').value) || 0;
-        const r = parseFloat(document.getElementById('r').value) || 0;
-        const m = parseFloat(document.getElementById('m').value) || 0;
-        const sub = (h * r) + m;
-        const isVat = document.getElementById('vat-toggle').checked;
-        const total = isVat ? (sub * 1.20) : sub;
-        document.getElementById('sub-display').style.display = isVat ? 'block' : 'none';
-        document.getElementById('sub-display').innerText = 'Net Subtotal: £' + sub.toFixed(2);
-        document.getElementById('res-total').innerText = '£' + total.toFixed(2);
-    }
-
-    function saveJob() {
-        const h = parseFloat(document.getElementById('h').value) || 0;
-        const r = parseFloat(document.getElementById('r').value) || 0;
-        const m = parseFloat(document.getElementById('m').value) || 0;
-        const sub = (h * r) + m;
-        const isVat = document.getElementById('vat-toggle').checked;
-        const vatVal = isVat ? (sub * 0.20) : 0;
-        const total = sub + vatVal;
-
-        let jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-        jobs.unshift({ 
-            id: Date.now(), 
-            cust: document.getElementById('cust-name').value || 'Private Client', 
-            ref: document.getElementById('job-ref').value || 'Job', 
-            h, r, m, sub, vat: vatVal, isVat,
-            txt: '£' + total.toFixed(2),
-            date: new Date().toLocaleDateString('en-GB') 
-        });
-        localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 50)));
-        
-        // Reset and Return
-        document.querySelectorAll('#scr-calc input').forEach(i => i.value = '');
-        document.getElementById('vat-toggle').checked = false;
-        doMath();
-        go('dash');
-    }
-
-    function loadHist() {
-        const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-        document.getElementById('hist-list').innerHTML = jobs.map(j => `
-            <div class="tile" onclick="viewJob(${j.id})">
-                <div style="flex:1"><h3>${j.cust}</h3><p>${j.ref} • ${j.txt}</p></div>
-                <button class="del-btn" onclick="event.stopPropagation(); deleteJob(${j.id})">DEL</button>
-            </div>`).join('') ||
+<div class="shell" id="app-shell">
+    <div id="nav-header"><div class="back
