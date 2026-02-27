@@ -3,41 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v9.6</title>
+    <title>toolboxpay - v9.7</title>
     <style>
         /* BRANDING */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; }
-        #app-viewport { width: 100%; max-width: 420px; padding: 20px; position: relative; }
+        #app-viewport { width: 100%; max-width: 420px; padding: 20px; }
 
-        /* ORANGE CLOCK */
+        /* HEADER & CLOCK */
         #live-clock { position: absolute; top: 25px; right: 25px; font-size: 14px; font-weight: 900; color: #ff6600; font-family: monospace; }
         .header { text-align: center; padding: 25px 0 15px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; margin-bottom: 20px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* THE VISIBILITY FIX */
+        /* THE NAVIGATION SYSTEM */
         .view { display: none; width: 100%; }
-        .view.active { display: block !important; }
+        /* Dashboard is active by default */
+        #view-home { display: block; } 
 
-        /* DASHBOARD STACK */
+        /* TILES */
         .stack { display: flex; flex-direction: column; gap: 15px; width: 100%; }
         .tile { background: #222; border-radius: 20px; padding: 22px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; }
         .icon-box { width: 55px; height: 55px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 26px; flex-shrink: 0; }
         .tile span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* CONTAINER CARDS */
+        /* CARDS */
         .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-top: 10px; }
-        .nav-header { padding-bottom: 20px; }
-        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 12px 20px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; }
+        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 12px 20px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; margin-bottom: 20px; display: inline-block; }
         
         h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin-bottom: 20px; font-weight: 900; }
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
         input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; display: block; }
         
         .total-row { font-size: 34px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 15px; border-top: 1px solid #333; padding-top: 10px; }
-        .btn-wa { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -45,71 +44,93 @@
 <div id="app-viewport">
     <div id="live-clock">00:00:00</div>
 
-    <div id="view-home" class="view active">
+    <div id="view-home" class="view">
         <div class="header"><div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div></div>
         <div class="stack">
-            <div class="tile" onclick="show('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
-            <div class="tile" onclick="show('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
-            <div class="tile" onclick="show('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
-            <div class="tile" onclick="show('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
-            <div class="tile" onclick="show('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
+            <div class="tile" onclick="swap('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
+            <div class="tile" onclick="swap('view-calc')"><div class="icon-box)️">🧮</div><span>Calculator</span></div>
+            <div class="tile" onclick="swap('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
+            <div class="tile" onclick="swap('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
+            <div class="tile" onclick="swap('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
         </div>
     </div>
 
     <div id="view-quote" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="show('view-home')">← DASHBOARD</div></div>
+        <div class="back-btn" onclick="swap('view-home')">← DASHBOARD</div>
         <div class="card">
             <h2>New Quote</h2>
             <label>Client Name</label><input type="text" id="q-name">
             <label>Labour Description</label><textarea id="q-desc" style="height:80px;"></textarea>
-            <label>Price (£)</label><input type="number" id="q-price" oninput="upQ()">
-            <div class="total-row" id="q-disp">£0.00</div>
-            <button class="btn-wa">Send via WhatsApp</button>
+            <label>Price (£)</label><input type="number" id="q-price" oninput="document.getElementById('q-res').innerText='£'+(parseFloat(this.value)||0).toFixed(2)">
+            <div class="total-row" id="q-res">£0.00</div>
         </div>
     </div>
 
     <div id="view-calc" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="show('view-home')">← DASHBOARD</div></div>
+        <div class="back-btn" onclick="swap('view-home')">← DASHBOARD</div>
         <div class="card">
             <h2>Business Calc</h2>
-            <label>Day Rate (£)</label><input type="number" id="c-rate" oninput="doC()">
-            <label>Days Worked</label><input type="number" id="c-days" oninput="doC()">
-            <label>Materials (£)</label><input type="number" id="c-mats" oninput="doC()">
-            <div class="total-row" id="c-tot">£0.00</div>
+            <label>Day Rate (£)</label><input type="number" id="c-rate" oninput="calc()">
+            <label>Days Worked</label><input type="number" id="c-days" oninput="calc()">
+            <div class="total-row" id="c-res">£0.00</div>
         </div>
     </div>
 
     <div id="view-bank" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="show('view-home')">← DASHBOARD</div></div>
+        <div class="back-btn" onclick="swap('view-home')">← DASHBOARD</div>
         <div class="card">
             <h2>Bank Setup</h2>
-            <label>Business Name</label><input type="text" id="b-name" oninput="sv('bn',this.value)">
-            <label>Bank Name</label><input type="text" id="b-bank" oninput="sv('bk',this.value)">
-            <label>Sort Code</label><input type="text" id="b-sort" oninput="sv('sc',this.value)">
-            <label>Account No.</label><input type="text" id="b-acc" oninput="sv('an',this.value)">
+            <label>Business Name</label><input type="text" id="b-name" oninput="localStorage.setItem('bn',this.value)">
+            <label>Bank</label><input type="text" id="b-bank" oninput="localStorage.setItem('bk',this.value)">
+            <label>Sort Code</label><input type="text" id="b-sort" oninput="localStorage.setItem('sc',this.value)">
+            <label>Account No.</label><input type="text" id="b-acc" oninput="localStorage.setItem('an',this.value)">
         </div>
     </div>
 
     <div id="view-history" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="show('view-home')">← DASHBOARD</div></div>
-        <div class="card"><h2>Job History</h2><p style="color:#666;">No jobs logged.</p></div>
+        <div class="back-btn" onclick="swap('view-home')">← DASHBOARD</div>
+        <div class="card"><h2>Job History</h2><p style="color:#666;">No logs available.</p></div>
     </div>
+
     <div id="view-readme" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="show('view-home')">← DASHBOARD</div></div>
-        <div class="card"><h2>Read Me</h2><p style="color:#ccc;">v9.6 Logic Recovery.</p></div>
+        <div class="back-btn" onclick="swap('view-home')">← DASHBOARD</div>
+        <div class="card"><h2>Read Me</h2><p style="color:#ccc;">v9.7 Force-Display Logic.</p></div>
     </div>
 
 </div>
 
 <script>
-    const K = "TBP_V96";
-
-    /* SIMPLIFIED TOGGLE FIX */
-    function show(id) {
-        const views = document.querySelectorAll('.view');
-        views.forEach(v => v.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+    /* THE FORCE-DISPLAY FIX */
+    function swap(targetId) {
+        // Find every element with the class 'view' and hide it
+        const views = document.getElementsByClassName('view');
+        for (let i = 0; i < views.length; i++) {
+            views[i].style.display = 'none';
+        }
+        // Force show the selected one
+        document.getElementById(targetId).style.display = 'block';
         window.scrollTo(0,0);
     }
 
-    function doC()
+    function calc() {
+        const r = parseFloat(document.getElementById('c-rate').value) || 0;
+        const d = parseFloat(document.getElementById('c-days').value) || 0;
+        document.getElementById('c-res').innerText = "£" + (r * d * 1.2).toFixed(2);
+    }
+
+    function tick() {
+        const d = new Date();
+        document.getElementById('live-clock').innerText = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0') + ":" + d.getSeconds().toString().padStart(2,'0');
+    }
+    setInterval(tick, 1000);
+
+    window.onload = function() {
+        tick();
+        document.getElementById('b-name').value = localStorage.getItem('bn') || "";
+        document.getElementById('b-bank').value = localStorage.getItem('bk') || "";
+        document.getElementById('b-sort').value = localStorage.getItem('sc') || "";
+        document.getElementById('b-acc').value = localStorage.getItem('an') || "";
+    };
+</script>
+</body>
+</html>
