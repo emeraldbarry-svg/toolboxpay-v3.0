@@ -8,31 +8,25 @@
         :root { --orange: #ff6600; --white: #ffffff; --dark-bg: #0b1521; --card-bg: #1a2635; --border-color: #233554; }
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--dark-bg); color: var(--white); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         .container { width: 100%; max-width: 500px; text-align: center; }
-        .branding { margin-bottom: 50px; }
-        .logo-text { font-size: 42px; font-weight: 800; letter-spacing: -1.5px; margin: 0; }
+        .logo-text { font-size: 42px; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 40px; }
         .toolbox { color: var(--orange); }
         .pay { color: var(--white); }
-        .menu-grid { display: flex; flex-direction: column; gap: 20px; margin-top: 40px; }
         .menu-item { background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; text-decoration: none; color: var(--white); display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
-        .menu-item:hover { border-color: var(--orange); transform: translateY(-3px); }
+        .menu-item:hover { border-color: var(--orange); }
         .menu-item h2 { margin: 0; font-size: 18px; text-transform: uppercase; color: var(--orange); }
         .menu-item p { margin: 5px 0 0 0; font-size: 13px; color: #8892b0; }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="branding">
-        <h1 class="logo-text"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
-    </div>
-    <div class="menu-grid">
-        <a href="labour-calculator.html" class="menu-item">
-            <div style="text-align: left;">
-                <h2>Labour & Materials</h2>
-                <p>Calculate costs and specialising tasks</p>
-            </div>
-            <span>→</span>
-        </a>
-    </div>
+    <h1 class="logo-text"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
+    <a href="labour-calculator.html" class="menu-item">
+        <div style="text-align: left;">
+            <h2>Labour & Materials</h2>
+            <p>Calculate costs and specialising tasks</p>
+        </div>
+        <span>→</span>
+    </a>
 </div>
 </body>
 </html>
