@@ -7,7 +7,9 @@ services:
     routes:
       - type: rewrite
         source: /
-        destination: /app-final.html
+        destination: /index.html
       - type: rewrite
         source: /index.html
-        destination: /app-final.html
+        destination: /index.html
+      - type: fallback
+        destination: /index.html
