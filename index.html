@@ -3,181 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v2.0 Fortress</title>
+    <title>toolboxpay - v2.1 Solid</title>
     <style>
-        /* BRANDING: Signature Orange & White on Deep Black */
-        :root { --orange: #ff6600; --white: #ffffff; --bg: #000000; --card: #111111; --border: #222222; --green: #2ecc71; }
+        /* FORCE COLOUR THEME */
+        :root { 
+            --orange: #ff6600 !important; 
+            --white: #ffffff !important; 
+            --bg: #000000 !important; 
+            --card: #151515 !important; 
+            --border: #333333 !important; 
+        }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--white); margin: 0; font-family: 'Segoe UI', sans-serif; padding-bottom: 120px; }
         
-        /* REINFORCED WRAPPER */
-        .wrapper { max-width: 500px; margin: 0 auto; padding: 25px; display: block !important; }
-
-        /* LOGO */
-        .hdr { text-align: center; padding: 60px 0 50px 0; }
-        .logo { font-size: 46px; font-weight: 900; letter-spacing: -2px; }
-        .logo .o { color: var(--orange); }
-        .logo .w { color: var(--white); }
-
-        /* THE BOXES: Heavily defined sections */
-        .box { 
-            background: var(--card); 
-            border: 2px solid var(--border); 
-            border-radius: 20px; 
-            padding: 35px; 
-            margin-bottom: 50px; /* Force spacing */
-            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
-            position: relative;
-            display: block !important;
+        body { 
+            background-color: var(--bg) !important; 
+            color: var(--white) !important; 
+            margin: 0; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            padding-bottom: 100px; 
         }
-
-        h2 { 
-            color: var(--orange); 
-            font-size: 15px; 
-            text-transform: uppercase; 
-            letter-spacing: 3px; 
-            margin: 0 0 30px 0; 
-            font-weight: 900; 
-            border-bottom: 1px solid #222; 
-            padding-bottom: 12px;
-            text-shadow: 0 0 10px rgba(255,102,0,0.2);
-        }
-
-        /* INPUTS */
-        .grp { margin-bottom: 25px; }
-        label { display: block; font-size: 11px; color: #777; margin-bottom: 12px; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; }
-        input, textarea { 
-            width: 100%; padding: 20px; background: #000; border: 1px solid #333; 
-            color: #fff; border-radius: 14px; font-size: 18px; outline: none; 
-            transition: border-color 0.2s;
-        }
-        input:focus { border-color: var(--orange); }
-
-        .row { display: flex; gap: 15px; }
-        .row > div { flex: 1; }
-
-        .total-box { font-size: 72px; font-weight: 900; color: var(--orange); letter-spacing: -4px; text-align: right; margin: 20px 0; line-height: 1; }
         
-        .btn-big { 
-            width: 100%; padding: 26px; background: var(--orange); color: #000; border: none; 
-            border-radius: 14px; font-size: 22px; font-weight: 900; text-transform: uppercase; cursor: pointer; 
-            box-shadow: 0 5px 0 #cc5200;
+        .main-container { 
+            max-width: 500px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            display: block !important; 
         }
-        .btn-big:active { transform: translateY(3px); box-shadow: 0 2px 0 #cc5200; }
-
-        /* GRID & LOGS */
-        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
-        .photo-cell { aspect-ratio: 1; background: #000; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
-        .photo-cell img { width: 100%; height: 100%; object-fit: cover; }
-        .upl-btn { 
-            display: block; width: 100%; padding: 20px; background: #1a1a1a; color: var(--orange); 
-            text-align: center; border-radius: 12px; border: 2px dashed var(--orange); cursor: pointer; font-weight: 800;
-        }
-
-        .log { padding: 25px 0; border-bottom: 1px solid #222; }
-        .log-t { display: flex; justify-content: space-between; align-items: center; }
-        .log-n { font-weight: 800; font-size: 20px; }
-        .log-p { color: var(--orange); font-weight: 900; font-size: 26px; }
-        .badge { display: inline-block; padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 900; text-transform: uppercase; margin-bottom: 12px; cursor: pointer; }
-        .b-paid { background: var(--green); color: #000; }
-        .b-due { background: #000; color: var(--orange); border: 1px solid var(--orange); }
-        .btn-sml { background: #222; color: #fff; border: 1px solid #333; padding: 14px; border-radius: 10px; font-size: 12px; margin-top: 15px; margin-right: 10px; cursor: pointer; font-weight: 700; }
-
-        @media print {
-            body { background: white; color: black; }
-            .wrapper { max-width: 100%; padding: 0; }
-            .hdr, .btn-big, .upl-btn, .box:not(#box-history), .btn-sml { display: none !important; }
-            .box { border: none; box-shadow: none; padding: 0; }
-            .log-p { color: black !important; }
-        }
-    </style>
-</head>
-<body>
-
-<div class="wrapper">
-    
-    <div class="hdr">
-        <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
-    </div>
-
-    <div class="box" id="box-quote">
-        <h2>New Quote</h2>
-        <div class="grp"><label>Client Name</label><input type="text" id="qn"></div>
-        <div class="grp"><label>Description of Labour</label><textarea id="ql" style="height: 120px;"></textarea></div>
-        <div class="row">
-            <div class="grp"><label>Hours</label><input type="number" id="qh" oninput="calc()"></div>
-            <div class="grp"><label>Rate (£)</label><!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v1.9 Locked</title>
-    <style>
-        :root { --orange: #ff6600; --white: #ffffff; --bg: #000000; --card: #121212; --border: #282828; --green: #2ecc71; }
-        
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--white); margin: 0; font-family: 'Segoe UI', sans-serif; padding-bottom: 100px; }
-        
-        .container { max-width: 500px; margin: 0 auto; padding: 20px; }
 
         /* HEADER */
-        .hdr { text-align: center; padding: 50px 0; }
+        .hdr { text-align: center; padding: 40px 0; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
         .logo { font-size: 42px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: var(--orange); }
         .logo .w { color: var(--white); }
 
-        /* PHYSICAL BOXES */
+        /* REINFORCED BOXES */
         section { 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            border-radius: 18px; 
-            padding: 30px; 
-            margin-bottom: 50px; /* Force deep space between boxes */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            display: block; /* Ensure they stack naturally */
+            display: block !important;
+            background-color: var(--card) !important; 
+            border: 2px solid var(--border) !important; 
+            border-radius: 20px !important; 
+            padding: 30px !important; 
+            margin-bottom: 40px !important; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7) !important;
         }
 
-        h2 { color: var(--orange); font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 25px 0; font-weight: 800; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        h2 { 
+            color: var(--orange) !important; 
+            font-size: 14px; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            margin: 0 0 20px 0; 
+            font-weight: 900; 
+            border-bottom: 2px solid var(--orange); 
+            padding-bottom: 8px; 
+            display: inline-block;
+        }
 
         /* UI ELEMENTS */
-        .group { margin-bottom: 22px; }
-        label { display: block; font-size: 11px; color: #888; margin-bottom: 10px; text-transform: uppercase; font-weight: 900; }
-        input, textarea { 
-            width: 100%; padding: 18px; background: #000; border: 1px solid #333; 
-            color: #fff; border-radius: 12px; font-size: 17px; outline: none; 
-        }
-        input:focus { border-color: var(--orange); }
-
-        .flex-row { display: flex; gap: 15px; }
-        .flex-row > div { flex: 1; }
-
-        .total-display { font-size: 68px; font-weight: 900; color: var(--orange); letter-spacing: -4px; text-align: right; margin: 15px 0; }
+        .field { margin-bottom: 20px; }
+        label { display: block; font-size: 11px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; font-weight: 800; }
         
-        .btn-main { 
-            width: 100%; padding: 24px; background: var(--orange); color: #000; border: none; 
-            border-radius: 12px; font-size: 20px; font-weight: 900; text-transform: uppercase; cursor: pointer; 
+        input, textarea { 
+            width: 100% !important; 
+            padding: 16px !important; 
+            background-color: #000 !important; 
+            border: 1px solid #444 !important; 
+            color: #fff !important; 
+            border-radius: 12px !important; 
+            font-size: 17px !important; 
+            outline: none; 
         }
 
-        /* PHOTOS */
-        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-        .photo-sq { aspect-ratio: 1; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid #333; }
-        .photo-sq img { width: 100%; height: 100%; object-fit: cover; }
-        .upload-lab { 
+        .split { display: flex; gap: 15px; }
+        .split > div { flex: 1; }
+
+        .big-total { 
+            font-size: 60px; 
+            font-weight: 900; 
+            color: var(--orange); 
+            text-align: right; 
+            margin: 20px 0; 
+            letter-spacing: -3px; 
+        }
+        
+        .btn-action { 
+            width: 100%; 
+            padding: 22px; 
+            background-color: var(--orange) !important; 
+            color: #000 !important; 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 20px; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            cursor: pointer; 
+        }
+
+        /* PHOTO GRID */
+        .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .pic { aspect-ratio: 1; background: #000; border: 1px solid #333; border-radius: 8px; overflow: hidden; }
+        .pic img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .upl { 
             display: block; width: 100%; padding: 15px; background: #222; color: var(--orange); 
             text-align: center; border-radius: 10px; border: 1px dashed var(--orange); cursor: pointer; font-weight: 800;
         }
 
-        /* HISTORY */
-        .log-entry { padding: 25px 0; border-bottom: 1px solid #222; }
-        .log-top { display: flex; justify-content: space-between; align-items: center; }
-        .log-name { font-weight: 800; font-size: 18px; }
-        .log-price { color: var(--orange); font-weight: 900; font-size: 24px; }
-        .status { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; cursor: pointer; }
-        .status-paid { background: var(--green); color: #000; }
-        .status-due { background: #333; color: var(--orange); border: 1px solid var(--orange); }
-        .btn-small { background: #222; color: #fff; border: 1px solid #333; padding: 12px; border-radius: 8px; font-size: 12px; margin-top: 15px; margin-right: 8px; cursor: pointer; font-weight: 700; }
-
-        @media print {
-            body { background: white; color: black; }
-            .container { max-width: 100%;
+        /* LOGS */
+        .entry { padding: 20px 0; border-bottom: 1px solid #333; }
+        .entry-top { display: flex; justify-content: space-between; align-items: center; }
+        .entry-n { font-weight: 800; font-size: 18px; }
+        .entry-p { color: var(--orange); font-weight: 900; font-size: 22px; }
+        .tag { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 900; margin-bottom: 10px; }
+        .tag-due { background: #000; color: var(--orange); border: 1px solid var(--orange); }
+        .tag-ok { background: #2ecc71; color: #000; }
+        
+        .btn-
