@@ -3,59 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v7.4</title>
+    <title>toolboxpay v7.5 - STABLE</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; }
-        .shell { width: 100%; max-width: 360px; position: relative; }
+        .shell { width: 100%; max-width: 360px; }
         
         .logo { text-align: center; margin: 10px 0 25px 0; font-size: 26px; font-weight: 800; }
         .logo span { color: var(--org); }
         .logo em { color: #fff; font-style: normal; }
         
-        /* NAVIGATION HEADER */
-        #nav-header { display: none; margin-bottom: 15px; }
+        .nav-bar { display: none; margin-bottom: 15px; }
         .back-btn { width: 100%; padding: 14px; border: 2px solid var(--org); color: var(--org); background: rgba(255,102,0,0.1); border-radius: 8px; font-weight: 800; cursor: pointer; text-align: center; text-transform: uppercase; font-size: 13px; }
 
-        .screen { display: none; width: 100%; }
-        .active { display: block !important; }
+        .screen { display: none; }
+        .screen:target { display: block !important; }
+        #scr-dash { display: block; } /* Default screen */
+        #scr-dash:has(~ .screen:target) { display: none; }
 
-        /* TILES */
-        .tile { background: var(--crd); padding: 22px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; transition: 0.2s; }
-        .tile:active { background: #233554; transform: scale(0.98); }
-        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; pointer-events: none; }
-        .tile p { font-size: 11px; color: #8892b0; margin-top: 4px; pointer-events: none; }
+        /* ORIGINAL TILES */
+        .tile { background: var(--crd); padding: 22px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; text-decoration: none; }
+        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; }
+        .tile p { font-size: 11px; color: #8892b0; margin-top: 4px; }
+        .tile span { color: #fff; font-weight: 800; }
 
         .tag { color: var(--org); font-size: 10px; font-weight: 800; text-transform: uppercase; margin: 15px 0 8px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 4px; }
-        input, textarea { width: 100%; padding: 16px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 8px; font-size: 16px; outline: none; -webkit-appearance: none; }
+        input, textarea { width: 100%; padding: 16px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 12px; border-radius: 8px; font-size: 16px; outline: none; }
         
-        /* VAT TOGGLE */
         .vat-container { background: #233554; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--org); }
-        .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .4s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--org); }
-        input:checked + .slider:before { transform: translateX(22px); }
-
         .total-box { border: 2px solid var(--org); padding: 20px; border-radius: 12px; text-align: right; background: rgba(255,102,0,0.1); margin: 15px 0; }
         .price { color: var(--org); font-size: 30px; font-weight: 800; }
         
-        .btn-main { width: 100%; padding: 18px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; font-size: 14px; }
-        .del-btn { background: #cc0000; color: white; border: none; padding: 10px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 900; }
-
-        .summary-card { background: #fff; color: #000; padding: 25px; border-radius: 4px; margin-top: 10px; border: 1px solid #ddd; }
-        .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
-
-        @media print {
-            body { background: white !important; color: black !important; padding: 0; }
-            #nav-header, .logo, .btn-main, .tag, .vat-container, .tile { display: none !important; }
-            .summary-card { border: none; padding: 0; width: 100%; box-shadow: none; }
-        }
+        .btn-main { width: 100%; padding: 18px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-<div class="shell" id="app-shell">
-    <div id="nav-header"><div class="back
+<div class="shell">
+    <div class="logo"><span>toolbox</span><em>pay</em> <small style="font-size: 9px; color: #444;">v7.5</small></div>
+
+    <div id="scr-dash" class="screen">
+        <a href="#scr-calc" class="tile"><div><h3>Labour & Materials</h3><p>New Quote</p></div><span>→</span></a>
+        <a href="#scr-hist" class="tile" onclick="loadHistory()"><div><h3>Job History</h3><p>Manage Records</p></div><span>→</span></a>
+        <a href="#scr-biz" class="tile"><div><h3>Business Details</h3><p>Edit Profile</p></div><span>→</span></a>
+        <a href="#scr-bank" class="tile"><div><h3>Bank Details</h3><p>Payment Info</p></div><span>→</span></a>
+        
+        <button onclick="localStorage.clear(); location.reload();" style="width:100%; background:none; border:1px solid #333; color:#444; padding:10px; margin-top:50px; border-radius:8px; font-size:10px;">FORCE RESET APP</button>
+    </div>
+
+    <div id="scr-calc" class="screen">
+        <a href="#" class="back-btn" style="display:block; text-decoration:none; margin-bottom:15px;">← BACK TO DASHBOARD</a>
+        <div class="tag">Quote Creator</div>
+        <input type="text" id="cust-name" placeholder="Customer Name">
+        <input type="number" id="h" placeholder="Labour Hours" oninput="runMath()">
+        <input type="number" id="r" placeholder="Hourly Rate (£)" oninput="runMath()">
+        <input type="number" id="m" placeholder="Materials (£)" oninput="runMath()">
+        
+        <div class="vat-container">
+            <span style="font-weight:800; font-size:13px;">ADD VAT (20%)</span>
+            <input type="checkbox" id="vat-toggle" onchange="runMath()" style="width:25px; height:25px; accent-color:var(--org);">
+        </div>
+
+        <div class="total-box">
+            <div id="res-total" class="price">£0.00</div>
+        </div>
+        <button class="btn-main" onclick="saveJob()">Save Quote</button>
+    </div>
+
+    <div id="scr-hist" class="screen">
+        <a href="#" class="back-btn" style="display:block; text-decoration:none; margin-bottom:15px;">← BACK</a>
+        <div id="hist-list"></div>
+    </div>
+
+    <div id="scr-biz" class="screen">
+        <a href="#" class="back-btn" style="display:block; text-decoration:none; margin-bottom:15px;">← BACK</a>
+        <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
+        <textarea id="ba" placeholder="Business Address" oninput="localStorage.setItem('ba',this.value)" style="height:100px;"></textarea>
+        <button class="btn-main" onclick="window.location.hash=''">Save & Return</button>
+    </div>
+
+    <div id="scr-bank" class="screen">
+        <a href="#" class="back-btn" style="display:block; text-decoration:none; margin-bottom:15px;">← BACK</a>
+        <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
+        <input type="text" id="bk-s" placeholder="Sort Code" oninput="localStorage.setItem('bk-s',this.value)">
+        <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
+        <button class="btn-main" onclick="window.location.hash=''">Save & Return</button>
+    </div>
+</div>
+
+<script>
+    function runMath() {
+        const h = parseFloat(document.getElementById('h').value) || 0;
+        const r = parseFloat(document.getElementById('r').value) || 0;
+        const m = parseFloat(document.getElementById('m').value) || 0;
+        const sub = (h * r) + m;
+        const total = document.getElementById('vat-toggle').checked ? sub * 1.2 : sub;
+        document.getElementById('res-total').innerText = '£' + total.toFixed(2);
+    }
+
+    function saveJob() {
+        const total = document.getElementById('res-total').innerText;
+        let jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        jobs.unshift({ 
+            id: Date.now(), 
+            cust: document.getElementById('cust-name').value || 'Client', 
+            txt: total, 
+            date: new Date().toLocaleDateString('en-GB') 
+        });
+        localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 20)));
+        window.location.hash
