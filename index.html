@@ -3,41 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v2.6 Steel</title>
+    <title>toolboxpay - v2.7 Total Recall</title>
     <style>
+        /* CORE RESET & THEME */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding-bottom: 60px; }
-        .wrap { max-width: 480px; margin: 0 auto; padding: 20px; }
-        
-        label { display: block; font-size: 11px; color: #888; margin-bottom: 8px; text-transform: uppercase; font-weight: 900; }
-        input, textarea { 
-            width: 100%; background: #000; border: 1px solid #333; color: #fff; 
-            padding: 18px; border-radius: 12px; font-size: 17px; outline: none; margin-bottom: 20px;
-        }
+        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding-bottom: 80px; }
+        .wrap { max-width: 480px; margin: 0 auto; padding: 15px; }
 
-        .logo { text-align: center; padding: 40px 0; font-size: 40px; font-weight: 900; letter-spacing: -2px; }
+        /* LOGO */
+        .logo { text-align: center; padding: 40px 0; font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo span { color: #ff6600; }
 
-        .btn-orange { 
-            width: 100%; background: #ff6600; color: #000; padding: 22px; border: none; 
-            border-radius: 15px; font-size: 20px; font-weight: 900; text-transform: uppercase; cursor: pointer; 
+        /* THE BOXES - REINFORCED STYLING */
+        .card { 
+            background: #111; 
+            border: 1px solid #222; 
+            border-radius: 24px; 
+            padding: 25px; 
+            margin-bottom: 35px; 
+            display: block !important; 
         }
         
-        /* VAT SECTION */
-        .vat-row { display: flex; align-items: center; justify-content: space-between; background: #0a0a0a; border: 1px solid #222; padding: 15px; border-radius: 12px; margin-bottom: 20px; }
-        .toggle { position: relative; width: 50px; height: 26px; }
-        .toggle input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #ff6600; }
-        input:checked + .slider:before { transform: translateX(24px); }
+        h2 { color: #ff6600; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 20px 0; font-weight: 900; }
 
-        .log-item { padding: 25px 0; border-bottom: 1px solid #222; }
-        .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 900; margin-bottom: 12px; }
-        .b-due { background: #000; color: #ff6600; border: 1px solid #ff6600; }
-        .b-paid { background: #2ecc71; color: #000; }
+        /* INPUTS */
+        label { display: block; font-size: 11px; color: #777; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
+        input, textarea { 
+            width: 100%; background: #000; border: 1px solid #333; color: #fff; 
+            padding: 16px; border-radius: 12px; font-size: 16px; outline: none; margin-bottom: 15px;
+        }
+        input:focus { border-color: #ff6600; }
+
+        /* VAT TOGGLE ROW */
+        .vat-row { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: #080808; border: 1px solid #222; padding: 12px 18px; 
+            border-radius: 14px; margin-bottom: 20px; 
+        }
+        .sw { position: relative; width: 44px; height: 22px; }
+        .sw input { opacity: 0; width: 0; height: 0; }
+        .sld { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #333; transition: .3s; border-radius: 20px; }
+        .sld:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background: #fff; transition: .3s; border-radius: 50%; }
+        input:checked + .sld { background: #ff6600; }
+        input:checked + .sld:before { transform: translateX(22px); }
+
+        .big-p { font-size: 58px; font-weight: 900; color: #ff6600; text-align: right; letter-spacing: -3px; margin-bottom: 15px; }
         
-        .btn-wa { display: block; width: 100%; background: #25D366; color: #000; padding: 15px; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 800; font-size: 14px; margin-top: 10px; }
+        .btn-m { width: 100%; background: #ff6600; color: #000; padding: 20px; border: none; border-radius: 14px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
+
+        /* HISTORY & TOOLS */
+        .job { padding: 20px 0; border-bottom: 1px solid #222; }
+        .job-p { color: #ff6600; font-weight: 900; font-size: 20px; }
+        .btn-wa { display: block; width: 100%; background: #25D366; color: #000; padding: 12px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 800; font-size: 13px; margin-top: 10px; }
+        .btn-del { color: #ff4444; background: none; border: none; font-size: 11px; margin-top: 10px; cursor: pointer; font-weight: 700; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -46,91 +64,49 @@
     
     <div class="logo"><span>toolbox</span>pay</div>
 
-    <div style="background:#111; border:1px solid #222; border-radius:24px; padding:30px; margin-bottom:40px;">
-        <h2 style="color:#ff6600; font-size:14px; text-transform:uppercase; margin:0 0 25px 0;">New Quote</h2>
-        <label>Client Name</label><input type="text" id="cn">
-        <label>Description of Labour</label><textarea id="dl" style="height:100px;"></textarea>
+    <div class="card">
+        <h2>New Quote</h2>
+        <label>Client Name</label><input type="text" id="cn" placeholder="e.g. John Smith">
+        <label>Description of Labour</label><textarea id="dl" style="height:80px;" placeholder="Describe work..."></textarea>
         <div style="display:flex; gap:10px;">
-            <div style="flex:1;"><label>Hours</label><input type="number" id="h" oninput="re()"></div>
-            <div style="flex:1;"><label>Rate (£)</label><input type="number" id="r" oninput="re()"></div>
+            <div style="flex:1;"><label>Hours</label><input type="number" id="h" oninput="calc()"></div>
+            <div style="flex:1;"><label>Rate (£)</label><input type="number" id="r" oninput="calc()"></div>
         </div>
-        <label>Materials Cost (£)</label><input type="number" id="m" oninput="re()">
+        <label>Materials (£)</label><input type="number" id="m" oninput="calc()">
         
         <div class="vat-row">
             <span style="font-size:12px; font-weight:900;">ADD VAT (20%)</span>
-            <label class="toggle"><input type="checkbox" id="v" onchange="re()"><span class="slider"></span></label>
+            <label class="sw"><input type="checkbox" id="v" onchange="calc()"><span class="sld"></span></label>
         </div>
 
-        <div id="tot" style="font-size:60px; font-weight:900; color:#ff6600; text-align:right; margin-bottom:20px;">£0.00</div>
-        <button class="btn-orange" onclick="sv()">Save & Log Quote</button>
+        <div class="big-p" id="tot">£0.00</div>
+        <button class="btn-m" onclick="save()">Save & Log Job</button>
     </div>
 
-    <div style="background:#111; border:1px solid #222; border-radius:24px; padding:30px; margin-bottom:40px;">
-        <h2 style="color:#ff6600; font-size:14px; text-transform:uppercase; margin-bottom:20px;">Job Photos</h2>
-        <div id="p-grid" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;"></div>
+    <div class="card" id="photo-box">
+        <h2>Job Photos</h2>
+        <label style="display:block; width:100%; padding:15px; border:1px dashed #ff6600; text-align:center; border-radius:10px; color:#ff6600; cursor:pointer; font-weight:800; margin-bottom:15px;">
+            + ADD PHOTO<input type="file" accept="image/*" style="display:none;" onchange="up(this)">
+        </label>
+        <div id="gallery" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;"></div>
     </div>
 
-    <div style="background:#111; border:1px solid #222; border-radius:24px; padding:30px; margin-bottom:40px;">
-        <h2 style="color:#ff6600; font-size:14px; text-transform:uppercase; margin-bottom:20px;">Job History</h2>
-        <div id="lst"></div>
+    <div class="card" id="history-box">
+        <h2>Job History</h2>
+        <div id="joblist"></div>
     </div>
 
-    <div style="background:#111; border:1px solid #222; border-radius:24px; padding:30px; margin-bottom:40px;">
-        <h2 style="color:#ff6600; font-size:14px; text-transform:uppercase; margin-bottom:25px;">Business Setup</h2>
-        <label>Business Name</label><input type="text" id="sn" oninput="s('sn',this.value)">
-        <label>Bank</label><input type="text" id="sb" oninput="s('sb',this.value)">
-        <label>Sort Code</label><input type="text" id="sc" oninput="s('sc',this.value)">
-        <label>Account</label><input type="text" id="an" oninput="s('an',this.value)">
+    <div class="card" id="setup-box">
+        <h2>Business & Bank Setup</h2>
+        <label>Business Name</label><input type="text" id="sn" oninput="st('sn',this.value)">
+        <label>Bank Name</label><input type="text" id="sb" oninput="st('sb',this.value)">
+        <label>Sort Code</label><input type="text" id="sc" oninput="st('sc',this.value)">
+        <label>Account No.</label><input type="text" id="an" oninput="st('an',this.value)">
     </div>
 
 </div>
 
 <script>
-    const KEY = "TBP_V26_STEEL";
-    function s(k,v){ localStorage.setItem(KEY+k,v); }
-    function g(k){ return localStorage.getItem(KEY+k) || ""; }
-
-    function re() {
-        const h = parseFloat(document.getElementById('h').value) || 0;
-        const r = parseFloat(document.getElementById('r').value) || 0;
-        const m = parseFloat(document.getElementById('m').value) || 0;
-        let total = (h * r) + m;
-        if(document.getElementById('v').checked) total *= 1.2;
-        document.getElementById('tot').innerText = "£" + total.toFixed(2);
-    }
-
-    function sv() {
-        const j = {
-            id: Date.now(),
-            n: document.getElementById('cn').value || "Client",
-            l: document.getElementById('dl').value || "Work",
-            t: document.getElementById('tot').innerText,
-            v: document.getElementById('v').checked,
-            d: new Date().toLocaleDateString('en-GB')
-        };
-        let jobs = JSON.parse(localStorage.getItem(KEY+'j') || '[]');
-        jobs.unshift(j);
-        localStorage.setItem(KEY+'j', JSON.stringify(jobs));
-        dr();
-    }
-
-    function dr() {
-        const jobs = JSON.parse(localStorage.getItem(KEY+'j') || '[]');
-        document.getElementById('lst').innerHTML = jobs.map(j => {
-            const msg = `Invoice: ${j.l}\nTotal: ${j.t}\n\nBank: ${g('sb')}\nSC: ${g('sc')}\nAcc: ${g('an')}\n\nThanks, ${g('sn')}`;
-            return `
-            <div class="log-item">
-                <div style="display:flex; justify-content:space-between; font-weight:900;"><span>${j.n}</span><span style="color:#ff6600;">${j.t}</span></div>
-                <div style="font-size:12px; color:#555; margin:4px 0;">${j.d}${j.v ? ' (+VAT)' : ''}</div>
-                <a class="btn-wa" href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank">SEND VIA WHATSAPP</a>
-            </div>`;
-        }).join('');
-    }
-
-    window.onload = () => {
-        ['sn','sb','sc','an'].forEach(i => document.getElementById(i).value = g(i));
-        dr();
-    };
-</script>
-</body>
-</html>
+    const STORAGE_K = "TBP_V27_FINAL";
+    function st(k,v){ localStorage.setItem(STORAGE_K+k,v); }
+    function gt(k){ return localStorage.getItem(STORAGE_K+k
