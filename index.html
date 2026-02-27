@@ -3,86 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v31.0</title>
+    <title>toolboxpay v32.0 - RECOVERY</title>
     <style>
-        :root { --p-orange: #ff6600; --p-bg: #0b0b0b; --p-card: #161616; }
+        /* THE KICKSTART CORE: Forces the background to be slightly off-black so you can see if it's loading */
+        :root { --p-org: #ff6600; --p-bg: #1a1a1a; --p-card: #000000; }
 
-        /* THE STABILITY CORE */
         html, body { 
-            background: var(--p-bg) !important; 
+            background: #000 !important; 
             margin: 0; padding: 0; height: 100vh;
-            display: flex; justify-content: center; align-items: flex-start;
-            font-family: 'Segoe UI', Arial, sans-serif; color: white;
-            overflow: hidden; 
+            display: flex; justify-content: center; align-items: center;
+            font-family: Arial, sans-serif; color: white;
+            overflow: hidden;
         }
 
-        #app-box {
+        #app-shell {
             background: var(--p-card);
-            width: 380px; height: 92vh;
-            margin-top: 20px; border: 1px solid #333;
-            border-radius: 18px; padding: 25px;
-            box-sizing: border-box; display: flex; flex-direction: column;
-            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            width: 380px; height: 90vh;
+            border: 2px solid #333;
+            border-radius: 20px; padding: 25px;
+            box-sizing: border-box; 
+            display: block !important; /* Forces visibility */
+            position: relative;
+            box-shadow: 0 0 50px rgba(255,102,0,0.1);
         }
 
-        .logo-text { color: var(--p-orange); font-weight: 900; font-size: 26px; text-align: center; margin-bottom: 25px; }
-        .logo-text span { color: #fff; }
+        .logo-box { color: var(--p-org); font-weight: 900; font-size: 26px; text-align: center; margin-bottom: 30px; }
+        .logo-box span { color: #fff; }
 
-        /* INTERACTIVE ELEMENTS */
-        .nav-tile { 
-            width: 100%; padding: 18px; margin-bottom: 12px; 
-            background: #222; border: 1px solid #444; border-radius: 12px; 
+        /* SOLID BUTTONS - No fancy transitions to avoid laptop lag */
+        .btn-tile { 
+            width: 100%; padding: 20px; margin-bottom: 12px; 
+            background: #111; border: 1px solid #444; border-radius: 12px; 
             font-size: 16px; font-weight: bold; text-align: left; 
-            color: var(--p-orange); cursor: pointer; display: flex;
+            color: var(--p-org); cursor: pointer; display: flex;
             justify-content: space-between; align-items: center;
         }
-        .nav-tile-main { background: var(--p-orange) !important; color: #000 !important; border: none; justify-content: center; text-transform: uppercase; }
-        .nav-back { background: none; border: 1px solid var(--p-orange); color: var(--p-orange); text-align: center; padding: 10px; margin-bottom: 20px; width: 100%; border-radius: 8px; cursor: pointer; }
+        .btn-save { background: var(--p-org) !important; color: #000 !important; border: none; justify-content: center; text-transform: uppercase; }
+        .btn-back { background: none; border: 1px solid var(--p-org); color: var(--p-org); text-align: center; padding: 10px; margin-bottom: 20px; width: 100%; border-radius: 8px; cursor: pointer; }
 
-        /* VISIBILITY ENGINE - Stops the ghosting from image_c79562.png */
-        .layer { display: none !important; pointer-events: none; }
-        .layer-on { display: block !important; pointer-events: auto !important; }
+        /* THE SCREEN ENGINE - Prevents ghosting in image_c79562.png */
+        .scr-layer { display: none !important; }
+        .scr-active { display: block !important; }
 
         input, textarea, select { 
-            width: 100%; padding: 15px; margin-bottom: 12px; 
-            border: 1px solid #333; background: #000; color: #fff; 
-            border-radius: 8px; font-size: 16px; box-sizing: border-box; 
+            width: 100%; padding: 15px; margin-bottom: 15px; 
+            border: 1px solid #333; background: #111; color: #fff; 
+            border-radius: 10px; font-size: 16px; box-sizing: border-box; 
         }
 
-        /* VAT TOGGLE - Fixes image_c720a8.png */
-        .vat-toggle-bar { 
-            background: #222; border: 1px solid #333; border-radius: 10px; 
+        /* VAT TOGGLE BAR - Fixes image_c720a8.png */
+        .vat-bar { 
+            background: #111; border: 1px solid #333; border-radius: 10px; 
             padding: 15px; display: flex; justify-content: space-between; 
             align-items: center; margin-bottom: 15px; cursor: pointer; 
         }
-        .vat-active { border-color: var(--p-orange); background: #2a1500; }
-        .vat-dot { width: 35px; height: 18px; background: #444; border-radius: 10px; position: relative; }
-        .vat-active .vat-dot { background: var(--p-orange); }
+        .vat-on { border-color: var(--p-org); background: #221100; }
+        .vat-dot { width: 35px; height: 18px; background: #444; border-radius: 10px; }
+        .vat-on .vat-dot { background: var(--p-org); }
 
-        .price-text { text-align: right; font-size: 42px; font-weight: 900; color: var(--p-orange); margin: 10px 0; }
-        .white-paper { background: #fff; color: #000; padding: 25px; border-radius: 8px; font-size: 14px; line-height: 1.5; }
-        .btn-del { background: #311; color: #f55; border: 1px solid #522; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; }
+        .price-big { text-align: right; font-size: 40px; font-weight: 900; color: var(--p-org); margin: 15px 0; }
+        .invoice-paper { background: #fff; color: #000; padding: 20px; border-radius: 8px; font-size: 14px; line-height: 1.4; }
+        .btn-x { background: #300; color: #f55; border: 1px solid #600; padding: 10px; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="app-box">
-        <div class="logo-text">toolbox<span>pay</span></div>
+    <div id="app-shell">
+        <div class="logo-box">toolbox<span>pay</span></div>
 
-        <div id="lay_menu" class="layer layer-on">
-            <button class="nav-tile" onclick="openLayer('lay_calc')">NEW QUOTE <span>→</span></button>
-            <button class="nav-tile" onclick="openLayer('lay_hist'); buildHist();">HISTORY <span>→</span></button>
-            <button class="nav-tile" onclick="openLayer('lay_sett')">BUSINESS SETUP <span>→</span></button>
-            <button class="nav-tile" onclick="openLayer('lay_bank')">BANK DETAILS <span>→</span></button>
+        <div id="scr_main" class="scr-layer scr-active">
+            <button class="btn-tile" onclick="nav('scr_calc')">NEW QUOTE <span>→</span></button>
+            <button class="btn-tile" onclick="nav('scr_hist'); drawH();">HISTORY <span>→</span></button>
+            <button class="btn-tile" onclick="nav('scr_setup')">BUSINESS SETUP <span>→</span></button>
+            <button class="btn-tile" onclick="nav('scr_bank')">BANK DETAILS <span>→</span></button>
             
-            <div style="margin-top:auto; text-align:center;">
-                <button onclick="localStorage.clear(); location.reload();" style="background:none; border:none; color:#333; font-size:10px; cursor:pointer; text-decoration:underline;">REPAIR APPLICATION</button>
-            </div>
+            <button onclick="localStorage.clear(); location.reload();" style="width:100%; margin-top:80px; background:none; border:none; color:#333; font-size:10px; cursor:pointer;">[ CLEAR SYSTEM CACHE ]</button>
         </div>
 
-        <div id="lay_calc" class="layer">
-            <button class="nav-back" onclick="openLayer('lay_menu')">← BACK TO MENU</button>
-            <input type="text" id="in_name" placeholder="Customer Name">
-            <input type="number" id="in_hrs" placeholder="Labour Hours" oninput="doMath()">
-            <input type="number" id="in_rate" placeholder="Hourly Rate" oninput="doMath()">
-            <input type="number" id="in_mat" placeholder="Materials" oninput="do
+        <div id="scr_calc" class="scr-layer">
+            <button class="btn-back" onclick="nav('scr_main')">← BACK</button>
+            <input type="text" id="q_client" placeholder="Client Name">
+            <input type="number" id="q_hours" placeholder="Labour Hours" oninput="math()">
+            <input type="number" id="q_rate" placeholder="Hourly Rate" oninput="math()">
+            <input type="number" id="q_mats" placeholder="Materials" oninput="math()">
+            
+            <div id="v_bar" class="vat-bar" onclick="vTog()">
+                <span id="v_lab" style="color:#666; font-weight:bold; font-size:14px;">ADD 20% VAT</span>
+                <div class="vat-dot"></div>
+            </div>
+
+            <div id="q_total" class="price-big">£0.00</div>
+            <button class="btn-tile btn-save" onclick="save()">SAVE QUOTE</button>
+        </div>
+
+        <div id="scr_hist" class="scr-layer">
+            <button class="btn-back" onclick="nav('scr_main')">← BACK</button>
+            <div id="h_list"></div>
+        </div>
+
+        <div id="scr_setup" class="scr-layer">
+            <button class="btn-back" onclick="nav('scr_main')">← BACK</button>
+            <input type="text" id="s_name" placeholder="Business Name" oninput="st('bn', this.value)">
+            <textarea id="s_addr" placeholder="Business Address" oninput="st('ba', this.value)" style="height:60px;"></textarea>
+            <select id="s_curr" onchange="st('cu', this.value)">
+                <option value="£">GBP (£)</option>
+                <option value="$">USD ($)</option>
+                <option value="€">EUR (€)</option>
+            </select>
+        </div>
+
+        <div id="scr_bank" class="scr-layer">
+            <button class="btn-back" onclick="nav('scr_main')">← BACK</button>
+            <input type="text" id="s_b1" placeholder="Account Name" oninput="st('b1', this.value)">
+            <input type="text" id="s_b2" placeholder="Sort Code" oninput="st('b2', this.value)">
+            <input type="text" id="s_b3" placeholder="Account Number" oninput="st('b3', this.value)">
+        </div>
+
+        <div id="scr_view" class="scr-layer">
+            <button class="btn-back" onclick="nav('scr_hist')">← BACK</button>
+            <div id="v_paper" class="invoice-paper"></div>
+            <button class="btn-tile btn-save" style="margin-top:20px" onclick="window.print()">PRINT / SAVE PDF</button>
+        </div>
+    </div>
+
+    <script>
+        const KEY = "tb_v32_";
+        let isTax = false;
+
+        function st(k, v) { localStorage.setItem(KEY+k, v); }
+        function gt(k) { return localStorage.getItem(KEY+k) || ""; }
+
+        function nav(id) {
+            document.querySelectorAll('.scr-layer').forEach(l => l.classList.remove('scr-active'));
+            document.getElementById(id).classList.add('scr-active');
+        }
+
+        function vTog() {
+            isTax = !isTax;
+            document.getElementById('v_bar').classList.toggle('vat-on', isTax);
+            document.getElementById('v_lab').style.color = isTax ? 'var(--p-org)' : '#666';
+            math();
+        }
+
+        function math() {
+            let cur = gt('cu') || '£';
+            let h = Number(document.getElementById('q_hours').value) || 0;
+            let r = Number(document.getElementById('q_rate').value) || 0;
+            let m = Number(document.getElementById('q_mats').value) || 0;
+            let tot = (h * r) + m;
+            if(isTax) tot *= 1.2;
+            document.getElementById('q_total').innerText = cur + tot.toFixed(2);
+        }
+
+        function save() {
+            let jobs = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
+            jobs.unshift({
+                id: Date.now(),
+                n: document.getElementById('q_client').value || 'Client',
+                t: document.getElementById('q_total').innerText,
+                d: new Date().toLocaleDateString('en-GB')
+            });
+            localStorage.setItem(KEY+'data', JSON.stringify(jobs.slice(0,25)));
+            nav('scr_main');
+        }
+
+        function drawH() {
+            let jobs = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
+            document.getElementById('h_list').innerHTML = jobs.map(j => `
+                <div style="display:flex; gap:10px; margin-bottom:12px;">
+                    <button class="btn-tile" style="flex:1; margin-bottom:0;" onclick="view(${j.id})">
+                        ${j.n} <span style="font-size:12px; opacity:0.5;">${j.t}</span>
+                    </button>
+                    <button class="btn-x" onclick="del(${j.id})">DEL</button>
+                </div>
+            `).join('') || '<p style="text-align:center; opacity:0.4;">No history.</p>';
+        }
+
+        function del(id) {
+            if(!confirm("Delete?")) return;
+            let jobs = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
+            localStorage.setItem(KEY+'data', JSON.stringify(jobs.filter(x => x.id !== id)));
+            drawH();
+        }
+
+        function view(id) {
+            let j = JSON.parse(localStorage.getItem(KEY+'data') || '[]').find(x => x.id === id);
+            if(!j) return;
+            document.getElementById('v_paper').innerHTML = `
+                <center><strong>QUOTE</strong></center><hr>
+                <strong>${gt('bn') || 'Business'}</strong><br>${gt('ba')}<br><br>
+                <strong>To:</strong> ${j.n}<br><strong>Date:</strong> ${j.d}<br>
+                <div style="font-size:26px; font-weight:bold; color:var(--p-org); text-align:right; margin:15px 0;">TOTAL: ${j.t}</div><hr>
+                <strong>Bank:</strong> ${gt('b1')}<br><strong>Sort:</strong> ${gt('b2')}<br><strong>Acc:</strong> ${gt('b3')}
+            `;
+            nav('scr_view');
+        }
+
+        window.onload = function() {
+            ['bn','ba','b1','b2','b3','cu'].forEach(k => {
+                if(document.getElementById('s_'+k)) document.getElementById('s_'+k).value = gt(k);
+            });
+            math();
+        };
+    </script>
+</body>
+</html>
