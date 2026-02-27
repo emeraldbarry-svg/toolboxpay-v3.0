@@ -34,7 +34,7 @@
 
         .summary-card { background: #fff; color: #333; padding: 25px; border-radius: 12px; margin-top: 10px; }
         .summary-card h2 { color: #000; font-size: 18px; margin-bottom: 4px; }
-        .summary-address { font-size: 12px; color: #666; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; line-height: 1.4; }
+        .summary-address { font-size: 12px; color: #666; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; white-space: pre-wrap; line-height: 1.4; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
     </style>
 </head>
@@ -53,4 +53,26 @@
     <div id="calc" class="screen">
         <div class="tag">Labour Costs</div>
         <input type="number" id="h" placeholder="Hours worked" oninput="math()">
-        <input type="number" id="r
+        <input type="number" id="r" placeholder="Hourly rate (£)" oninput="math()">
+        <div class="tag">Materials</div>
+        <input type="number" id="m" placeholder="Total materials (£)" oninput="math()">
+        <div class="vat-row">
+            <span>Add 20% VAT</span>
+            <input type="checkbox" id="v-tog" onchange="math()" style="width:20px; height:20px; cursor:pointer;">
+        </div>
+        <div class="total-box">
+            <span style="font-weight:800; font-size:12px;">TOTAL:</span>
+            <span id="res" class="price">£0.00</span>
+            <div id="v-msg" style="font-size:12px; color:#8892b0; text-align:right; display:none;">Inc. VAT</div>
+        </div>
+        <button class="btn-main" onclick="gen()">View Quote Summary</button>
+        <button class="btn-reset" onclick="reset()">Reset Figures</button>
+    </div>
+
+    <div id="summary" class="screen">
+        <div class="summary-card">
+            <h2 id="s-biz">Company Name</h2>
+            <div id="s-addr" class="summary-address">Address not set</div>
+            <div class="summary-row"><span>Labour:</span> <span id="s-lab">£0.00</span></div>
+            <div class="summary-row"><span>Materials:</span> <span id="s-mat">£0.00</span></div>
+            <div id="s-v
