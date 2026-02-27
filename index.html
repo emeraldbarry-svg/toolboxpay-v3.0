@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v10.3</title>
+    <title>toolboxpay - v10.5</title>
     <style>
         /* BRANDING & THEME */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; }
+        body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
         #app-viewport { width: 100%; max-width: 420px; padding: 20px; position: relative; }
 
-        /* SINGLE CLOCK HEADER */
-        .time-header { text-align: center; font-size: 14px; font-weight: 900; color: #ff6600; font-family: monospace; padding: 10px 0; }
-        .logo { text-align: center; font-size: 38px; font-weight: 900; letter-spacing: -2px; margin: 10px 0 25px 0; }
+        /* HEADER - CLOCKS REMOVED */
+        .header { text-align: center; padding: 30px 0 20px 0; }
+        .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* VIEW NAVIGATION */
+        /* VIEW SYSTEM */
         .view { display: none; width: 100%; }
         #view-home { display: block; } 
 
@@ -32,57 +32,73 @@
         
         h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin-bottom: 20px; font-weight: 900; }
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
-        input, textarea, select { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; display: block; }
+        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; display: block; }
         
         /* RESULTS */
         .total-display { font-size: 45px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 15px; }
-        .btn-action { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 14px; margin-top: 10px; }
+        .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
         
-        /* CLIENT LISTING */
-        .client-entry { background: #000; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid #ff6600; display: flex; justify-content: space-between; align-items: center; }
-        .client-info b { color: #ff6600; display: block; margin-bottom: 4px; }
-        .client-info span { color: #999; font-size: 12px; display: block; }
-        .del-btn { color: #ff4444; font-size: 20px; cursor: pointer; padding: 10px; }
+        /* CLIENT LIST */
+        .client-card { background: #000; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid #ff6600; display: flex; justify-content: space-between; align-items: center; }
+        .client-card b { color: #ff6600; }
+        .del-x { color: #ff4444; font-weight: 900; padding: 5px 10px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="app-viewport">
-    <div class="time-header" id="live-clock">00:00:00</div>
+    <div class="header"><div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div></div>
 
     <div id="view-home" class="view">
-        <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         <div class="stack">
-            <div class="tile" data-nav="view-quote"><div class="icon-box">📝</div><span>Job Quotes</span></div>
-            <div class="tile" data-nav="view-clients"><div class="icon-box">👥</div><span>Clients</span></div>
-            <div class="tile" data-nav="view-calc"><div class="icon-box">🧮</div><span>Calculator</span></div>
-            <div class="tile" data-nav="view-bank"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
-            <div class="tile" data-nav="view-readme"><div class="icon-box">📖</div><span>Read Me</span></div>
+            <div class="tile" onclick="nav('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
+            <div class="tile" onclick="nav('view-clients')"><div class="icon-box">👥</div><span>Clients</span></div>
+            <div class="tile" onclick="nav('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
+            <div class="tile" onclick="nav('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
+            <div class="tile" onclick="nav('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
         </div>
     </div>
 
     <div id="view-clients" class="view">
-        <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
+        <div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div>
         <div class="card">
-            <h2>Add Client</h2>
-            <label>Name</label><input type="text" id="c-name" placeholder="Client Name">
-            <label>Address</label><textarea id="c-addr" style="height:60px;" placeholder="Site Address"></textarea>
-            <label>Contact Number</label><input type="text" id="c-phone" placeholder="07xxx xxxxxx">
-            <button class="btn-action" style="background:#ff6600;" onclick="addClient()">Save to Database</button>
+            <h2>Add New Client</h2>
+            <label>Full Name</label><input type="text" id="cli-name">
+            <label>Address / Site</label><textarea id="cli-addr" style="height:60px;"></textarea>
+            <button class="btn-green" style="background:#ff6600;" onclick="addCli()">Save Client</button>
         </div>
-        <div class="card" style="margin-top:20px;">
-            <h2>Your Clients</h2>
-            <div id="client-list"></div>
-        </div>
+        <div id="client-container" style="margin-top:20px;"></div>
     </div>
 
     <div id="view-quote" class="view">
-        <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
+        <div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div>
         <div class="card">
             <h2>New Quote</h2>
-            <label>Select Saved Client</label>
-            <select id="q-select" onchange="fillFromDb()"><option value="">-- Choose --</option></select>
-            <label>Client Name</label><input type="text" id="q-name">
-            <label>Labour Description</label><textarea id="q-desc" style="height:80px;"></textarea>
-            <label>Price (£)</label><input type="number" id="q-price" oninput="upQ()">
-            <div class="total-display" id="q-total">£0.
+            <label>Labour Description</label><textarea id="quo-desc" style="height:80px;"></textarea>
+            <label>Price (£)</label><input type="number" id="quo-price" oninput="calcQ()">
+            <div class="total-display" id="quo-total">£0.00</div>
+            <button class="btn-green">Send Quote</button>
+        </div>
+    </div>
+
+    <div id="view-calc" class="view">
+        <div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div>
+        <div class="card">
+            <h2>Calculator</h2>
+            <label>Day Rate (£)</label><input type="number" id="cal-r" oninput="calcC()">
+            <label>Days Worked</label><input type="number" id="cal-d" oninput="calcC()">
+            <div class="total-display" id="cal-total">£0.00</div>
+        </div>
+    </div>
+
+    <div id="view-bank" class="view">
+        <div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div>
+        <div class="card">
+            <h2>Bank Setup</h2>
+            <label>Business Name</label><input type="text" id="bank-n" oninput="saveBank('n',this.value)">
+            <label>Sort Code</label><input type="text" id="bank-s" oninput="saveBank('s',this.value)">
+            <label>Account No.</label><input type="text" id="bank-a" oninput="saveBank('a',this.value)">
+        </div>
+    </div>
+
+    <div id="view-readme" class="view"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div><div class="card"><h2>Read Me</h2><p>
