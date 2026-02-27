@@ -2,144 +2,43 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v44.0 - INDEPENDENT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>toolboxpay v45.0 - STABLE</title>
     <style>
-        :root { --org: #ff6600; --bg: #0b0b0b; --card: #1c1c1c; --input: #000000; }
-        html, body { background: var(--bg); margin: 0; padding: 0; font-family: sans-serif; color: white; display: flex; justify-content: center; }
+        :root { --org: #ff6600; --bg: #0b0b0b; --card: #1a1a1a; }
+        /* Prevent elastic scrolling which can cause freezes on mobile */
+        html, body { background: var(--bg); margin: 0; padding: 0; font-family: -apple-system, sans-serif; color: white; height: 100%; overflow: hidden; }
         
-        #app { background: var(--bg); width: 400px; min-height: 100vh; padding: 25px; box-sizing: border-box; }
+        #app { width: 100%; max-width: 400px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; }
         
-        /* LOGO STYLING */
-        .logo { font-weight: 900; font-size: 28px; text-align: center; margin-bottom: 40px; letter-spacing: -1px; }
-        .logo .tool { color: var(--org); }
-        .logo .pay { color: #fff; }
+        .header { padding: 20px; text-align: center; background: var(--bg); }
+        .logo { font-weight: 900; font-size: 24px; letter-spacing: -1px; }
+        .logo span { color: var(--org); }
 
-        /* INDEPENDENT VIEWS */
-        .view { display: none; }
+        /* INDEPENDENT CONTAINERS */
+        .view { display: none; flex: 1; overflow-y: auto; padding: 20px; box-sizing: border-box; }
         .view.active { display: block; }
 
-        /* HUB MENU CARDS */
-        .hub-card { background: var(--card); border: 1.5px solid #333; padding: 22px; border-radius: 16px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
-        .hub-card:hover { border-color: var(--org); }
-        .hub-card span { color: var(--org); font-weight: 900; text-transform: uppercase; font-size: 14px; }
-        .hub-card .arrow { font-size: 18px; color: var(--org); }
-
-        /* FORM ELEMENTS */
-        h3 { color: var(--org); font-size: 13px; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; font-weight: 800; }
-        input, textarea { width: 100%; padding: 16px; margin-bottom: 12px; border: 1.5px solid #333; background: var(--input); color: #fff; border-radius: 12px; font-size: 16px; box-sizing: border-box; outline: none; }
+        /* HUB MENU */
+        .menu-item { background: var(--card); border: 1px solid #333; padding: 25px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: var(--org); font-weight: 800; text-transform: uppercase; font-size: 13px; }
+        
+        /* FORMS */
+        h3 { color: var(--org); font-size: 12px; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #333; background: #000; color: #fff; border-radius: 8px; font-size: 16px; box-sizing: border-box; -webkit-appearance: none; }
         input:focus { border-color: var(--org); }
         
         .row { display: flex; gap: 10px; }
         .row input { flex: 1; }
 
-        /* CALC STYLING */
-        .tax-toggle { background: var(--card); border: 1px solid #333; padding: 18px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; margin-bottom: 15px; }
-        .tax-toggle.active { border-color: var(--org); }
-        .dot { width: 22px; height: 12px; background: #333; border-radius: 10px; position: relative; }
-        .active .dot { background: var(--org); }
+        .tax-bar { background: var(--card); padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid #333; margin-bottom: 20px; }
+        .tax-bar.active { border-color: var(--org); background: #221400; }
+        .indicator { width: 12px; height: 12px; border-radius: 50%; background: #333; }
+        .active .indicator { background: var(--org); box-shadow: 0 0 5px var(--org); }
+
+        .big-total { text-align: right; font-size: 50px; font-weight: 900; color: var(--org); margin: 10px 0; }
         
-        .total-display { text-align: right; font-size: 56px; font-weight: 900; color: var(--org); margin: 20px 0; letter-spacing: -3px; }
-        
-        /* BUTTONS */
-        .btn-main { width: 100%; padding: 20px; background: var(--org); color: #000; border: none; border-radius: 16px; font-size: 18px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
-        .btn-back { background: none; border: 1px solid var(--org); color: var(--org); width: 100%; padding: 12px; border-radius: 10px; font-weight: 800; margin-bottom: 25px; cursor: pointer; }
+        .btn-orange { width: 100%; padding: 20px; background: var(--org); color: #000; border: none; border-radius: 12px; font-size: 16px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+        .btn-back { background: none; border: 1px solid #444; color: #888; width: 100%; padding: 10px; border-radius: 8px; margin-bottom: 20px; cursor: pointer; font-weight: bold; font-size: 11px; }
 
-        /* LISTS */
-        .hist-card { background: var(--card); padding: 18px; border-radius: 14px; margin-bottom: 10px; border-left: 4px solid var(--org); display: flex; justify-content: space-between; align-items: center; }
-        
-        /* OVERLAY PRINT */
-        #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; padding: 20px; box-sizing: border-box; overflow-y: auto; }
-        .paper { background: #fff; color: #000; padding: 40px; width: 100%; max-width: 450px; border-radius: 2px; }
-    </style>
-</head>
-<body>
-
-    <div id="app">
-        <div class="logo"><span class="tool">toolbox</span><span class="pay">pay</span></div>
-
-        <div id="view_menu" class="view active">
-            <div class="hub-card" onclick="nav('quote')"><span>New Quote</span> <div class="arrow">→</div></div>
-            <div class="hub-card" onclick="nav('history')"><span>History</span> <div class="arrow">→</div></div>
-            <div class="hub-card" onclick="nav('settings')"><span>Business & Bank Setup</span> <div class="arrow">→</div></div>
-        </div>
-
-        <div id="view_quote" class="view">
-            <button class="btn-back" onclick="nav('menu')">← BACK TO MENU</button>
-            <input type="text" id="in_name" placeholder="Client Name">
-            <textarea id="in_desc" placeholder="Description of Labour" style="height: 80px;"></textarea>
-            <div class="row">
-                <input type="number" id="in_hrs" placeholder="Hours" oninput="runMath()">
-                <input type="number" id="in_rate" placeholder="Rate" oninput="runMath()">
-            </div>
-            <input type="number" id="in_mat" placeholder="Materials" oninput="runMath()">
-            
-            <div id="vat_box" class="tax-toggle" onclick="toggleVAT()">
-                <span style="font-weight: 800; font-size: 13px; color: #999;">ADD 20% VAT</span>
-                <div class="dot"></div>
-            </div>
-
-            <div id="display_total" class="total-display">£0.00</div>
-            <button class="btn-main" onclick="saveQuote()">Save Quote</button>
-        </div>
-
-        <div id="view_history" class="view">
-            <button class="btn-back" onclick="nav('menu')">← BACK TO MENU</button>
-            <div id="list_container"></div>
-        </div>
-
-        <div id="view_settings" class="view">
-            <button class="btn-back" onclick="nav('menu')">← BACK TO MENU</button>
-            <h3>Business Identity</h3>
-            <input type="text" id="s_name" placeholder="Business Name" oninput="saveSet('name', this.value)">
-            <textarea id="s_addr" placeholder="Business Address" style="height:70px;" oninput="saveSet('addr', this.value)"></textarea>
-            
-            <h3>Bank Details (Auto-Save)</h3>
-            <input type="text" id="s_bank" placeholder="Bank Name" oninput="saveSet('bank', this.value)">
-            <div class="row">
-                <input type="text" id="s_sort" placeholder="Sort Code" oninput="saveSet('sort', this.value)">
-                <input type="text" id="s_acc" placeholder="Account Number" oninput="saveSet('acc', this.value)">
-            </div>
-        </div>
-    </div>
-
-    <div id="overlay" onclick="this.style.display='none'">
-        <div class="paper" id="invoice_content" onclick="event.stopPropagation()"></div>
-    </div>
-
-    <script>
-        const KEY = "toolbox_v44_";
-        let vatActive = false;
-
-        function nav(v) {
-            document.querySelectorAll('.view').forEach(e => e.classList.remove('active'));
-            document.getElementById('view_' + v).classList.add('active');
-            if(v === 'history') renderHistory();
-        }
-
-        function saveSet(k, v) { localStorage.setItem(KEY+k, v); }
-        function getSet(k) { return localStorage.getItem(KEY+k) || ""; }
-
-        function toggleVAT() {
-            vatActive = !vatActive;
-            document.getElementById('vat_box').classList.toggle('active', vatActive);
-            runMath();
-        }
-
-        function runMath() {
-            let h = Number(document.getElementById('in_hrs').value) || 0;
-            let r = Number(document.getElementById('in_rate').value) || 0;
-            let m = Number(document.getElementById('in_mat').value) || 0;
-            let total = (h * r) + m;
-            if(vatActive) total *= 1.2;
-            document.getElementById('display_total').innerText = "£" + total.toFixed(2);
-        }
-
-        function saveQuote() {
-            let logs = JSON.parse(localStorage.getItem(KEY+'logs') || '[]');
-            logs.unshift({
-                id: Date.now(),
-                client: document.getElementById('in_name').value || 'Client',
-                labour: document.getElementById('in_desc').value || 'No description provided.',
-                total: document.getElementById('display_total').innerText,
-                date: new Date().toLocaleDateString('en-GB')
+        /* HISTORY */
+        .log-card { background: var(--card); padding: 15
