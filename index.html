@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v2.8 Balance</title>
+    <title>toolboxpay - v2.9 Final Link</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding-bottom: 80px; }
@@ -18,8 +18,7 @@
 
         label { display: block; font-size: 11px; color: #777; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
         input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 16px; outline: none; margin-bottom: 15px; }
-        input:focus { border-color: #ff6600; }
-
+        
         .vat-row { display: flex; justify-content: space-between; align-items: center; background: #080808; border: 1px solid #222; padding: 12px 18px; border-radius: 14px; margin-bottom: 20px; }
         .sw { position: relative; width: 44px; height: 22px; }
         .sw input { opacity: 0; width: 0; height: 0; }
@@ -31,15 +30,28 @@
         .big-p { font-size: 58px; font-weight: 900; color: #ff6600; text-align: right; letter-spacing: -3px; margin-bottom: 15px; }
         .btn-m { width: 100%; background: #ff6600; color: #000; padding: 20px; border: none; border-radius: 14px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
 
-        /* HISTORY STATUS */
+        /* HISTORY */
         .job { padding: 20px 0; border-bottom: 1px solid #222; }
         .job-p { color: #ff6600; font-weight: 900; font-size: 20px; }
         .tag { display: inline-block; padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 900; margin-bottom: 12px; cursor: pointer; }
         .tag-due { background: #000; color: #ff6600; border: 1px solid #ff6600; }
         .tag-paid { background: #2ecc71; color: #000; }
         
-        .btn-wa { display: block; width: 100%; background: #25D366; color: #000; padding: 12px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 800; font-size: 13px; margin-top: 10px; }
-        .btn-del { color: #ff4444; background: none; border: none; font-size: 11px; margin-top: 10px; cursor: pointer; font-weight: 700; text-transform: uppercase; }
+        /* WHATSAPP BUTTON - FORCED VISIBILITY */
+        .btn-wa { 
+            display: block !important; 
+            width: 100%; 
+            background: #25D366 !important; 
+            color: #000 !important; 
+            padding: 15px; 
+            border-radius: 10px; 
+            text-align: center; 
+            text-decoration: none; 
+            font-weight: 800; 
+            font-size: 14px; 
+            margin-top: 15px; 
+        }
+        .btn-del { color: #ff4444; background: none; border: none; font-size: 11px; margin-top: 15px; cursor: pointer; font-weight: 700; text-transform: uppercase; width: 100%; text-align: left;}
     </style>
 </head>
 <body>
@@ -89,7 +101,7 @@
 </div>
 
 <script>
-    const STORAGE_K = "TBP_V28_FINAL";
+    const STORAGE_K = "TBP_V29_FINAL";
     function st(k,v){ localStorage.setItem(STORAGE_K+k,v); }
     function gt(k){ return localStorage.getItem(STORAGE_K+k) || ""; }
 
@@ -124,7 +136,7 @@
         const j = {
             id: Date.now(),
             n: document.getElementById('cn').value || "Client",
-            l: document.getElementById('dl').value || "Labour description.",
+            l: document.getElementById('dl').value || "Labour details.",
             t: document.getElementById('tot').innerText,
             v: document.getElementById('v').checked,
             d: new Date().toLocaleDateString('en-GB'),
@@ -168,8 +180,8 @@
                     <span class="job-p">${j.t}</span>
                 </div>
                 <div style="font-size:12px; color:#555; margin:4px 0;">${j.d}</div>
-                ${!j.p ? `<a class="btn-wa" href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank">SEND WHATSAPP</a>` : ''}
-                <button class="btn-del" onclick="del(${j.id})">Remove Entry</button>
+                <a class="btn-wa" href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank">SEND WHATSAPP INVOICE</a>
+                <button class="btn-del" onclick="del(${j.id})">Remove Record</button>
             </div>`;
         }).join('') || '<p style="color:#333; text-align:center;">History empty.</p>';
     }
