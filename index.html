@@ -3,59 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v29.0 - IRONCLAD</title>
+    <title>toolboxpay v31.0</title>
     <style>
-        :root { --org: #ff6600; --bg: #0b0b0b; --card: #161616; }
+        :root { --p-orange: #ff6600; --p-bg: #0b0b0b; --p-card: #161616; }
 
-        /* PREVENT SCROLL FREEZE */
+        /* THE STABILITY CORE */
         html, body { 
-            background: var(--bg) !important; 
+            background: var(--p-bg) !important; 
             margin: 0; padding: 0; height: 100vh;
             display: flex; justify-content: center; align-items: flex-start;
             font-family: 'Segoe UI', Arial, sans-serif; color: white;
             overflow: hidden; 
         }
 
-        #app-shell {
-            background: var(--card);
-            width: 380px; height: 94vh;
-            margin-top: 10px; border: 2px solid #333;
-            border-radius: 20px; padding: 20px;
-            box-sizing: border-box; position: relative;
-            display: flex; flex-direction: column;
+        #app-box {
+            background: var(--p-card);
+            width: 380px; height: 92vh;
+            margin-top: 20px; border: 1px solid #333;
+            border-radius: 18px; padding: 25px;
+            box-sizing: border-box; display: flex; flex-direction: column;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
         }
 
-        .logo { color: var(--org); font-weight: 900; font-size: 24px; text-align: center; margin-bottom: 20px; }
-        .logo span { color: #fff; }
+        .logo-text { color: var(--p-orange); font-weight: 900; font-size: 26px; text-align: center; margin-bottom: 25px; }
+        .logo-text span { color: #fff; }
 
-        /* EMERGENCY BUTTONS */
-        .emergency-btn { background: #333; color: #888; border: none; padding: 5px; font-size: 9px; cursor: pointer; border-radius: 4px; margin-bottom: 10px; width: 100%; }
-
-        /* BIG TOUCH BUTTONS */
-        .btn { 
+        /* INTERACTIVE ELEMENTS */
+        .nav-tile { 
             width: 100%; padding: 18px; margin-bottom: 12px; 
             background: #222; border: 1px solid #444; border-radius: 12px; 
             font-size: 16px; font-weight: bold; text-align: left; 
-            color: var(--org); cursor: pointer; display: flex;
+            color: var(--p-orange); cursor: pointer; display: flex;
             justify-content: space-between; align-items: center;
         }
-        .btn-org { background: var(--org) !important; color: #000 !important; border: none; justify-content: center; text-transform: uppercase; }
-        .back { background: none; border: 1px solid var(--org); color: var(--org); text-align: center; padding: 12px; margin-bottom: 15px; width: 100%; border-radius: 10px; cursor: pointer; }
+        .nav-tile-main { background: var(--p-orange) !important; color: #000 !important; border: none; justify-content: center; text-transform: uppercase; }
+        .nav-back { background: none; border: 1px solid var(--p-orange); color: var(--p-orange); text-align: center; padding: 10px; margin-bottom: 20px; width: 100%; border-radius: 8px; cursor: pointer; }
 
-        /* HARD-CODED SCREEN HIDING */
-        .screen { display: none !important; visibility: hidden; opacity: 0; pointer-events: none; }
-        .active-view { display: block !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        /* VISIBILITY ENGINE - Stops the ghosting from image_c79562.png */
+        .layer { display: none !important; pointer-events: none; }
+        .layer-on { display: block !important; pointer-events: auto !important; }
 
         input, textarea, select { 
-            width: 100%; padding: 15px; margin-bottom: 15px; 
+            width: 100%; padding: 15px; margin-bottom: 12px; 
             border: 1px solid #333; background: #000; color: #fff; 
             border-radius: 8px; font-size: 16px; box-sizing: border-box; 
         }
 
-        /* VAT TOGGLE BAR */
-        .vat-bar { background: #222; border: 1px solid #333; border-radius: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; }
-        .vat-on { border-color: var(--org); background: #310; }
-        .toggle-dot { width: 40px; height: 20px; background: #444; border-radius: 20px; position: relative; }
-        .vat-on .toggle-dot { background: var(--org); }
+        /* VAT TOGGLE - Fixes image_c720a8.png */
+        .vat-toggle-bar { 
+            background: #222; border: 1px solid #333; border-radius: 10px; 
+            padding: 15px; display: flex; justify-content: space-between; 
+            align-items: center; margin-bottom: 15px; cursor: pointer; 
+        }
+        .vat-active { border-color: var(--p-orange); background: #2a1500; }
+        .vat-dot { width: 35px; height: 18px; background: #444; border-radius: 10px; position: relative; }
+        .vat-active .vat-dot { background: var(--p-orange); }
 
-        .total-display { text-align: right; font-size: 40px; font-weight: 90
+        .price-text { text-align: right; font-size: 42px; font-weight: 900; color: var(--p-orange); margin: 10px 0; }
+        .white-paper { background: #fff; color: #000; padding: 25px; border-radius: 8px; font-size: 14px; line-height: 1.5; }
+        .btn-del { background: #311; color: #f55; border: 1px solid #522; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div id="app-box">
+        <div class="logo-text">toolbox<span>pay</span></div>
+
+        <div id="lay_menu" class="layer layer-on">
+            <button class="nav-tile" onclick="openLayer('lay_calc')">NEW QUOTE <span>→</span></button>
+            <button class="nav-tile" onclick="openLayer('lay_hist'); buildHist();">HISTORY <span>→</span></button>
+            <button class="nav-tile" onclick="openLayer('lay_sett')">BUSINESS SETUP <span>→</span></button>
+            <button class="nav-tile" onclick="openLayer('lay_bank')">BANK DETAILS <span>→</span></button>
+            
+            <div style="margin-top:auto; text-align:center;">
+                <button onclick="localStorage.clear(); location.reload();" style="background:none; border:none; color:#333; font-size:10px; cursor:pointer; text-decoration:underline;">REPAIR APPLICATION</button>
+            </div>
+        </div>
+
+        <div id="lay_calc" class="layer">
+            <button class="nav-back" onclick="openLayer('lay_menu')">← BACK TO MENU</button>
+            <input type="text" id="in_name" placeholder="Customer Name">
+            <input type="number" id="in_hrs" placeholder="Labour Hours" oninput="doMath()">
+            <input type="number" id="in_rate" placeholder="Hourly Rate" oninput="doMath()">
+            <input type="number" id="in_mat" placeholder="Materials" oninput="do
