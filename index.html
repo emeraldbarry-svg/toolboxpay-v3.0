@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v1.5 Stable</title>
+    <title>toolboxpay - v1.6 PDF</title>
     <style>
         :root { --orange: #ff6600; --white: #ffffff; --bg: #050505; --card: #141414; --border: #252525; }
         
@@ -52,13 +52,29 @@
             text-align: center; border-radius: 10px; border: 1px dashed var(--orange); cursor: pointer; font-weight: 800;
         }
 
+        /* HISTORY ROWS */
         .log-row { padding: 20px 0; border-bottom: 1px solid #222; }
-        .log-row:last-child { border: none; }
         .log-head { display: flex; justify-content: space-between; align-items: center; }
         .log-n { font-weight: 800; font-size: 18px; }
         .log-a { color: var(--orange); font-weight: 900; font-size: 22px; }
         .log-d { font-size: 12px; color: #555; }
         .log-l { font-size: 13px; color: #888; margin-top: 8px; font-style: italic; }
+
+        .btn-mini { 
+            background: #222; color: var(--white); border: 1px solid #333; padding: 8px 12px; 
+            border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; margin-top: 10px; margin-right: 5px;
+        }
+        .btn-del { color: #ff4444; border-color: #441111; }
+
+        /* PRINT STYLES FOR PDF */
+        @media print {
+            body { background: white !important; color: black !important; padding: 0; }
+            #app, section { box-shadow: none; border: none; margin: 0; padding: 0; }
+            .hdr, .btn-save, .upload-lab, section:nth-of-type(1), section:nth-of-type(2), section:nth-of-type(4), .btn-mini { display: none !important; }
+            .log-row { border-bottom: 2px solid #eee; page-break-inside: avoid; }
+            .log-a { color: black !important; }
+            h2 { color: black !important; border-bottom: 2px solid black; }
+        }
     </style>
 </head>
 <body>
@@ -85,9 +101,10 @@
         <h2>Job Photos</h2>
         <label class="upload-lab">+ ADD PHOTO<input type="file" accept="image/*" style="display:none;" onchange="imgUp(this)"></label>
         <div class="photo-grid" id="pgrid"></div>
+        <button class="btn-mini" onclick="clearPhotos()" style="width:100%; margin-top:15px; border-style:dashed;">Clear All Photos</button>
     </section>
 
-    <section>
+    <section id="history-section">
         <h2>Job History</h2>
         <div id="hlist"></div>
     </section>
@@ -95,3 +112,20 @@
     <section>
         <h2>Business & Bank Setup</h2>
         <div class="group"><label>Business Name</label><input type="text" id="sn" oninput="st('sn', this.value)"></div>
+        <div class="group"><label>Address</label><textarea id="sa" oninput="st('sa', this.value)" style="height: 80px;"></textarea></div>
+        <div class="flex">
+            <div class="group"><label>Bank</label><input type="text" id="sb" oninput="st('sb', this.value)"></div>
+            <div class="group"><label>Sort Code</label><input type="text" id="ssc" oninput="st('ssc', this.value)"></div>
+        </div>
+        <div class="group"><label>Account No.</label><input type="text" id="san" oninput="st('san', this.value)"></div>
+    </section>
+</div>
+
+<script>
+    const MASTER_KEY = "TOOLBOX_PRO_V1_";
+
+    function st(k, v) { localStorage.setItem(MASTER_KEY+k, v); }
+    function gt(k) { return localStorage.getItem(MASTER_KEY+k) || ""; }
+
+    function run() {
+        const h = parseFloat
