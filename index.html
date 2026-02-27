@@ -3,25 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v4.2</title>
+    <title>toolboxpay - v4.3 Solid State</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding: 15px; padding-top: 100px; } /* Space for fixed clock */
+        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding: 15px; }
         .wrap { max-width: 480px; margin: 0 auto; }
 
-        /* FIXED TOP CLOCK */
-        .top-nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(0,0,0,0.9); border-bottom: 2px solid #ff6600; z-index: 1000; padding: 10px 0; text-align: center; backdrop-filter: blur(5px); }
-        .logo-small { font-size: 18px; font-weight: 900; letter-spacing: -1px; margin-bottom: 2px; }
-        .logo-small .o { color: #ff6600; }
-        .logo-small .w { color: #ffffff; }
-        #live-clock { color: #ff6600; font-size: 32px; font-weight: 900; font-family: monospace; line-height: 1; }
+        .logo { text-align: center; padding: 30px 0; font-size: 38px; font-weight: 900; letter-spacing: -2px; }
+        .logo .o { color: #ff6600; }
+        .logo .w { color: #ffffff; }
 
-        /* CARDS */
         .card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 25px; }
         h2 { color: #ff6600; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 15px 0; font-weight: 900; border-bottom: 1px solid #222; padding-bottom: 8px; }
 
         label { display: block; font-size: 10px; color: #666; margin-bottom: 5px; font-weight: 800; text-transform: uppercase; }
         input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 14px; border-radius: 12px; font-size: 16px; margin-bottom: 12px; outline: none; }
+        input:focus { border-color: #ff6600; }
         
         .dash { display: flex; gap: 10px; margin-bottom: 15px; }
         .stat { flex: 1; background: #000; padding: 12px; border-radius: 10px; border: 1px solid #222; text-align: center; }
@@ -38,12 +35,9 @@
 </head>
 <body>
 
-<div class="top-nav">
-    <div class="logo-small"><span class="o">toolbox</span><span class="w">pay</span></div>
-    <div id="live-clock">00:00:00</div>
-</div>
-
 <div class="wrap">
+    <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
+
     <div class="card">
         <h2>New Quote</h2>
         <label>Client Name</label><input type="text" id="cn">
@@ -81,7 +75,7 @@
 
 <script>
     const KEYS = ["TOOLBOX_V37_ANVIL", "TBP_CONCRETE_V1", "TBP_IRONCLAD_V1", "TBP_LEGACY_V41"];
-    const CUR = "TBP_LEGACY_V41";
+    const CUR = "TBP_SOLID_V43";
 
     function st(k,v){ localStorage.setItem(CUR+k,v); }
     function gt(k){ 
@@ -111,7 +105,7 @@
             list.innerHTML = jb.map(j => {
                 i += j.t; if(j.p) p += j.t;
                 return `<div class="job"><div class="tag ${j.p?'tag-paid':'tag-due'}" onclick="tog(${j.id})">${j.p?'PAID':'DUE'}</div><div style="display:flex; justify-content:space-between; font-weight:900;"><span>${j.n}</span><span style="color:#ff6600;">£${j.t.toFixed(2)}</span></div></div>`;
-            }).join('') || '<p style="text-align:center; color:#444;">No history.</p>';
+            }).join('') || '<p style="text-align:center; color:#444;">No history recorded.</p>';
         }
         document.getElementById('t-inv').innerText = "£" + i.toFixed(2);
         document.getElementById('t-paid').innerText = "£" + p.toFixed(2);
@@ -132,11 +126,6 @@
         const idx = jb.findIndex(x => x.id === id);
         if(idx > -1) { jb[idx].p = !jb[idx].p; localStorage.setItem(CUR+'j', JSON.stringify(jb)); render(); }
     }
-
-    setInterval(() => {
-        const d = new Date();
-        document.getElementById('live-clock').innerText = d.toLocaleTimeString('en-GB');
-    }, 1000);
 
     window.onload = () => {
         ['sn', 'sb', 'sc', 'an'].forEach(i => document.getElementById(i).value = gt(i));
