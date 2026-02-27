@@ -2,32 +2,52 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v4.4 Zero-Clock</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toolboxpay - v4.5</title>
     <style>
+        /* RESET & SITE STYLING */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding: 20px; }
-        .wrap { max-width: 480px; margin: 0 auto; }
+        body { 
+            background: #000; 
+            color: #fff; 
+            margin: 0; 
+            font-family: sans-serif; 
+            padding: 15px;
+            /* Extra space at the bottom so the last box is never cut off */
+            padding-bottom: 150px; 
+        }
+        .wrap { max-width: 450px; margin: 0 auto; }
 
-        .logo { text-align: center; padding: 30px 0; font-size: 38px; font-weight: 900; letter-spacing: -2px; }
+        /* BRANDING */
+        .logo { text-align: center; padding: 20px 0; font-size: 34px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        .card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 25px; margin-bottom: 30px; }
-        h2 { color: #ff6600; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 20px 0; font-weight: 900; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        /* BOXES - SIMPLE & STABLE */
+        .card { 
+            background: #111; 
+            border: 1px solid #222; 
+            border-radius: 15px; 
+            padding: 20px; 
+            margin-bottom: 25px;
+            display: block !important; /* Forces visibility */
+        }
+        h2 { color: #ff6600; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 15px 0; font-weight: 900; border-bottom: 1px solid #222; padding-bottom: 8px; }
 
-        label { display: block; font-size: 11px; color: #777; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
-        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 16px; margin-bottom: 15px; outline: none; }
+        /* INPUTS */
+        label { display: block; font-size: 10px; color: #666; margin-bottom: 5px; font-weight: 800; text-transform: uppercase; }
+        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 14px; border-radius: 10px; font-size: 16px; margin-bottom: 12px; outline: none; }
         
-        .dash { display: flex; gap: 12px; margin-bottom: 20px; }
-        .stat { flex: 1; background: #000; padding: 15px; border-radius: 12px; border: 1px solid #222; text-align: center; }
-        .stat-val { font-size: 20px; font-weight: 900; color: #ff6600; }
-        .stat-lbl { font-size: 9px; color: #555; text-transform: uppercase; margin-top: 5px; display: block; }
+        /* DASHBOARD */
+        .dash { display: flex; gap: 8px; margin-bottom: 15px; }
+        .stat { flex: 1; background: #000; padding: 12px; border-radius: 10px; border: 1px solid #222; text-align: center; }
+        .stat-val { font-size: 18px; font-weight: 900; color: #ff6600; }
+        .stat-lbl { font-size: 8px; color: #555; text-transform: uppercase; display: block; }
 
-        .btn-m { width: 100%; background: #ff6600; color: #000; padding: 20px; border: none; border-radius: 15px; font-size: 18px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
+        .btn-m { width: 100%; background: #ff6600; color: #000; padding: 18px; border: none; border-radius: 12px; font-size: 16px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
         
-        .job { padding: 18px 0; border-bottom: 1px solid #222; }
-        .tag { display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 900; margin-bottom: 10px; cursor: pointer; }
+        .job { padding: 12px 0; border-bottom: 1px solid #222; }
+        .tag { display: inline-block; padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: 900; margin-bottom: 5px; cursor: pointer; }
         .tag-due { background: #000; color: #ff6600; border: 1px solid #ff6600; }
         .tag-paid { background: #2ecc71; color: #000; }
     </style>
@@ -40,96 +60,11 @@
     <div class="card">
         <h2>New Quote</h2>
         <label>Client Name</label><input type="text" id="cn">
-        <label>Labour</label><textarea id="dl" style="height:60px;"></textarea>
+        <label>Labour</label><textarea id="dl" style="height:50px;"></textarea>
         <div style="display:flex; gap:10px;">
             <div style="flex:1;"><label>Hours</label><input type="number" id="h" oninput="calc()"></div>
             <div style="flex:1;"><label>Rate (£)</label><input type="number" id="r" oninput="calc()"></div>
         </div>
         <label>Materials (£)</label><input type="number" id="m" oninput="calc()">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:15px; background:#000; border:1px solid #222; border-radius:12px;">
-            <span style="font-size:12px; font-weight:800;">ADD VAT (20%)</span>
-            <input type="checkbox" id="v" onchange="calc()" style="width:24px; height:24px;">
-        </div>
-        <div id="tot" style="font-size:52px; font-weight:900; color:#ff6600; text-align:right; margin-bottom:15px;">£0.00</div>
-        <button class="btn-m" onclick="save()">Save & Log Job</button>
-    </div>
-
-    <div class="card">
-        <h2>Job History</h2>
-        <div class="dash">
-            <div class="stat"><span class="stat-val" id="t-inv">£0.00</span><span class="stat-lbl">Invoiced</span></div>
-            <div class="stat"><span class="stat-val" id="t-paid" style="color:#2ecc71;">£0.00</span><span class="stat-lbl">Paid</span></div>
-        </div>
-        <div id="joblist"></div>
-    </div>
-
-    <div class="card">
-        <h2>Business & Bank Setup</h2>
-        <label>Business Name</label><input type="text" id="sn" oninput="st('sn',this.value)">
-        <label>Bank Name</label><input type="text" id="sb" oninput="st('sb',this.value)">
-        <label>Sort Code</label><input type="text" id="sc" oninput="st('sc',this.value)">
-        <label>Account No.</label><input type="text" id="an" oninput="st('an',this.value)">
-    </div>
-</div>
-
-<script>
-    const KEYS = ["TOOLBOX_V37_ANVIL", "TBP_CONCRETE_V1", "TBP_IRONCLAD_V1", "TBP_LEGACY_V41", "TBP_SOLID_V43"];
-    const CUR = "TBP_FINAL_V44";
-
-    function st(k,v){ localStorage.setItem(CUR+k,v); }
-    function gt(k){ 
-        for(let key of KEYS){
-            let val = localStorage.getItem(key+k);
-            if(val) return val;
-        }
-        return "";
-    }
-
-    function calc() {
-        const h = parseFloat(document.getElementById('h').value)||0, r = parseFloat(document.getElementById('r').value)||0, m = parseFloat(document.getElementById('m').value)||0;
-        let t = (h*r)+m; if(document.getElementById('v').checked) t*=1.2;
-        document.getElementById('tot').innerText = "£" + t.toFixed(2);
-    }
-
-    function render() {
-        let jb = [];
-        for(let key of [CUR, ...KEYS]){
-            let raw = localStorage.getItem(key+'j');
-            if(raw) { jb = JSON.parse(raw); break; }
-        }
-        
-        let i = 0, p = 0;
-        const list = document.getElementById('joblist');
-        if(list) {
-            list.innerHTML = jb.map(j => {
-                i += j.t; if(j.p) p += j.t;
-                return `<div class="job"><div class="tag ${j.p?'tag-paid':'tag-due'}" onclick="tog(${j.id})">${j.p?'PAID':'DUE'}</div><div style="display:flex; justify-content:space-between; font-weight:900; font-size:18px;"><span>${j.n}</span><span style="color:#ff6600;">£${j.t.toFixed(2)}</span></div></div>`;
-            }).join('') || '<p style="text-align:center; color:#444; font-size:12px;">No history logged.</p>';
-        }
-        document.getElementById('t-inv').innerText = "£" + i.toFixed(2);
-        document.getElementById('t-paid').innerText = "£" + p.toFixed(2);
-    }
-
-    function save() {
-        const val = parseFloat(document.getElementById('tot').innerText.replace('£', '')) || 0;
-        const j = { id: Date.now(), n: document.getElementById('cn').value || "Client", t: val, p: false };
-        let jb = JSON.parse(localStorage.getItem(CUR+'j') || '[]');
-        jb.unshift(j); localStorage.setItem(CUR+'j', JSON.stringify(jb));
-        ['cn','dl','h','r','m'].forEach(x => document.getElementById(x).value = "");
-        document.getElementById('v').checked = false;
-        render();
-    }
-
-    function tog(id) {
-        let jb = JSON.parse(localStorage.getItem(CUR+'j') || '[]');
-        const idx = jb.findIndex(x => x.id === id);
-        if(idx > -1) { jb[idx].p = !jb[idx].p; localStorage.setItem(CUR+'j', JSON.stringify(jb)); render(); }
-    }
-
-    window.onload = () => {
-        ['sn', 'sb', 'sc', 'an'].forEach(i => document.getElementById(i).value = gt(i));
-        render();
-    };
-</script>
-</body>
-</html>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:10px; background:#000; border:1px solid #222; border-radius:10px;">
+            <span style="font-size:11px; font-weight
