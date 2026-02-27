@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v6.0</title>
+    <title>toolboxpay - v6.2</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
@@ -15,58 +15,56 @@
             overflow-x: hidden;
         }
 
-        /* HEADER & CENTERED LOGO */
-        .header { text-align: center; padding: 35px 0 15px 0; }
-        .logo { font-size: 36px; font-weight: 900; letter-spacing: -2px; }
+        /* HEADER */
+        .header { text-align: center; padding: 30px 0 10px 0; }
+        .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* VERTICAL STACKED BOXES */
+        /* THE STACK */
         .stack {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            width: 92%;
-            max-width: 450px;
+            gap: 15px;
+            width: 90%;
+            max-width: 420px;
             margin: 0 auto;
             padding-bottom: 50px;
         }
 
-        .box {
-            background: #1e1e1e;
-            border: 1px solid #333;
+        .btn-tile {
+            background: #222;
             border-radius: 20px;
-            padding: 22px;
+            padding: 20px;
             display: flex;
             align-items: center;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border: 1px solid #333;
         }
-        .box:active { transform: scale(0.98); background: #252525; }
+        .btn-tile:active { transform: scale(0.97); background: #2a2a2a; }
         
-        /* ICON CIRCLE */
-        .icon-circ {
-            width: 45px;
-            height: 45px;
+        .icon-sq {
+            width: 55px;
+            height: 55px;
             background: #000;
-            border-radius: 50%;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 20px;
-            font-size: 20px;
-            border: 1px solid #333;
+            margin-right: 25px;
+            font-size: 28px;
         }
 
-        .box span { 
+        .btn-tile span { 
             color: #ff6600; 
             font-weight: 900; 
-            font-size: 15px; 
+            font-size: 18px; 
             text-transform: uppercase; 
-            letter-spacing: 0.5px; 
+            letter-spacing: 1px; 
         }
 
-        /* PAGE OVERLAYS */
+        /* PAGES */
         .page {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -81,27 +79,33 @@
 
         .back-btn { 
             background: #000; color: #ff6600; border: 1px solid #ff6600; 
-            padding: 12px 24px; border-radius: 12px; font-weight: 900; 
-            width: fit-content; margin-bottom: 25px; cursor: pointer; text-transform: uppercase;
-            font-size: 12px;
+            padding: 14px 24px; border-radius: 12px; font-weight: 900; 
+            margin-bottom: 25px; cursor: pointer; text-transform: uppercase;
+            width: fit-content; font-size: 12px;
         }
 
-        /* INTERNAL CARD STYLE (MATCHING IMAGE_B811F9.PNG) */
-        .card { background: #1a1a1a; border-radius: 20px; padding: 25px; border: 1px solid #333; }
-        h2 { color: #ff6600; font-size: 15px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; letter-spacing: 1px; }
+        .card { background: #1a1a1a; border-radius: 22px; padding: 25px; border: 1px solid #333; margin-bottom: 20px;}
+        h2 { color: #ff6600; font-size: 16px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; }
         
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
         input, textarea { 
             width: 100%; background: #000; border: 1px solid #333; color: #fff; 
-            padding: 16px; border-radius: 12px; margin-bottom: 18px; outline: none; font-size: 16px; 
+            padding: 18px; border-radius: 12px; margin-bottom: 20px; outline: none; font-size: 16px; 
         }
 
         .save-btn { 
             width: 100%; background: #ff6600; color: #000; padding: 22px; border: none; 
-            border-radius: 15px; font-weight: 900; font-size: 20px; text-transform: uppercase;
+            border-radius: 15px; font-weight: 900; font-size: 22px; text-transform: uppercase;
         }
 
-        #big-total { font-size: 58px; font-weight: 900; color: #ff6600; text-align: right; margin: 10px 0; }
+        .total-text { font-size: 64px; font-weight: 900; color: #ff6600; text-align: right; margin: 15px 0; }
+        
+        /* HISTORY ITEMS */
+        .job-row { padding: 15px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .job-info { font-weight: 900; font-size: 14px; }
+        .job-price { color: #ff6600; display: block; font-size: 18px; }
+        .paid-tag { background: #2ecc71; color: #000; padding: 5px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; }
+        .due-tag { border: 1px solid #ff6600; color: #ff6600; padding: 5px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -110,58 +114,40 @@
     <div class="header">
         <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
     </div>
-    
     <div class="stack">
-        <div class="box" onclick="openPage('quotes')">
-            <div class="icon-circ">📝</div>
-            <span>Job Quotes</span>
-        </div>
-        
-        <div class="box" onclick="openPage('calc')">
-            <div class="icon-circ">🧮</div>
-            <span>Calculator</span>
-        </div>
-        
-        <div class="box" onclick="openPage('history')">
-            <div class="icon-circ">📜</div>
-            <span>Job History</span>
-        </div>
-        
-        <div class="box" onclick="openPage('bank')">
-            <div class="icon-circ">🏦</div>
-            <span>Bank Setup</span>
-        </div>
-        
-        <div class="box" onclick="openPage('readme')">
-            <div class="icon-circ">📖</div>
-            <span>Read Me</span>
-        </div>
+        <div class="btn-tile" onclick="openP('quotes')"><div class="icon-sq">📝</div><span>Job Quotes</span></div>
+        <div class="btn-tile" onclick="openP('calc')"><div class="icon-sq">🧮</div><span>Calculator</span></div>
+        <div class="btn-tile" onclick="openP('history')"><div class="icon-sq">📜</div><span>Job History</span></div>
+        <div class="btn-tile" onclick="openP('bank')"><div class="icon-sq">🏦</div><span>Bank Setup</span></div>
+        <div class="btn-tile" onclick="openP('readme')"><div class="icon-sq">📖</div><span>Read Me</span></div>
     </div>
 </div>
 
 <div id="quotes" class="page">
-    <div class="back-btn" onclick="closePage()">← BACK TO DASHBOARD</div>
+    <div class="back-btn" onclick="closeP()">← Dashboard</div>
     <div class="card">
         <h2>New Quote</h2>
         <label>Client Name</label><input type="text" id="cn">
         <label>Labour Description</label><textarea id="dl" style="height:100px;"></textarea>
-        <button class="save-btn" onclick="saveJob()">Save Job</button>
+        <label>Total Price (£)</label><input type="number" id="tp" oninput="upQ()">
+        <div class="total-text" id="q-tot">£0.00</div>
+        <button class="save-btn" onclick="saveJ()">Save Job</button>
     </div>
 </div>
 
 <div id="calc" class="page">
-    <div class="back-btn" onclick="closePage()">← BACK TO DASHBOARD</div>
+    <div class="back-btn" onclick="closeP()">← Dashboard</div>
     <div class="card">
         <h2>Calculator</h2>
-        <label>Hours</label><input type="number" id="h" oninput="runTotal()">
-        <label>Rate (£)</label><input type="number" id="r" oninput="runTotal()">
-        <label>Materials (£)</label><input type="number" id="m" oninput="runTotal()">
-        <div id="big-total">£0.00</div>
+        <label>Hours</label><input type="number" id="h" oninput="doC()">
+        <label>Rate (£)</label><input type="number" id="r" oninput="doC()">
+        <label>Materials (£)</label><input type="number" id="m" oninput="doC()">
+        <div class="total-text" id="c-tot">£0.00</div>
     </div>
 </div>
 
 <div id="history" class="page">
-    <div class="back-btn" onclick="closePage()">← BACK TO DASHBOARD</div>
+    <div class="back-btn" onclick="closeP()">← Dashboard</div>
     <div class="card">
         <h2>History</h2>
         <div id="joblist"></div>
@@ -169,15 +155,68 @@
 </div>
 
 <div id="bank" class="page">
-    <div class="back-btn" onclick="closePage()">← BACK TO DASHBOARD</div>
+    <div class="back-btn" onclick="closeP()">← Dashboard</div>
     <div class="card">
         <h2>Bank Details</h2>
-        <label>Business Name</label><input type="text" id="sn" oninput="persist('sn',this.value)">
-        <label>Bank Name</label><input type="text" id="sb" oninput="persist('sb',this.value)">
-        <label>Sort Code</label><input type="text" id="sc" oninput="persist('sc',this.value)">
-        <label>Account No.</label><input type="text" id="an" oninput="persist('an',this.value)">
+        <label>Business Name</label><input type="text" id="sn" oninput="st('sn',this.value)">
+        <label>Bank Name</label><input type="text" id="sb" oninput="st('sb',this.value)">
+        <label>Sort Code</label><input type="text" id="sc" oninput="st('sc',this.value)">
+        <label>Account No.</label><input type="text" id="an" oninput="st('an',this.value)">
     </div>
 </div>
 
 <div id="readme" class="page">
-    <div class="back-
+    <div class="back-btn" onclick="closeP()">← Dashboard</div>
+    <div class="card">
+        <h2>Read Me</h2>
+        <p style="color:#aaa; line-height:1.6;">Designed for specialized labour. All data is stored locally on this device. British English standards applied.</p>
+    </div>
+</div>
+
+<script>
+    const KEY = "TBP_V62_FINAL";
+    function openP(id) { document.getElementById(id).classList.add('active'); if(id==='history') renderH(); }
+    function closeP() { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); }
+    
+    function st(k,v) { localStorage.setItem(KEY+k,v); }
+    function gt(k) { return localStorage.getItem(KEY+k) || ""; }
+
+    function upQ() { document.getElementById('q-tot').innerText = "£" + (parseFloat(document.getElementById('tp').value)||0).toFixed(2); }
+    
+    function doC() {
+        const h = parseFloat(document.getElementById('h').value)||0, r = parseFloat(document.getElementById('r').value)||0, m = parseFloat(document.getElementById('m').value)||0;
+        document.getElementById('c-tot').innerText = "£" + ((h*r)+m).toFixed(2);
+    }
+
+    function saveJ() {
+        const jobs = JSON.parse(gt('j') || '[]');
+        const newJob = { id: Date.now(), name: document.getElementById('cn').value || "Client", price: parseFloat(document.getElementById('tp').value)||0, paid: false };
+        jobs.unshift(newJob);
+        st('j', JSON.stringify(jobs));
+        alert("Job Saved!");
+        closeP();
+    }
+
+    function renderH() {
+        const jobs = JSON.parse(gt('j') || '[]');
+        document.getElementById('joblist').innerHTML = jobs.map(j => `
+            <div class="job-row">
+                <div class="job-info">${j.name}<span class="job-price">£${j.price.toFixed(2)}</span></div>
+                <div class="${j.paid?'paid-tag':'due-tag'}" onclick="toggleP(${j.id})">${j.paid?'PAID':'DUE'}</div>
+            </div>
+        `).join('') || '<p style="color:#444;">No jobs found.</p>';
+    }
+
+    function toggleP(id) {
+        let jobs = JSON.parse(gt('j') || '[]');
+        jobs = jobs.map(j => j.id === id ? {...j, paid: !j.paid} : j);
+        st('j', JSON.stringify(jobs));
+        renderH();
+    }
+
+    window.onload = () => {
+        ['sn', 'sb', 'sc', 'an'].forEach(i => document.getElementById(i).value = gt(i));
+    };
+</script>
+</body>
+</html>
