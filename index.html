@@ -9,6 +9,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); color: var(--wht); font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; padding: 40px; }
         .shell { width: 100%; max-width: 380px; text-align: center; }
+        /* toolbox (orange) pay (white) */
         .logo { font-size: 34px; font-weight: 800; margin-bottom: 35px; }
         .logo span { color: var(--org); }
         .btn-back { display: none; color: var(--org); border: 1px solid var(--org); background: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 25px; }
@@ -23,10 +24,10 @@
 </head>
 <body>
 <div class="shell">
-    <button id="back" class="btn-back" onclick="go('dash')">← RETURN TO DASHBOARD</button>
+    <button id="back" class="btn-back" onclick="nav('dash')">← RETURN TO DASHBOARD</button>
     <div class="logo"><span>toolbox</span>pay</div>
     <div id="dash" class="view active">
-        <div class="tile" onclick="go('calc')">
+        <div class="tile" onclick="nav('calc')">
             <div>
                 <h3>Labour & Materials</h3>
                 <p style="font-size:12px; color:#8892b0; margin-top:4px;">Calculate costs and specialising tasks</p>
@@ -47,7 +48,7 @@
     </div>
 </div>
 <script>
-    function go(id) {
+    function nav(id) {
         document.getElementById('dash').classList.remove('active');
         document.getElementById('calc').classList.remove('active');
         document.getElementById(id).classList.add('active');
