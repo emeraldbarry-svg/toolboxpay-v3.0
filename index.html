@@ -3,30 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v9.7</title>
+    <title>toolboxpay - v9.8</title>
     <style>
-        /* BRANDING */
+        /* RESET & BRANDING */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; }
-        #app-viewport { width: 100%; max-width: 420px; padding: 20px; }
+        body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
+        #app-viewport { width: 100%; max-width: 420px; padding: 20px; position: relative; }
 
-        /* HEADER & CLOCK */
-        #live-clock { position: absolute; top: 25px; right: 25px; font-size: 14px; font-weight: 900; color: #ff6600; font-family: monospace; }
+        /* HEADER */
+        #live-clock { position: absolute; top: 25px; right: 25px; font-size: 14px; font-weight: 900; color: #ff6600; font-family: monospace; z-index: 999; }
         .header { text-align: center; padding: 25px 0 15px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; margin-bottom: 20px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* THE NAVIGATION SYSTEM */
+        /* NAVIGATION SYSTEM */
         .view { display: none; width: 100%; }
-        /* Dashboard is active by default */
-        #view-home { display: block; } 
+        #view-home { display: block; } /* Home is always first */
 
-        /* TILES */
+        /* DASHBOARD TILES */
         .stack { display: flex; flex-direction: column; gap: 15px; width: 100%; }
-        .tile { background: #222; border-radius: 20px; padding: 22px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; }
-        .icon-box { width: 55px; height: 55px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 26px; flex-shrink: 0; }
-        .tile span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
+        .tile { 
+            background: #222; 
+            border-radius: 20px; 
+            padding: 22px; 
+            display: flex; 
+            align-items: center; 
+            cursor: pointer; 
+            border: 1px solid #333; 
+            user-select: none;
+        }
+        .icon-box { width: 55px; height: 55px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 26px; pointer-events: none; }
+        .tile span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; pointer-events: none; }
 
         /* CARDS */
         .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-top: 10px; }
@@ -47,19 +55,19 @@
     <div id="view-home" class="view">
         <div class="header"><div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div></div>
         <div class="stack">
-            <div class="tile" onclick="swap('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
-            <div class="tile" onclick="swap('view-calc')"><div class="icon-box)️">🧮</div><span>Calculator</span></div>
-            <div class="tile" onclick="swap('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
-            <div class="tile" onclick="swap('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
-            <div class="tile" onclick="swap('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
+            <div class="tile" data-target="view-quote"><div class="icon-box">📝</div><span>Job Quotes</span></div>
+            <div class="tile" data-target="view-calc"><div class="icon-box">🧮</div><span>Calculator</span></div>
+            <div class="tile" data-target="view-history"><div class="icon-box">📜</div><span>Job History</span></div>
+            <div class="tile" data-target="view-bank"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
+            <div class="tile" data-target="view-readme"><div class="icon-box">📖</div><span>Read Me</span></div>
         </div>
     </div>
 
     <div id="view-quote" class="view">
-        <div class="back-btn" onclick="swap('view-home')">← DASHBOARD</div>
+        <div class="back-btn" data-target="view-home">← DASHBOARD</div>
         <div class="card">
             <h2>New Quote</h2>
-            <label>Client Name</label><input type="text" id="q-name">
+            <label>Client Name</label><input type="text" id="q-name" placeholder="John Smith">
             <label>Labour Description</label><textarea id="q-desc" style="height:80px;"></textarea>
             <label>Price (£)</label><input type="number" id="q-price" oninput="document.getElementById('q-res').innerText='£'+(parseFloat(this.value)||0).toFixed(2)">
             <div class="total-row" id="q-res">£0.00</div>
@@ -67,69 +75,73 @@
     </div>
 
     <div id="view-calc" class="view">
-        <div class="back-btn" onclick="swap('view-home')">← DASHBOARD</div>
+        <div class="back-btn" data-target="view-home">← DASHBOARD</div>
         <div class="card">
             <h2>Business Calc</h2>
-            <label>Day Rate (£)</label><input type="number" id="c-rate" oninput="calc()">
-            <label>Days Worked</label><input type="number" id="c-days" oninput="calc()">
+            <label>Day Rate (£)</label><input type="number" id="c-rate" oninput="doCalc()">
+            <label>Days Worked</label><input type="number" id="c-days" oninput="doCalc()">
             <div class="total-row" id="c-res">£0.00</div>
         </div>
     </div>
 
     <div id="view-bank" class="view">
-        <div class="back-btn" onclick="swap('view-home')">← DASHBOARD</div>
+        <div class="back-btn" data-target="view-home">← DASHBOARD</div>
         <div class="card">
             <h2>Bank Setup</h2>
-            <label>Business Name</label><input type="text" id="b-name" oninput="localStorage.setItem('bn',this.value)">
-            <label>Bank</label><input type="text" id="b-bank" oninput="localStorage.setItem('bk',this.value)">
-            <label>Sort Code</label><input type="text" id="b-sort" oninput="localStorage.setItem('sc',this.value)">
-            <label>Account No.</label><input type="text" id="b-acc" oninput="localStorage.setItem('an',this.value)">
+            <label>Business Name</label><input type="text" id="b-name" oninput="saveB('bn',this.value)">
+            <label>Bank</label><input type="text" id="b-bank" oninput="saveB('bk',this.value)">
+            <label>Sort Code</label><input type="text" id="b-sort" oninput="saveB('sc',this.value)">
+            <label>Account No.</label><input type="text" id="b-acc" oninput="saveB('an',this.value)">
         </div>
     </div>
 
-    <div id="view-history" class="view">
-        <div class="back-btn" onclick="swap('view-home')">← DASHBOARD</div>
-        <div class="card"><h2>Job History</h2><p style="color:#666;">No logs available.</p></div>
-    </div>
-
-    <div id="view-readme" class="view">
-        <div class="back-btn" onclick="swap('view-home')">← DASHBOARD</div>
-        <div class="card"><h2>Read Me</h2><p style="color:#ccc;">v9.7 Force-Display Logic.</p></div>
-    </div>
+    <div id="view-history" class="view"><div class="back-btn" data-target="view-home">← DASHBOARD</div><div class="card"><h2>Job History</h2><p style="color:#666;">No logs available.</p></div></div>
+    <div id="view-readme" class="view"><div class="back-btn" data-target="view-home">← DASHBOARD</div><div class="card"><h2>Read Me</h2><p style="color:#ccc;">v9.8 Event Listener Patch.</p></div></div>
 
 </div>
 
 <script>
-    /* THE FORCE-DISPLAY FIX */
-    function swap(targetId) {
-        // Find every element with the class 'view' and hide it
-        const views = document.getElementsByClassName('view');
-        for (let i = 0; i < views.length; i++) {
-            views[i].style.display = 'none';
+    /* DIRECT EVENT LISTENER NAVIGATION */
+    document.addEventListener('click', function (e) {
+        // Find if the clicked element (or its parent) has a data-target
+        const targetId = e.target.getAttribute('data-target') || (e.target.parentElement ? e.target.parentElement.getAttribute('data-target') : null);
+        
+        if (targetId) {
+            // 1. Hide every single view
+            const views = document.querySelectorAll('.view');
+            for (let i = 0; i < views.length; i++) {
+                views[i].style.display = 'none';
+            }
+            // 2. Force show the one we want
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+                targetEl.style.display = 'block';
+                window.scrollTo(0,0);
+            }
         }
-        // Force show the selected one
-        document.getElementById(targetId).style.display = 'block';
-        window.scrollTo(0,0);
-    }
+    });
 
-    function calc() {
+    function doCalc() {
         const r = parseFloat(document.getElementById('c-rate').value) || 0;
         const d = parseFloat(document.getElementById('c-days').value) || 0;
         document.getElementById('c-res').innerText = "£" + (r * d * 1.2).toFixed(2);
     }
 
-    function tick() {
+    function saveB(k, v) { localStorage.setItem('TBP98_' + k, v); }
+    function loadB(k) { return localStorage.getItem('TBP98_' + k) || ""; }
+
+    function clockTick() {
         const d = new Date();
         document.getElementById('live-clock').innerText = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0') + ":" + d.getSeconds().toString().padStart(2,'0');
     }
-    setInterval(tick, 1000);
+    setInterval(clockTick, 1000);
 
     window.onload = function() {
-        tick();
-        document.getElementById('b-name').value = localStorage.getItem('bn') || "";
-        document.getElementById('b-bank').value = localStorage.getItem('bk') || "";
-        document.getElementById('b-sort').value = localStorage.getItem('sc') || "";
-        document.getElementById('b-acc').value = localStorage.getItem('an') || "";
+        clockTick();
+        document.getElementById('b-name').value = loadB('bn');
+        document.getElementById('b-bank').value = loadB('bk');
+        document.getElementById('b-sort').value = loadB('sc');
+        document.getElementById('b-acc').value = loadB('an');
     };
 </script>
 </body>
