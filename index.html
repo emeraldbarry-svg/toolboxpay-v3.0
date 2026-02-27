@@ -5,188 +5,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>toolboxpay</title>
     <style>
-        :root {
-            --orange: #ff6600;
-            --white: #ffffff;
-            --navy: #0b1521;
-            --card: #1a2635;
-            --border: #233554;
-        }
-
-        /* Strict mobile-first reset */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --orange: #ff6600; --white: #ffffff; --navy: #0b1521; --card: #1a2635; }
         
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--navy);
-            color: var(--white);
-            display: flex;
-            justify-content: center;
+        /* Forces the app to stay in a narrow mobile column to fix overlapping */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: var(--navy); 
+            color: var(--white); 
+            font-family: sans-serif; 
+            display: flex; 
+            justify-content: center; 
             padding: 20px 10px;
             overflow-x: hidden;
         }
-
-        .container {
-            width: 100%;
-            max-width: 340px; /* Forced narrow width for phone screens */
-        }
+        .wrapper { width: 100%; max-width: 350px; }
 
         /* Navigation Header */
-        .nav-bar {
-            min-height: 40px;
-            margin-bottom: 10px;
-        }
-        
-        #back-btn {
-            background: none;
-            border: 1px solid var(--orange);
-            color: var(--orange);
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-size: 11px;
-            font-weight: 800;
+        .nav { min-height: 50px; margin-bottom: 10px; }
+        #back-btn { 
+            display: none; 
+            color: var(--orange); 
+            background: none; 
+            border: 1px solid var(--orange); 
+            padding: 10px; 
+            width: 100%; 
+            font-weight: 800; 
+            cursor: pointer; 
+            border-radius: 6px;
             text-transform: uppercase;
-            cursor: pointer;
-            display: none; /* Only shows when calculator is open */
         }
 
-        /* Branding - Borderless Orange & White */
-        .branding {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .logo {
-            font-size: 30px;
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
-        .toolbox { color: var(--orange); }
-        .pay { color: var(--white); }
+        /* Branding - toolbox (orange) pay (white) */
+        .logo { text-align: center; font-size: 32px; font-weight: 800; margin-bottom: 30px; }
+        .logo span { color: var(--orange); }
 
-        /* Screen Visibility Control */
-        .screen { display: none; }
+        /* Screen Management */
+        .page { display: none; }
         .active { display: block; }
 
-        /* Dashboard Card */
-        .menu-box {
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            padding: 22px;
-            border-radius: 12px;
+        /* Dashboard Item */
+        .menu-item { 
+            background: var(--card); 
+            padding: 25px; 
+            border-radius: 12px; 
+            border: 1px solid #233554; 
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .menu-box h3 { 
-            color: var(--orange); 
-            font-size: 15px; 
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-        .menu-box p { color: #8892b0; font-size: 11px; }
+        .menu-item h3 { color: var(--orange); font-size: 16px; margin-bottom: 5px; text-transform: uppercase; }
+        .menu-item p { color: #8892b0; font-size: 12px; }
 
-        /* Calculator Styles */
-        .label-heading {
-            color: var(--orange);
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin: 20px 0 10px 0;
-            border-bottom: 1px solid rgba(255, 102, 0, 0.2);
-            padding-bottom: 4px;
-        }
-        .field-wrap { margin-bottom: 15px; }
-        label { display: block; font-size: 12px; margin-bottom: 6px; }
-        input {
-            width: 100%;
-            padding: 12px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--white);
+        /* Calculator Formatting */
+        .label { color: var(--orange); font-size: 11px; font-weight: 800; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 5px; text-transform: uppercase; }
+        label { display: block; font-size: 13px; margin-bottom: 8px; }
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--card); 
+            border: 1px solid #233554; 
+            color: #fff; 
+            margin-bottom: 15px; 
+            border-radius: 8px; 
             font-size: 16px;
-            outline: none;
         }
-        input:focus { border-color: var(--orange); }
 
-        /* Total Result Card */
-        .result-bar {
-            background: var(--card);
-            border: 2px solid var(--orange);
-            border-radius: 8px;
-            padding: 18px;
-            margin-top: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .total-amount { font-size: 22px; font-weight: 800; color: var(--orange); }
+        /* Total Section */
+        .total-box { border: 2px solid var(--orange); padding: 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+        .amount { color: var(--orange); font-size: 24px; font-weight: 800; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="nav-bar">
-        <button id="back-btn" onclick="swapTo('dash')">← Return to Dashboard</button>
+<div class="wrapper">
+    <div class="nav">
+        <button id="back-btn" onclick="show('dash')">← Return to Dashboard</button>
     </div>
 
-    <div class="branding">
-        <h1 class="logo"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
-    </div>
+    <div class="logo"><span>toolbox</span>pay</div>
 
-    <div id="dash" class="screen active">
-        <div class="menu-box" onclick="swapTo('calc')">
+    <div id="dash" class="page active">
+        <div class="menu-item" onclick="show('calc')">
             <div>
                 <h3>Labour & Materials</h3>
                 <p>Calculate costs and specialising tasks</p>
             </div>
-            <span style="color: var(--orange); font-weight: bold;">→</span>
+            <span style="color:var(--orange); font-weight: bold;">→</span>
         </div>
     </div>
 
-    <div id="calc" class="screen">
-        <div class="label-heading">Labour Costs</div>
-        <div class="field-wrap">
-            <label>Hours worked</label>
-            <input type="number" id="h" placeholder="0" oninput="doCalc()">
-        </div>
-        <div class="field-wrap">
-            <label>Hourly rate (£)</label>
-            <input type="number" id="r" placeholder="0.00" oninput="doCalc()">
-        </div>
+    <div id="calc" class="page">
+        <div class="label">Labour Costs</div>
+        <label>Hours worked</label>
+        <input type="number" id="h" placeholder="0" oninput="math()">
+        <label>Hourly rate (£)</label>
+        <input type="number" id="r" placeholder="0.00" oninput="math()">
 
-        <div class="label-heading">Materials</div>
-        <div class="field-wrap">
-            <label>Total material costs (£)</label>
-            <input type="number" id="m" placeholder="0.00" oninput="doCalc()">
-        </div>
+        <div class="label">Materials</div>
+        <label>Total material costs (£)</label>
+        <input type="number" id="m" placeholder="0.00" oninput="math()">
 
-        <div class="result-bar">
-            <span style="font-weight: 800; font-size: 13px;">TOTAL:</span>
-            <span id="res" class="total-amount">£0.00</span>
+        <div class="total-box">
+            <span style="font-weight:800; font-size:12px;">TOTAL:</span>
+            <span id="total" class="amount">£0.00</span>
         </div>
     </div>
 </div>
 
 <script>
-    function swapTo(id) {
-        // Toggle active screens locally
+    function show(id) {
+        // Switch between views instantly without reloading
         document.getElementById('dash').classList.remove('active');
         document.getElementById('calc').classList.remove('active');
         document.getElementById(id).classList.add('active');
         
-        // Show/Hide back button
+        // Show the back button only on the calculator
         document.getElementById('back-btn').style.display = (id === 'calc') ? 'block' : 'none';
         window.scrollTo(0,0);
     }
 
-    function doCalc() {
+    function math() {
         const h = parseFloat(document.getElementById('h').value) || 0;
         const r = parseFloat(document.getElementById('r').value) || 0;
         const m = parseFloat(document.getElementById('m').value) || 0;
-        const total = (h * r) + m;
-        document.getElementById('res').innerText = '£' + total.toLocaleString('en-GB', {
+        const res = (h * r) + m;
+        document.getElementById('total').innerText = '£' + res.toLocaleString('en-GB', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
