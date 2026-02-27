@@ -3,39 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v21.0</title>
+    <title>toolboxpay v22.0</title>
     <style>
-        :root { --org: #ff6600; --bg: #0e0e0e; --card: #1a1a1a; --text: #ffffff; }
+        /* BRANDING COLOURS */
+        :root { --orange: #ff6600; --bg: #0e0e0e; --card: #1a1a1a; --text: #ffffff; }
 
         html, body { 
             background-color: var(--bg) !important; 
             margin: 0; padding: 0; 
             display: flex; justify-content: center; 
-            font-family: sans-serif; color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            color: var(--text);
         }
 
-        /* Fixed shell prevents the "Stretched" look from your first screenshot */
+        /* CENTERED SHELL - Fixes the stretching seen in your first screenshots */
         #app-shell {
             background: var(--card);
-            width: 400px; height: 90vh;
-            margin-top: 5vh; border: 1px solid #333;
-            border-radius: 12px; padding: 25px;
+            width: 420px; height: 90vh;
+            margin-top: 4vh; border: 1px solid #333;
+            border-radius: 16px; padding: 30px;
             box-sizing: border-box; overflow-y: auto;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
         }
 
-        .logo { color: var(--org); font-weight: 900; font-size: 26px; text-align: center; margin-bottom: 30px; }
+        .logo { color: var(--orange); font-weight: 900; font-size: 28px; text-align: center; margin-bottom: 35px; }
         .logo span { color: #fff; }
 
-        .btn { width: 100%; padding: 20px; margin-bottom: 12px; background: #222; border: 1px solid #444; border-radius: 8px; font-size: 16px; font-weight: bold; text-align: left; color: var(--org); cursor: pointer; display: flex; justify-content: space-between; }
-        .btn-save { background: var(--org) !important; color: #000 !important; border: none; justify-content: center; margin-top: 10px; }
-        .back { background: none; border: 1px solid var(--org); color: var(--org); text-align: center; padding: 10px; margin-bottom: 20px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        /* NAVIGATION BUTTONS - Orange text on Dark background */
+        .nav-tile { 
+            width: 100%; padding: 22px; margin-bottom: 15px; 
+            background: #252525; border: 1px solid #333; border-radius: 10px; 
+            font-size: 16px; font-weight: bold; text-align: left; 
+            color: var(--orange); cursor: pointer; display: flex; 
+            justify-content: space-between; transition: 0.2s;
+        }
+        .nav-tile:hover { background: #333; border-color: var(--orange); }
 
+        .btn-action { 
+            background: var(--orange) !important; color: #000 !important; 
+            border: none; width: 100%; padding: 18px; border-radius: 8px;
+            font-weight: 900; font-size: 16px; cursor: pointer; margin-top: 10px;
+        }
+
+        .btn-back { 
+            background: none; border: 1px solid var(--orange); color: var(--orange); 
+            text-align: center; padding: 10px; margin-bottom: 25px; 
+            width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; 
+        }
+
+        /* HIDDEN BY DEFAULT TO PREVENT OVERLAP */
         .screen { display: none; }
         .active { display: block !important; }
 
-        input, textarea, select { width: 100%; padding: 16px; margin: 8px 0 15px 0; border: 1px solid #444; background: #000; color: #fff; border-radius: 6px; font-size: 16px; box-sizing: border-box; }
-        .total-display { text-align: right; font-size: 34px; font-weight: 900; color: var(--org); margin: 20px 0; }
-        .invoice-paper { background: #fff; color: #000; padding: 20px; border-radius: 4px; font-size: 14px; line-height: 1.6; }
+        input, textarea, select { 
+            width: 100%; padding: 16px; margin: 8px 0 15px 0; 
+            border: 1px solid #444; background: #050505; color: #fff; 
+            border-radius: 8px; font-size: 16px; box-sizing: border-box; 
+        }
+
+        .total-box { text-align: right; font-size: 36px; font-weight: 900; color: var(--orange); margin: 25px 0; }
+        
+        /* WHITE INVOICE FOR PRINTING */
+        .invoice-paper { background: #fff; color: #000; padding: 25px; border-radius: 4px; font-size: 14px; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -44,94 +73,131 @@
         <div class="logo">toolbox<span>pay</span></div>
 
         <div id="scr-dash" class="screen active">
-            <button class="btn" onclick="nav('scr-calc')">NEW QUOTE <span>→</span></button>
-            <button class="btn" onclick="nav('scr-hist'); loadH();">HISTORY <span>→</span></button>
-            <button class="btn" onclick="nav('scr-biz')">BUSINESS SETUP <span>→</span></button>
-            <button class="btn" onclick="nav('scr-bnk')">BANK DETAILS <span>→</span></button>
-            <button onclick="localStorage.clear(); location.reload();" style="width:100%; margin-top:50px; background:none; border:none; color:#444; cursor:pointer; font-size:10px;">[ CITE: CLEAR APP MEMORY ]</button>
+            <button class="nav-tile" onclick="nav('scr-calc')">NEW QUOTE <span>→</span></button>
+            <button class="nav-tile" onclick="nav('scr-hist'); loadHistory();">HISTORY <span>→</span></button>
+            <button class="nav-tile" onclick="nav('scr-biz')">BUSINESS SETUP <span>→</span></button>
+            <button class="nav-tile" onclick="nav('scr-bnk')">BANK DETAILS <span>→</span></button>
+            
+            <button onclick="localStorage.clear(); location.reload();" 
+                style="width:100%; margin-top:60px; background:none; border:none; color:#444; cursor:pointer; font-size:11px;">
+                [ FORCE DATA RESET ]
+            </button>
         </div>
 
         <div id="scr-calc" class="screen">
-            <button class="back" onclick="nav('scr-dash')">← BACK</button>
-            <input type="text" id="in-name" placeholder="Client Name">
-            <input type="number" id="in-hrs" placeholder="Labour Hours" oninput="doMath()">
-            <input type="number" id="in-rte" placeholder="Hourly Rate" oninput="doMath()">
-            <input type="number" id="in-mat" placeholder="Materials" oninput="doMath()">
-            <div id="in-total" class="total-display">£0.00</div>
-            <button class="btn btn-save" onclick="saveQuote()">SAVE QUOTE</button>
+            <button class="btn-back" onclick="nav('scr-dash')">← BACK TO MENU</button>
+            <input type="text" id="q-name" placeholder="Client Name">
+            <input type="number" id="q-hrs" placeholder="Labour Hours" oninput="calc()">
+            <input type="number" id="q-rte" placeholder="Hourly Rate" oninput="calc()">
+            <input type="number" id="q-mat" placeholder="Materials Cost" oninput="calc()">
+            <div id="q-total" class="total-box">£0.00</div>
+            <button class="btn-action" onclick="save()">SAVE QUOTE</button>
         </div>
 
         <div id="scr-hist" class="screen">
-            <button class="back" onclick="nav('scr-dash')">← BACK</button>
-            <div id="hist-target"></div>
+            <button class="btn-back" onclick="nav('scr-dash')">← BACK TO MENU</button>
+            <div id="hist-list"></div>
         </div>
 
         <div id="scr-biz" class="screen">
-            <button class="back" onclick="nav('scr-dash')">← BACK</button>
-            <select id="set-cur" onchange="localStorage.setItem('v21_cur', this.value)">
+            <button class="btn-back" onclick="nav('scr-dash')">← BACK TO MENU</button>
+            <label style="color:var(--orange); font-size:12px; font-weight:bold;">CURRENCY</label>
+            <select id="s-cur" onchange="localStorage.setItem('v22_cur', this.value)">
                 <option value="£">GBP (£)</option>
                 <option value="$">USD ($)</option>
                 <option value="€">EUR (€)</option>
             </select>
-            <input type="text" id="set-bn" placeholder="Business Name" oninput="localStorage.setItem('v21_bn', this.value)">
-            <textarea id="set-ba" placeholder="Business Address" oninput="localStorage.setItem('v21_ba', this.value)" style="height:100px;"></textarea>
+            <input type="text" id="s-bn" placeholder="Business Name" oninput="localStorage.setItem('v22_bn', this.value)">
+            <textarea id="s-ba" placeholder="Business Address" oninput="localStorage.setItem('v22_ba', this.value)" style="height:100px;"></textarea>
         </div>
 
         <div id="scr-bnk" class="screen">
-            <button class="back" onclick="nav('scr-dash')">← BACK</button>
-            <input type="text" id="set-b1" placeholder="Account Name" oninput="localStorage.setItem('v21_b1', this.value)">
-            <input type="text" id="set-b2" placeholder="Sort Code" oninput="localStorage.setItem('v21_b2', this.value)">
-            <input type="text" id="set-b3" placeholder="Account Number" oninput="localStorage.setItem('v21_b3', this.value)">
+            <button class="btn-back" onclick="nav('scr-dash')">← BACK TO MENU</button>
+            <input type="text" id="s-b1" placeholder="Account Name" oninput="localStorage.setItem('v22_b1', this.value)">
+            <input type="text" id="s-b2" placeholder="Sort Code" oninput="localStorage.setItem('v22_b2', this.value)">
+            <input type="text" id="s-b3" placeholder="Account Number" oninput="localStorage.setItem('v22_b3', this.value)">
         </div>
 
         <div id="scr-view" class="screen">
-            <button class="back" onclick="nav('scr-hist')">← BACK</button>
-            <div id="view-target" class="invoice-paper"></div>
-            <button class="btn btn-save" onclick="window.print()">PRINT / SAVE PDF</button>
+            <button class="btn-back" onclick="nav('scr-hist')">← BACK TO HISTORY</button>
+            <div id="view-paper" class="invoice-paper"></div>
+            <button class="btn-action" onclick="window.print()">PRINT / SAVE AS PDF</button>
         </div>
     </div>
 
     <script>
-        const DB = "v21_";
+        const KEY = "v22_";
 
+        // Navigation that physically wipes screen state to prevent overlaps
         function nav(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             window.scrollTo(0,0);
         }
 
-        function doMath() {
-            var sym = localStorage.getItem(DB+'cur') || '£';
-            var h = Number(document.getElementById('in-hrs').value) || 0;
-            var r = Number(document.getElementById('in-rte').value) || 0;
-            var m = Number(document.getElementById('in-mat').value) || 0;
-            document.getElementById('in-total').innerText = sym + ((h*r)+m).toFixed(2);
+        function calc() {
+            var sym = localStorage.getItem(KEY+'cur') || '£';
+            var h = Number(document.getElementById('q-hrs').value) || 0;
+            var r = Number(document.getElementById('q-rte').value) || 0;
+            var m = Number(document.getElementById('q-mat').value) || 0;
+            document.getElementById('q-total').innerText = sym + ((h*r)+m).toFixed(2);
         }
 
-        function saveQuote() {
-            var jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
+        function save() {
+            var jobs = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
             jobs.unshift({
                 id: Date.now(),
-                n: document.getElementById('in-name').value || 'Client',
-                t: document.getElementById('in-total').innerText,
+                n: document.getElementById('q-name').value || 'Client',
+                t: document.getElementById('q-total').innerText,
                 d: new Date().toLocaleDateString('en-GB')
             });
-            localStorage.setItem(DB+'data', JSON.stringify(jobs.slice(0,25)));
+            localStorage.setItem(KEY+'data', JSON.stringify(jobs.slice(0,30)));
             location.reload(); 
         }
 
-        function loadH() {
-            var jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
-            document.getElementById('hist-target').innerHTML = jobs.map(j => `
-                <button class="btn" onclick="openJob(${j.id})">${j.n}<span>${j.t}</span></button>
-            `).join('') || '<p style="text-align:center">No history.</p>';
+        function loadHistory() {
+            var jobs = JSON.parse(localStorage.getItem(KEY+'data') || '[]');
+            document.getElementById('hist-list').innerHTML = jobs.map(j => `
+                <button class="nav-tile" onclick="openJob(${j.id})">
+                    <span>${j.n}</span>
+                    <span style="font-size:12px; opacity:0.7;">${j.d} — ${j.t}</span>
+                </button>
+            `).join('') || '<p style="text-align:center; opacity:0.5;">No quotes saved yet.</p>';
         }
 
         function openJob(id) {
-            var j = JSON.parse(localStorage.getItem(DB+'data') || '[]').find(x => x.id === id);
+            var j = JSON.parse(localStorage.getItem(KEY+'data') || '[]').find(x => x.id === id);
             if(!j) return;
-            document.getElementById('view-target').innerHTML = `
-                <div style="text-align:center; margin-bottom:20px;"><strong>QUOTE / INVOICE</strong></div>
-                <strong>FROM:</strong><br>${localStorage.getItem(DB+'bn') || 'Business Name'}<br>${localStorage.getItem(DB+'ba') || ''}<hr>
-                <strong>TO:</strong> ${j.n}<br><strong>DATE:</strong> ${j.d}<br>
-                <div style="font-size:22px
+            document.getElementById('view-paper').innerHTML = `
+                <div style="text-align:center; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">
+                    <h2 style="margin:0;">QUOTE / INVOICE</h2>
+                </div>
+                <strong>FROM:</strong><br>
+                ${localStorage.getItem(KEY+'bn') || 'Business Name'}<br>
+                ${localStorage.getItem(KEY+'ba') || ''}<br><br>
+                <strong>TO:</strong> ${j.n}<br>
+                <strong>DATE:</strong> ${j.d}<br>
+                <div style="font-size:24px; font-weight:bold; color:#ff6600; text-align:right; margin:20px 0;">
+                    TOTAL: ${j.t}
+                </div>
+                <div style="border-top:1px solid #eee; padding-top:10px; font-size:12px;">
+                    <strong>BANK DETAILS:</strong><br>
+                    Account: ${localStorage.getItem(KEY+'b1') || ''}<br>
+                    Sort Code: ${localStorage.getItem(KEY+'b2') || ''}<br>
+                    Account No: ${localStorage.getItem(KEY+'b3') || ''}
+                </div>
+            `;
+            nav('scr-view');
+        }
+
+        // Auto-load settings on boot
+        window.onload = function() {
+            ['bn','ba','b1','b2','b3','cur'].forEach(k => {
+                var v = localStorage.getItem(KEY+k);
+                if(v && document.getElementById('s-'+k)) document.getElementById('s-'+k).value = v;
+            });
+            calc();
+        };
+    </script>
+</body>
+</html>
