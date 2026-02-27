@@ -3,27 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v5.5</title>
+    <title>toolboxpay v5.6</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; }
+        body { background: var(--bg); color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; overflow: hidden; }
         .shell { width: 100%; max-width: 360px; }
         
+        /* The "Panic" Button */
+        .reset-trigger { display: block; text-align: center; color: #555; font-size: 10px; padding: 10px; text-decoration: underline; cursor: pointer; }
+
         .logo { text-align: center; margin-bottom: 20px; font-size: 26px; font-weight: 800; }
         .logo span { color: var(--org); }
         
-        #back-btn { display: none; width: 100%; padding: 12px; border: 1px solid var(--org); color: var(--org); background: none; border-radius: 8px; font-weight: 800; cursor: pointer; margin-bottom: 15px; }
+        #back-nav { display: none; width: 100%; padding: 12px; border: 1px solid var(--org); color: var(--org); background: none; border-radius: 8px; font-weight: 800; margin-bottom: 15px; text-align: center; cursor: pointer; }
 
         .screen { display: none; }
-        .active { display: block !important; }
+        .screen.active { display: block; }
 
         .tile { background: var(--crd); padding: 20px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .tile h3 { color: var(--org); text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
         .tile p { font-size: 11px; color: #8892b0; margin-top: 3px; }
 
         .tag { color: var(--org); font-size: 10px; font-weight: 800; text-transform: uppercase; margin: 15px 0 8px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 4px; }
-        input, textarea { width: 100%; padding: 14px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 10px; border-radius: 8px; font-size: 16px; outline: none; display: block; }
+        input, textarea { width: 100%; padding: 14px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 10px; border-radius: 8px; font-size: 16px; outline: none; }
         
         .total-box { border: 2px solid var(--org); padding: 18px; border-radius: 12px; text-align: right; background: rgba(255,102,0,0.05); margin: 15px 0; }
         .price { color: var(--org); font-size: 24px; font-weight: 800; }
@@ -38,15 +41,17 @@
 <body>
 
 <div class="shell">
-    <button id="back-btn" onclick="go('dash')">← BACK TO DASHBOARD</button>
+    <div class="reset-trigger" onclick="forceDash()">IF FROZEN: TAP TO UNFREEZE</div>
+    
+    <div id="back-nav" onclick="go('dash')">← BACK TO DASHBOARD</div>
 
-    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #8892b0;">v5.5</small></div>
+    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #8892b0;">v5.6</small></div>
 
     <div id="scr-dash" class="screen active">
         <div class="tile" onclick="go('calc')"><div><h3>Labour & Materials</h3><p>New Quote</p></div><span>→</span></div>
         <div class="tile" onclick="go('hist')"><div><h3>Job History</h3><p>Manage Logs</p></div><span>→</span></div>
-        <div class="tile" onclick="go('biz')"><div><h3>Business Details</h3><p>Saved automatically</p></div><span>→</span></div>
-        <div class="tile" onclick="go('bank')"><div><h3>Bank Details</h3><p>Saved automatically</p></div><span>→</span></div>
+        <div class="tile" onclick="go('biz')"><div><h3>Business Details</h3><p>Auto-saves</p></div><span>→</span></div>
+        <div class="tile" onclick="go('bank')"><div><h3>Bank Details</h3><p>Auto-saves</p></div><span>→</span></div>
     </div>
 
     <div id="scr-calc" class="screen">
@@ -56,4 +61,108 @@
         <input type="number" id="r" placeholder="Rate (£)" oninput="doMath()" inputmode="decimal">
         <input type="number" id="m" placeholder="Materials (£)" oninput="doMath()" inputmode="decimal">
         <div class="total-box"><span id="res" class="price">£0.00</span></div>
-        <button class="btn-main
+        <button class="btn-main" onclick="saveJob()">Save Quote</button>
+    </div>
+
+    <div id="scr-hist" class="screen">
+        <div class="stats-box">
+            <div style="font-size: 10px; color: #8892b0;">TOTAL VALUE</div>
+            <div id="hist-total" style="font-size: 22px; font-weight: 800; color: var(--org);">£0.00</div>
+        </div>
+        <div id="hist-list"></div>
+        <button class="btn-main" style="background:#222; margin-top:20px; font-size: 10px;" onclick="clearHist()">Wipe History</button>
+    </div>
+
+    <div id="scr-biz" class="screen">
+        <div class="tag">Company</div>
+        <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
+        <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba',this.value)" style="height:80px; width:100%; background:var(--crd); color:#fff; border:1px solid #233554; padding:10px; border-radius:8px;"></textarea>
+        <button class="btn-main" onclick="go('dash')">Return</button>
+    </div>
+
+    <div id="scr-bank" class="screen">
+        <div class="tag">Bank</div>
+        <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
+        <input type="text" id="bk-s" placeholder="Sort Code" oninput="localStorage.setItem('bk-s',this.value)">
+        <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
+        <button class="btn-main" onclick="go('dash')">Return</button>
+    </div>
+</div>
+
+<script>
+    // Clean transition logic
+    function go(id) {
+        var s = document.getElementsByClassName('screen');
+        for (var i = 0; i < s.length; i++) {
+            s[i].classList.remove('active');
+        }
+        document.getElementById('scr-' + id).classList.add('active');
+        document.getElementById('back-nav').style.display = (id === 'dash') ? 'none' : 'block';
+        if(id === 'hist') loadHist();
+    }
+
+    // Panic function to reset visual state
+    function forceDash() {
+        localStorage.removeItem('currentScreen'); // Clear any stuck state
+        location.reload();
+    }
+
+    function doMath() {
+        var h = parseFloat(document.getElementById('h').value) || 0;
+        var r = parseFloat(document.getElementById('r').value) || 0;
+        var m = parseFloat(document.getElementById('m').value) || 0;
+        document.getElementById('res').innerText = '£' + ((h * r) + m).toFixed(2);
+    }
+
+    function saveJob() {
+        var ref = document.getElementById('job-ref').value || 'New Job';
+        var txt = document.getElementById('res').innerText;
+        var num = parseFloat(txt.replace('£', ''));
+        var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        jobs.unshift({ id: Date.now(), ref: ref, txt: txt, num: num, date: new Date().toLocaleDateString('en-GB') });
+        localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 15)));
+        document.getElementById('job-ref').value = '';
+        go('dash');
+    }
+
+    function loadHist() {
+        var list = document.getElementById('hist-list');
+        var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        var total = 0;
+        var html = '';
+        for (var i = 0; i < jobs.length; i++) {
+            total += jobs[i].num;
+            html += '<div class="hist-item">' +
+                '<div style="flex:1; min-width:0;">' +
+                    '<div style="font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + jobs[i].ref + '</div>' +
+                    '<div style="font-size:11px; color:#8892b0;">' + jobs[i].date + ' • <span style="color:var(--org);">' + jobs[i].txt + '</span></div>' +
+                '</div>' +
+                '<button class="del-btn" onclick="deleteJob(' + jobs[i].id + ')">DEL</button>' +
+            '</div>';
+        }
+        list.innerHTML = jobs.length ? html : '<p style="text-align:center;font-size:12px;color:#444;">No records</p>';
+        document.getElementById('hist-total').innerText = '£' + total.toFixed(2);
+    }
+
+    function deleteJob(id) {
+        var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        var filtered = [];
+        for (var i = 0; i < jobs.length; i++) {
+            if (jobs[i].id !== id) filtered.push(jobs[i]);
+        }
+        localStorage.setItem('jobs', JSON.stringify(filtered));
+        loadHist();
+    }
+
+    function clearHist() { if(confirm('Clear all?')) { localStorage.setItem('jobs', '[]'); loadHist(); } }
+
+    window.onload = function() {
+        var k = ['bn','ba','bk-a','bk-s','bk-n'];
+        for (var i = 0; i < k.length; i++) {
+            var v = localStorage.getItem(k[i]);
+            if(v) document.getElementById(k[i]).value = v;
+        }
+    };
+</script>
+</body>
+</html>
