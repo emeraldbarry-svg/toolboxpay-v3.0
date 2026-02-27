@@ -2,50 +2,47 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v9.7</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>toolboxpay v9.8</title>
     <style>
-        /* THE ULTIMATE RESET: No fixed widths, no aspect ratio locks */
-        body { background: #0b1521; color: white; font-family: sans-serif; padding: 15px; margin: 0; }
-        
-        .logo { text-align: center; margin-bottom: 20px; font-size: 24px; font-weight: 900; }
-        .logo span { color: #ff6600; }
+        /* THE RESET: Native styling to prevent browser scaling errors */
+        body { font-family: sans-serif; padding: 15px; margin: 0; background: #fff; color: #000; }
+        .logo { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 20px; color: #ff6600; }
+        .logo span { color: #000; }
 
-        /* NATIVE BLOCK BUTTONS: Impossible to skew */
-        button { width: 100%; padding: 20px; background: #1a2635; color: #ff6600; border: 1px solid #233554; border-radius: 8px; margin-bottom: 10px; font-size: 16px; font-weight: 800; text-align: left; display: block; cursor: pointer; }
-        
-        .back-btn { background: none; border: 1px solid #ff6600; color: #ff6600; text-align: center; padding: 10px; }
-        .save-btn { background: #ff6600; color: white; border: none; text-align: center; }
+        /* NATIVE BUTTONS: Highest compatibility for mobile */
+        button { width: 100%; padding: 18px; margin-bottom: 10px; font-size: 16px; font-weight: bold; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #f0f0f0; text-align: left; }
+        .btn-org { background: #ff6600; color: white; border: none; text-align: center; }
+        .btn-back { background: #fff; border: 1px solid #ff6600; color: #ff6600; text-align: center; padding: 8px; }
 
         .screen { display: none; }
         .active { display: block !important; }
 
-        label { color: #ff6600; font-size: 11px; font-weight: 800; display: block; margin-top: 10px; }
-        input, textarea, select { width: 100%; padding: 15px; margin: 5px 0 15px 0; border-radius: 6px; border: 1px solid #233554; background: #162130; color: white; font-size: 16px; display: block; box-sizing: border-box; }
+        label { display: block; margin-top: 10px; font-weight: bold; font-size: 12px; text-transform: uppercase; }
+        input, textarea, select { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; box-sizing: border-box; }
         
-        #total-area { text-align: right; padding: 20px 0; font-size: 30px; font-weight: 900; color: #ff6600; }
-
-        .receipt { background: white; color: black; padding: 15px; border-radius: 4px; font-size: 14px; }
+        .total { text-align: right; font-size: 28px; font-weight: bold; color: #ff6600; margin: 15px 0; }
+        .card { border: 2px solid #000; padding: 15px; background: #fff; }
     </style>
 </head>
 <body>
 
-    <div class="logo"><span>toolbox</span>pay</div>
+    <div class="logo">toolbox<span>pay</span></div>
 
     <div id="m" class="screen active">
-        <button onclick="nav('c')">NEW QUOTE →</button>
-        <button onclick="nav('h'); drawH();">HISTORY →</button>
-        <button onclick="nav('s')">BUSINESS SETUP →</button>
-        <button onclick="nav('b')">BANK DETAILS →</button>
+        <button onclick="sh('c')">NEW QUOTE →</button>
+        <button onclick="sh('h'); lh();">HISTORY →</button>
+        <button onclick="sh('s')">BUSINESS SETUP →</button>
+        <button onclick="sh('b')">BANK DETAILS →</button>
     </div>
 
     <div id="s" class="screen">
-        <button class="back-btn" onclick="nav('m')">← BACK</button>
+        <button class="btn-back" onclick="sh('m')">← BACK</button>
         <label>Currency</label>
         <select id="cur" onchange="localStorage.setItem('cur', this.value)">
-            <option value="£">GBP (£)</option>
-            <option value="$">USD ($)</option>
-            <option value="€">EUR (€)</option>
+            <option value="£">British Pound (£)</option>
+            <option value="$">US Dollar ($)</option>
+            <option value="€">Euro (€)</option>
         </select>
         <label>Business Name</label>
         <input type="text" id="bn" oninput="localStorage.setItem('bn', this.value)">
@@ -54,81 +51,94 @@
     </div>
 
     <div id="b" class="screen">
-        <button class="back-btn" onclick="nav('m')">← BACK</button>
+        <button class="btn-back" onclick="sh('m')">← BACK</button>
         <label>Account Name</label>
-        <input type="text" id="bk1" oninput="localStorage.setItem('bk1', this.value)">
+        <input type="text" id="b1" oninput="localStorage.setItem('b1', this.value)">
         <label>Sort Code</label>
-        <input type="text" id="bk2" oninput="localStorage.setItem('bk2', this.value)">
+        <input type="text" id="b2" oninput="localStorage.setItem('b2', this.value)">
         <label>Account Number</label>
-        <input type="text" id="bk3" oninput="localStorage.setItem('bk3', this.value)">
+        <input type="text" id="b3" oninput="localStorage.setItem('b3', this.value)">
         <label>Payment Link</label>
-        <input type="url" id="bkl" oninput="localStorage.setItem('bkl', this.value)">
+        <input type="url" id="bl" oninput="localStorage.setItem('bl', this.value)">
     </div>
 
     <div id="c" class="screen">
-        <button class="back-btn" onclick="nav('m')">← BACK</button>
+        <button class="btn-back" onclick="sh('m')">← BACK</button>
         <input type="text" id="cn" placeholder="Client Name">
-        <input type="number" id="hrs" placeholder="Hours" oninput="math()">
-        <input type="number" id="rte" placeholder="Rate" oninput="math()">
-        <input type="number" id="mat" placeholder="Materials" oninput="math()">
-        <div id="total-area">£0.00</div>
-        <button class="save-btn" onclick="saveQ()">SAVE QUOTE</button>
+        <input type="number" id="hrs" placeholder="Hours" oninput="ma()">
+        <input type="number" id="rte" placeholder="Rate" oninput="ma()">
+        <input type="number" id="mat" placeholder="Materials" oninput="ma()">
+        <div id="out" class="total">£0.00</div>
+        <button class="btn-org" onclick="sq()">SAVE QUOTE</button>
     </div>
 
     <div id="h" class="screen">
-        <button class="back-btn" onclick="nav('m')">← BACK</button>
+        <button class="btn-back" onclick="sh('m')">← BACK</button>
         <div id="h-list"></div>
     </div>
 
     <div id="v" class="screen">
-        <button class="back-btn" onclick="nav('h')">← BACK</button>
-        <div id="v-cont" class="receipt"></div>
-        <div id="p-area"></div>
-        <button class="save-btn" style="margin-top:10px" onclick="window.print()">PRINT / PDF</button>
+        <button class="btn-back" onclick="sh('h')">← BACK</button>
+        <div id="vc" class="card"></div>
+        <div id="pa"></div>
+        <button class="btn-org" style="margin-top:10px" onclick="window.print()">PRINT / PDF</button>
     </div>
 
     <script>
-        function nav(id) {
-            const screens = ['m','s','b','c','h','v'];
-            screens.forEach(s => document.getElementById(s).classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+        // Use direct display manipulation for maximum stability
+        function sh(id) {
+            const ss = ['m','s','b','c','h','v'];
+            ss.forEach(s => document.getElementById(s).style.display = 'none');
+            document.getElementById(id).style.display = 'block';
             window.scrollTo(0,0);
         }
 
-        function math() {
-            const sym = localStorage.getItem('cur') || '£';
+        function ma() {
+            const sy = localStorage.getItem('cur') || '£';
             const h = Number(document.getElementById('hrs').value)||0;
             const r = Number(document.getElementById('rte').value)||0;
             const m = Number(document.getElementById('mat').value)||0;
-            document.getElementById('total-area').innerText = sym + ((h*r)+m).toFixed(2);
+            document.getElementById('out').innerText = sy + ((h*r)+m).toFixed(2);
         }
 
-        function saveQ() {
-            const sym = localStorage.getItem('cur') || '£';
+        function sq() {
+            const sy = localStorage.getItem('cur') || '£';
             const h = Number(document.getElementById('hrs').value)||0;
             const r = Number(document.getElementById('rte').value)||0;
             const m = Number(document.getElementById('mat').value)||0;
             const t = (h*r)+m;
             let j = JSON.parse(localStorage.getItem('jobs') || '[]');
-            j.unshift({id: Date.now(), n: document.getElementById('cn').value||'Client', t: sym+t.toFixed(2), d: new Date().toLocaleDateString('en-GB')});
+            j.unshift({id: Date.now(), n: document.getElementById('cn').value||'Client', t: sy+t.toFixed(2), d: new Date().toLocaleDateString('en-GB')});
             localStorage.setItem('jobs', JSON.stringify(j.slice(0,20)));
-            nav('m');
+            sh('m');
         }
 
-        function drawH() {
+        function lh() {
             let j = JSON.parse(localStorage.getItem('jobs') || '[]');
             document.getElementById('h-list').innerHTML = j.map(x => `
-                <button onclick="viewQ(${x.id})">${x.n}<br><small style="color:#aaa;">${x.d} • ${x.t}</small></button>
+                <button onclick="vq(${x.id})">${x.n}<br><small style="color:#666;">${x.d} • ${x.t}</small></button>
             `).join('') || '<p>No history.</p>';
         }
 
-        function viewQ(id) {
+        function vq(id) {
             let j = JSON.parse(localStorage.getItem('jobs')||'[]').find(x => x.id === id);
             if(!j) return;
-            document.getElementById('v-cont').innerHTML = `
+            document.getElementById('vc').innerHTML = `
                 <strong>${localStorage.getItem('bn')||'Business'}</strong><br>${localStorage.getItem('ba')||''}<hr>
                 Client: ${j.n}<br>Date: ${j.d}<br><strong>Total: ${j.t}</strong><hr>
-                Bank: ${localStorage.getItem('bk1')||''}<br>Sort: ${localStorage.getItem('bk2')||''}<br>Acc: ${localStorage.getItem('bk3')||''}
+                Bank: ${localStorage.getItem('b1')}<br>Sort Code: ${localStorage.getItem('b2')}<br>Account: ${localStorage.getItem('b3')}
             `;
-            const link = localStorage.getItem('bkl');
-            document.getElementById('p-area').innerHTML = link ? `<button class="save-btn" style="background:#2ecc71; margin-
+            const lnk = localStorage.getItem('bl');
+            document.getElementById('pa').innerHTML = lnk ? `<button class="btn-org" style="background:#2ecc71; margin-top:10px; text-align:center;" onclick="window.open('${lnk}','_blank')">PAY NOW</button>` : '';
+            sh('v');
+        }
+
+        window.onload = function() {
+            ['bn','ba','b1','b2','b3','bl','cur'].forEach(k => {
+                let v = localStorage.getItem(k); if(v) document.getElementById(k).value = v;
+            });
+            ma();
+        };
+    </script>
+</body>
+</html>
