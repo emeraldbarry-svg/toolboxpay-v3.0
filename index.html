@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v5.9</title>
+    <title>toolboxpay v6.0</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -32,8 +32,12 @@
         .btn-main { width: 100%; padding: 18px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
         
         .stats { background: rgba(255,102,0,0.05); padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; border: 1px solid var(--org); }
-        .hist-item { background: var(--crd); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--org); display: flex; justify-content: space-between; align-items: center; }
+        .hist-item { background: var(--crd); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--org); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .del-btn { background: #cc0000; color: white; border: none; padding: 10px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 900; margin-left: 10px; }
+
+        /* Summary View Styling */
+        .summary-card { background: #fff; color: #000; padding: 25px; border-radius: 4px; margin-top: 10px; }
+        .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -41,7 +45,7 @@
 <div class="shell">
     <div id="nav-header"><div class="back-btn" onclick="go('dash')">← BACK TO MAIN MENU</div></div>
 
-    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #444;">v5.9</small></div>
+    <div class="logo"><span>toolbox</span>pay <small style="font-size: 9px; color: #444;">v6.0</small></div>
 
     <div id="scr-dash" class="screen active">
         <div class="tile" onclick="go('calc')"><div><h3>Labour & Materials</h3><p>New Quote</p></div><span>→</span></div>
@@ -69,6 +73,13 @@
         <button class="btn-main" style="background:#222; margin-top:20px; font-size: 11px;" onclick="clearHist()">Wipe All Records</button>
     </div>
 
+    <div id="scr-view" class="screen">
+        <div class="tag">Quote Summary</div>
+        <div id="view-content" class="summary-card"></div>
+        <button class="btn-main" onclick="window.print()">Print / PDF</button>
+        <button class="btn-main" style="background:#333;" onclick="go('hist')">Back to History</button>
+    </div>
+
     <div id="scr-biz" class="screen">
         <div class="tag">Company Profile</div>
         <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
@@ -88,9 +99,7 @@
 <script>
     function go(id) {
         var screens = document.getElementsByClassName('screen');
-        for (var i = 0; i < screens.length; i++) {
-            screens[i].classList.remove('active');
-        }
+        for (var i = 0; i < screens.length; i++) { screens[i].classList.remove('active'); }
         document.getElementById('scr-' + id).classList.add('active');
         document.getElementById('nav-header').style.display = (id === 'dash') ? 'none' : 'block';
         if(id === 'hist') loadHist();
@@ -106,12 +115,20 @@
 
     function saveJob() {
         var ref = document.getElementById('job-ref').value || 'New Quote';
+        var h = document.getElementById('h').value || 0;
+        var r = document.getElementById('r').value || 0;
+        var m = document.getElementById('m').value || 0;
         var txt = document.getElementById('res').innerText;
         var num = parseFloat(txt.replace('£', ''));
+        
         var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-        jobs.unshift({ id: Date.now(), ref: ref, txt: txt, num: num, date: new Date().toLocaleDateString('en-GB') });
-        localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 25)));
+        jobs.unshift({ id: Date.now(), ref: ref, h: h, r: r, m: m, txt: txt, num: num, date: new Date().toLocaleDateString('en-GB') });
+        localStorage.setItem('jobs', JSON.stringify(jobs.slice(0, 30)));
+        
         document.getElementById('job-ref').value = '';
+        document.getElementById('h').value = '';
+        document.getElementById('r').value = '';
+        document.getElementById('m').value = '';
         go('dash');
     }
 
@@ -122,25 +139,41 @@
         var html = '';
         for (var i = 0; i < jobs.length; i++) {
             total += jobs[i].num;
-            html += '<div class="hist-item">' +
+            html += '<div class="hist-item" onclick="viewJob(' + jobs[i].id + ')">' +
                 '<div style="flex:1; min-width:0;">' +
                     '<div style="font-weight:800; color:white; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + jobs[i].ref + '</div>' +
                     '<div style="font-size:11px; color:#8892b0;">' + jobs[i].date + ' • <span style="color:var(--org);">' + jobs[i].txt + '</span></div>' +
                 '</div>' +
-                '<button class="del-btn" onclick="deleteJob(' + jobs[i].id + ')">DEL</button>' +
+                '<button class="del-btn" onclick="event.stopPropagation(); deleteJob(' + jobs[i].id + ')">DEL</button>' +
             '</div>';
         }
         list.innerHTML = jobs.length ? html : '<p style="text-align:center;font-size:12px;color:#444;margin-top:20px;">No saved quotes.</p>';
         document.getElementById('hist-total').innerText = '£' + total.toLocaleString('en-GB', {minimumFractionDigits: 2});
     }
 
+    function viewJob(id) {
+        var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        var j = jobs.find(item => item.id === id);
+        if(!j) return;
+        
+        var bizName = localStorage.getItem('bn') || 'Your Business';
+        var bizAddr = localStorage.getItem('ba') || '';
+        
+        var html = '<strong>' + bizName + '</strong><br><small>' + bizAddr + '</small><hr style="margin:15px 0; border:0; border-top:1px solid #ddd;">' +
+            '<div class="summary-row"><span>Ref:</span><strong>' + j.ref + '</strong></div>' +
+            '<div class="summary-row"><span>Date:</span><strong>' + j.date + '</strong></div>' +
+            '<div class="summary-row"><span>Labour (' + j.h + ' hrs @ £' + j.r + '):</span><strong>£' + (j.h * j.r).toFixed(2) + '</strong></div>' +
+            '<div class="summary-row"><span>Materials:</span><strong>£' + parseFloat(j.m).toFixed(2) + '</strong></div>' +
+            '<div class="summary-row" style="font-size:18px; margin-top:10px; border-top:2px solid #000;"><span>Total Payable:</span><strong>' + j.txt + '</strong></div>';
+        
+        document.getElementById('view-content').innerHTML = html;
+        go('view');
+    }
+
     function deleteJob(id) {
         if(confirm('Delete this record?')) {
             var jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-            var filtered = [];
-            for (var i = 0; i < jobs.length; i++) {
-                if (jobs[i].id !== id) filtered.push(jobs[i]);
-            }
+            var filtered = jobs.filter(function(j) { return j.id !== id; });
             localStorage.setItem('jobs', JSON.stringify(filtered));
             loadHist();
         }
