@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v7.9 [STABLE LOGO]</title>
+    <title>toolboxpay v8.0 [BUSINESS SETUP]</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -33,7 +33,6 @@
         
         .btn-main { width: 100%; padding: 18px; background: var(--org); border: none; color: white; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
         
-        /* LOGO PREVIEW BOX */
         .logo-box { background: #000; padding: 20px; border-radius: 8px; border: 1px dashed var(--org); text-align: center; margin-bottom: 15px; }
         #preview-logo { max-width: 100%; max-height: 80px; display: none; margin: 0 auto 10px auto; }
 
@@ -50,12 +49,12 @@
 <body>
 
 <div class="shell">
-    <div class="logo"><span>toolbox</span><em>pay</em> <small style="font-size: 8px; color: #444;">v7.9</small></div>
+    <div class="logo"><span>toolbox</span><em>pay</em> <small style="font-size: 8px; color: #444;">v8.0</small></div>
 
     <div id="scr-dash" class="screen">
         <a href="#scr-calc" class="tile"><div><h3>Labour & Materials</h3><p>New Quote</p></div><span>→</span></a>
         <a href="#scr-hist" class="tile" onclick="loadHistory()"><div><h3>Job History</h3><p>Manage Records</p></div><span>→</span></a>
-        <a href="#scr-biz" class="tile"><div><h3>Business Details</h3><p>Edit Profile & Logo</p></div><span>→</span></a>
+        <a href="#scr-biz" class="tile"><div><h3>Business Setup</h3><p>Profile, Logo & Contact</p></div><span>→</span></a>
         <a href="#scr-bank" class="tile"><div><h3>Bank Details</h3><p>Payment Info</p></div><span>→</span></a>
     </div>
 
@@ -84,11 +83,59 @@
             <img id="preview-logo" src="" alt="Preview">
             <input type="file" id="logo-in" accept="image/*" onchange="processLogo(this)" style="display:none">
             <button class="btn-main" onclick="document.getElementById('logo-in').click()" style="background:#222; font-size:11px; padding:10px;">Upload Logo File</button>
-            <button class="btn-main" onclick="localStorage.removeItem('user-logo'); location.reload();" style="background:none; color:#cc0000; font-size:10px; margin-top:5px; border:none;">Remove Logo</button>
         </div>
-        <div class="tag">Company Details</div>
+        <div class="tag">Company Profile</div>
         <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn',this.value)">
         <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba',this.value)" style="height:80px;"></textarea>
+        <div class="tag">Contact Information</div>
+        <input type="tel" id="bp" placeholder="Phone Number" oninput="localStorage.setItem('bp',this.value)">
+        <input type="email" id="be" placeholder="Email Address" oninput="localStorage.setItem('be',this.value)">
+        <input type="text" id="bw" placeholder="Website" oninput="localStorage.setItem('bw',this.value)">
     </div>
 
-    <div id="scr-bank
+    <div id="scr-bank" class="screen">
+        <a href="#" class="back-btn">← BACK</a>
+        <div class="tag">Bank Details</div>
+        <input type="text" id="bk-a" placeholder="Account Name" oninput="localStorage.setItem('bk-a',this.value)">
+        <input type="text" id="bk-s" placeholder="Sort Code" oninput="localStorage.setItem('bk-s',this.value)">
+        <input type="text" id="bk-n" placeholder="Account Number" oninput="localStorage.setItem('bk-n',this.value)">
+    </div>
+
+    <div id="scr-hist" class="screen">
+        <a href="#" class="back-btn">← BACK</a>
+        <div id="hist-list"></div>
+    </div>
+
+    <div id="scr-view" class="screen">
+        <a href="#scr-hist" class="back-btn">← BACK</a>
+        <div id="view-content" class="summary-card"></div>
+        <button class="btn-main" onclick="window.print()">Print / PDF</button>
+    </div>
+</div>
+
+<script>
+    function processLogo(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem('user-logo', e.target.result);
+                renderLogo();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function renderLogo() {
+        const data = localStorage.getItem('user-logo');
+        const img = document.getElementById('preview-logo');
+        if (data && img) {
+            img.src = data;
+            img.style.display = 'block';
+        }
+    }
+
+    function runMath() {
+        const h = Number(document.getElementById('h').value) || 0;
+        const r = Number(document.getElementById('r').value) || 0;
+        const m = Number(document.getElementById('m').value) || 0;
+        const sub = (h * r) +
