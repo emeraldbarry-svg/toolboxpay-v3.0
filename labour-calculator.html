@@ -26,27 +26,23 @@
             max-width: 550px;
         }
 
-        /* Top Navigation - Back Button Logic */
+        /* Top Navigation - Explicit Link */
         .top-nav {
             margin-bottom: 30px;
             padding-top: 10px;
         }
-        .back-btn {
-            background: none;
-            border: 1px solid var(--orange);
+        .return-link {
             color: var(--orange);
-            padding: 8px 16px;
-            border-radius: 4px;
+            text-decoration: none;
             font-size: 14px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            letter-spacing: 1.2px;
+            display: inline-block;
         }
-        .back-btn:hover {
-            background-color: var(--orange);
+        .return-link:hover {
             color: var(--white);
+            text-decoration: underline;
         }
 
         /* Branding - Clean & Borderless */
@@ -115,7 +111,7 @@
 
 <div class="container">
     <div class="top-nav">
-        <button onclick="history.back()" class="back-btn">← RETURN TO DASHBOARD</button>
+        <a href="dashboard.html" class="return-link">← RETURN TO DASHBOARD</a>
     </div>
 
     <div class="branding">
