@@ -26,28 +26,28 @@
             max-width: 550px;
         }
 
-        /* Top Navigation - Always Present but Dynamic */
+        /* Navigation */
         .top-nav {
-            margin-bottom: 30px;
-            min-height: 25px;
+            margin-bottom: 25px;
+            height: 30px;
         }
-        #return-btn {
+        #return-link {
             color: var(--orange);
             text-decoration: none;
             font-size: 14px;
             font-weight: 800;
             text-transform: uppercase;
             cursor: pointer;
-            display: none; /* Only shows inside calculator */
+            display: none; /* Only visible when in calculator */
         }
 
-        /* Branding - Clean & Borderless */
+        /* Branding - Borderless Logo */
         .branding {
             margin-bottom: 40px;
-            margin-top: 10px;
+            text-align: center;
         }
         .logo-text {
-            font-size: 38px;
+            font-size: 42px;
             font-weight: 800;
             letter-spacing: -1.5px;
             margin: 0;
@@ -55,10 +55,11 @@
         .toolbox { color: var(--orange); }
         .pay { color: var(--white); }
 
-        /* Dashboard View */
+        /* View Management */
         .view-section { display: none; }
         .view-section.active { display: block; }
 
+        /* Dashboard Menu Styles */
         .menu-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -69,12 +70,20 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            text-align: left;
         }
         .menu-card:hover { border-color: var(--orange); }
-        .menu-card h3 { margin: 0; color: var(--orange); text-transform: uppercase; font-size: 18px; }
+        .menu-card h3 { 
+            margin: 0; 
+            color: var(--orange); 
+            text-transform: uppercase; 
+            font-size: 18px; 
+            letter-spacing: 0.5px;
+        }
         .menu-card p { margin: 5px 0 0 0; font-size: 13px; color: #8892b0; }
+        .arrow { color: var(--white); font-size: 18px; }
 
-        /* Calculator View */
+        /* Calculator Styles */
         .section-label {
             color: var(--orange);
             font-size: 13px;
@@ -85,6 +94,8 @@
             border-bottom: 1px solid rgba(255, 102, 0, 0.3);
             padding-bottom: 8px;
         }
+        .field-group { margin-bottom: 20px; }
+        label { display: block; font-size: 14px; margin-bottom: 10px; }
         input {
             width: 100%;
             padding: 14px;
@@ -92,11 +103,10 @@
             border: 1px solid var(--border-color);
             border-radius: 6px;
             color: var(--white);
-            margin-bottom: 20px;
-            box-sizing: border-box;
             font-size: 16px;
+            box-sizing: border-box;
         }
-        .results-box {
+        .results-card {
             background-color: var(--card-bg);
             border: 2px solid var(--orange);
             border-radius: 10px;
@@ -104,17 +114,17 @@
             margin-top: 30px;
             display: flex;
             justify-content: space-between;
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--orange);
+            align-items: center;
         }
+        .total-label { font-size: 18px; font-weight: 700; }
+        .total-amount { font-size: 26px; font-weight: 800; color: var(--orange); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="top-nav">
-        <span id="return-btn" onclick="showView('dashboard')">← RETURN TO DASHBOARD</span>
+        <span id="return-link" onclick="showView('dashboard')">← RETURN TO DASHBOARD</span>
     </div>
 
     <div class="branding">
@@ -122,46 +132,25 @@
     </div>
 
     <div id="dashboard" class="view-section active">
-        <div class="menu-card" onclick="showView('calc')">
+        <div class="menu-card" onclick="showView('calculator')">
             <div>
                 <h3>Labour & Materials</h3>
                 <p>Calculate costs and specialising tasks</p>
             </div>
-            <span>→</span>
+            <span class="arrow">→</span>
         </div>
     </div>
 
-    <div id="calc" class="view-section">
-        <span class="section-label">Labour Costs</span>
-        <input type="number" id="hours" placeholder="Hours worked" oninput="calculate()">
-        <input type="number" id="rate" placeholder="Hourly rate (£)" oninput="calculate()">
+    <div id="calculator" class="view-section">
+        <span class="section-label">Labour</span>
+        <div class="field-group">
+            <label>Hours worked</label>
+            <input type="number" id="hours" placeholder="0" oninput="calculate()">
+        </div>
+        <div class="field-group">
+            <label>Hourly rate (£)</label>
+            <input type="number" id="rate" placeholder="0.00" oninput="calculate()">
+        </div>
 
         <span class="section-label">Materials</span>
-        <input type="number" id="mats" placeholder="Total material costs (£)" oninput="calculate()">
-
-        <div class="results-box">
-            <span>TOTAL</span>
-            <span id="total">£0.00</span>
-        </div>
-    </div>
-</div>
-
-<script>
-    function showView(id) {
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.getElementById('return-btn').style.display = (id === 'dashboard') ? 'none' : 'block';
-        window.scrollTo(0,0);
-    }
-
-    function calculate() {
-        const h = parseFloat(document.getElementById('hours').value) || 0;
-        const r = parseFloat(document.getElementById('rate').value) || 0;
-        const m = parseFloat(document.getElementById('mats').value) || 0;
-        const total = (h * r) + m;
-        document.getElementById('total').innerText = '£' + total.toLocaleString('en-GB', {minimumFractionDigits: 2});
-    }
-</script>
-
-</body>
-</html>
+        <div
