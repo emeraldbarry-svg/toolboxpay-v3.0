@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v8.2</title>
+    <title>toolboxpay - v8.3</title>
     <style>
-        /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
+        /* BRANDING & THEME [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             background: #4a4a4a; 
@@ -30,11 +30,11 @@
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* VIEW LOGIC */
+        /* VIEW VISIBILITY */
         .view { display: none; width: 100%; }
-        .view.active { display: block; }
+        .view.active { display: block !important; }
 
-        /* DASHBOARD STACK */
+        /* DASHBOARD TILES */
         .stack { display: flex; flex-direction: column; gap: 15px; }
         .tile {
             background: #222; border-radius: 20px; padding: 20px;
@@ -49,16 +49,16 @@
         }
         .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* NAVIGATION */
+        /* NAV ELEMENTS */
         .nav-header { padding: 10px 0 20px 0; }
         .back-btn { 
             background: #000; color: #ff6600; border: 2px solid #ff6600; 
-            padding: 8px 15px; border-radius: 10px; font-weight: 900; 
+            padding: 10px 15px; border-radius: 10px; font-weight: 900; 
             cursor: pointer; text-transform: uppercase; font-size: 11px;
             width: fit-content;
         }
 
-        /* CARDS & INPUTS */
+        /* CARDS */
         .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; }
         h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; }
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
@@ -72,12 +72,12 @@
         .btn-wa { 
             width: 100%; background: #25D366; color: #000; padding: 20px; border: none; 
             border-radius: 15px; font-weight: 900; font-size: 14px; text-transform: uppercase; 
-            cursor: pointer; margin-top: 10px; display: block;
+            cursor: pointer; margin-bottom: 10px;
         }
         .btn-save { 
-            width: 100%; background: #ff6600; color: #000; padding: 18px; border: none; 
+            width: 100%; background: #ff6600; color: #000; padding: 20px; border: none; 
             border-radius: 15px; font-weight: 900; font-size: 14px; text-transform: uppercase; 
-            cursor: pointer; margin-top: 10px; display: block;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -90,86 +90,88 @@
             <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         </div>
         <div class="stack">
-            <div class="tile" onclick="nav('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
-            <div class="tile" onclick="nav('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
-            <div class="tile" onclick="nav('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
-            <div class="tile" onclick="nav('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
-            <div class="tile" onclick="nav('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
+            <div class="tile" onclick="openPage('view-quote')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
+            <div class="tile" onclick="openPage('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
+            <div class="tile" onclick="openPage('view-history')"><div class="icon-box)📜">Job History</span></div>
+            <div class="tile" onclick="openPage('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
+            <div class="tile" onclick="openPage('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
         </div>
     </div>
 
     <div id="view-quote" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
+        <div class="nav-header"><div class="back-btn" onclick="openPage('view-home')">← DASHBOARD</div></div>
         <div class="card">
             <h2>New Quote</h2>
-            <label>Client Name</label><input type="text" id="c-name" placeholder="John Smith">
-            <label>Labour Description</label><textarea id="l-desc" style="height:80px;" placeholder="Details..."></textarea>
-            <label>Total Price (£)</label><input type="number" id="p-in" oninput="upTotal()" placeholder="0.00">
+            <label>Client Name</label><input type="text" id="c-name">
+            <label>Labour Description</label><textarea id="l-desc" style="height:80px;"></textarea>
+            <label>Total Price (£)</label><input type="number" id="p-in" oninput="calcPrice()">
             <div class="total-display" id="q-total">£0.00</div>
-            <button class="btn-wa" onclick="sendQuoteWA()">Send via WhatsApp</button>
-            <button class="btn-save" onclick="nav('view-home')">Save to History</button>
+            <button class="btn-wa" onclick="waQuote()">Send via WhatsApp</button>
+            <button class="btn-save" onclick="openPage('view-home')">Save Job</button>
         </div>
     </div>
 
     <div id="view-bank" class="view">
-        <div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div>
+        <div class="nav-header"><div class="back-btn" onclick="openPage('view-home')">← DASHBOARD</div></div>
         <div class="card">
             <h2>Bank Setup</h2>
-            <label>Business Name</label><input type="text" id="b-name" oninput="sv('bn',this.value)">
-            <label>Bank Name</label><input type="text" id="b-bank" oninput="sv('bk',this.value)">
-            <label>Sort Code</label><input type="text" id="b-sort" oninput="sv('sc',this.value)">
-            <label>Account No.</label><input type="text" id="b-acc" oninput="sv('an',this.value)">
-            <button class="btn-wa" onclick="sendBankWA()">Share via WhatsApp</button>
+            <label>Business Name</label><input type="text" id="b-name" oninput="saveMe('bn',this.value)">
+            <label>Bank Name</label><input type="text" id="b-bank" oninput="saveMe('bk',this.value)">
+            <label>Sort Code</label><input type="text" id="b-sort" oninput="saveMe('sc',this.value)">
+            <label>Account No.</label><input type="text" id="b-acc" oninput="saveMe('an',this.value)">
+            <button class="btn-wa" style="margin-top:10px;" onclick="waBank()">Share via WhatsApp</button>
         </div>
     </div>
 
-    <div id="view-calc" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>Calculator</h2></div></div>
-    <div id="view-history" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>History</h2></div></div>
-    <div id="view-readme" class="view"><div class="nav-header"><div class="back-btn" onclick="nav('view-home')">← DASHBOARD</div></div><div class="card"><h2>Read Me</h2><p>v8.2 (Clock Removed)</p></div></div>
+    <div id="view-calc" class="view"><div class="nav-header"><div class="back-btn" onclick="openPage('view-home')">← DASHBOARD</div></div><div class="card"><h2>Calculator</h2></div></div>
+    <div id="view-history" class="view"><div class="nav-header"><div class="back-btn" onclick="openPage('view-home')">← DASHBOARD</div></div><div class="card"><h2>History</h2></div></div>
+    <div id="view-readme" class="view"><div class="nav-header"><div class="back-btn" onclick="openPage('view-home')">← DASHBOARD</div></div><div class="card"><h2>Read Me</h2><p>v8.3 Reset Complete.</p></div></div>
 
 </div>
 
 <script>
-    const STORAGE_KEY = "TBP_V82_FINAL";
+    const DB_KEY = "TBP_V83_RESET";
 
-    // SIMPLE NAV [cite: 2026-02-27]
-    function nav(id) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        const target = document.getElementById(id);
-        if (target) target.classList.add('active');
+    // ULTRA-SIMPLE NAVIGATION [cite: 2026-02-27]
+    function openPage(id) {
+        const allViews = document.getElementsByClassName('view');
+        for (let i = 0; i < allViews.length; i++) {
+            allViews[i].classList.remove('active');
+        }
+        document.getElementById(id).classList.add('active');
         window.scrollTo(0,0);
     }
 
-    // PERSISTENCE [cite: 2026-02-26, 2026-02-27]
-    function sv(k, v) { localStorage.setItem(STORAGE_KEY + k, v); }
-    function gt(k) { return localStorage.getItem(STORAGE_KEY + k) || ""; }
+    // BANK DATA [cite: 2026-02-26, 2026-02-27]
+    function saveMe(k, v) { localStorage.setItem(DB_KEY + k, v); }
+    function loadMe(k) { return localStorage.getItem(DB_KEY + k) || ""; }
 
-    function upTotal() {
-        const p = parseFloat(document.getElementById('p-in').value) || 0;
-        document.getElementById('q-total').innerText = "£" + p.toFixed(2);
+    function calcPrice() {
+        const val = parseFloat(document.getElementById('p-in').value) || 0;
+        document.getElementById('q-total').innerText = "£" + val.toFixed(2);
     }
 
     // WHATSAPP [cite: 2026-02-27]
-    function sendQuoteWA() {
+    function waQuote() {
         const client = document.getElementById('c-name').value || "Client";
-        const desc = document.getElementById('l-desc').value || "Works";
+        const desc = document.getElementById('l-desc').value || "Labour";
         const total = document.getElementById('q-total').innerText;
-        const biz = gt('bn') || "toolboxpay User";
-        const msg = `Hi ${client}, here is your quote from ${biz}:\n\nLabour: ${desc}\nTotal: ${total}`;
+        const biz = loadMe('bn') || "toolboxpay";
+        const msg = `Hi ${client}, quote from ${biz}:\n\nLabour: ${desc}\nTotal: ${total}`;
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    function sendBankWA() {
-        const biz = gt('bn') || "Business";
-        const msg = `Bank Details for ${biz}:\nBank: ${gt('bk')}\nSort Code: ${gt('sc')}\nAccount No: ${gt('an')}`;
+    function waBank() {
+        const biz = loadMe('bn') || "My Business";
+        const msg = `Bank Details for ${biz}:\nBank: ${loadMe('bk')}\nSort: ${loadMe('sc')}\nAcc: ${loadMe('an')}`;
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    window.onload = () => {
-        document.getElementById('b-name').value = gt('bn');
-        document.getElementById('b-bank').value = gt('bk');
-        document.getElementById('b-sort').value = gt('sc');
-        document.getElementById('b-acc').value = gt('an');
+    window.onload = function() {
+        document.getElementById('b-name').value = loadMe('bn');
+        document.getElementById('b-bank').value = loadMe('bk');
+        document.getElementById('b-sort').value = loadMe('sc');
+        document.getElementById('b-acc').value = loadMe('an');
     };
 </script>
 </body>
