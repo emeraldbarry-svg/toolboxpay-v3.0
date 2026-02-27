@@ -2,70 +2,133 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>toolboxpay v9.6</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toolboxpay v9.7</title>
     <style>
-        /* ASPECT RATIO FIX: Fluid 100% width with no fixed shells */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
-        body { background: #0b1521; color: white; padding: 15px; width: 100vw; overflow-x: hidden; }
+        /* THE ULTIMATE RESET: No fixed widths, no aspect ratio locks */
+        body { background: #0b1521; color: white; font-family: sans-serif; padding: 15px; margin: 0; }
         
-        .logo { text-align: center; margin: 20px 0; font-size: 28px; font-weight: 900; }
+        .logo { text-align: center; margin-bottom: 20px; font-size: 24px; font-weight: 900; }
         .logo span { color: #ff6600; }
 
-        /* NATIVE BUTTONS: Prevents skewing on mobile processors */
-        .btn-tile { width: 100%; display: block; background: #1a2635; color: #ff6600; border: 1px solid #233554; border-radius: 8px; padding: 25px 15px; margin-bottom: 12px; font-size: 16px; font-weight: 800; text-align: left; text-transform: uppercase; cursor: pointer; }
-        .btn-back { width: 100%; padding: 12px; background: transparent; color: #ff6600; border: 1px solid #ff6600; border-radius: 6px; margin-bottom: 20px; font-weight: 800; cursor: pointer; }
-        .btn-save { width: 100%; padding: 18px; background: #ff6600; color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 16px; margin-top: 10px; cursor: pointer; }
+        /* NATIVE BLOCK BUTTONS: Impossible to skew */
+        button { width: 100%; padding: 20px; background: #1a2635; color: #ff6600; border: 1px solid #233554; border-radius: 8px; margin-bottom: 10px; font-size: 16px; font-weight: 800; text-align: left; display: block; cursor: pointer; }
+        
+        .back-btn { background: none; border: 1px solid #ff6600; color: #ff6600; text-align: center; padding: 10px; }
+        .save-btn { background: #ff6600; color: white; border: none; text-align: center; }
 
         .screen { display: none; }
         .active { display: block !important; }
 
-        .label { color: #ff6600; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; display: block; }
-        input, textarea, select { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #233554; background: #162130; color: white; font-size: 16px; outline: none; }
+        label { color: #ff6600; font-size: 11px; font-weight: 800; display: block; margin-top: 10px; }
+        input, textarea, select { width: 100%; padding: 15px; margin: 5px 0 15px 0; border-radius: 6px; border: 1px solid #233554; background: #162130; color: white; font-size: 16px; display: block; box-sizing: border-box; }
         
-        .result-box { text-align: right; padding: 20px 0; border-top: 1px solid #233554; }
-        .total-val { font-size: 32px; font-weight: 900; color: #ff6600; }
+        #total-area { text-align: right; padding: 20px 0; font-size: 30px; font-weight: 900; color: #ff6600; }
 
-        .quote-card { background: white; color: black; padding: 20px; border-radius: 4px; font-size: 14px; line-height: 1.4; }
-        hr { border: 0; border-top: 1px solid #eee; margin: 10px 0; }
+        .receipt { background: white; color: black; padding: 15px; border-radius: 4px; font-size: 14px; }
     </style>
 </head>
 <body>
 
     <div class="logo"><span>toolbox</span>pay</div>
 
-    <div id="scr_main" class="screen active">
-        <button class="btn-tile" onclick="nav('scr_calc')">NEW QUOTE →</button>
-        <button class="btn-tile" onclick="nav('scr_hist'); getHist();">HISTORY →</button>
-        <button class="btn-tile" onclick="nav('scr_biz')">BUSINESS SETUP →</button>
-        <button class="btn-tile" onclick="nav('scr_bank')">BANK DETAILS →</button>
+    <div id="m" class="screen active">
+        <button onclick="nav('c')">NEW QUOTE →</button>
+        <button onclick="nav('h'); drawH();">HISTORY →</button>
+        <button onclick="nav('s')">BUSINESS SETUP →</button>
+        <button onclick="nav('b')">BANK DETAILS →</button>
     </div>
 
-    <div id="scr_biz" class="screen">
-        <button class="btn-back" onclick="nav('scr_main')">← BACK</button>
-        <span class="label">Currency</span>
+    <div id="s" class="screen">
+        <button class="back-btn" onclick="nav('m')">← BACK</button>
+        <label>Currency</label>
         <select id="cur" onchange="localStorage.setItem('cur', this.value)">
-            <option value="£">British Pound (£)</option>
-            <option value="$">US Dollar ($)</option>
-            <option value="€">Euro (€)</option>
+            <option value="£">GBP (£)</option>
+            <option value="$">USD ($)</option>
+            <option value="€">EUR (€)</option>
         </select>
-        <span class="label">Business Name</span>
+        <label>Business Name</label>
         <input type="text" id="bn" oninput="localStorage.setItem('bn', this.value)">
-        <span class="label">Address</span>
-        <textarea id="ba" oninput="localStorage.setItem('ba', this.value)" style="height:80px;"></textarea>
+        <label>Address</label>
+        <textarea id="ba" oninput="localStorage.setItem('ba', this.value)"></textarea>
     </div>
 
-    <div id="scr_bank" class="screen">
-        <button class="btn-back" onclick="nav('scr_main')">← BACK</button>
-        <span class="label">Account Name</span>
+    <div id="b" class="screen">
+        <button class="back-btn" onclick="nav('m')">← BACK</button>
+        <label>Account Name</label>
         <input type="text" id="bk1" oninput="localStorage.setItem('bk1', this.value)">
-        <span class="label">Sort Code</span>
+        <label>Sort Code</label>
         <input type="text" id="bk2" oninput="localStorage.setItem('bk2', this.value)">
-        <span class="label">Account Number</span>
+        <label>Account Number</label>
         <input type="text" id="bk3" oninput="localStorage.setItem('bk3', this.value)">
-        <span class="label">Digital Payment Link</span>
-        <input type="url" id="bkl" placeholder="e.g. revolut.me/yourname" oninput="localStorage.setItem('bkl', this.value)">
+        <label>Payment Link</label>
+        <input type="url" id="bkl" oninput="localStorage.setItem('bkl', this.value)">
     </div>
 
-    <div id="scr_calc" class="screen">
-        <button class="btn-back" onclick="nav('scr_main')">← BACK</button>
+    <div id="c" class="screen">
+        <button class="back-btn" onclick="nav('m')">← BACK</button>
+        <input type="text" id="cn" placeholder="Client Name">
+        <input type="number" id="hrs" placeholder="Hours" oninput="math()">
+        <input type="number" id="rte" placeholder="Rate" oninput="math()">
+        <input type="number" id="mat" placeholder="Materials" oninput="math()">
+        <div id="total-area">£0.00</div>
+        <button class="save-btn" onclick="saveQ()">SAVE QUOTE</button>
+    </div>
+
+    <div id="h" class="screen">
+        <button class="back-btn" onclick="nav('m')">← BACK</button>
+        <div id="h-list"></div>
+    </div>
+
+    <div id="v" class="screen">
+        <button class="back-btn" onclick="nav('h')">← BACK</button>
+        <div id="v-cont" class="receipt"></div>
+        <div id="p-area"></div>
+        <button class="save-btn" style="margin-top:10px" onclick="window.print()">PRINT / PDF</button>
+    </div>
+
+    <script>
+        function nav(id) {
+            const screens = ['m','s','b','c','h','v'];
+            screens.forEach(s => document.getElementById(s).classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function math() {
+            const sym = localStorage.getItem('cur') || '£';
+            const h = Number(document.getElementById('hrs').value)||0;
+            const r = Number(document.getElementById('rte').value)||0;
+            const m = Number(document.getElementById('mat').value)||0;
+            document.getElementById('total-area').innerText = sym + ((h*r)+m).toFixed(2);
+        }
+
+        function saveQ() {
+            const sym = localStorage.getItem('cur') || '£';
+            const h = Number(document.getElementById('hrs').value)||0;
+            const r = Number(document.getElementById('rte').value)||0;
+            const m = Number(document.getElementById('mat').value)||0;
+            const t = (h*r)+m;
+            let j = JSON.parse(localStorage.getItem('jobs') || '[]');
+            j.unshift({id: Date.now(), n: document.getElementById('cn').value||'Client', t: sym+t.toFixed(2), d: new Date().toLocaleDateString('en-GB')});
+            localStorage.setItem('jobs', JSON.stringify(j.slice(0,20)));
+            nav('m');
+        }
+
+        function drawH() {
+            let j = JSON.parse(localStorage.getItem('jobs') || '[]');
+            document.getElementById('h-list').innerHTML = j.map(x => `
+                <button onclick="viewQ(${x.id})">${x.n}<br><small style="color:#aaa;">${x.d} • ${x.t}</small></button>
+            `).join('') || '<p>No history.</p>';
+        }
+
+        function viewQ(id) {
+            let j = JSON.parse(localStorage.getItem('jobs')||'[]').find(x => x.id === id);
+            if(!j) return;
+            document.getElementById('v-cont').innerHTML = `
+                <strong>${localStorage.getItem('bn')||'Business'}</strong><br>${localStorage.getItem('ba')||''}<hr>
+                Client: ${j.n}<br>Date: ${j.d}<br><strong>Total: ${j.t}</strong><hr>
+                Bank: ${localStorage.getItem('bk1')||''}<br>Sort: ${localStorage.getItem('bk2')||''}<br>Acc: ${localStorage.getItem('bk3')||''}
+            `;
+            const link = localStorage.getItem('bkl');
+            document.getElementById('p-area').innerHTML = link ? `<button class="save-btn" style="background:#2ecc71; margin-
