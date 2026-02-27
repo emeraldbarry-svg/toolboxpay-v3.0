@@ -72,11 +72,13 @@
         const m = parseFloat(document.getElementById('m').value) || 0;
         document.getElementById('res').innerText = '£' + ((h * r) + m).toLocaleString('en-GB', {minimumFractionDigits: 2});
     }
-    // Auto-save business details locally
+    // Auto-save logic
     ['b-name', 'b-sort', 'b-acc'].forEach(id => {
         const el = document.getElementById(id);
-        el.value = localStorage.getItem(id) || '';
-        el.oninput = () => localStorage.setItem(id, el.value);
+        if(el) {
+            el.value = localStorage.getItem(id) || '';
+            el.oninput = () => localStorage.setItem(id, el.value);
+        }
     });
 </script>
 </body>
