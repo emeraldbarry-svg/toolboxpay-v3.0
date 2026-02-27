@@ -3,101 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v9.9</title>
+    <title>toolboxpay v10.0</title>
     <style>
-        /* MINIMALIST CSS: No graphical containers to prevent freezing */
-        body { font-family: sans-serif; padding: 15px; background: white; color: black; line-height: 1.4; }
+        /* RAW NATIVE STYLING: No containers or flexbox to prevent skewing */
+        body { font-family: sans-serif; padding: 15px; background: white; color: black; margin: 0; }
         .logo { color: #ff6600; font-weight: bold; font-size: 24px; text-align: center; margin-bottom: 20px; }
-        .nav-link { display: block; padding: 20px; background: #eee; border: 1px solid #ccc; margin-bottom: 10px; text-decoration: none; color: #ff6600; font-weight: bold; border-radius: 5px; }
+        
+        /* THE KEY: Standard links that look like buttons */
+        .btn { display: block; width: 100%; padding: 20px; background: #eee; color: #ff6600; border: 1px solid #ccc; text-decoration: none; font-weight: bold; margin-bottom: 10px; border-radius: 8px; text-align: left; box-sizing: border-box; }
+        .btn-org { background: #ff6600; color: white; border: none; text-align: center; }
+        .btn-back { background: white; border: 1px solid #ff6600; color: #ff6600; text-align: center; padding: 10px; }
+
+        /* NATIVE TARGETING: Browser handles the showing/hiding */
         .screen { display: none; }
-        .active { display: block; }
-        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; box-sizing: border-box; font-size: 16px; }
-        .btn-action { width: 100%; padding: 15px; background: #ff6600; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 10px; }
-        .result { font-size: 24px; font-weight: bold; text-align: right; color: #ff6600; margin: 10px 0; }
-        .box { border: 1px solid black; padding: 15px; margin-top: 10px; }
+        .screen:target { display: block !important; }
+        #home:not(:target) { display: block; } /* Default state */
+        .screen:target ~ #home { display: none; }
+
+        input, textarea, select { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; box-sizing: border-box; }
+        .res { font-size: 28px; font-weight: bold; color: #ff6600; text-align: right; margin: 10px 0; }
     </style>
 </head>
 <body>
 
-<div class="logo">toolboxpay</div>
+    <div class="logo">toolboxpay</div>
 
-<div id="scr_1" class="screen active">
-    <a href="javascript:void(0)" class="nav-link" onclick="sh('scr_2')">NEW QUOTE →</a>
-    <a href="javascript:void(0)" class="nav-link" onclick="sh('scr_3'); lh();">HISTORY →</a>
-    <a href="javascript:void(0)" class="nav-link" onclick="sh('scr_4')">BUSINESS SETUP →</a>
-    <a href="javascript:void(0)" class="nav-link" onclick="sh('scr_5')">BANK DETAILS →</a>
-</div>
+    <div id="home" class="screen">
+        <a href="#calc" class="btn">NEW QUOTE →</a>
+        <a href="#hist" class="btn" onclick="lh()">HISTORY →</a>
+        <a href="#biz" class="btn">BUSINESS SETUP →</a>
+        <a href="#bank" class="btn">BANK DETAILS →</a>
+    </div>
 
-<div id="scr_2" class="screen">
-    <a href="javascript:void(0)" onclick="sh('scr_1')">← BACK</a>
-    <input type="text" id="cn" placeholder="Customer Name">
-    <input type="number" id="h" placeholder="Hours" oninput="ma()">
-    <input type="number" id="r" placeholder="Rate" oninput="ma()">
-    <input type="number" id="m" placeholder="Materials" oninput="ma()">
-    <div id="out" class="result">£0.00</div>
-    <button class="btn-action" onclick="sq()">SAVE QUOTE</button>
-</div>
+    <div id="calc" class="screen">
+        <a href="#" class="btn btn-back">← BACK TO DASHBOARD</a>
+        <input type="text" id="cn" placeholder="Client Name">
+        <input type="number" id="hrs" placeholder="Hours" oninput="ma()">
+        <input type="number" id="rte" placeholder="Rate" oninput="ma()">
+        <input type="number" id="mat" placeholder="Materials" oninput="ma()">
+        <div id="out" class="res">£0.00</div>
+        <button class="btn btn-org" onclick="sq()">SAVE QUOTE</button>
+    </div>
 
-<div id="scr_3" class="screen">
-    <a href="javascript:void(0)" onclick="sh('scr_1')">← BACK</a>
-    <div id="h_list"></div>
-</div>
+    <div id="hist" class="screen">
+        <a href="#" class="btn btn-back">← BACK TO DASHBOARD</a>
+        <div id="h-list"></div>
+    </div>
 
-<div id="scr_4" class="screen">
-    <a href="javascript:void(0)" onclick="sh('scr_1')">← BACK</a>
-    <label>Currency</label>
-    <select id="cur" onchange="localStorage.setItem('cur', this.value)">
-        <option value="£">GBP (£)</option>
-        <option value="$">USD ($)</option>
-        <option value="€">EUR (€)</option>
-    </select>
-    <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn', this.value)">
-    <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba', this.value)"></textarea>
-</div>
+    <div id="biz" class="screen">
+        <a href="#" class="btn btn-back">← BACK TO DASHBOARD</a>
+        <select id="cur" onchange="localStorage.setItem('cur', this.value)">
+            <option value="£">GBP (£)</option>
+            <option value="$">USD ($)</option>
+            <option value="€">EUR (€)</option>
+        </select>
+        <input type="text" id="bn" placeholder="Business Name" oninput="localStorage.setItem('bn', this.value)">
+        <textarea id="ba" placeholder="Address" oninput="localStorage.setItem('ba', this.value)"></textarea>
+    </div>
 
-<div id="scr_5" class="screen">
-    <a href="javascript:void(0)" onclick="sh('scr_1')">← BACK</a>
-    <input type="text" id="b1" placeholder="Account Name" oninput="localStorage.setItem('b1', this.value)">
-    <input type="text" id="b2" placeholder="Sort Code" oninput="localStorage.setItem('b2', this.value)">
-    <input type="text" id="b3" placeholder="Account Number" oninput="localStorage.setItem('b3', this.value)">
-    <input type="url" id="bl" placeholder="Payment Link" oninput="localStorage.setItem('bl', this.value)">
-</div>
+    <div id="bank" class="screen">
+        <a href="#" class="btn btn-back">← BACK TO DASHBOARD</a>
+        <input type="text" id="b1" placeholder="Account Name" oninput="localStorage.setItem('b1', this.value)">
+        <input type="text" id="b2" placeholder="Sort Code" oninput="localStorage.setItem('b2', this.value)">
+        <input type="text" id="b3" placeholder="Account Number" oninput="localStorage.setItem('b3', this.value)">
+        <input type="url" id="bl" placeholder="Payment Link" oninput="localStorage.setItem('bl', this.value)">
+    </div>
 
-<div id="scr_6" class="screen">
-    <a href="javascript:void(0)" onclick="sh('scr_3')">← BACK</a>
-    <div id="vc" class="box"></div>
-    <div id="pa"></div>
-    <button class="btn-action" onclick="window.print()">PRINT / PDF</button>
-</div>
+    <div id="view" class="screen">
+        <a href="#hist" class="btn btn-back">← BACK TO HISTORY</a>
+        <div id="vc" style="border:1px solid #000; padding:15px; margin-top:10px;"></div>
+        <div id="pa"></div>
+        <button class="btn btn-org" style="margin-top:10px" onclick="window.print()">PRINT / PDF</button>
+    </div>
 
-<script>
-    function sh(id) {
-        var s = document.getElementsByClassName('screen');
-        for(var i=0; i<s.length; i++) { s[i].style.display = 'none'; }
-        document.getElementById(id).style.display = 'block';
-        window.scrollTo(0,0);
-    }
+    <script>
+        // ULTIMATE STABILITY: Manual calculation and storage only
+        function ma() {
+            var sy = localStorage.getItem('cur') || '£';
+            var h = Number(document.getElementById('hrs').value) || 0;
+            var r = Number(document.getElementById('rte').value) || 0;
+            var m = Number(document.getElementById('mat').value) || 0;
+            document.getElementById('out').innerText = sy + ( (h*r)+m ).toFixed(2);
+        }
 
-    function ma() {
-        var cur = localStorage.getItem('cur') || '£';
-        var h = Number(document.getElementById('h').value) || 0;
-        var r = Number(document.getElementById('r').value) || 0;
-        var m = Number(document.getElementById('m').value) || 0;
-        document.getElementById('out').innerText = cur + ( (h*r)+m ).toFixed(2);
-    }
+        function sq() {
+            var sy = localStorage.getItem('cur') || '£';
+            var h = Number(document.getElementById('hrs').value) || 0;
+            var r = Number(document.getElementById('rte').value) || 0;
+            var m = Number(document.getElementById('mat').value) || 0;
+            var t = (h*r)+m;
+            var j = JSON.parse(localStorage.getItem('jobs') || '[]');
+            j.unshift({id: Date.now(), n: document.getElementById('cn').value||'Client', t: sy+t.toFixed(2), d: new Date().toLocaleDateString('en-GB')});
+            localStorage.setItem('jobs', JSON.stringify(j.slice(0,20)));
+            window.location.hash = ""; // Returns to home
+        }
 
-    function sq() {
-        var cur = localStorage.getItem('cur') || '£';
-        var h = Number(document.getElementById('h').value) || 0;
-        var r = Number(document.getElementById('r').value) || 0;
-        var m = Number(document.getElementById('m').value) || 0;
-        var t = (h*r)+m;
-        var j = JSON.parse(localStorage.getItem('jobs') || '[]');
-        j.unshift({id: Date.now(), n: document.getElementById('cn').value||'Client', t: cur+t.toFixed(2), d: new Date().toLocaleDateString('en-GB')});
-        localStorage.setItem('jobs', JSON.stringify(j.slice(0,20)));
-        sh('scr_1');
-    }
+        function lh() {
+            var j = JSON.parse(localStorage.getItem('jobs') || '[]');
+            document.getElementById('h-list').innerHTML = j.map(function(x) {
+                return '<a href="#view" class="btn" onclick="vq('+x.id+')">'+x.n+'<br><small>'+x.d+' - '+x.t+'</small></a>';
+            }).join('') || '<p>No history.</p>';
+        }
 
-    function lh() {
-        var j = JSON.parse(localStorage.getItem('jobs') || '[]');
-        document.getElementById('h_list').innerHTML = j.map(function(x)
+        function vq(id) {
+            var j = JSON.parse(localStorage.getItem('jobs')||'[]').find(function(x){return x.id === id;});
+            if(!j) return;
+            document.getElementById('vc').innerHTML = '<strong>'+(localStorage.getItem('bn')||'Business')+'</strong><br>'+(localStorage.getItem('ba')||'')+'<hr>Client: '+j.n+'<br>Total: '+j.t+'<hr>Bank: '+(localStorage.getItem('b1')||'')+'<br>Sort: '+(localStorage.getItem('b2')||'')+'<br>Acc: '+(localStorage.getItem('b3')||'');
+            var lnk = localStorage.getItem('bl');
+            document.getElementById('pa').innerHTML = lnk ? '<button class="btn btn-org" style="background:green; margin-top:10px;" onclick="window.open(\''+lnk+'\',\'_blank\')">PAY NOW</button>' : '';
+        }
+
+        window.onload = function() {
+            var keys = ['bn','ba','b1','b2','b3','bl','cur'];
+            for(var i=0; i<keys.length; i++) {
+                var v = localStorage.getItem(keys[i]);
+                if(v && document.getElementById(keys[i])) { document.getElementById(keys[i]).value = v; }
+            }
+            ma();
+        };
+    </script>
+</body>
+</html>
