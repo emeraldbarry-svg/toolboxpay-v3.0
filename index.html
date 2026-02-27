@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v9.8</title>
+    <title>toolboxpay - v9.9</title>
     <style>
-        /* RESET & BRANDING */
+        /* RESET & BRANDING [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
         #app-viewport { width: 100%; max-width: 420px; padding: 20px; position: relative; }
@@ -17,26 +17,17 @@
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* NAVIGATION SYSTEM */
+        /* NAVIGATION SYSTEM [cite: 2026-02-27] */
         .view { display: none; width: 100%; }
-        #view-home { display: block; } /* Home is always first */
+        #view-home { display: block; } 
 
         /* DASHBOARD TILES */
         .stack { display: flex; flex-direction: column; gap: 15px; width: 100%; }
-        .tile { 
-            background: #222; 
-            border-radius: 20px; 
-            padding: 22px; 
-            display: flex; 
-            align-items: center; 
-            cursor: pointer; 
-            border: 1px solid #333; 
-            user-select: none;
-        }
+        .tile { background: #222; border-radius: 20px; padding: 22px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; }
         .icon-box { width: 55px; height: 55px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 26px; pointer-events: none; }
         .tile span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; pointer-events: none; }
 
-        /* CARDS */
+        /* CARDS & FORMS [cite: 2026-02-27] */
         .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-top: 10px; }
         .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 12px 20px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; margin-bottom: 20px; display: inline-block; }
         
@@ -44,7 +35,13 @@
         label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
         input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; display: block; }
         
-        .total-row { font-size: 34px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 15px; border-top: 1px solid #333; padding-top: 10px; }
+        /* CALC RESULTS BOX */
+        .res-box { background: #000; padding: 20px; border-radius: 15px; border-left: 4px solid #ff6600; margin-bottom: 20px; }
+        .res-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-weight: 700; color: #ccc; }
+        .res-row b { color: #ff6600; }
+        .total-row { font-size: 34px; color: #ff6600; font-weight: 900; text-align: right; border-top: 1px solid #333; padding-top: 10px; }
+        
+        .btn-wa { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -63,86 +60,82 @@
         </div>
     </div>
 
-    <div id="view-quote" class="view">
-        <div class="back-btn" data-target="view-home">← DASHBOARD</div>
-        <div class="card">
-            <h2>New Quote</h2>
-            <label>Client Name</label><input type="text" id="q-name" placeholder="John Smith">
-            <label>Labour Description</label><textarea id="q-desc" style="height:80px;"></textarea>
-            <label>Price (£)</label><input type="number" id="q-price" oninput="document.getElementById('q-res').innerText='£'+(parseFloat(this.value)||0).toFixed(2)">
-            <div class="total-row" id="q-res">£0.00</div>
-        </div>
-    </div>
-
     <div id="view-calc" class="view">
         <div class="back-btn" data-target="view-home">← DASHBOARD</div>
         <div class="card">
             <h2>Business Calc</h2>
-            <label>Day Rate (£)</label><input type="number" id="c-rate" oninput="doCalc()">
-            <label>Days Worked</label><input type="number" id="c-days" oninput="doCalc()">
-            <div class="total-row" id="c-res">£0.00</div>
+            <label>Day Rate (£)</label>
+            <input type="number" id="c-rate" placeholder="0.00" oninput="runCalc()">
+            
+            <label>Number of Days</label>
+            <input type="number" id="c-days" placeholder="0" oninput="runCalc()">
+            
+            <label>Materials Cost (£)</label>
+            <input type="number" id="c-mats" placeholder="0.00" oninput="runCalc()">
+
+            <div class="res-box">
+                <div class="res-row"><span>Labour Total:</span><span id="res-lab">£0.00</span></div>
+                <div class="res-row"><span>Materials:</span><span id="res-mat">£0.00</span></div>
+                <div class="res-row"><span>VAT (20%):</span><span id="res-vat">£0.00</span></div>
+                <div class="total-row" id="res-total">£0.00</div>
+            </div>
+
+            <button class="btn-wa" onclick="shareCalc()">Share Breakdown via WhatsApp</button>
         </div>
     </div>
 
-    <div id="view-bank" class="view">
-        <div class="back-btn" data-target="view-home">← DASHBOARD</div>
-        <div class="card">
-            <h2>Bank Setup</h2>
-            <label>Business Name</label><input type="text" id="b-name" oninput="saveB('bn',this.value)">
-            <label>Bank</label><input type="text" id="b-bank" oninput="saveB('bk',this.value)">
-            <label>Sort Code</label><input type="text" id="b-sort" oninput="saveB('sc',this.value)">
-            <label>Account No.</label><input type="text" id="b-acc" oninput="saveB('an',this.value)">
-        </div>
-    </div>
-
-    <div id="view-history" class="view"><div class="back-btn" data-target="view-home">← DASHBOARD</div><div class="card"><h2>Job History</h2><p style="color:#666;">No logs available.</p></div></div>
-    <div id="view-readme" class="view"><div class="back-btn" data-target="view-home">← DASHBOARD</div><div class="card"><h2>Read Me</h2><p style="color:#ccc;">v9.8 Event Listener Patch.</p></div></div>
+    <div id="view-quote" class="view"><div class="back-btn" data-target="view-home">← DASHBOARD</div><div class="card"><h2>Job Quote</h2><label>Client</label><input type="text"><button class="btn-wa">Send Quote</button></div></div>
+    <div id="view-history" class="view"><div class="back-btn" data-target="view-home">← DASHBOARD</div><div class="card"><h2>History</h2><p>No recent jobs.</p></div></div>
+    <div id="view-bank" class="view"><div class="back-btn" data-target="view-home">← DASHBOARD</div><div class="card"><h2>Bank Setup</h2><label>Acc Name</label><input type="text"></div></div>
+    <div id="view-readme" class="view"><div class="back-btn" data-target="view-home">← DASHBOARD</div><div class="card"><h2>Read Me</h2><p>v9.9 Calculator Info Active.</p></div></div>
 
 </div>
 
 <script>
-    /* DIRECT EVENT LISTENER NAVIGATION */
+    /* NAVIGATION */
     document.addEventListener('click', function (e) {
-        // Find if the clicked element (or its parent) has a data-target
         const targetId = e.target.getAttribute('data-target') || (e.target.parentElement ? e.target.parentElement.getAttribute('data-target') : null);
-        
         if (targetId) {
-            // 1. Hide every single view
             const views = document.querySelectorAll('.view');
-            for (let i = 0; i < views.length; i++) {
-                views[i].style.display = 'none';
-            }
-            // 2. Force show the one we want
-            const targetEl = document.getElementById(targetId);
-            if (targetEl) {
-                targetEl.style.display = 'block';
-                window.scrollTo(0,0);
-            }
+            for (let i = 0; i < views.length; i++) { views[i].style.display = 'none'; }
+            document.getElementById(targetId).style.display = 'block';
+            window.scrollTo(0,0);
         }
     });
 
-    function doCalc() {
-        const r = parseFloat(document.getElementById('c-rate').value) || 0;
-        const d = parseFloat(document.getElementById('c-days').value) || 0;
-        document.getElementById('c-res').innerText = "£" + (r * d * 1.2).toFixed(2);
+    /* CALCULATOR LOGIC [cite: 2026-02-27] */
+    function runCalc() {
+        const rate = parseFloat(document.getElementById('c-rate').value) || 0;
+        const days = parseFloat(document.getElementById('c-days').value) || 0;
+        const mats = parseFloat(document.getElementById('c-mats').value) || 0;
+
+        const labour = rate * days;
+        const subtotal = labour + mats;
+        const vat = subtotal * 0.20;
+        const total = subtotal + vat;
+
+        document.getElementById('res-lab').innerText = "£" + labour.toFixed(2);
+        document.getElementById('res-mat').innerText = "£" + mats.toFixed(2);
+        document.getElementById('res-vat').innerText = "£" + vat.toFixed(2);
+        document.getElementById('res-total').innerText = "£" + total.toFixed(2);
     }
 
-    function saveB(k, v) { localStorage.setItem('TBP98_' + k, v); }
-    function loadB(k) { return localStorage.getItem('TBP98_' + k) || ""; }
+    function shareCalc() {
+        const lab = document.getElementById('res-lab').innerText;
+        const mat = document.getElementById('res-mat').innerText;
+        const vat = document.getElementById('res-vat').innerText;
+        const tot = document.getElementById('res-total').innerText;
+        
+        const msg = `Job Breakdown:\n\nLabour: ${lab}\nMaterials: ${mat}\nVAT (20%): ${vat}\n---\nTotal Due: ${tot}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
 
     function clockTick() {
         const d = new Date();
         document.getElementById('live-clock').innerText = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0') + ":" + d.getSeconds().toString().padStart(2,'0');
     }
     setInterval(clockTick, 1000);
-
-    window.onload = function() {
-        clockTick();
-        document.getElementById('b-name').value = loadB('bn');
-        document.getElementById('b-bank').value = loadB('bk');
-        document.getElementById('b-sort').value = loadB('sc');
-        document.getElementById('b-acc').value = loadB('an');
-    };
+    window.onload = clockTick;
 </script>
 </body>
 </html>
