@@ -5,29 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>toolboxpay</title>
     <style>
-        :root { --orange: #ff6600; --white: #ffffff; --navy: #0b1521; --card: #1a2635; }
+        :root { --org: #ff6600; --wht: #ffffff; --bg: #0b1521; --crd: #1a2635; }
         
-        /* Mobile-Locked Layout for Laptop Screens */
+        /* Centered Mobile Layout for Laptop */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            background: var(--navy); 
-            color: var(--white); 
-            font-family: -apple-system, sans-serif; 
+            background: var(--bg); 
+            color: var(--wht); 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
             display: flex; 
             justify-content: center; 
             min-height: 100vh;
             padding: 40px 20px; 
         }
-        .wrapper { width: 100%; max-width: 380px; }
+        .container { width: 100%; max-width: 380px; }
 
         /* Logo: toolbox (orange) pay (white) */
         .logo { text-align: center; margin-bottom: 35px; font-size: 34px; font-weight: 800; }
-        .logo span { color: var(--orange); }
+        .logo span { color: var(--org); }
 
-        #btn-back { 
+        #nav-back { 
             display: none; 
-            color: var(--orange); 
-            border: 1px solid var(--orange); 
+            color: var(--org); 
+            border: 1px solid var(--org); 
             background: none; 
             padding: 12px; 
             width: 100%; 
@@ -41,9 +41,9 @@
         .view { display: none; }
         .active { display: block; }
 
-        /* Dashboard Card */
+        /* Dashboard Tile */
         .tile { 
-            background: var(--card); 
+            background: var(--crd); 
             padding: 25px; 
             border-radius: 12px; 
             border: 1px solid #233554; 
@@ -52,15 +52,15 @@
             justify-content: space-between; 
             align-items: center; 
         }
-        .tile h3 { color: var(--orange); text-transform: uppercase; font-size: 16px; }
+        .tile h3 { color: var(--org); text-transform: uppercase; font-size: 16px; }
 
         /* Calculator Styles */
-        .tag { color: var(--orange); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
+        .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
         label { display: block; font-size: 13px; margin-bottom: 8px; }
         input { 
             width: 100%; 
             padding: 15px; 
-            background: var(--card); 
+            background: var(--crd); 
             border: 1px solid #233554; 
             color: #fff; 
             margin-bottom: 15px; 
@@ -69,36 +69,36 @@
             outline: none; 
         }
 
-        .total-box { border: 2px solid var(--orange); padding: 22px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 35px; }
-        .total-val { color: var(--orange); font-size: 26px; font-weight: 800; }
+        .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 35px; }
+        .total-val { color: var(--org); font-size: 26px; font-weight: 800; }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <button id="btn-back" onclick="nav('dash')">← Return to Dashboard</button>
+<div class="container">
+    <button id="nav-back" onclick="swap('dash')">← Return to Dashboard</button>
     <div class="logo"><span>toolbox</span>pay</div>
 
     <div id="dash" class="view active">
-        <div class="tile" onclick="nav('calc')">
+        <div class="tile" onclick="swap('calc')">
             <div>
                 <h3>Labour & Materials</h3>
                 <p style="font-size:12px; color:#8892b0; margin-top:4px;">Calculate costs and specialising tasks</p>
             </div>
-            <span style="color:var(--orange); font-weight:bold; font-size: 20px;">→</span>
+            <span style="color:var(--org); font-weight:bold; font-size: 20px;">→</span>
         </div>
     </div>
 
     <div id="calc" class="view">
         <div class="tag">Labour Costs</div>
         <label>Hours worked</label>
-        <input type="number" id="h" placeholder="0" oninput="solve()">
+        <input type="number" id="h" placeholder="0" oninput="math()">
         <label>Hourly rate (£)</label>
-        <input type="number" id="r" placeholder="0.00" oninput="solve()">
+        <input type="number" id="r" placeholder="0.00" oninput="math()">
         
         <div class="tag">Materials</div>
         <label>Total material costs (£)</label>
-        <input type="number" id="m" placeholder="0.00" oninput="solve()">
+        <input type="number" id="m" placeholder="0.00" oninput="math()">
         
         <div class="total-box">
             <span style="font-weight:800; font-size:12px;">TOTAL:</span>
@@ -108,15 +108,15 @@
 </div>
 
 <script>
-    function nav(id) {
+    function swap(id) {
         document.getElementById('dash').classList.remove('active');
         document.getElementById('calc').classList.remove('active');
         document.getElementById(id).classList.add('active');
-        document.getElementById('btn-back').style.display = (id === 'calc') ? 'block' : 'none';
+        document.getElementById('nav-back').style.display = (id === 'calc') ? 'block' : 'none';
         window.scrollTo(0,0);
     }
 
-    function solve() {
+    function math() {
         const h = parseFloat(document.getElementById('h').value) || 0;
         const r = parseFloat(document.getElementById('r').value) || 0;
         const m = parseFloat(document.getElementById('m').value) || 0;
