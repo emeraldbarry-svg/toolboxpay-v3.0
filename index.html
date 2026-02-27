@@ -3,56 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v10.2</title>
+    <title>toolboxpay - v10.3</title>
     <style>
-        /* BRANDING */
+        /* BRANDING & THEME */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; }
         #app-viewport { width: 100%; max-width: 420px; padding: 20px; position: relative; }
 
-        /* HEADER */
-        .time-header { display: flex; justify-content: space-between; font-size: 14px; font-weight: 900; color: #ff6600; font-family: monospace; padding: 10px 0; }
+        /* SINGLE CLOCK HEADER */
+        .time-header { text-align: center; font-size: 14px; font-weight: 900; color: #ff6600; font-family: monospace; padding: 10px 0; }
         .logo { text-align: center; font-size: 38px; font-weight: 900; letter-spacing: -2px; margin: 10px 0 25px 0; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* NAVIGATION */
+        /* VIEW NAVIGATION */
         .view { display: none; width: 100%; }
         #view-home { display: block; } 
 
         /* DASHBOARD TILES */
         .stack { display: flex; flex-direction: column; gap: 12px; }
-        .tile { background: #222; border-radius: 18px; padding: 18px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; }
-        .icon-box { width: 50px; height: 50px; background: #000; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 24px; pointer-events: none; }
-        .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; pointer-events: none; }
+        .tile { background: #222; border-radius: 20px; padding: 20px; display: flex; align-items: center; cursor: pointer; border: 1px solid #333; }
+        .icon-box { width: 50px; height: 50px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 24px; pointer-events: none; }
+        .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; pointer-events: none; }
 
         /* CARDS & FORMS */
         .card { background: #1e1e1e; border-radius: 25px; padding: 25px; border: 1px solid #333; margin-top: 10px; }
-        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 10px 15px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; margin-bottom: 15px; display: inline-block; }
+        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 10px 15px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; margin-bottom: 20px; display: inline-block; }
         
         h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin-bottom: 20px; font-weight: 900; }
-        label { display: block; font-size: 10px; color: #888; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; }
-        input, textarea, select { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 12px; font-size: 16px; display: block; }
+        label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
+        input, textarea, select { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; display: block; }
         
+        /* RESULTS */
         .total-display { font-size: 45px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 15px; }
-        .btn-green { width: 100%; background: #25D366; color: #000; padding: 18px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
+        .btn-action { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 14px; margin-top: 10px; }
         
-        /* CLIENT LIST STYLING */
-        .client-item { background: #000; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 3px solid #ff6600; }
-        .client-item p { margin: 0; font-size: 14px; }
-        .client-item b { color: #ff6600; font-size: 16px; }
+        /* CLIENT LISTING */
+        .client-entry { background: #000; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid #ff6600; display: flex; justify-content: space-between; align-items: center; }
+        .client-info b { color: #ff6600; display: block; margin-bottom: 4px; }
+        .client-info span { color: #999; font-size: 12px; display: block; }
+        .del-btn { color: #ff4444; font-size: 20px; cursor: pointer; padding: 10px; }
     </style>
 </head>
 <body>
 
 <div id="app-viewport">
-    <div class="time-header"><span id="live-clock">00:00:00</span><span>v10.2</span></div>
+    <div class="time-header" id="live-clock">00:00:00</div>
 
     <div id="view-home" class="view">
         <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         <div class="stack">
             <div class="tile" data-nav="view-quote"><div class="icon-box">📝</div><span>Job Quotes</span></div>
-            <div class="tile" data-nav="view-clients"><div class="icon-box">👥</div><span>Client Database</span></div>
+            <div class="tile" data-nav="view-clients"><div class="icon-box">👥</div><span>Clients</span></div>
             <div class="tile" data-nav="view-calc"><div class="icon-box">🧮</div><span>Calculator</span></div>
             <div class="tile" data-nav="view-bank"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
             <div class="tile" data-nav="view-readme"><div class="icon-box">📖</div><span>Read Me</span></div>
@@ -62,14 +64,14 @@
     <div id="view-clients" class="view">
         <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
         <div class="card">
-            <h2>Add New Client</h2>
-            <label>Full Name</label><input type="text" id="cl-name">
-            <label>Site Address</label><textarea id="cl-addr" style="height:60px;"></textarea>
-            <label>Phone Number</label><input type="text" id="cl-phone">
-            <button class="btn-green" style="background:#ff6600;" onclick="saveClient()">Save Client</button>
+            <h2>Add Client</h2>
+            <label>Name</label><input type="text" id="c-name" placeholder="Client Name">
+            <label>Address</label><textarea id="c-addr" style="height:60px;" placeholder="Site Address"></textarea>
+            <label>Contact Number</label><input type="text" id="c-phone" placeholder="07xxx xxxxxx">
+            <button class="btn-action" style="background:#ff6600;" onclick="addClient()">Save to Database</button>
         </div>
         <div class="card" style="margin-top:20px;">
-            <h2>Existing Clients</h2>
+            <h2>Your Clients</h2>
             <div id="client-list"></div>
         </div>
     </div>
@@ -78,92 +80,9 @@
         <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
         <div class="card">
             <h2>New Quote</h2>
-            <label>Select Client</label>
-            <select id="q-client-select" onchange="autoFillClient()"><option value="">-- Choose Client --</option></select>
-            
-            <label>Client Name (Manual)</label><input type="text" id="q-name">
+            <label>Select Saved Client</label>
+            <select id="q-select" onchange="fillFromDb()"><option value="">-- Choose --</option></select>
+            <label>Client Name</label><input type="text" id="q-name">
             <label>Labour Description</label><textarea id="q-desc" style="height:80px;"></textarea>
-            <label>Price (£)</label><input type="number" id="q-price" oninput="updateQ()">
-            <div class="total-display" id="q-total">£0.00</div>
-            <button class="btn-green" onclick="shareQuote()">Send Quote</button>
-        </div>
-    </div>
-
-    <div id="view-calc" class="view"><div class="back-btn" data-nav="view-home">← DASHBOARD</div><div class="card"><h2>Calculator</h2><label>Day Rate</label><input type="number" id="c-rate" oninput="runC()"><label>Days</label><input type="number" id="c-days" oninput="runC()"><div class="total-display" id="c-total">£0.00</div></div></div>
-    
-    <div id="view-bank" class="view">
-        <div class="back-btn" data-nav="view-home">← DASHBOARD</div>
-        <div class="card">
-            <h2>Bank Setup</h2>
-            <label>Business Name</label><input type="text" id="b-name" oninput="saveB('bn',this.value)">
-            <label>Sort Code</label><input type="text" id="b-sort" oninput="saveB('sc',this.value)">
-            <label>Account No.</label><input type="text" id="b-acc" oninput="saveB('an',this.value)">
-        </div>
-    </div>
-
-    <div id="view-readme" class="view"><div class="back-btn" data-nav="view-home">← DASHBOARD</div><div class="card"><h2>Read Me</h2><p>v10.2 Client Database Integration Active.</p></div></div>
-
-</div>
-
-<script>
-    /* NAVIGATION */
-    document.addEventListener('click', function(e) {
-        const target = e.target.closest('[data-nav]');
-        if (target) {
-            const id = target.getAttribute('data-nav');
-            document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
-            document.getElementById(id).style.display = 'block';
-            if(id === 'view-quote') refreshClientDropdown();
-            window.scrollTo(0,0);
-        }
-    });
-
-    /* CLIENT LOGIC */
-    let clients = JSON.parse(localStorage.getItem('TBP_CLIENTS') || "[]");
-
-    function saveClient() {
-        const name = document.getElementById('cl-name').value;
-        const addr = document.getElementById('cl-addr').value;
-        const phone = document.getElementById('cl-phone').value;
-        if(!name) return alert("Enter a name");
-        
-        clients.push({ name, addr, phone });
-        localStorage.setItem('TBP_CLIENTS', JSON.stringify(clients));
-        
-        document.getElementById('cl-name').value = '';
-        document.getElementById('cl-addr').value = '';
-        document.getElementById('cl-phone').value = '';
-        renderClients();
-    }
-
-    function renderClients() {
-        const list = document.getElementById('client-list');
-        list.innerHTML = clients.map(c => `<div class="client-item"><b>${c.name}</b><p>${c.addr}</p><p>${c.phone}</p></div>`).join('');
-    }
-
-    function refreshClientDropdown() {
-        const sel = document.getElementById('q-client-select');
-        sel.innerHTML = '<option value="">-- Choose Client --</option>' + 
-            clients.map((c, i) => `<option value="${i}">${c.name}</option>`).join('');
-    }
-
-    function autoFillClient() {
-        const idx = document.getElementById('q-client-select').value;
-        if(idx !== "") {
-            document.getElementById('q-name').value = clients[idx].name;
-            document.getElementById('q-desc').value = "Work for: " + clients[idx].addr;
-        }
-    }
-
-    /* OTHER LOGIC */
-    function updateQ() { document.getElementById('q-total').innerText = "£" + (parseFloat(document.getElementById('q-price').value) || 0).toFixed(2); }
-    function runC() { 
-        const r = parseFloat(document.getElementById('c-rate').value) || 0;
-        const d = parseFloat(document.getElementById('c-days').value) || 0;
-        document.getElementById('c-total').innerText = "£" + (r * d * 1.2).toFixed(2); 
-    }
-    function saveB(k, v) { localStorage.setItem('TBP_B_'+k, v); }
-
-    function tick() {
-        const d = new Date();
-        document.getElementById('live-clock').innerText = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(
+            <label>Price (£)</label><input type="number" id="q-price" oninput="upQ()">
+            <div class="total-display" id="q-total">£0.
