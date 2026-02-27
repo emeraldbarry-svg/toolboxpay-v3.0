@@ -3,6 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toolboxpay v28.0</title>
+    <style>
+        :root { --org: #ff6600; --bg: #0b0b0b; --card: #161616; }
+
+        html, body { 
+            background: var(--bg) !important; 
+            margin: 0; padding: 0; height: 100vh;
+            display: flex; justify-content: center; align-items: flex-start;
+            font-family: 'Segoe UI', Arial, sans-serif; color: white;
+            overflow: hidden; 
+        }
+
+        #app-shell {
+            background: var(--card);
+            width: 380px; height: 92vh;
+            margin-top: 2vh; border: 1px solid #333;
+            border-radius: 20px; padding: 25px;
+            box-sizing: border-box; position: relative;
+        }
+
+        .logo { color: var(--org); font-weight: 900; font-size: 24px; text-align: center; margin-bottom: 30px; }
+        .logo span { color: #fff; }
+
+        /* INTERACTIVE BUTTONS */
+        .btn { 
+            width: 100%; padding: 18px; margin-bottom: 12px; 
+            background: #222; border: 1px solid #444; border-radius: 10px; 
+            font-size: 16px; font-weight: bold; text-align: left; 
+            color: var(--org); cursor: pointer; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        .btn-main { background: var(--org) !important; color: #000 !important; border: none; justify-content: center; text-transform: uppercase; }
+        .back { background: none; border: 1px solid var(--org); color: var(--org); text-align: center; padding: 10px; margin-bottom: 20px; width: 100%; border-radius: 8px; cursor: pointer; }
+
+        /* THE VAT TOGGLE BOX - Fixes the issue in image_c720a8.png */
+        .vat-bar {
+            background: #222; border: 1px solid #333; border-radius: 10px;
+            padding: 15px; display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 15px; cursor: pointer;
+        }
+        .vat-label { font-size: 14px; font-weight: bold; color: #888; }
+        .vat-active { color: var(--org) !important; }
+        .toggle-dot { 
+            width: 40px; height: 20px; background: #444; border-radius: 20px; position: relative; 
+            transition: 0.3s; 
+        }
+        .toggle-dot::after { 
+            content: ''; position: absolute; top: 2px; left: 2px; 
+            width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: 0.3s;
+        }
+        .vat-on .toggle-dot { background: var(--org); }
+        .vat-on .toggle-dot::after { left: 22px; }
+
+        .screen { display: none !important; }
+        .on { display: block !important; }
+
+        input, textarea, select { 
+            width: 100%; padding: 15px; margin-bottom: 15px; 
+            border: 1px solid #333; background: #000; color: #fff; 
+            border-radius: 8px; font-size: 16px; box-sizing: border-box; 
+        }
+
+        .total-box { text-align: right; font-size: 38px; font-weight: 900; color: var(--org); margin: 15px 0; }
+        .paper { background: #fff; color: #000; padding: 20px; border-radius: 5px; font-size: 14px; }
+        .del { background: #300; color: #f55; border: 1px solid #500; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="app-shell">
+        <div class="logo">toolbox<span>pay</span></div>
+
+        <div id="v_m" class="screen on">
+            <button class="btn" onclick="sh('v_c')">NEW QUOTE <span>→</span></button>
+            <button class="btn" onclick="sh('v_h'); draw();">HISTORY <span>→</span></button>
+            <button class="btn" onclick="sh('v_s')">BUSINESS SETUP <span>→</span></button>
+            <button class="btn" onclick="sh('v_b')">BANK DETAILS <span>→</span></button>
+            
+            <button onclick="localStorage.clear(); location.reload();" style="width:100%; margin-top:60px; background:none; border:none; color:#333; font-size:10px; cursor:pointer; font-weight:bold;">[ CITE: PURGE APP MEMORY ]</button>
+        </div>
+
+        <div id="v_c" class="screen">
+            <button class="back" onclick="sh('v_m')">← BACK</button>
+            <input type="text" id="i_n" placeholder="Client Name">
+            <input type="number" id="i_h" placeholder="Labour Hours" oninput="run()">
+            <input type="number" id="i_r" placeholder="Hourly Rate" oninput="run()">
+            <input type="number" id="i_m" placeholder="Materials" oninput="run()">
+            
+            <div id="vat_btn" class="vat-bar" onclick="tog()">
+                <span id="vat_txt" class="vat-label">ADD 20% VAT</span>
+                <div class="toggle-dot"></div>
+            </div>
+
+            <div id="i_t" class="total-box">£0.00</div>
+            <button class="btn btn-main" onclick="save()">SAVE QUOTE</button>
+        </div>
+
+        <div id="v_h" class="screen">
+            <button class="back" onclick="sh('v_m')">← BACK</button>
+            <div id="h_list"></div>
+        </div>
+
+        <div id="v_s" class="screen">
+            <button class="back" onclick="sh('v_m')">← BACK</button>
+            <input type="text" id="s_bn" placeholder="Business Name" oninput="up('bn', this.value)">
+            <textarea id="s_ba" placeholder="Business Address" oninput="up('ba', this.value)" style="height:80px;"></textarea>
+            <select id="s_cu" onchange="up('cu', this.value)">
+                <option value="£">GBP (£)</option>
+                <option value="$">USD ($)</option>
+                <option value="€">EUR (€)</option>
+            </select>
+        </div>
+
+        <div id="v_b" class="screen">
+            <button class="back" onclick="sh('v_m')">← BACK</button>
+            <input type="text" id="s_b1" placeholder="Account Name" oninput="up('b1', this.value)">
+            <input type="text" id="s_b2" placeholder="Sort Code" oninput="up('b2', this.value)">
+            <input type="text" id="s_b3" placeholder="Account Number" oninput="up('b3', this.value)">
+        </div>
+
+        <div id="v_v" class="screen">
+            <button class="back" onclick="sh('v_h')">← BACK</button>
+            <div id="v_out" class="paper"></div>
+            <button class="btn btn-main" style="margin-top:20px" onclick="window.print()">PRINT / SAVE PDF</button>
+        </div>
+    </div>
+
+    <script>
+        const DB = "v28_";
+        let isVat = false;
+
+        function up(k, v) { localStorage.setItem(DB+k, v); }
+        function get(k) { return localStorage.getItem(DB+k) || ""; }
+
+        function sh(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+            document.getElementById(id).classList.add('on');
+        }
+
+        function tog() {
+            isVat = !isVat;
+            document.getElementById('vat_btn').classList.toggle('vat-on', isVat);
+            document.getElementById('vat_txt').classList.toggle('vat-active', isVat);
+            run();
+        }
+
+        function run() {
+            let cur = get('cu') || '£';
+            let h = Number(document.getElementById('i_h').value) || 0;
+            let r = Number(document.getElementById('i_r').value) || 0;
+            let m = Number(document.getElementById('i_m').value) || 0;
+            let total = (h * r) + m;
+            if(isVat) total *= 1.2;
+            document.getElementById('i_t').innerText = cur + total.toFixed(2);
+        }
+
+        function save() {
+            let jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
+            jobs.unshift({
+                id: Date.now(),
+                n: document.getElementById('i_n').value || 'Client',
+                t: document.getElementById('i_t').innerText,
+                d: new Date().toLocaleDateString('en-GB')
+            });
+            localStorage.setItem(DB+'data', JSON.stringify(jobs.slice(0,25)));
+            sh('v_m');
+        }
+
+        function draw() {
+            let jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
+            document.getElementById('h_list').innerHTML = jobs.map(j => `
+                <div style="display:flex; gap:10px; margin-bottom:12px;">
+                    <button class="btn" style="flex:1; margin-bottom:0;" onclick="view(${j.id})">
+                        ${j.n} <span style="font-size:12px; opacity:0.6;">${j.t}</span>
+                    </button>
+                    <button class="del" onclick="del(${j.id})">DEL</button>
+                </div>
+            `).join('') || '<p style="text-align:center; opacity:0.5;">No quotes saved.</p>';
+        }
+
+        function del(id) {
+            if(!confirm("Delete this quote?")) return;
+            let jobs = JSON.parse(localStorage.getItem(DB+'data') || '[]');
+            localStorage.setItem(DB+'data', JSON.stringify(jobs.filter(x => x.id !== id)));
+            draw();
+        }
+
+        function view(id) {
+            let j = JSON.parse(localStorage.getItem(DB+'data') || '[]').find(x => x.id === id);
+            if(!j) return;
+            document.getElementById('v_out').innerHTML = `
+                <div style="text-align:center; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">
+                    <h2 style="margin:0;">QUOTE</h2>
+                </div>
+                <strong>FROM:</strong><br>${get('bn') || 'Business Name'}<br>${get('ba')}<br><br>
+                <strong>TO:</strong> ${j.n}<br><strong>DATE:</strong> ${j.d}<br>
+                <div style="font-size:24px; font-weight:bold; color:var(--org); text-align:right; margin:20px 0;">TOTAL: ${j.t}</div>
+                <div style="border-top:1px solid #eee; padding-top:10px; font-size:12px;">
+                    <strong>PAYMENT DETAILS:</strong><br>
+                    Account: ${get('b1')}<br>Sort Code: ${get('b2')}<br>Account No: ${get('b3')}
+                </div>
+            `;
+            sh('v_v');
+        }
+
+        window.onload = function() {
+            ['bn','ba','b1','b2','b3','cu'].forEach(k => {
+                if(document.getElementById('s_'+k)) document.getElementById('s_'+k).value = get(k);
+            });
+            run();
+        };
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>toolboxpay v27.0</title>
     <style>
         /* THE STABILITY CORE: Forced visibility to prevent the "Empty Box" error */
