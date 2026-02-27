@@ -17,19 +17,19 @@
             background-color: var(--dark-bg);
             color: var(--white);
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
             display: flex;
             justify-content: center;
         }
         .container {
             width: 100%;
-            max-width: 550px;
+            max-width: 500px;
         }
 
         /* Branding - Clean & Borderless */
         .branding {
-            margin-bottom: 40px;
-            margin-top: 20px;
+            margin-bottom: 50px;
+            text-align: left;
         }
         .logo-text {
             font-size: 38px;
@@ -40,51 +40,78 @@
         .toolbox { color: var(--orange); }
         .pay { color: var(--white); }
         
+        /* Section Labels */
         .section-label {
             color: var(--orange);
             font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin: 30px 0 15px 0;
+            margin: 35px 0 15px 0;
             display: block;
-            border-bottom: 1px solid rgba(255, 102, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 102, 0, 0.2);
             padding-bottom: 8px;
         }
 
-        .field-group { margin-bottom: 20px; }
-        label { display: block; font-size: 14px; margin-bottom: 10px; color: var(--white); }
+        .field-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #ccd6f6;
+            font-weight: 500;
+        }
         input {
             width: 100%;
             padding: 14px;
             background-color: var(--input-bg);
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 8px;
             color: var(--white);
             font-size: 16px;
             box-sizing: border-box;
+            transition: border-color 0.2s;
         }
-        input:focus { outline: none; border-color: var(--orange); }
+        input:focus {
+            outline: none;
+            border-color: var(--orange);
+        }
+        input::placeholder {
+            color: #4a5d7e;
+        }
 
-        .row { display: flex; gap: 20px; }
-        .flex-1 { flex: 1; }
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+        .flex-1 {
+            flex: 1;
+        }
 
-        /* Calculation Results Card */
+        /* Results Card */
         .results-card {
-            background-color: var(--input-bg);
-            border: 2px solid var(--orange);
-            border-radius: 10px;
+            background-color: rgba(26, 38, 53, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             padding: 25px;
-            margin-top: 30px;
+            margin-top: 40px;
         }
-        .result-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 16px; }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 16px;
+            color: #8892b0;
+        }
         .total-row {
             display: flex;
             justify-content: space-between;
             margin-top: 15px;
             padding-top: 15px;
             border-top: 1px solid var(--border-color);
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 800;
             color: var(--orange);
         }
@@ -98,31 +125,35 @@
     </div>
 
     <form id="calcForm">
-        <span class="section-label">Labour Costs</span>
+        <span class="section-label">Labour</span>
         <div class="row">
             <div class="field-group flex-1">
-                <label for="hours">Total Hours</label>
+                <label for="hours">Hours</label>
                 <input type="number" id="hours" placeholder="0" oninput="calculate()">
             </div>
             <div class="field-group flex-1">
-                <label for="rate">Hourly Rate (£)</label>
+                <label for="rate">Rate (£)</label>
                 <input type="number" id="rate" placeholder="0.00" oninput="calculate()">
             </div>
         </div>
 
         <span class="section-label">Materials</span>
         <div class="field-group">
-            <label for="materials">Materials Total (£)</label>
+            <label for="materials">Total Materials (£)</label>
             <input type="number" id="materials" placeholder="0.00" oninput="calculate()">
         </div>
 
         <div class="results-card">
             <div class="result-row">
-                <span>Labour Subtotal:</span>
+                <span>Labour Subtotal</span>
                 <span id="labour-sub">£0.00</span>
             </div>
+            <div class="result-row">
+                <span>Materials Subtotal</span>
+                <span id="materials-sub">£0.00</span>
+            </div>
             <div class="total-row">
-                <span>GRAND TOTAL:</span>
+                <span>TOTAL</span>
                 <span id="grand-total">£0.00</span>
             </div>
         </div>
@@ -138,8 +169,9 @@
         const labourTotal = hours * rate;
         const grandTotal = labourTotal + materials;
 
-        document.getElementById('labour-sub').innerText = '£' + labourTotal.toLocaleString('en-GB', {minimumFractionDigits: 2});
-        document.getElementById('grand-total').innerText = '£' + grandTotal.toLocaleString('en-GB', {minimumFractionDigits: 2});
+        document.getElementById('labour-sub').innerText = '£' + labourTotal.toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('materials-sub').innerText = '£' + materials.toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('grand-total').innerText = '£' + grandTotal.toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     }
 </script>
 
