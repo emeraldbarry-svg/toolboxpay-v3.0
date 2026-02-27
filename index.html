@@ -2,116 +2,189 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>toolboxpay</title>
     <style>
-        :root { --orange: #ff6600; --white: #fff; --navy: #0b1521; --card: #1a2635; }
-        
-        /* Stop the "Too Big" issue - force everything into a narrow column */
-        body { 
-            background: var(--navy); 
-            color: var(--white); 
-            font-family: sans-serif; 
-            margin: 0; 
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        :root {
+            --orange: #ff6600;
+            --white: #ffffff;
+            --navy: #0b1521;
+            --card: #1a2635;
+            --border: #233554;
         }
-        .wrapper { width: 100%; max-width: 320px; } /* Strictly narrow for mobile */
 
-        /* Branding */
-        .logo { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 30px; }
-        .logo span { color: var(--orange); }
+        /* Essential Reset - Prevents elements from stretching/breaking */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--navy);
+            color: var(--white);
+            display: flex;
+            justify-content: center;
+            padding: 20px 15px;
+            overflow-x: hidden;
+        }
 
-        /* Navigation */
-        #return-btn { 
-            display: none; 
-            color: var(--orange); 
-            border: 1px solid var(--orange);
+        .app-container {
+            width: 100%;
+            max-width: 360px; /* Forces a mobile-friendly width */
+        }
+
+        /* Branding - Clean & Borderless */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+        }
+        .toolbox { color: var(--orange); }
+        .pay { color: var(--white); }
+
+        /* Navigation Button - Hidden on Dashboard */
+        #return-btn {
             background: none;
+            border: 1px solid var(--orange);
+            color: var(--orange);
             padding: 10px;
             width: 100%;
+            border-radius: 6px;
             font-weight: 800;
+            font-size: 11px;
+            text-transform: uppercase;
             margin-bottom: 20px;
             cursor: pointer;
+            display: none;
         }
 
-        /* Views */
-        .page { display: none; }
-        .visible { display: block !important; }
+        /* View Switching Logic */
+        .screen { display: none; }
+        .active { display: block; }
 
-        /* Menu Card */
-        .box { 
-            background: var(--card); 
-            border: 1px solid #233554; 
-            padding: 20px; 
-            border-radius: 8px; 
+        /* Dashboard Menu Styles */
+        .menu-item {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 12px;
             cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .box h3 { color: var(--orange); margin: 0; text-transform: uppercase; font-size: 14px; }
-        .box p { font-size: 11px; color: #8892b0; margin: 5px 0 0 0; }
+        .menu-item h3 { 
+            color: var(--orange); 
+            font-size: 16px; 
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .menu-item p { color: #8892b0; font-size: 12px; }
 
-        /* Inputs */
-        .section-title { color: var(--orange); font-size: 10px; font-weight: 800; margin: 20px 0 10px 0; text-transform: uppercase; border-bottom: 1px solid #233554; }
-        label { display: block; font-size: 12px; margin-bottom: 5px; }
-        input { width: 100%; padding: 12px; background: var(--card); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 4px; box-sizing: border-box; }
+        /* Calculator Styles */
+        .label-group {
+            color: var(--orange);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 25px 0 12px 0;
+            border-bottom: 1px solid rgba(255, 102, 0, 0.2);
+            padding-bottom: 5px;
+        }
+        .field { margin-bottom: 15px; }
+        label { display: block; font-size: 13px; margin-bottom: 8px; }
+        input {
+            width: 100%;
+            padding: 14px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 16px;
+        }
 
-        /* Total Box */
-        .total-card { border: 2px solid var(--orange); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px; }
-        .total-val { color: var(--orange); font-size: 20px; font-weight: 800; }
+        /* Total Result Card */
+        .result-card {
+            background: var(--card);
+            border: 2px solid var(--orange);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .total-text { font-size: 24px; font-weight: 800; color: var(--orange); }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <button id="return-btn" onclick="show('dash')">← RETURN TO DASHBOARD</button>
-    
-    <div class="logo"><span>toolbox</span>pay</div>
+<div class="app-container">
+    <button id="return-btn" onclick="showScreen('dashboard')">← Return to Dashboard</button>
 
-    <div id="dash" class="page visible">
-        <div class="box" onclick="show('calc')">
-            <h3>Labour & Materials</h3>
-            <p>Calculate costs and specialising tasks</p>
+    <div class="header">
+        <h1 class="logo"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
+    </div>
+
+    <div id="dashboard" class="screen active">
+        <div class="menu-item" onclick="showScreen('calculator')">
+            <div>
+                <h3>Labour & Materials</h3>
+                <p>Calculate costs and specialising tasks</p>
+            </div>
+            <span style="color: var(--orange); font-weight: bold; font-size: 18px;">→</span>
         </div>
     </div>
 
-    <div id="calc" class="page">
-        <div class="section-title">Labour</div>
-        <label>Hours</label>
-        <input type="number" id="h" oninput="math()">
-        <label>Rate (£)</label>
-        <input type="number" id="r" oninput="math()">
+    <div id="calculator" class="screen">
+        <div class="label-group">Labour Costs</div>
+        <div class="field">
+            <label>Hours worked</label>
+            <input type="number" id="hrs" placeholder="0" oninput="calculate()">
+        </div>
+        <div class="field">
+            <label>Hourly rate (£)</label>
+            <input type="number" id="rate" placeholder="0.00" oninput="calculate()">
+        </div>
 
-        <div class="section-title">Materials</div>
-        <label>Total Materials (£)</label>
-        <input type="number" id="m" oninput="math()">
+        <div class="label-group">Materials</div>
+        <div class="field">
+            <label>Total material costs (£)</label>
+            <input type="number" id="mats" placeholder="0.00" oninput="calculate()">
+        </div>
 
-        <div class="total-card">
-            <span style="font-size: 12px; font-weight: 800;">TOTAL:</span>
-            <span id="total" class="total-val">£0.00</span>
+        <div class="result-card">
+            <span style="font-weight: 700; font-size: 14px;">TOTAL:</span>
+            <span id="grand-total" class="total-text">£0.00</span>
         </div>
     </div>
 </div>
 
 <script>
-    function show(id) {
-        // Hide both, then show the one we want
-        document.getElementById('dash').classList.remove('visible');
-        document.getElementById('calc').classList.remove('visible');
-        document.getElementById(id).classList.add('visible');
+    function showScreen(screenId) {
+        // Hide all screens
+        document.getElementById('dashboard').classList.remove('active');
+        document.getElementById('calculator').classList.remove('active');
         
-        // Show/Hide the return button
-        document.getElementById('return-btn').style.display = (id === 'calc') ? 'block' : 'none';
+        // Show selected screen
+        document.getElementById(screenId).classList.add('active');
+        
+        // Only show return button if we aren't on the dashboard
+        document.getElementById('return-btn').style.display = (screenId === 'dashboard') ? 'none' : 'block';
         window.scrollTo(0,0);
     }
 
-    function math() {
-        const h = parseFloat(document.getElementById('h').value) || 0;
-        const r = parseFloat(document.getElementById('r').value) || 0;
-        const m = parseFloat(document.getElementById('m').value) || 0;
-        const res = (h * r) + m;
-        document.getElementById('total').innerText = '£' + res.toFixed(2);
+    function calculate() {
+        const h = parseFloat(document.getElementById('hrs').value) || 0;
+        const r = parseFloat(document.getElementById('rate').value) || 0;
+        const m = parseFloat(document.getElementById('mats').value) || 0;
+        const total = (h * r) + m;
+        document.getElementById('grand-total').innerText = '£' + total.toLocaleString('en-GB', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
     }
 </script>
 
