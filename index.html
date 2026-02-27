@@ -3,257 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v1.8 Pro</title>
+    <title>toolboxpay - v7.3</title>
     <style>
-        :root { --orange: #ff6600; --white: #ffffff; --bg: #000000; --card: #121212; --border: #282828; --green: #2ecc71; }
-        
+        /* CORE BRANDING */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--white); margin: 0; font-family: 'Segoe UI', sans-serif; }
-        
-        #main-feed { max-width: 500px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; }
-
-        .hdr { text-align: center; padding: 50px 0; order: 1; }
-        .logo { font-size: 42px; font-weight: 900; letter-spacing: -2px; }
-        .logo .o { color: var(--orange); }
-        .logo .w { color: var(--white); }
-
-        section { 
-            background: var(--card); border: 1px solid var(--border); border-radius: 18px; 
-            padding: 30px; margin-bottom: 45px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        body { 
+            background: #4a4a4a; 
+            color: #fff; 
+            margin: 0; 
+            font-family: sans-serif; 
+            display: flex;
+            justify-content: center;
         }
 
-        #sec-quote { order: 2; }
-        #sec-photos { order: 3; }
-        #sec-history { order: 4; }
-        #sec-setup { order: 5; }
+        /* THE CONSTRAINED 420PX VIEWPORT */
+        #app-viewport {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            min-height: 100vh;
+        }
 
-        h2 { color: var(--orange); font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 25px 0; font-weight: 800; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        /* LOGO */
+        .header { text-align: center; padding: 20px 0; }
+        .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
+        .logo .o { color: #ff6600; }
+        .logo .w { color: #ffffff; }
 
-        .group { margin-bottom: 22px; }
-        label { display: block; font-size: 11px; color: #888; margin-bottom: 10px; text-transform: uppercase; font-weight: 900; }
+        /* PAGE VISIBILITY */
+        .view { display: none; width: 100%; }
+        .view.active { display: block; }
+
+        /* DASHBOARD TILES */
+        .stack { display: flex; flex-direction: column; gap: 15px; }
+        .tile {
+            background: #222;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            border: 1px solid #333;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .tile:active { background: #111; transform: scale(0.98); }
+        .icon-box {
+            width: 50px; height: 50px; background: #000; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 20px; font-size: 24px;
+        }
+        .tile span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* SUB-PAGE ELEMENTS */
+        .back-btn { 
+            background: #000; color: #ff6600; border: 2px solid #ff6600; 
+            padding: 10px 15px; border-radius: 8px; font-weight: 900; 
+            margin-bottom: 25px; cursor: pointer; text-transform: uppercase; 
+            font-size: 11px; width: fit-content;
+        }
+        .card { 
+            background: #1e1e1e; border-radius: 25px; padding: 30px; 
+            border: 1px solid #333; box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+        }
+        h2 { color: #ff6600; font-size: 18px; text-transform: uppercase; margin: 0 0 25px 0; font-weight: 900; }
+        label { display: block; font-size: 10px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
+        
         input, textarea { 
-            width: 100%; padding: 18px; background: #000; border: 1px solid #333; 
-            color: #fff; border-radius: 12px; font-size: 17px; outline: none; 
+            width: 100%; background: #000; border: 1px solid #333; color: #fff; 
+            padding: 18px; border-radius: 15px; margin-bottom: 20px; outline: none; font-size: 16px; 
         }
-        input:focus { border-color: var(--orange); }
 
-        .flex-row { display: flex; gap: 15px; }
-        .flex-row > div { flex: 1; }
-
-        .total-display { font-size: 68px; font-weight: 900; color: var(--orange); letter-spacing: -4px; text-align: right; margin: 15px 0; }
+        .total-display { font-size: 64px; font-weight: 900; color: #ff6600; text-align: right; margin: 15px 0; }
         
-        .btn-main { 
-            width: 100%; padding: 24px; background: var(--orange); color: #000; border: none; 
-            border-radius: 12px; font-size: 20px; font-weight: 900; text-transform: uppercase; cursor: pointer; 
-        }
-
-        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-        .photo-square { aspect-ratio: 1; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid #333; }
-        .photo-square img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .upload-btn { 
-            display: block; width: 100%; padding: 15px; background: #222; color: var(--orange); 
-            text-align: center; border-radius: 10px; border: 1px dashed var(--orange); cursor: pointer; font-weight: 800;
-        }
-
-        .log-entry { padding: 25px 0; border-bottom: 1px solid #222; position: relative; }
-        .log-top { display: flex; justify-content: space-between; align-items: center; }
-        .log-name { font-weight: 800; font-size: 18px; }
-        .log-price { color: var(--orange); font-weight: 900; font-size: 24px; }
-        .log-meta { font-size: 12px; color: #555; margin: 4px 0; }
-        .log-labour { font-size: 14px; color: #aaa; margin-top: 10px; line-height: 1.5; }
-
-        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; cursor: pointer; }
-        .status-paid { background: var(--green); color: #000; }
-        .status-due { background: #333; color: var(--orange); border: 1px solid var(--orange); }
-
-        .btn-small { background: #222; color: #fff; border: 1px solid #333; padding: 12px; border-radius: 8px; font-size: 12px; margin-top: 15px; margin-right: 8px; cursor: pointer; font-weight: 700; }
-
-        /* PRINT INVOICE MODE */
-        #invoice-print { display: none; }
-        @media print {
-            body { background: white; color: black; }
-            #main-feed { display: none !important; }
-            #invoice-print { display: block; padding: 40px; font-family: sans-serif; }
-            .inv-header { display: flex; justify-content: space-between; border-bottom: 3px solid black; padding-bottom: 20px; margin-bottom: 30px; }
-            .inv-title { font-size: 32px; font-weight: 900; text-transform: uppercase; }
-            .inv-biz { text-align: right; }
-            .inv-body { margin-bottom: 40px; }
-            .inv-total { font-size: 40px; font-weight: 900; border-top: 2px solid #eee; padding-top: 10px; text-align: right; }
-            .inv-bank { background: #f9f9f9; padding: 20px; border-radius: 10px; margin-top: 50px; }
-            .inv-bank h3 { margin-top: 0; font-size: 14px; text-transform: uppercase; }
+        .save-btn { 
+            width: 100%; background: #ff6600; color: #000; padding: 22px; border: none; 
+            border-radius: 18px; font-weight: 900; font-size: 20px; text-transform: uppercase; cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div id="main-feed">
-    <div class="hdr"><div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div></div>
-
-    <section id="sec-quote">
-        <h2>New Quote</h2>
-        <div class="group"><label>Client Name</label><input type="text" id="qn"></div>
-        <div class="group"><label>Description of Labour</label><textarea id="ql" style="height: 100px;"></textarea></div>
-        <div class="flex-row">
-            <div class="group"><label>Hours</label><input type="number" id="qh" oninput="recalc()"></div>
-            <div class="group"><label>Rate (£)</label><input type="number" id="qr" oninput="recalc()"></div>
+<div id="app-viewport">
+    
+    <div id="view-home" class="view active">
+        <div class="header">
+            <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         </div>
-        <div class="group"><label>Materials Cost (£)</label><input type="number" id="qm" oninput="recalc()"></div>
-        <div class="total-display" id="res">£0.00</div>
-        <button class="btn-main" onclick="saveJob()">Save & Log Quote</button>
-    </section>
-
-    <section id="sec-photos">
-        <h2>Job Photos</h2>
-        <label class="upload-btn">+ ADD PHOTO<input type="file" accept="image/*" style="display:none;" onchange="handleImg(this)"></label>
-        <div class="photo-grid" id="p_grid"></div>
-    </section>
-
-    <section id="sec-history">
-        <h2>Job History</h2>
-        <div id="h_list"></div>
-    </section>
-
-    <section id="sec-setup">
-        <h2>Business & Bank Setup</h2>
-        <div class="group"><label>Business Name</label><input type="text" id="sn" oninput="up('sn', this.value)"></div>
-        <div class="group"><label>Address</label><textarea id="sa" oninput="up('sa', this.value)" style="height: 80px;"></textarea></div>
-        <div class="flex-row">
-            <div class="group"><label>Bank Name</label><input type="text" id="sb" oninput="up('sb', this.value)"></div>
-            <div class="group"><label>Sort Code</label><input type="text" id="ssc" oninput="up('ssc', this.value)"></div>
-        </div>
-        <div class="group"><label>Account Number</label><input type="text" id="san" oninput="up('san', this.value)"></div>
-    </section>
-</div>
-
-<div id="invoice-print">
-    <div class="inv-header">
-        <div class="inv-title">INVOICE</div>
-        <div class="inv-biz">
-            <strong id="print-bn"></strong><br>
-            <span id="print-ba" style="white-space: pre-wrap;"></span>
+        <div class="stack">
+            <div class="tile" onclick="openNav('view-quotes')"><div class="icon-box">📝</div><span>Job Quotes</span></div>
+            <div class="tile" onclick="openNav('view-calc')"><div class="icon-box">🧮</div><span>Calculator</span></div>
+            <div class="tile" onclick="openNav('view-history')"><div class="icon-box">📜</div><span>Job History</span></div>
+            <div class="tile" onclick="openNav('view-bank')"><div class="icon-box">🏦</div><span>Bank Setup</span></div>
+            <div class="tile" onclick="openNav('view-readme')"><div class="icon-box">📖</div><span>Read Me</span></div>
         </div>
     </div>
-    <div class="inv-body">
-        <p><strong>To:</strong> <span id="print-cn"></span></p>
-        <p><strong>Date:</strong> <span id="print-dt"></span></p>
-        <div style="margin: 40px 0;">
-            <h3 style="text-transform: uppercase; font-size: 12px; border-bottom: 1px solid #eee;">Description of Labour</h3>
-            <p id="print-lab" style="white-space: pre-wrap; line-height: 1.6;"></p>
+
+    <div id="view-quotes" class="view">
+        <div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div>
+        <div class="card">
+            <h2>New Quote</h2>
+            <label>Client Name</label><input type="text" id="cn">
+            <label>Labour Description</label><textarea id="dl" style="height:100px;"></textarea>
+            <label>Price (£)</label><input type="number" id="tp" oninput="runTotal()">
+            <div class="total-display" id="q-val">£0.00</div>
+            <button class="save-btn" onclick="openNav('view-home')">SAVE JOB</button>
         </div>
-        <div class="inv-total">Total Due: <span id="print-tot"></span></div>
     </div>
-    <div class="inv-bank">
-        <h3>Payment Details</h3>
-        <p><strong>Bank:</strong> <span id="print-bk"></span></p>
-        <p><strong>Sort Code:</strong> <span id="print-sc"></span> | <strong>Account:</strong> <span id="print-an"></span></p>
+
+    <div id="view-bank" class="view">
+        <div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div>
+        <div class="card">
+            <h2>Bank Setup</h2>
+            <label>Business Name</label><input type="text" id="bn" oninput="saveData('bn',this.value)">
+            <label>Bank Name</label><input type="text" id="bk" oninput="saveData('bk',this.value)">
+            <label>Sort Code</label><input type="text" id="sc" oninput="saveData('sc',this.value)">
+            <label>Account No.</label><input type="text" id="an" oninput="saveData('an',this.value)">
+        </div>
     </div>
+
+    <div id="view-calc" class="view"><div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div><div class="card"><h2>Calculator</h2><p>Coming Soon</p></div></div>
+    <div id="view-history" class="view"><div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div><div class="card"><h2>Job History</h2><p>Coming Soon</p></div></div>
+    <div id="view-readme" class="view"><div class="back-btn" onclick="openNav('view-home')">← DASHBOARD</div><div class="card"><h2>Read Me</h2><p>v7.3 Foundation</p></div></div>
+
 </div>
 
 <script>
-    const KEY = "TOOLBOX_STABLE_V18";
+    const K = "TBP_V73_STABLE";
 
-    function up(k, v) { localStorage.setItem(KEY+k, v); }
-    function get(k) { return localStorage.getItem(KEY+k) || ""; }
-
-    function recalc() {
-        const h = parseFloat(document.getElementById('qh').value) || 0;
-        const r = parseFloat(document.getElementById('qr').value) || 0;
-        const m = parseFloat(document.getElementById('qm').value) || 0;
-        document.getElementById('res').innerText = "£" + ((h * r) + m).toFixed(2);
-    }
-
-    function handleImg(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                let imgs = JSON.parse(localStorage.getItem(KEY+'imgs') || '[]');
-                imgs.unshift(e.target.result);
-                localStorage.setItem(KEY+'imgs', JSON.stringify(imgs.slice(0, 12)));
-                drawImgs();
-            };
-            reader.readAsDataURL(input.files[0]);
+    function openNav(id) {
+        // Hide all
+        const views = document.getElementsByClassName('view');
+        for (let i = 0; i < views.length; i++) {
+            views[i].style.display = 'none';
         }
+        // Show selected
+        document.getElementById(id).style.display = 'block';
+        window.scrollTo(0, 0);
     }
 
-    function drawImgs() {
-        const imgs = JSON.parse(localStorage.getItem(KEY+'imgs') || '[]');
-        document.getElementById('p_grid').innerHTML = imgs.map(s => `<div class="photo-square"><img src="${s}"></div>`).join('');
-    }
+    function saveData(k, v) { localStorage.setItem(K + k, v); }
+    function loadData(k) { return localStorage.getItem(K + k) || ""; }
 
-    function saveJob() {
-        const job = {
-            id: Date.now(),
-            n: document.getElementById('qn').value || "Client",
-            l: document.getElementById('ql').value || "Labour provided.",
-            t: document.getElementById('res').innerText,
-            d: new Date().toLocaleDateString('en-GB'),
-            paid: false
-        };
-        let jobs = JSON.parse(localStorage.getItem(KEY+'jobs') || '[]');
-        jobs.unshift(job);
-        localStorage.setItem(KEY+'jobs', JSON.stringify(jobs));
-        ['qn','ql','qh','qr','qm'].forEach(id => document.getElementById(id).value = "");
-        document.getElementById('res').innerText = "£0.00";
-        drawJobs();
-    }
-
-    function togglePaid(id) {
-        let jobs = JSON.parse(localStorage.getItem(KEY+'jobs') || '[]');
-        const idx = jobs.findIndex(j => j.id === id);
-        jobs[idx].paid = !jobs[idx].paid;
-        localStorage.setItem(KEY+'jobs', JSON.stringify(jobs));
-        drawJobs();
-    }
-
-    function printInvoice(id) {
-        const jobs = JSON.parse(localStorage.getItem(KEY+'jobs') || '[]');
-        const j = jobs.find(job => job.id === id);
-        
-        document.getElementById('print-bn').innerText = get('sn');
-        document.getElementById('print-ba').innerText = get('sa');
-        document.getElementById('print-bk').innerText = get('sb');
-        document.getElementById('print-sc').innerText = get('ssc');
-        document.getElementById('print-an').innerText = get('san');
-        
-        document.getElementById('print-cn').innerText = j.n;
-        document.getElementById('print-dt').innerText = j.d;
-        document.getElementById('print-lab').innerText = j.l;
-        document.getElementById('print-tot').innerText = j.t;
-        
-        window.print();
-    }
-
-    function del(id) {
-        if(confirm("Delete this record?")) {
-            let jobs = JSON.parse(localStorage.getItem(KEY+'jobs') || '[]');
-            jobs = jobs.filter(j => j.id !== id);
-            localStorage.setItem(KEY+'jobs', JSON.stringify(jobs));
-            drawJobs();
-        }
-    }
-
-    function drawJobs() {
-        const jobs = JSON.parse(localStorage.getItem(KEY+'jobs') || '[]');
-        document.getElementById('h_list').innerHTML = jobs.map(j => `
-            <div class="log-entry">
-                <div class="status-badge ${j.paid ? 'status-paid' : 'status-due'}" onclick="togglePaid(${j.id})">
-                    ${j.paid ? 'Settled' : 'Payment Due'}
-                </div>
-                <div class="log-top"><div class="log-name">${j.n}</div><div class="log-price">${j.t}</div></div>
-                <div class="log-meta">${j.d}</div>
-                <div class="log-labour">${j.l}</div>
-                <button class="btn-small" onclick="printInvoice(${j.id})">Get PDF Invoice</button>
-                <button class="btn-small" style="color:red; border-color:red;" onclick="del(${j.id})">Delete</button>
-            </div>
-        `).join('') || '<p style="color:#444;">No history.</p>';
+    function runTotal() {
+        const val = parseFloat(document.getElementById('tp').value) || 0;
+        document.getElementById('q-val').innerText = "£" + val.toFixed(2);
     }
 
     window.onload = () => {
-        ['sn','sa','sb','ssc','san'].forEach(id => document.getElementById(id).value = get(id));
-        drawImgs();
-        drawJobs();
+        ['bn', 'bk', 'sc', 'an'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.value = loadData(id);
+        });
     };
 </script>
+
 </body>
 </html>
