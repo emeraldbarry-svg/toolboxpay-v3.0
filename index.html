@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toolboxpay</title>
+    <style>
+        :root { --orange: #ff6600; --white: #ffffff; --navy: #0b1521; --card: #1a2635; }
+        
+        /* Centered column for laptop viewing */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: var(--navy); 
+            color: var(--white); 
+            font-family: -apple-system, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh;
+            padding: 40px 20px; 
+        }
+        .app-shell { width: 100%; max-width: 380px; }
+
+        /* Branding: toolbox (orange) pay (white) */
+        .logo { text-align: center; margin-bottom: 35px; font-size: 34px; font-weight: 800; }
+        .logo-orange { color: var(--orange); }
+
+        #back-nav { 
+            display: none; 
+            color: var(--orange); 
+            border: 1px solid var(--orange); 
+            background: none; 
+            padding: 12px; 
+            width: 100%; 
+            border-radius: 8px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            margin-bottom: 25px; 
+            text-transform: uppercase; 
+        }
+
+        .view-panel { display: none; }
+        .is-active { display: block; }
+
+        /* Dashboard Card */
+        .dashboard-tile { 
+            background: var(--card); 
+            padding: 25px; 
+            border-radius: 12px; 
+            border: 1px solid #233554; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .dashboard-tile h3 { color: var(--orange); text-transform: uppercase; font-size: 16px; }
+
+        /* Calculator Layout */
+        .heading-tag { color: var(--orange); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
+        label { display: block; font-size: 13px; margin-bottom: 8px; }
+        input { 
+            width: 100%; 
+            padding: 15px; 
+            background: var(--card); 
+            border: 1px solid #233554; 
+            color: #fff; 
+            margin-bottom: 15px; 
+            border-radius: 8px; 
+            font-size: 18px; 
+            outline: none; 
+        }
+
+        /* Result Panel */
+        .summary-card { border: 2px solid var(--orange); padding: 22px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 35px; }
+        .price-total { color: var(--orange); font-size: 26px; font-weight: 800; }
+    </style>
+</head>
+<body>
+
+<div class="app-shell">
+    <button id="back-nav" onclick="changeView('dash')">← Return to Dashboard</button>
+    
+    <div class="logo"><span class="logo-orange">toolbox</span>pay</div>
+
+    <div id="dash" class="view-panel is-active">
+        <div class="dashboard-tile" onclick="changeView('calc')">
+            <div>
+                <h3>Labour & Materials</h3>
+                <p style="font-size:12px; color:#8892b0; margin-top:4px;">Calculate costs and specialising tasks</p>
+            </div>
+            <span style="color:var(--orange); font-weight:bold; font-size: 20px;">→</span>
+        </div>
+    </div>
+
+    <div id="calc" class="view-panel">
+        <div class="heading-tag">Labour Costs</div>
+        <label>Hours worked</label>
+        <input type="number" id="hrs" placeholder="0" oninput="calculate()">
+        <label>Hourly rate (£)</label>
+        <input type="number" id="rate" placeholder="0.00" oninput="calculate()">
+        
+        <div class="heading-tag">Materials</div>
+        <label>Total material costs (£)</label>
+        <input type="number" id="mats" placeholder="0.00" oninput="calculate()">
+        
+        <div class="summary-card">
+            <span style="font-weight:800; font-size:12px;">TOTAL:</span>
+            <span id="output" class="price-total">£0.00</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function changeView(target) {
+        document.getElementById('dash').classList.remove('is-active');
+        document.getElementById('calc').classList.remove('is-active');
+        document.getElementById(target).classList.add('is-active');
+        document.getElementById('back-nav').style.display = (target === 'calc') ? 'block' : 'none';
+        window.scrollTo(0,0);
+    }
+
+    function calculate() {
+        const h = parseFloat(document.getElementById('hrs').value) || 0;
+        const r = parseFloat(document.getElementById('rate').value) || 0;
+        const m = parseFloat(document.getElementById('mats').value) || 0;
+        const total = (h * r) + m;
+        document.getElementById('output').innerText = '£' + total.toLocaleString('en-GB', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+</script>
+
+</body>
+</html>
