@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v6.4</title>
+    <title>toolboxpay - v6.5</title>
     <style>
-        /* BASE THEME */
+        /* CORE THEME [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             background: #4a4a4a; 
@@ -16,20 +16,20 @@
             overflow-x: hidden;
         }
 
-        /* LOGO & HEADER */
+        /* HEADER */
         .header { text-align: center; padding: 30px 0 10px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* CONTAINERS - Fixed Width for consistency */
-        .app-container {
+        /* THE CONSTRAINED CONTAINER [cite: 2026-02-27] */
+        .app-width {
             width: 90%;
-            max-width: 420px; /* Prevents stretching */
+            max-width: 420px; 
             margin: 0 auto;
         }
 
-        /* THE DASHBOARD STACK */
+        /* STACKED TILES */
         .stack { display: flex; flex-direction: column; gap: 15px; padding-bottom: 50px; }
         .btn-tile {
             background: #222;
@@ -42,27 +42,29 @@
             border: 1px solid #333;
         }
         .btn-tile:active { transform: scale(0.97); background: #2a2a2a; }
+        
         .icon-sq {
             width: 55px; height: 55px; background: #000; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
             margin-right: 25px; font-size: 28px;
         }
+
         .btn-tile span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* PAGES */
+        /* FULL SCREEN OVERLAYS */
         .page {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: #4a4a4a;
-            display: none;
+            display: none; 
             flex-direction: column;
             padding: 20px;
-            z-index: 1000;
+            z-index: 9999; /* Ensures it sits on top */
             overflow-y: auto;
         }
         .page.active { display: flex; }
 
-        /* INTERNAL FORM STYLE */
+        /* FORM STYLING */
         .back-btn { 
             background: #000; color: #ff6600; border: 1px solid #ff6600; 
             padding: 12px 20px; border-radius: 10px; font-weight: 900; 
@@ -75,7 +77,6 @@
             border-radius: 22px; 
             padding: 25px; 
             border: 1px solid #333; 
-            margin-bottom: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
@@ -101,6 +102,71 @@
     <div class="header">
         <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
     </div>
-    <div class="app-container stack">
-        <div class="btn-tile" onclick="openP('quotes')"><div class="icon-sq">📝</div><span>Job Quotes</span></div>
-        <div class="btn-tile" onclick="openP('calc')"><div class="icon
+    <div class="app-width stack">
+        <div class="btn-tile" onclick="openPage('quotes')"><div class="icon-sq">📝</div><span>Job Quotes</span></div>
+        <div class="btn-tile" onclick="openPage('calc')"><div class="icon-sq">🧮</div><span>Calculator</span></div>
+        <div class="btn-tile" onclick="openPage('history')"><div class="icon-sq">📜</div><span>Job History</span></div>
+        <div class="btn-tile" onclick="openPage('bank')"><div class="icon-sq">🏦</div><span>Bank Setup</span></div>
+        <div class="btn-tile" onclick="openPage('readme')"><div class="icon-sq">📖</div><span>Read Me</span></div>
+    </div>
+</div>
+
+<div id="quotes" class="page">
+    <div class="app-width">
+        <div class="back-btn" onclick="closePage()">← Dashboard</div>
+        <div class="card">
+            <h2>New Quote</h2>
+            <label>Client Name</label><input type="text" id="cn">
+            <label>Labour Description</label><textarea id="dl" style="height:100px;"></textarea>
+            <label>Total Price (£)</label><input type="number" id="tp" oninput="liveUpdate()">
+            <div class="total-display" id="q-val">£0.00</div>
+            <button class="save-btn" onclick="closePage()">Save Job</button>
+        </div>
+    </div>
+</div>
+
+<div id="bank" class="page">
+    <div class="app-width">
+        <div class="back-btn" onclick="closePage()">← Dashboard</div>
+        <div class="card">
+            <h2>Business & Bank Setup</h2>
+            <label>Business Name</label><input type="text" id="sn" oninput="saveMem('sn',this.value)">
+            <label>Bank Name</label><input type="text" id="sb" oninput="saveMem('sb',this.value)">
+            <label>Sort Code</label><input type="text" id="sc" oninput="saveMem('sc',this.value)">
+            <label>Account No.</label><input type="text" id="an" oninput="saveMem('an',this.value)">
+        </div>
+    </div>
+</div>
+
+<script>
+    /* SCRIPT FIX [cite: 2026-02-27] */
+    const KEY = "TBP_V65_FIXED";
+
+    function openPage(id) {
+        // Remove active class from all pages first
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        // Activate the specific page
+        document.getElementById(id).classList.add('active');
+    }
+
+    function closePage() {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    }
+    
+    function saveMem(k,v) { localStorage.setItem(KEY+k,v); }
+    function loadMem(k) { return localStorage.getItem(KEY+k) || ""; }
+
+    function liveUpdate() { 
+        const val = parseFloat(document.getElementById('tp').value) || 0;
+        document.getElementById('q-val').innerText = "£" + val.toFixed(2); 
+    }
+
+    window.onload = () => {
+        ['sn', 'sb', 'sc', 'an'].forEach(i => {
+            const el = document.getElementById(i);
+            if(el) el.value = loadMem(i);
+        });
+    };
+</script>
+</body>
+</html>
