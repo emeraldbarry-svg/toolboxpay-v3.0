@@ -38,10 +38,10 @@
             font-weight: 800;
             text-transform: uppercase;
             cursor: pointer;
-            display: none; /* Hidden on Dashboard */
+            display: none; /* Only shows when in the calculator screen */
         }
 
-        /* Branding - Clean Borderless Text Logo */
+        /* Branding - Clean Borderless Text */
         .branding {
             margin-bottom: 40px;
             text-align: center;
@@ -55,11 +55,11 @@
         .toolbox { color: var(--orange); }
         .pay { color: var(--white); }
 
-        /* Section Visibility Control */
-        .view-section { display: none; }
-        .view-section.active { display: block; }
+        /* Screen Visibility Control */
+        .screen { display: none; }
+        .screen.active { display: block; }
 
-        /* Dashboard Menu Styles */
+        /* Dashboard Screen Styles */
         .menu-grid {
             display: flex;
             flex-direction: column;
@@ -85,7 +85,7 @@
         }
         .menu-card p { margin: 5px 0 0 0; font-size: 13px; color: #8892b0; }
 
-        /* Calculator Specific Styles */
+        /* Calculator Screen Styles */
         .section-label {
             color: var(--orange);
             font-size: 13px;
@@ -108,7 +108,7 @@
             font-size: 16px;
             box-sizing: border-box;
         }
-        .results-card {
+        .results-box {
             background-color: var(--card-bg);
             border: 2px solid var(--orange);
             border-radius: 10px;
@@ -129,16 +129,16 @@
 
 <div class="container">
     <div class="top-nav">
-        <span id="return-btn" onclick="showView('dashboard')">← RETURN TO DASHBOARD</span>
+        <span id="return-btn" onclick="toggleScreen('dashboard')">← RETURN TO DASHBOARD</span>
     </div>
 
     <div class="branding">
         <h1 class="logo-text"><span class="toolbox">toolbox</span><span class="pay">pay</span></h1>
     </div>
 
-    <div id="dashboard" class="view-section active">
+    <div id="dashboard" class="screen active">
         <div class="menu-grid">
-            <div class="menu-card" onclick="showView('calculator')">
+            <div class="menu-card" onclick="toggleScreen('labour-calculator')">
                 <div>
                     <h3>Labour & Materials</h3>
                     <p>Calculate costs and specialising tasks</p>
@@ -148,24 +148,24 @@
         </div>
     </div>
 
-    <div id="calculator" class="view-section">
+    <div id="labour-calculator" class="screen">
         <span class="section-label">Labour Costs</span>
         <div class="field-group">
             <label>Hours worked</label>
-            <input type="number" id="hours" placeholder="0" oninput="calculateTotal()">
+            <input type="number" id="hours" placeholder="0" oninput="doSum()">
         </div>
         <div class="field-group">
             <label>Hourly rate (£)</label>
-            <input type="number" id="rate" placeholder="0.00" oninput="calculateTotal()">
+            <input type="number" id="rate" placeholder="0.00" oninput="doSum()">
         </div>
 
         <span class="section-label">Materials</span>
         <div class="field-group">
             <label>Total material costs (£)</label>
-            <input type="number" id="mats" placeholder="0.00" oninput="calculateTotal()">
+            <input type="number" id="mats" placeholder="0.00" oninput="doSum()">
         </div>
 
-        <div class="results-card">
+        <div class="results-box">
             <span style="font-weight: 700;">TOTAL:</span>
             <span id="grand-total" class="total-amount">£0.00</span>
         </div>
@@ -173,28 +173,24 @@
 </div>
 
 <script>
-    function showView(viewId) {
-        // Hide all views
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-        // Show requested view
-        document.getElementById(viewId).classList.add('active');
+    function toggleScreen(screenId) {
+        // Hide all screens
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        // Show selected screen
+        document.getElementById(screenId).classList.add('active');
         
-        // Show/Hide Return Button
-        const returnBtn = document.getElementById('return-btn');
-        if (viewId === 'dashboard') {
-            returnBtn.style.display = 'none';
-        } else {
-            returnBtn.style.display = 'inline-block';
-        }
+        // Show/Hide the "Return to Dashboard" text
+        const btn = document.getElementById('return-btn');
+        btn.style.display = (screenId === 'dashboard') ? 'none' : 'inline-block';
         window.scrollTo(0, 0);
     }
 
-    function calculateTotal() {
+    function doSum() {
         const h = parseFloat(document.getElementById('hours').value) || 0;
         const r = parseFloat(document.getElementById('rate').value) || 0;
         const m = parseFloat(document.getElementById('mats').value) || 0;
-        const total = (h * r) + m;
-        document.getElementById('grand-total').innerText = '£' + total.toLocaleString('en-GB', {
+        const sum = (h * r) + m;
+        document.getElementById('grand-total').innerText = '£' + sum.toLocaleString('en-GB', {
             minimumFractionDigits: 2, 
             maximumFractionDigits: 2
         });
