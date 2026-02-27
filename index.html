@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay v3.5 - Stable</title>
+    <title>toolboxpay v3.5 - High Stability</title>
     <style>
         :root { --org: #ff6600; --bg: #0b1521; --crd: #1a2635; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: var(--bg); color: #fff; display: flex; justify-content: center; min-height: 100vh; padding: 20px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: #fff; display: flex; justify-content: center; min-height: 100vh; padding: 20px; overflow-x: hidden; }
         .shell { width: 100%; max-width: 380px; }
         .logo { text-align: center; margin-bottom: 30px; font-size: 30px; font-weight: 800; }
         .logo span { color: var(--org); }
         #back-btn { display: none; color: var(--org); border: 1px solid var(--org); background: none; padding: 12px; width: 100%; border-radius: 8px; margin-bottom: 25px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
-        .screen { display: none; }
+        .screen { display: none; animation: fadeIn 0.2s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .tile { background: var(--crd); padding: 25px; border-radius: 12px; border: 1px solid #233554; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .tile h3 { color: var(--org); text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
         .tile p { font-size: 12px; color: #8892b0; margin-top: 4px; }
         .tag { color: var(--org); font-size: 11px; font-weight: 800; text-transform: uppercase; margin: 25px 0 10px 0; border-bottom: 1px solid rgba(255,102,0,0.2); padding-bottom: 6px; }
         input, textarea { width: 100%; padding: 15px; background: var(--crd); border: 1px solid #233554; color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 16px; outline: none; }
-        input:focus, textarea:focus { border-color: var(--org); }
+        input:focus { border-color: var(--org); }
         textarea { height: 80px; resize: none; }
         .vat-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 5px; background: rgba(255,102,0,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,102,0,0.2); }
         .total-box { border: 2px solid var(--org); padding: 22px; border-radius: 12px; display: flex; flex-direction: column; gap: 5px; margin-top: 20px; background: rgba(255,102,0,0.05); }
@@ -44,10 +45,10 @@
 
     <div id="calc" class="screen">
         <div class="tag">Costs</div>
-        <input type="number" id="h" placeholder="Hours" oninput="doMath()">
-        <input type="number" id="r" placeholder="Rate (£)" oninput="doMath()">
-        <input type="number" id="m" placeholder="Materials (£)" oninput="doMath()">
-        <div class="vat-row"><span>Add 20% VAT</span><input type="checkbox" id="v-tog" onchange="doMath()" style="width:22px; height:22px;"></div>
+        <input type="number" id="h" placeholder="Hours" oninput="doMath()" pattern="[0-9]*" inputmode="decimal">
+        <input type="number" id="r" placeholder="Rate (£)" oninput="doMath()" pattern="[0-9]*" inputmode="decimal">
+        <input type="number" id="m" placeholder="Materials (£)" oninput="doMath()" pattern="[0-9]*" inputmode="decimal">
+        <div class="vat-row"><span>Add 20% VAT</span><input type="checkbox" id="v-tog" onchange="doMath()" style="width:24px; height:24px;"></div>
         <div class="total-box"><span style="font-size:12px;">TOTAL:</span><span id="res" class="price">£0.00</span></div>
         <button class="btn-main" onclick="gen()">View Summary</button>
     </div>
@@ -86,12 +87,21 @@
 </div>
 
 <script>
+    // NAVIGATION
     function go(id) {
-        document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-        document.getElementById(id).style.display = 'block';
-        document.getElementById('back-btn').style.display = (id === 'dash') ? 'none' : 'block';
+        try {
+            const screens = document.getElementsByClassName('screen');
+            for(let i=0; i<screens.length; i++) { screens[i].style.display = 'none'; }
+            document.getElementById(id).style.display = 'block';
+            document.getElementById('back-btn').style.display = (id === 'dash') ? 'none' : 'block';
+            window.scrollTo(0,0);
+        } catch(e) { console.error("Nav Error", e); }
     }
+
+    // STORAGE
     function set(k, v) { localStorage.setItem(k, v); }
+
+    // CALCULATIONS
     function doMath() {
         const h = parseFloat(document.getElementById('h').value) || 0;
         const r = parseFloat(document.getElementById('r').value) || 0;
@@ -100,6 +110,8 @@
         const v = document.getElementById('v-tog').checked ? (sub * 0.2) : 0;
         document.getElementById('res').innerText = '£' + (sub + v).toLocaleString('en-GB', {minimumFractionDigits: 2});
     }
+
+    // GENERATE SUMMARY
     function gen() {
         const h = parseFloat(document.getElementById('h').value) || 0;
         const r = parseFloat(document.getElementById('r').value) || 0;
@@ -115,11 +127,14 @@
         document.getElementById('s-v-row').style.display = isV ? 'flex' : 'none';
         document.getElementById('s-v-amt').innerText = '£' + v.toLocaleString('en-GB', {minimumFractionDigits: 2});
         document.getElementById('s-tot').innerText = '£' + (sub + v).toLocaleString('en-GB', {minimumFractionDigits: 2});
+        
         document.getElementById('s-acc').innerText = localStorage.getItem('bank-acc') || '---';
         document.getElementById('s-srt').innerText = localStorage.getItem('bank-sort') || '---';
         document.getElementById('s-num').innerText = localStorage.getItem('bank-num') || '---';
         go('summary');
     }
+
+    // CLIPBOARD
     function copyIt() {
         const biz = localStorage.getItem('biz-name') || 'Quote';
         const tot = document.getElementById('s-tot').innerText;
@@ -131,20 +146,19 @@
         
         navigator.clipboard.writeText(text).then(() => {
             const btn = document.getElementById('copy-btn');
-            btn.innerText = 'COPIED TO CLIPBOARD!';
+            btn.innerText = 'COPIED!';
             btn.style.background = '#27ae60';
             setTimeout(() => {
                 btn.innerText = 'Copy for WhatsApp';
                 btn.style.background = '#ff6600';
-            }, 2000);
+            }, 1500);
         });
     }
+
+    // INITIAL LOAD
     window.onload = function() {
-        ['biz-name', 'biz-addr', 'bank-acc', 'bank-sort', 'bank-num'].forEach(f => {
-            const el = document.getElementById(f);
-            if(el) el.value = localStorage.getItem(f) || '';
+        const keys = ['biz-name', 'biz-addr', 'bank-acc', 'bank-sort', 'bank-num'];
+        keys.forEach(k => {
+            const el = document.getElementById(k);
+            if(el) el.value = localStorage.getItem(k) || '';
         });
-    }
-</script>
-</body>
-</html>
