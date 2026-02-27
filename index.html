@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay v49.0 - RECOVERY</title>
+    <title>toolboxpay v50.0</title>
     <style>
-        /* The most basic CSS possible to prevent GPU crashes */
+        /* Zero-Impact Static Engine: No transitions, no shadows, no GPU load */
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding: 15px; }
-        .hdr { text-align: center; font-weight: 900; font-size: 24px; margin: 20px 0; border-bottom: 2px solid #222; padding-bottom: 10px; }
+        .hdr { text-align: center; font-weight: 900; font-size: 24px; margin-bottom: 25px; padding-bottom: 10px; border-bottom: 1px solid #222; }
         .hdr span { color: #ff6600; }
         
-        section { background: #111; padding: 15px; margin-bottom: 20px; border: 1px solid #333; }
-        h2 { color: #ff6600; font-size: 12px; text-transform: uppercase; margin-top: 0; }
+        section { background: #111; padding: 15px; margin-bottom: 30px; border: 1px solid #333; border-radius: 4px; }
+        h2 { color: #ff6600; font-size: 13px; text-transform: uppercase; margin: 0 0 15px 0; letter-spacing: 1px; }
 
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid #444; background: #000; color: #fff; font-size: 16px; box-sizing: border-box; }
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #444; background: #000; color: #fff; font-size: 16px; box-sizing: border-box; border-radius: 4px; }
         
-        .total-box { font-size: 45px; font-weight: 900; color: #ff6600; text-align: right; margin: 10px 0; }
-        .btn-work { width: 100%; padding: 20px; background: #ff6600; color: #000; border: none; font-weight: 900; font-size: 16px; text-transform: uppercase; }
-        
-        .item { border-bottom: 1px solid #333; padding: 10px 0; display: flex; justify-content: space-between; }
+        .total-box { font-size: 55px; font-weight: 900; color: #ff6600; text-align: right; margin: 10px 0; letter-spacing: -2px; }
+        .btn-big { width: 100%; padding: 22px; background: #ff6600; color: #000; border: none; font-weight: 900; font-size: 18px; text-transform: uppercase; border-radius: 4px; }
+
+        .hist-item { border-bottom: 1px solid #222; padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
+        .hist-item strong { color: #ff6600; }
     </style>
 </head>
 <body>
@@ -28,31 +29,36 @@
     <section>
         <h2>New Quote</h2>
         <input type="text" id="qn" placeholder="Client Name">
-        <textarea id="ql" placeholder="Description of Labour" style="height:60px"></textarea>
-        <input type="number" id="qh" placeholder="Hours" oninput="c()">
-        <input type="number" id="qr" placeholder="Rate" oninput="c()">
+        <textarea id="ql" placeholder="Description of Labour" style="height:70px"></textarea>
+        <div style="display:flex; gap:8px;">
+            <input type="number" id="qh" placeholder="Hours" oninput="c()" style="flex:1">
+            <input type="number" id="qr" placeholder="Rate" oninput="c()" style="flex:1">
+        </div>
         <input type="number" id="qm" placeholder="Materials" oninput="c()">
         <div class="total-box" id="tt">£0.00</div>
-        <button class="btn-work" onclick="s()">Save Quote</button>
+        <button class="btn-big" onclick="s()">Save & Log Quote</button>
     </section>
 
     <section>
-        <h2>Business & Bank (Auto-Saves)</h2>
-        <input type="text" id="sn" placeholder="Business Name" oninput="st('n',this.value)">
-        <input type="text" id="sb" placeholder="Bank Name" oninput="st('b',this.value)">
-        <input type="text" id="ss" placeholder="Sort Code" oninput="st('s',this.value)">
-        <input type="text" id="sa" placeholder="Account Number" oninput="st('a',this.value)">
-    </section>
-
-    <section id="hist">
-        <h2>History</h2>
+        <h2>Recent History</h2>
         <div id="hl"></div>
     </section>
 
+    <section>
+        <h2>Business & Bank Details</h2>
+        <input type="text" id="sn" placeholder="Business Name" oninput="ls('n',this.value)">
+        <textarea id="sa" placeholder="Business Address" oninput="ls('a',this.value)" style="height:60px"></textarea>
+        <input type="text" id="sb" placeholder="Bank Name" oninput="ls('b',this.value)">
+        <div style="display:flex; gap:8px;">
+            <input type="text" id="ss" placeholder="Sort Code" oninput="ls('s',this.value)" style="flex:1">
+            <input type="text" id="snm" placeholder="Account Number" oninput="ls('nm',this.value)" style="flex:1">
+        </div>
+    </section>
+
     <script>
-        const K = "tb49_";
-        function st(k, v) { localStorage.setItem(K+k, v); }
-        function gt(k) { return localStorage.getItem(K+k) || ""; }
+        const DB = "tb_v50_";
+        function ls(k, v) { localStorage.setItem(DB+k, v); }
+        function gl(k) { return localStorage.getItem(DB+k) || ""; }
 
         function c() {
             let h = +document.getElementById('qh').value || 0;
@@ -62,29 +68,34 @@
         }
 
         function s() {
-            let d = JSON.parse(localStorage.getItem(K+'d') || '[]');
-            d.unshift({n:document.getElementById('qn').value, t:document.getElementById('tt').innerText});
-            localStorage.setItem(K+'d', JSON.stringify(d.slice(0,5)));
-            draw();
-            alert("Saved");
+            let d = JSON.parse(localStorage.getItem(DB+'d') || '[]');
+            d.unshift({
+                n: document.getElementById('qn').value || 'Client',
+                t: document.getElementById('tt').innerText,
+                dt: new Date().toLocaleDateString('en-GB')
+            });
+            localStorage.setItem(DB+'d', JSON.stringify(d.slice(0,10)));
+            render();
+            alert("Quote Logged.");
         }
 
-        function draw() {
-            let d = JSON.parse(localStorage.getItem(K+'d') || '[]');
+        function render() {
+            let d = JSON.parse(localStorage.getItem(DB+'d') || '[]');
             document.getElementById('hl').innerHTML = d.map(i => `
-                <div class="item">
-                    <span>${i.n}</span>
-                    <strong style="color:#ff6600">${i.t}</strong>
+                <div class="hist-item">
+                    <span>${i.n}<br><small style="color:#555">${i.dt}</small></span>
+                    <strong>${i.t}</strong>
                 </div>
-            `).join('');
+            `).join('') || '<p style="opacity:0.3; font-size:12px;">No quotes yet.</p>';
         }
 
         window.onload = () => {
-            document.getElementById('sn').value = gt('n');
-            document.getElementById('sb').value = gt('b');
-            document.getElementById('ss').value = gt('s');
-            document.getElementById('sa').value = gt('a');
-            draw();
+            document.getElementById('sn').value = gl('n');
+            document.getElementById('sa').value = gl('a');
+            document.getElementById('sb').value = gl('b');
+            document.getElementById('ss').value = gl('s');
+            document.getElementById('snm').value = gl('nm');
+            render();
         };
     </script>
 </body>
