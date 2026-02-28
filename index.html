@@ -3,108 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - EMERGENCY RESTORE</title>
+    <title>toolboxpay - v17.0 PERMANENT</title>
     <style>
-        /* RESET EVERYTHING [cite: 2020-02-20] */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #111; color: #fff; font-family: sans-serif; padding: 10px; }
+        /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        html, body { background: #111; height: 100%; width: 100%; overflow: hidden; position: fixed; font-family: sans-serif; color: #fff; }
+        #mobile-wrapper { max-width: 500px; margin: 0 auto; height: 100%; background: #4a4a4a; display: flex; flex-direction: column; }
         
-        /* HEADER [cite: 2026-02-21] */
-        .header { text-align: center; padding: 20px; border-bottom: 3px solid #ff6600; margin-bottom: 20px; }
-        .logo { font-size: 24px; font-weight: 900; text-transform: uppercase; }
-        .logo span { color: #ff6600; }
+        header { background: #4a4a4a; padding: 10px; border-bottom: 3px solid #ff6600; flex-shrink: 0; z-index: 1000; }
+        .logo-text { text-align: center; font-size: 20px; font-weight: 900; margin-bottom: 10px; }
+        .logo-text span { color: #ff6600; }
 
-        /* NAVIGATION - 2 ROWS OF 4 */
-        .nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 20px; }
-        .btn { background: #333; color: #fff; border: 1px solid #ff6600; padding: 10px 2px; text-align: center; border-radius: 5px; font-size: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
-        .btn.active { background: #ff6600; color: #000; }
+        /* 8-BUTTON NAVIGATION GRID [cite: 2026-02-28] */
+        .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 4px; }
+        .nav-btn { background: #222; border: 1px solid #444; border-radius: 6px; padding: 10px 0; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .nav-btn i { font-style: normal; font-size: 14px; margin-bottom: 2px; }
+        .nav-btn span { color: #aaa; font-weight: 800; font-size: 7px; text-transform: uppercase; }
+        .nav-btn.active { background: #ff6600 !important; border-color: #fff !important; }
+        .nav-btn.active span { color: #fff !important; }
 
-        /* CONTENT CARDS */
+        #viewport { flex-grow: 1; overflow-y: auto; padding: 15px; -webkit-overflow-scrolling: touch; }
         .page { display: none; }
         .page.active { display: block; }
-        .card { background: #222; border: 1px solid #444; border-radius: 15px; padding: 20px; }
-        .title { color: #ff6600; font-size: 18px; font-weight: 900; margin-bottom: 15px; border-bottom: 1px solid #ff6600; padding-bottom: 5px; }
+
+        /* PERMANENT DATA CARDS [cite: 2026-02-28] */
+        .card { background: #1e1e1e; border-radius: 20px; padding: 25px; border: 1px solid #333; margin-bottom: 15px; }
+        .title { color: #ff6600; font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 8px; text-align: center; }
         
-        /* DATA FIELDS */
-        .box { margin-bottom: 15px; }
-        .lbl { color: #ff6600; font-size: 10px; font-weight: 900; display: block; margin-bottom: 5px; }
-        .val { background: #000; padding: 12px; border-radius: 5px; border: 1px solid #555; display: block; font-size: 16px; font-weight: 700; color: #fff; min-height: 20px; }
+        .static-label { color: #ff6600; font-size: 10px; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .static-value { color: #fff; font-size: 18px; font-weight: 700; background: #000; padding: 15px; border-radius: 10px; border: 1px solid #444; display: block; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo"><span>toolbox</span>pay</div>
-    </div>
-
-    <div class="nav">
-        <div class="btn active" onclick="tab('prof', this)">Profile</div>
-        <div class="btn" onclick="tab('bank', this)">Bank</div>
-        <div class="btn" onclick="tab('quote', this)">Quotes</div>
-        <div class="btn" onclick="tab('exp', this)">Expenses</div>
-        <div class="btn" onclick="tab('calc', this)">Calc</div>
-        <div class="btn" onclick="tab('gal', this)">Gallery</div>
-        <div class="btn" onclick="tab('terms', this)">Terms</div>
-        <div class="btn" onclick="tab('read', this)">ReadMe</div>
-    </div>
+<div id="mobile-wrapper">
+    <header>
+        <div class="logo-text"><span>TOOLBOX</span>PAY</div>
+        <div class="nav-grid">
+            <div class="nav-btn active" onclick="nav('profile', this)"><i>👤</i><span>Profile</span></div>
+            <div class="nav-btn" onclick="nav('bank', this)"><i>🏦</i><span>Bank</span></div>
+            <div class="nav-btn" onclick="nav('quotes', this)"><i>📝</i><span>Quotes</span></div>
+            <div class="nav-btn" onclick="nav('expenses', this)"><i>🧾</i><span>Exp.</span></div>
+            <div class="nav-btn" onclick="nav('calc', this)"><i>🧮</i><span>Calc</span></div>
+            <div class="nav-btn" onclick="nav('gallery', this)"><i>📸</i><span>Gallery</span></div>
+            <div class="nav-btn" onclick="nav('terms', this)"><i>⚖️</i><span>Terms</span></div>
+            <div class="nav-btn" onclick="nav('readme', this)"><i>📖</i><span>ReadMe</span></div>
+        </div>
+    </header>
 
     <div id="viewport">
-        <div id="prof" class="page active">
+        <div id="p-profile" class="page active">
             <div class="card">
                 <div class="title">Business Profile</div>
-                <div class="box">
-                    <span class="lbl">Business Name</span>
-                    <span class="val">TOOLBOX PAY</span>
-                </div>
-                <div class="box">
-                    <span class="lbl">Specialising In</span>
-                    <span class="val">Labour & Trades</span>
-                </div>
+                <span class="static-label">Business Name</span>
+                <span class="static-value">Toolboxpay</span>
+                
+                <span class="static-label">Specialising In</span>
+                <span class="static-value">App development</span>
             </div>
         </div>
 
-        <div id="bank" class="page">
+        <div id="p-bank" class="page">
             <div class="card">
                 <div class="title">Bank Details</div>
-                <div class="box">
-                    <span class="lbl">Account Holder</span>
-                    <span class="val">TOOLBOX PAY LTD</span>
-                </div>
-                <div class="box">
-                    <span class="lbl">Sort Code</span>
-                    <span class="val">00-00-00</span>
-                </div>
-                <div class="box">
-                    <span class="lbl">Account Number</span>
-                    <span class="val">12345678</span>
-                </div>
+                <span class="static-label">Bank Name</span>
+                <span class="static-value">Nationwide</span>
+
+                <span class="static-label">Sort Code</span>
+                <span class="static-value">07-02-46</span>
+
+                <span class="static-label">Account Number</span>
+                <span class="static-value">30067390</span>
             </div>
         </div>
 
-        <div id="quote" class="page"><div class="card"><div class="title">Quotes</div></div></div>
-        <div id="exp" class="page"><div class="card"><div class="title">Expenses</div></div></div>
-        <div id="calc" class="page"><div class="card"><div class="title">Calculator</div></div></div>
-        <div id="gal" class="page"><div class="card"><div class="title">Gallery</div></div></div>
-        <div id="terms" class="page"><div class="card"><div class="title">Terms</div></div></div>
-        <div id="read" class="page"><div class="card"><div class="title">ReadMe</div></div></div>
+        <div id="p-quotes" class="page"><div class="card"><div class="title">Quotes</div></div></div>
+        <div id="p-expenses" class="page"><div class="card"><div class="title">Expenses</div></div></div>
+        <div id="p-calc" class="page"><div class="card"><div class="title">Calculator</div></div></div>
+        <div id="p-gallery" class="page"><div class="card"><div class="title">Gallery</div></div></div>
+        <div id="p-terms" class="page"><div class="card"><div class="title">Terms</div></div></div>
+        <div id="p-readme" class="page"><div class="card"><div class="title">ReadMe</div></div></div>
     </div>
+</div>
 
-    <script>
-        function tab(id, btn) {
-            // Hide all pages
-            var pages = document.getElementsByClassName('page');
-            for (var i = 0; i < pages.length; i++) {
-                pages[i].style.display = 'none';
-            }
-            // Deactivate all buttons
-            var buttons = document.getElementsByClassName('btn');
-            for (var i = 0; i < buttons.length; i++) {
-                buttons[i].classList.remove('active');
-            }
-            // Show selected
-            document.getElementById(id).style.display = 'block';
-            btn.classList.add('active');
-        }
-    </script>
+<script>
+    function nav(id, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('p-' + id).classList.add('active');
+        btn.classList.add('active');
+        document.getElementById('viewport').scrollTop = 0;
+    }
+</script>
 </body>
 </html>
