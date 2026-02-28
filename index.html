@@ -3,94 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.4 TRUE WHITE</title>
+    <title>toolboxpay - v21.5 MASTER</title>
     <style>
-        /* RESET [cite: 2026-02-28] */
+        /* LIGHT THEME TO PREVENT TEXT LOSS [cite: 2026-02-28] */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #4a4a4a; color: #ffffff; font-family: Arial, sans-serif; }
+        body { background-color: #f4f4f4; color: #333; font-family: Arial, sans-serif; padding-top: 140px; }
 
-        header { background: #333333; padding: 25px 0; text-align: center; border-bottom: 5px solid #ff6600; }
-        .logo { font-size: 28px; font-weight: 900; text-transform: uppercase; }
-        .logo span { color: #ff6600; }
-
-        nav { background: #111111; border-bottom: 2px solid #000; overflow-x: auto; }
-        .nav-inner { display: flex; padding: 12px; gap: 8px; width: max-content; }
-        .nav-btn { width: 105px; padding: 14px 0; background: #333; color: #ff6600; text-align: center; border-radius: 8px; font-weight: 900; font-size: 11px; border: 2px solid #444; text-transform: uppercase; cursor: pointer; }
-
-        .wrapper { padding: 20px; max-width: 500px; margin: 0 auto; }
-        .section { display: none; width: 100%; }
-        .active { display: block !important; }
-
-        /* THE TEXT VISIBILITY FIX [cite: 2026-02-28] */
-        .title { color: #ff6600; font-size: 24px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-left: 6px solid #ff6600; padding-left: 15px; }
-        .label { color: #ffffff; font-size: 13px; font-weight: 900; display: block; margin-bottom: 8px; text-transform: uppercase; }
-
-        /* FORCE WHITE TEXT ON BLACK BACKGROUND [cite: 2026-02-28] */
-        input, textarea { 
-            width: 100%; 
-            padding: 18px; 
-            background-color: #000000 !important; 
-            border: 2px solid #666666 !important; 
-            border-radius: 10px;
-            margin-bottom: 25px;
-            display: block;
-            outline: none;
-            font-size: 18px !important;
-            
-            /* The essential color override [cite: 2026-02-28] */
-            color: #ffffff !important; 
-            -webkit-text-fill-color: #ffffff !important; 
-            opacity: 1 !important;
+        /* FIXED HEADER & NAV [cite: 2026-02-28] */
+        .top-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: #f4f4f4;
         }
 
-        /* Ensure placeholders remain visible but distinct [cite: 2026-02-28] */
-        ::placeholder { color: #aaaaaa !important; -webkit-text-fill-color: #aaaaaa !important; }
+        header { background: #333; padding: 15px 0; text-align: center; border-bottom: 4px solid #ff6600; }
+        .logo { font-size: 24px; font-weight: 900; color: #fff; text-transform: uppercase; }
+        .logo span { color: #ff6600; }
 
-        .calc-panel { background: #000; padding: 25px; border-radius: 15px; border: 2px solid #ff6600; text-align: center; }
-        .calc-total { font-size: 32px; font-weight: 900; color: #ffffff; }
+        nav { background: #222; overflow-x: auto; border-bottom: 2px solid #ff6600; }
+        .nav-inner { display: flex; padding: 10px; gap: 8px; width: max-content; }
+        .nav-btn { 
+            width: 100px; padding: 12px 0; background: #444; color: #fff; 
+            text-align: center; border-radius: 6px; font-weight: bold; 
+            font-size: 11px; border: none; text-transform: uppercase;
+        }
+
+        /* CONTENT CARDS [cite: 2026-02-28] */
+        .wrapper { padding: 15px; max-width: 500px; margin: 0 auto; }
+        .section { display: none; background: #fff; padding: 20px; border-radius: 12px; border: 2px solid #ddd; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .active { display: block !important; }
+
+        .title { color: #ff6600; font-size: 20px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; text-align: center; }
+        .label { color: #555; font-size: 12px; font-weight: 900; display: block; margin-bottom: 5px; text-transform: uppercase; }
+
+        /* FORCED VISIBLE INPUTS [cite: 2026-02-28] */
+        input, textarea { 
+            width: 100%; padding: 15px; background: #f9f9f9 !important; 
+            border: 2px solid #ff6600 !important; border-radius: 8px;
+            margin-bottom: 20px; font-size: 16px; display: block;
+            color: #000 !important; font-weight: bold;
+        }
+
+        .calc-panel { background: #333; padding: 20px; border-radius: 10px; text-align: center; color: #fff; }
+        .calc-val { font-size: 28px; font-weight: 900; color: #ff6600; }
     </style>
 </head>
 <body>
 
-    <header><div class="logo">TOOLBOX<span>PAY</span></div></header>
-
-    <nav>
-        <div class="nav-inner">
-            <div id="t1" class="nav-btn" style="background:#ff6600; color:#fff; border-color:#fff;" onclick="tab(1)">Profile</div>
-            <div id="t2" class="nav-btn" onclick="tab(2)">Bank</div>
-            <div id="t3" class="nav-btn" onclick="tab(3)">VAT</div>
-            <div id="t4" class="nav-btn" onclick="tab(4)">Biz Calc</div>
-        </div>
-    </nav>
+    <div class="top-container">
+        <header><div class="logo">TOOLBOX<span>PAY</span></div></header>
+        <nav>
+            <div class="nav-inner">
+                <div id="t1" class="nav-btn" style="background:#ff6600;" onclick="tab(1)">Profile</div>
+                <div id="t2" class="nav-btn" onclick="tab(2)">Bank</div>
+                <div id="t3" class="nav-btn" onclick="tab(3)">VAT</div>
+                <div id="t4" class="nav-btn" onclick="tab(4)">Biz Calc</div>
+            </div>
+        </nav>
+    </div>
 
     <main class="wrapper">
         <div id="v1" class="section active">
             <h2 class="title">Business Profile</h2>
             <label class="label">Business Name</label>
-            <input type="text" id="f1" placeholder="Type here..." oninput="sv('f1')">
-            <label class="label">Specialising In</label>
-            <input type="text" id="f2" placeholder="e.g. Electrical" oninput="sv('f2')">
-            <label class="label">Business Address</label>
-            <textarea id="f3" rows="4" placeholder="Full address..." oninput="sv('f3')"></textarea>
+            <input type="text" id="f1" placeholder="Type name..." oninput="sv('f1')">
+            <label class="label">Trade / Specialism</label>
+            <input type="text" id="f2" placeholder="e.g. Electrician" oninput="sv('f2')">
+            <label class="label">Address</label>
+            <textarea id="f3" rows="3" placeholder="Full address..." oninput="sv('f3')"></textarea>
         </div>
 
         <div id="v2" class="section">
             <h2 class="title">Bank Details</h2>
             <label class="label">Bank Name</label>
-            <input type="text" id="f4" placeholder="Bank Name" oninput="sv('f4')">
+            <input type="text" id="f4" oninput="sv('f4')">
             <label class="label">Sort Code</label>
             <input type="text" id="f5" placeholder="00-00-00" oninput="sv('f5')">
             <label class="label">Account Number</label>
-            <input type="text" id="f6" placeholder="Account Number" oninput="sv('f6')">
+            <input type="text" id="f6" oninput="sv('f6')">
         </div>
 
         <div id="v3" class="section">
-            <h2 class="title">VAT Calc</h2>
+            <h2 class="title">VAT Calculator</h2>
             <label class="label">Amount (£)</label>
             <input type="number" id="vIn" oninput="cV()">
             <div class="calc-panel">
-                <div style="color:#ff6600; font-size:12px; font-weight:900;">TOTAL INC VAT</div>
-                <div id="vOut" class="calc-total">£0.00</div>
+                <div style="font-size:10px; font-weight:bold;">TOTAL INC VAT</div>
+                <div id="vOut" class="calc-val">£0.00</div>
             </div>
         </div>
 
@@ -103,8 +105,8 @@
             <label class="label">Markup (%)</label>
             <input type="number" id="bMk" value="20" oninput="cB()">
             <div class="calc-panel">
-                <div style="color:#ff6600; font-size:12px; font-weight:900;">REC. QUOTE</div>
-                <div id="bQ" class="calc-total">£0.00</div>
+                <div style="font-size:10px; font-weight:bold;">RECOMMENDED QUOTE</div>
+                <div id="bQ" class="calc-val">£0.00</div>
             </div>
         </div>
     </main>
@@ -113,16 +115,14 @@
     function tab(n) {
         for(let i=1; i<=4; i++) {
             document.getElementById('v' + i).classList.remove('active');
-            let b = document.getElementById('t' + i);
-            b.style.background = '#333'; b.style.color = '#ff6600'; b.style.borderColor = '#444';
+            document.getElementById('t' + i).style.background = '#444';
         }
         document.getElementById('v' + n).classList.add('active');
-        let act = document.getElementById('t' + n);
-        act.style.background = '#ff6600'; act.style.color = '#fff'; act.style.borderColor = '#fff';
+        document.getElementById('t' + n).style.background = '#ff6600';
     }
 
     function sv(id) {
-        localStorage.setItem('TBOX_V214_' + id, document.getElementById(id).value);
+        localStorage.setItem('TBOX_V215_' + id, document.getElementById(id).value);
     }
 
     function cV() {
@@ -139,7 +139,7 @@
 
     window.onload = function() {
         ['f1', 'f2', 'f3', 'f4', 'f5', 'f6'].forEach(id => {
-            let val = localStorage.getItem('TBOX_V214_' + id);
+            let val = localStorage.getItem('TBOX_V215_' + id);
             if (val) document.getElementById(id).value = val;
         });
     };
