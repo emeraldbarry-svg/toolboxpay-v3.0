@@ -2,146 +2,91 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - Phase 1.2</title>
-    <style>
-        /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #4a4a4a; color: #ffffff; font-family: sans-serif; min-height: 100vh; padding-bottom: 50px; }
-        
-        header { background-color: #4a4a4a; padding: 25px; text-align: center; border-bottom: 4px solid #ff6600; }
-        .logo { font-size: 28px; font-weight: 900; text-transform: uppercase; color: #ffffff; }
-        .logo span { color: #ff6600; }
-
-        /* HORIZONTAL SCROLLING NAV [cite: 2026-02-28] */
-        .nav-ribbon {
-            display: flex;
-            overflow-x: auto;
-            gap: 15px;
-            padding: 15px;
-            background-color: #222222;
-            -webkit-overflow-scrolling: touch;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .nav-ribbon::-webkit-scrollbar { display: none; }
-
-        .nav-item { 
-            flex: 0 0 140px; 
-            background-color: #333333; 
-            border: 2px solid #ff6600; 
-            border-radius: 12px; 
-            padding: 15px 5px; 
-            text-align: center; 
-            cursor: pointer;
-            color: #ff6600;
-            font-size: 13px;
-            font-weight: 900;
-            text-transform: uppercase;
-        }
-        .nav-item.active { background-color: #ff6600; color: #ffffff; border-color: #ffffff; }
-
-        /* CONTENT AREAS [cite: 2026-02-28] */
-        .main-content { max-width: 500px; margin: 0 auto; padding: 20px; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        .card { background-color: #1e1e1e; border-radius: 20px; padding: 25px; border: 1px solid #000000; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .card-h2 { color: #ff6600; font-size: 22px; font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; }
-        
-        /* INPUTS [cite: 2026-02-28] */
-        label { display: block; font-size: 12px; color: #ff6600; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
-        input, textarea { 
-            width: 100%; 
-            background-color: #000000; 
-            border: 1px solid #444444; 
-            color: #ffffff; 
-            padding: 18px; 
-            border-radius: 10px; 
-            font-size: 17px; 
-            margin-bottom: 25px; 
-            outline: none; 
-            display: block;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>toolboxpay - v19</title>
 </head>
-<body>
+<body style="background-color: #111; color: #fff; font-family: sans-serif; margin: 0; padding: 0;">
 
-<header>
-    <div class="logo">TOOLBOX<span>PAY</span></div>
-</header>
+    <div id="app" style="max-width: 500px; margin: 0 auto; background-color: #4a4a4a; min-height: 100vh;">
+        
+        <header style="padding: 30px; text-align: center; border-bottom: 4px solid #ff6600;">
+            <h1 style="margin: 0; text-transform: uppercase; font-size: 30px; letter-spacing: 2px;">
+                TOOLBOX<span style="color: #ff6600;">PAY</span>
+            </h1>
+        </header>
 
-<div class="nav-ribbon">
-    <div id="btn-profile" class="nav-item active" onclick="showTab('profile')">Profile</div>
-    <div id="btn-bank" class="nav-item" onclick="showTab('bank')">Bank</div>
-</div>
+        <div id="nav-container" style="display: flex; overflow-x: auto; padding: 20px; gap: 15px; background-color: #222; border-bottom: 2px solid #333;">
+            <div id="x1" onclick="tab(1)" style="flex: 0 0 140px; background: #ff6600; color: #fff; padding: 20px 10px; border-radius: 15px; text-align: center; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid #fff;">PROFILE</div>
+            <div id="x2" onclick="tab(2)" style="flex: 0 0 140px; background: #333; color: #ff6600; padding: 20px 10px; border-radius: 15px; text-align: center; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid #444;">BANK</div>
+        </div>
 
-<div class="main-content">
-    <div id="view-profile" class="tab-content active">
-        <div class="card">
-            <h2 class="card-h2">Business Profile</h2>
+        <div id="content" style="padding: 20px;">
             
-            <label>Business Name</label>
-            <input type="text" id="p-name" placeholder="e.g. Toolboxpay Ltd" oninput="save('p-name')">
-            
-            <label>Specialising In</label>
-            <input type="text" id="p-spec" placeholder="e.g. Electrical / Plumbing" oninput="save('p-spec')">
-            
-            <label>Business Address</label>
-            <textarea id="p-addr" rows="3" placeholder="Full trading address..." oninput="save('p-addr')"></textarea>
-            
-            <label>VAT Registration Number</label>
-            <input type="text" id="p-vat" placeholder="Enter VAT Number" oninput="save('p-vat')">
-            
-            <label>Company Registration Number</label>
-            <input type="text" id="p-reg" placeholder="Enter Reg Number" oninput="save('p-reg')">
-            
-            <label>Contact Email</label>
-            <input type="email" id="p-email" placeholder="email@example.com" oninput="save('p-email')">
+            <div id="sec1" style="display: block;">
+                <div style="background: #1e1e1e; padding: 30px; border-radius: 25px; border: 1px solid #000;">
+                    <h2 style="color: #ff6600; text-transform: uppercase; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #ff6600; padding-bottom: 10px;">Business Profile</h2>
+                    
+                    <label style="color: #ff6600; font-size: 12px; font-weight: 900; display: block; margin-bottom: 10px; text-transform: uppercase;">Business Name</label>
+                    <input type="text" id="f1" placeholder="e.g. Toolboxpay" style="width: 100%; padding: 20px; background: #000; border: 1px solid #444; color: #fff; border-radius: 12px; margin-bottom: 25px; font-size: 18px;" oninput="sv('f1')">
+                    
+                    <label style="color: #ff6600; font-size: 12px; font-weight: 900; display: block; margin-bottom: 10px; text-transform: uppercase;">Specialising In</label>
+                    <input type="text" id="f2" placeholder="e.g. App Development" style="width: 100%; padding: 20px; background: #000; border: 1px solid #444; color: #fff; border-radius: 12px; margin-bottom: 25px; font-size: 18px;" oninput="sv('f2')">
+                    
+                    <label style="color: #ff6600; font-size: 12px; font-weight: 900; display: block; margin-bottom: 10px; text-transform: uppercase;">Business Address</label>
+                    <textarea id="f3" rows="3" style="width: 100%; padding: 20px; background: #000; border: 1px solid #444; color: #fff; border-radius: 12px; margin-bottom: 25px; font-size: 18px; font-family: sans-serif;" oninput="sv('f3')"></textarea>
+                </div>
+            </div>
+
+            <div id="sec2" style="display: none;">
+                <div style="background: #1e1e1e; padding: 30px; border-radius: 25px; border: 1px solid #000;">
+                    <h2 style="color: #ff6600; text-transform: uppercase; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #ff6600; padding-bottom: 10px;">Bank Details</h2>
+                    
+                    <label style="color: #ff6600; font-size: 12px; font-weight: 900; display: block; margin-bottom: 10px; text-transform: uppercase;">Bank Name</label>
+                    <input type="text" id="f4" placeholder="e.g. Nationwide" style="width: 100%; padding: 20px; background: #000; border: 1px solid #444; color: #fff; border-radius: 12px; margin-bottom: 25px; font-size: 18px;" oninput="sv('f4')">
+                    
+                    <label style="color: #ff6600; font-size: 12px; font-weight: 900; display: block; margin-bottom: 10px; text-transform: uppercase;">Sort Code</label>
+                    <input type="text" id="f5" placeholder="00-00-00" style="width: 100%; padding: 20px; background: #000; border: 1px solid #444; color: #fff; border-radius: 12px; margin-bottom: 25px; font-size: 18px;" oninput="sv('f5')">
+                    
+                    <label style="color: #ff6600; font-size: 12px; font-weight: 900; display: block; margin-bottom: 10px; text-transform: uppercase;">Account Number</label>
+                    <input type="text" id="f6" placeholder="00000000" style="width: 100%; padding: 20px; background: #000; border: 1px solid #444; color: #fff; border-radius: 12px; margin-bottom: 25px; font-size: 18px;" oninput="sv('f6')">
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div id="view-bank" class="tab-content">
-        <div class="card">
-            <h2 class="card-h2">Bank Details</h2>
-            <label>Bank Name</label>
-            <input type="text" id="b-name" placeholder="e.g. Nationwide" oninput="save('b-name')">
-            <label>Sort Code</label>
-            <input type="text" id="b-sort" placeholder="00-00-00" oninput="save('b-sort')">
-            <label>Account Number</label>
-            <input type="text" id="b-acc" placeholder="00000000" oninput="save('b-acc')">
-        </div>
-    </div>
-</div>
+    <script>
+        function tab(n) {
+            // Hide everything
+            document.getElementById('sec1').style.display = 'none';
+            document.getElementById('sec2').style.display = 'none';
+            
+            // Reset buttons
+            document.getElementById('x1').style.background = '#333';
+            document.getElementById('x1').style.color = '#ff6600';
+            document.getElementById('x1').style.borderColor = '#444';
+            document.getElementById('x2').style.background = '#333';
+            document.getElementById('x2').style.color = '#ff6600';
+            document.getElementById('x2').style.borderColor = '#444';
 
-<script>
-    /* DYNAMIC STORAGE [cite: 2026-02-26] */
-    const inputs = ['p-name', 'p-spec', 'p-addr', 'p-vat', 'p-reg', 'p-email', 'b-name', 'b-sort', 'b-acc'];
+            // Show active
+            document.getElementById('sec' + n).style.display = 'block';
+            document.getElementById('x' + n).style.background = '#ff6600';
+            document.getElementById('x' + n).style.color = '#fff';
+            document.getElementById('x' + n).style.borderColor = '#fff';
+        }
 
-    function save(id) {
-        localStorage.setItem('PAY_' + id, document.getElementById(id).value);
-    }
+        function sv(id) {
+            localStorage.setItem('SAVE_' + id, document.getElementById(id).value);
+        }
 
-    function load() {
-        inputs.forEach(id => {
-            const val = localStorage.getItem('PAY_' + id);
-            if (val) document.getElementById(id).value = val;
-        });
-    }
-
-    function showTab(id) {
-        // Switch Views
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById('view-' + id).classList.add('active');
-
-        // Switch Buttons
-        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-        document.getElementById('btn-' + id).classList.add('active');
-    }
-
-    window.onload = load;
-</script>
-
+        window.onload = function() {
+            const fields = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6'];
+            fields.forEach(id => {
+                const val = localStorage.getItem('SAVE_' + id);
+                if (val) document.getElementById(id).value = val;
+            });
+        };
+    </script>
 </body>
 </html>
