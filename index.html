@@ -3,40 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.50 STABLE</title>
+    <title>toolboxpay - v21.51 STABLE</title>
     <style>
-        /* THE RESET: NO TRICKS, JUST BUTTONS [cite: 2026-02-28] */
+        /* THE INDUSTRIAL LOCK */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif !important; font-weight: 900 !important; }
-        body { background-color: #1a1a1a; color: #ffffff; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        body { background-color: #1a1a1a; color: #ffffff; padding: 15px; display: flex; flex-direction: column; align-items: center; }
 
-        .app-container { width: 100%; max-width: 500px; }
+        .app-wrap { width: 100%; max-width: 500px; }
 
-        /* HEADER [cite: 2020-02-20] */
-        header { padding: 20px 0; text-align: center; }
+        /* HEADER */
+        header { padding: 20px 0; text-align: center; border-bottom: 2px solid #333; margin-bottom: 15px; }
         .logo { font-size: 30px; text-transform: uppercase; }
         .logo .orange { color: #ff6600; }
         .logo .white { color: #ffffff; }
 
-        /* NAV GRID: THE 2x2 LOCK */
-        nav { 
-            background: #000; padding: 15px; border: 4px solid #444; 
+        /* NAV GRID */
+        .nav-box { 
+            background: #000; padding: 12px; border: 4px solid #444; 
             border-bottom: 8px solid #ff6600; border-radius: 15px; margin-bottom: 25px; 
         }
         .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .nav-btn { 
-            height: 65px; background: #333; color: #ff6600; border: 3px solid #555; 
+        
+        /* THE BUTTONS */
+        .btn-link { 
+            height: 60px; background: #333; color: #ff6600; border: 3px solid #555; 
             border-radius: 12px; text-transform: uppercase; cursor: pointer; 
-            font-size: 15px; display: flex; align-items: center; justify-content: center;
+            font-size: 14px; display: flex; align-items: center; justify-content: center;
+            text-decoration: none;
         }
-        .nav-btn.active { background: #ff6600 !important; color: #fff !important; border-color: #fff !important; }
+        .btn-link.active { background: #ff6600 !important; color: #fff !important; border-color: #fff !important; }
 
-        /* CARDS */
-        .card { display: none; background: #111; padding: 25px; border-radius: 20px; border: 8px solid #ff6600; }
-        .card.active { display: block !important; }
+        /* CONTENT CARDS */
+        .card-view { display: none; background: #111; padding: 25px; border-radius: 20px; border: 8px solid #ff6600; }
+        .card-view.open { display: block !important; }
+        
         .title { color: #ff6600; font-size: 24px; text-transform: uppercase; margin-bottom: 25px; text-align: center; }
 
-        /* INPUTS: LARGE & VISIBLE [cite: 2026-02-28] */
-        .label { color: #ffffff; font-size: 14px; display: block; margin-bottom: 8px; text-transform: uppercase; }
+        /* INPUTS - BRITISH ENGLISH */
+        .lbl { color: #ffffff; font-size: 14px; display: block; margin-bottom: 8px; text-transform: uppercase; }
         input, textarea { 
             width: 100% !important; background: #ffffff !important; color: #000000 !important; 
             border: 6px solid #ff6600 !important; border-radius: 15px !important; 
@@ -45,93 +49,32 @@
         }
         textarea { min-height: 120px; resize: none; }
 
-        /* CALC BOXES [cite: 2026-02-28] */
-        .res-container { background: #000; padding: 30px; border-radius: 15px; border: 6px solid #ff6600; text-align: center; }
-        .res-val { font-size: 45px; color: #ffffff; }
+        /* RESULTS */
+        .res-display { background: #000; padding: 30px; border-radius: 15px; border: 6px solid #ff6600; text-align: center; }
+        .res-num { font-size: 45px; color: #ffffff; }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
+    <div class="app-wrap">
         <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
         
-        <nav>
+        <div class="nav-box">
             <div class="nav-grid">
-                <button id="tab1" class="nav-btn active" onclick="show(1)">Profile</button>
-                <button id="tab2" class="nav-btn" onclick="show(2)">Bank</button>
-                <button id="tab3" class="nav-btn" onclick="show(3)">VAT</button>
-                <button id="tab4" class="nav-btn" onclick="show(4)">Biz Calc</button>
+                <button class="btn-link active" id="tab-1" onclick="jump(1)">Profile</button>
+                <button class="btn-link" id="tab-2" onclick="jump(2)">Bank</button>
+                <button class="btn-link" id="tab-3" onclick="jump(3)">VAT</button>
+                <button class="btn-link" id="tab-4" onclick="jump(4)">Biz Calc</button>
             </div>
-        </nav>
+        </div>
 
-        <main>
-            <div id="page1" class="card active">
+        <main id="content-area">
+            <div class="card-view open" id="view-1">
                 <h2 class="title">BUSINESS PROFILE</h2>
-                <label class="label">TRADING NAME</label>
-                <input type="text" id="d_name" placeholder="Name" oninput="store('d_name')">
-                <label class="label">SPECIALISING IN</label>
-                <input type="text" id="d_trade" placeholder="Trade" oninput="store('d_trade')">
-                <label class="label">ADDRESS</label>
-                <textarea id="d_addr" placeholder="Address" oninput="store('d_addr')"></textarea>
+                <label class="lbl">TRADING NAME</label>
+                <input type="text" id="z_name" placeholder="Name" oninput="keep('z_name')">
+                <label class="lbl">SPECIALISING IN</label>
+                <input type="text" id="z_trade" placeholder="Trade" oninput="keep('z_trade')">
+                <label class="lbl">ADDRESS</label>
+                <textarea id="z_addr" placeholder="Address" oninput="keep('z_addr')"></textarea>
             </div>
-
-            <div id="page2" class="card">
-                <h2 class="title">BANK DETAILS</h2>
-                <label class="label">BANK NAME</label><input type="text" id="d_bank" oninput="store('d_bank')">
-                <label class="label">SORT CODE</label><input type="text" id="d_sort" oninput="store('d_sort')">
-                <label class="label">ACCOUNT NUMBER</label><input type="text" id="d_acc" oninput="store('d_acc')">
-            </div>
-
-            <div id="page3" class="card">
-                <h2 class="title">VAT CALCULATOR</h2>
-                <label class="label">NET AMOUNT (£)</label>
-                <input type="number" id="vIn" placeholder="0.00" oninput="runV()">
-                <div class="res-container"><div id="vOut" class="res-val">£0.00</div></div>
-            </div>
-
-            <div id="page4" class="card">
-                <h2 class="title">BUSINESS CALC</h2>
-                <label class="label">LABOUR (£)</label><input type="number" id="bL" oninput="runB()">
-                <label class="label">MATERIALS (£)</label><input type="number" id="bM" oninput="runB()">
-                <label class="label">MARKUP (%)</label><input type="number" id="bMk" value="20" oninput="runB()">
-                <div class="res-container"><div id="bQ" class="res-val">£0.00</div></div>
-            </div>
-        </main>
-    </div>
-
-<script>
-    /* THE INDESTRUCTIBLE SWITCHER [cite: 2026-02-28] */
-    function show(n) {
-        for(let i=1; i<=4; i++) {
-            document.getElementById('page' + i).classList.remove('active');
-            document.getElementById('tab' + i).classList.remove('active');
-        }
-        document.getElementById('page' + n).classList.add('active');
-        document.getElementById('tab' + n).classList.add('active');
-        window.scrollTo(0, 0);
-    }
-
-    /* DATA PERSISTENCE [cite: 2026-02-26] */
-    function store(id) { localStorage.setItem('TBOX_D_' + id, document.getElementById(id).value); }
-
-    function runV() {
-        let v = parseFloat(document.getElementById('vIn').value) || 0;
-        document.getElementById('vOut').innerText = "£" + (v * 1.2).toFixed(2);
-    }
-
-    function runB() {
-        let l = parseFloat(document.getElementById('bL').value) || 0;
-        let m = parseFloat(document.getElementById('bM').value) || 0;
-        let mk = (parseFloat(document.getElementById('bMk').value) || 0) / 100;
-        document.getElementById('bQ').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
-    }
-
-    window.onload = function() {
-        ['d_name', 'd_trade', 'd_addr', 'd_bank', 'd_sort', 'd_acc'].forEach(id => {
-            let val = localStorage.getItem('TBOX_D_' + id);
-            if (val && document.getElementById(id)) document.getElementById(id).value = val;
-        });
-    };
-</script>
-</body>
-</html>
