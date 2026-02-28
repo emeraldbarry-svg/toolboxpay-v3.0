@@ -3,32 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v11.4</title>
+    <title>toolboxpay - v11.5</title>
     <style>
-        /* BRANDING & THEME */
+        /* BRANDING & THEME [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; }
-        #app-viewport { width: 100%; max-width: 420px; padding: 20px; }
+        #app-viewport { width: 100%; max-width: 420px; padding: 20px; position: relative; }
 
-        /* HEADER - NO CLOCKS */
-        .header { text-align: center; padding: 40px 0 30px 0; }
+        /* HEADER - NO CLOCKS [cite: 2026-02-27] */
+        .header { text-align: center; padding: 40px 0 20px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* NAVIGATION SYSTEM */
-        .view { display: none; width: 100%; visibility: visible; }
-        #view-home { display: block; } 
+        /* THE "NO-FAIL" NAV SYSTEM [cite: 2026-02-27] */
+        /* We use hidden checkboxes to toggle the views so NO SCRIPT is needed to open them */
+        .nav-trigger { display: none; }
+        .view { display: none; width: 100%; position: absolute; top: 120px; left: 0; padding: 20px; background: #4a4a4a; min-height: 100vh; z-index: 10; }
+        
+        /* When a checkbox is ticked, show the matching view */
+        #t-quote:checked ~ #view-quote,
+        #t-clients:checked ~ #view-clients,
+        #t-calc:checked ~ #view-calc,
+        #t-bank:checked ~ #view-bank { display: block; }
 
         /* TILES */
-        .stack { display: flex; flex-direction: column; gap: 15px; }
-        .tile { background: #222; border-radius: 20px; padding: 25px; display: block; border: 2px solid #333; width: 100%; cursor: pointer; text-align: left; }
-        .tile:active { background: #333; border-color: #ff6600; }
-        .tile span { color: #ff6600; font-weight: 900; font-size: 20px; text-transform: uppercase; pointer-events: none; }
+        .stack { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .tile-label { background: #222; border-radius: 20px; padding: 25px; display: flex; align-items: center; border: 2px solid #333; cursor: pointer; }
+        .icon-box { width: 50px; height: 50px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 24px; }
+        .tile-label span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; }
 
         /* CARDS */
-        .card { background: #1e1e1e; border-radius: 25px; padding: 25px; border: 1px solid #333; margin-top: 10px; }
-        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 15px 25px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 14px; margin-bottom: 20px; display: inline-block; }
+        .card { background: #1e1e1e; border-radius: 25px; padding: 25px; border: 1px solid #333; }
+        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 12px 20px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 12px; margin-bottom: 20px; display: inline-block; text-align: center; }
         
         label { display: block; font-size: 11px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
         input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; outline: none; display: block; }
@@ -36,7 +43,6 @@
         .total-display { font-size: 50px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 15px; }
         .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 16px; }
 
-        /* CLIENT LIST */
         .cli-row { background: #000; padding: 15px; border-radius: 12px; margin-top: 10px; border-left: 4px solid #ff6600; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
@@ -47,25 +53,20 @@
         <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
     </div>
 
-    <div id="view-home" class="view">
-        <div class="stack">
-            <div class="tile" onclick="document.querySelectorAll('.view').forEach(v=>v.style.display='none');document.getElementById('view-quote').style.display='block';">
-                <span>📝 Job Quotes</span>
-            </div>
-            <div class="tile" onclick="document.querySelectorAll('.view').forEach(v=>v.style.display='none');document.getElementById('view-clients').style.display='block';">
-                <span>👥 Clients</span>
-            </div>
-            <div class="tile" onclick="document.querySelectorAll('.view').forEach(v=>v.style.display='none');document.getElementById('view-calc').style.display='block';">
-                <span>🧮 Calculator</span>
-            </div>
-            <div class="tile" onclick="document.querySelectorAll('.view').forEach(v=>v.style.display='none');document.getElementById('view-bank').style.display='block';">
-                <span>🏦 Bank Setup</span>
-            </div>
-        </div>
+    <input type="checkbox" id="t-quote" class="nav-trigger">
+    <input type="checkbox" id="t-clients" class="nav-trigger">
+    <input type="checkbox" id="t-calc" class="nav-trigger">
+    <input type="checkbox" id="t-bank" class="nav-trigger">
+
+    <div class="stack">
+        <label for="t-quote" class="tile-label"><div class="icon-box">📝</div><span>Job Quotes</span></label>
+        <label for="t-clients" class="tile-label"><div class="icon-box">👥</div><span>Clients</span></label>
+        <label for="t-calc" class="tile-label"><div class="icon-box">🧮</div><span>Calculator</span></label>
+        <label for="t-bank" class="tile-label"><div class="icon-box">🏦</div><span>Bank Setup</span></label>
     </div>
 
     <div id="view-quote" class="view">
-        <div class="back-btn" onclick="document.querySelectorAll('.view').forEach(v=>v.style.display='none');document.getElementById('view-home').style.display='block';">← BACK</div>
+        <label for="t-quote" class="back-btn">← DASHBOARD</label>
         <div class="card">
             <label>Labour Description</label><textarea id="qd" style="height:100px;"></textarea>
             <label>Price (£)</label><input type="number" id="qp" oninput="upQ()">
@@ -75,7 +76,7 @@
     </div>
 
     <div id="view-clients" class="view">
-        <div class="back-btn" onclick="document.querySelectorAll('.view').forEach(v=>v.style.display='none');document.getElementById('view-home').style.display='block';">← BACK</div>
+        <label for="t-clients" class="back-btn">← DASHBOARD</label>
         <div class="card">
             <label>Full Name</label><input type="text" id="cn">
             <label>Address</label><textarea id="ca" style="height:60px;"></textarea>
@@ -85,7 +86,7 @@
     </div>
 
     <div id="view-calc" class="view">
-        <div class="back-btn" onclick="document.querySelectorAll('.view').forEach(v=>v.style.display='none');document.getElementById('view-home').style.display='block';">← BACK</div>
+        <label for="t-calc" class="back-btn">← DASHBOARD</label>
         <div class="card">
             <label>Day Rate (£)</label><input type="number" id="cr" oninput="upC()">
             <label>Days Worked</label><input type="number" id="cd" oninput="upC()">
@@ -94,7 +95,7 @@
     </div>
 
     <div id="view-bank" class="view">
-        <div class="back-btn" onclick="document.querySelectorAll('.view').forEach(v=>v.style.display='none');document.getElementById('view-home').style.display='block';">← BACK</div>
+        <label for="t-bank" class="back-btn">← DASHBOARD</label>
         <div class="card">
             <label>Business Name</label><input type="text" id="bn" oninput="sv('bn',this.value)">
             <label>Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
@@ -104,7 +105,7 @@
 </div>
 
 <script>
-    /* DATA LOGIC ONLY */
+    /* DATA LOGIC ONLY [cite: 2026-02-26, 2026-02-27] */
     function upQ() { document.getElementById('qt').innerText = "£" + (parseFloat(document.getElementById('qp').value) || 0).toFixed(2); }
     function upC() {
         var r = parseFloat(document.getElementById('cr').value) || 0;
@@ -120,4 +121,25 @@
         if(!n) return;
         clients.push({n: n, a: a});
         localStorage.setItem('TBP_LIST', JSON.stringify(clients));
-        document
+        document.getElementById('cn').value = '';
+        document.getElementById('ca').value = '';
+        showC();
+    }
+    function showC() {
+        var html = "";
+        for (var i = 0; i < clients.length; i++) {
+            html += '<div class="cli-row"><div><b>'+clients[i].n+'</b><br>'+clients[i].a+'</div><div style="color:red; font-weight:bold;" onclick="delC('+i+')">DEL</div></div>';
+        }
+        document.getElementById('cl-list').innerHTML = html;
+    }
+    function delC(i) { clients.splice(i, 1); localStorage.setItem('TBP_LIST', JSON.stringify(clients)); showC(); }
+
+    window.onload = function() {
+        showC();
+        document.getElementById('bn').value = localStorage.getItem('TBP_bn') || "";
+        document.getElementById('sc').value = localStorage.getItem('TBP_sc') || "";
+        document.getElementById('an').value = localStorage.getItem('TBP_an') || "";
+    };
+</script>
+</body>
+</html>
