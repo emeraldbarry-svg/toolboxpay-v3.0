@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v16.2</title>
+    <title>toolboxpay - v16.3</title>
     <style>
         /* CORE SETUP [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -56,8 +56,12 @@
         input, textarea { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 14px; border-radius: 10px; font-size: 16px; margin-bottom: 12px; outline: none; }
         
         .btn-green { width: 100%; background: #25D366; color: #000; padding: 18px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 14px; cursor: pointer; }
-        .btn-orange { background: #ff6600; color: #fff; margin-top: 5px; }
         
+        /* LOGO PORTAL [cite: 2026-02-28] */
+        #logo-portal { width: 100px; height: 100px; background: #000; border: 2px dashed #ff6600; border-radius: 15px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        #logo-portal img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        #logo-portal span { font-size: 9px; color: #666; font-weight: 900; text-align: center; }
+
         .save-indicator { text-align: center; font-size: 9px; color: #25D366; font-weight: 800; text-transform: uppercase; margin-top: -10px; margin-bottom: 10px; opacity: 0; transition: 0.3s; }
     </style>
 </head>
@@ -72,38 +76,40 @@
             <div class="nav-btn" id="btn-expenses" onclick="show('expenses')"><i>🧾</i><span>Exp.</span></div>
             <div class="nav-btn" id="btn-calc" onclick="show('calc')"><i>🧮</i><span>Calc</span></div>
             <div class="nav-btn" id="btn-gallery" onclick="show('gallery')"><i>📸</i><span>Gallery</span></div>
-            <div class="nav-btn active" id="btn-bank" onclick="show('bank')"><i>🏦</i><span>Bank</span></div>
+            <div class="nav-btn" id="btn-bank" onclick="show('bank')"><i>🏦</i><span>Bank</span></div>
             <div class="nav-btn" id="btn-terms" onclick="show('terms')"><i>⚖️</i><span>Terms</span></div>
-            <div class="nav-btn" id="btn-profile" onclick="show('profile')"><i>👤</i><span>Profile</span></div>
+            <div class="nav-btn active" id="btn-profile" onclick="show('profile')"><i>👤</i><span>Profile</span></div>
         </div>
     </header>
 
     <div id="viewport">
-        <div id="p-bank" class="page active">
+        <div id="p-profile" class="page active">
             <div class="card">
-                <div class="title">Bank Account</div>
-                <div id="bank-save-msg" class="save-indicator">AUTO-SAVED</div>
-                
-                <label>Account Holder Name</label>
-                <input type="text" id="bk-n" placeholder="Trading Name" oninput="asav('bk_n', this.value, 'bank-save-msg')">
+                <div class="title">Business Profile</div>
+                <div id="prof-save-msg" class="save-indicator">AUTO-SAVED</div>
 
-                <label>Sort Code</label>
-                <input type="text" id="bk-s" placeholder="00-00-00" oninput="asav('bk_s', this.value, 'bank-save-msg')">
+                <div id="logo-portal" onclick="document.getElementById('prof-logo-in').click()">
+                    <img id="prof-logo-img" style="display:none;">
+                    <span id="prof-logo-hint">TAP TO<br>ADD LOGO</span>
+                </div>
+                <input type="file" id="prof-logo-in" accept="image/*" style="display:none;" onchange="handleLogo(this)">
 
-                <label>Account Number</label>
-                <input type="text" id="bk-a" placeholder="12345678" oninput="asav('bk_a', this.value, 'bank-save-msg')">
+                <label>Business Name</label>
+                <input type="text" id="pr-n" placeholder="Trading Name" oninput="asav('pr_n', this.value, 'prof-save-msg')">
 
-                <button class="btn-green btn-orange" onclick="copyBank()">COPY DETAILS 📋</button>
-            </div>
-        </div>
+                <label>Business Address</label>
+                <textarea id="pr-a" placeholder="Office Address" style="height:80px;" oninput="asav('pr_a', this.value, 'prof-save-msg')"></textarea>
 
-        <div id="p-terms" class="page">
-            <div class="card">
-                <div class="title">T&Cs</div>
-                <div id="terms-save-msg" class="save-indicator">AUTO-SAVED</div>
-                
-                <label>Standard Terms of Business</label>
-                <textarea id="tc-t" style="height: 300px;" placeholder="e.g. Labour and materials must be paid..." oninput="asav('tc_t', this.value, 'terms-save-msg')"></textarea>
+                <label>Phone Number</label>
+                <input type="tel" id="pr-p" placeholder="01234 567890" oninput="asav('pr_p', this.value, 'prof-save-msg')">
+
+                <label>Email Address</label>
+                <input type="email" id="pr-e" placeholder="contact@email.com" oninput="asav('pr_e', this.value, 'prof-save-msg')">
+
+                <label>Website</label>
+                <input type="url" id="pr-w" placeholder="www.yourbusiness.com" oninput="asav('pr_w', this.value, 'prof-save-msg')">
+
+                <button class="btn-green" onclick="alert('Profile Locked and Loaded!')">Lock Profile</button>
             </div>
         </div>
 
@@ -112,7 +118,8 @@
         <div id="p-expenses" class="page"><div class="card"><div class="title">Expenses</div></div></div>
         <div id="p-calc" class="page"><div class="card"><div class="title">Calc</div></div></div>
         <div id="p-gallery" class="page"><div class="card"><div class="title">Gallery</div></div></div>
-        <div id="p-profile" class="page"><div class="card"><div class="title">Profile</div></div></div>
+        <div id="p-bank" class="page"><div class="card"><div class="title">Bank</div></div></div>
+        <div id="p-terms" class="page"><div class="card"><div class="title">Terms</div></div></div>
     </div>
 </div>
 
@@ -135,23 +142,35 @@
         saveTimeout = setTimeout(() => { msg.style.opacity = "0"; }, 1000);
     }
 
-    /* UTILITIES [cite: 2026-02-28] */
-    function copyBank() {
-        const n = localStorage.getItem('TBP_bk_n') || "";
-        const s = localStorage.getItem('TBP_bk_s') || "";
-        const a = localStorage.getItem('TBP_bk_a') || "";
-        const text = `PAYMENT DETAILS:\nName: ${n}\nSort: ${s}\nAcc: ${a}`;
-        navigator.clipboard.writeText(text);
-        alert("Bank details copied to clipboard!");
+    /* LOGO HANDLING [cite: 2026-02-28] */
+    function handleLogo(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('prof-logo-img').src = e.target.result;
+                document.getElementById('prof-logo-img').style.display = "block";
+                document.getElementById('prof-logo-hint').style.display = "none";
+                localStorage.setItem('TBP_LOGO', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 
     window.onload = function() {
-        // Load Banking
-        document.getElementById('bk-n').value = localStorage.getItem('TBP_bk_n') || "";
-        document.getElementById('bk-s').value = localStorage.getItem('TBP_bk_s') || "";
-        document.getElementById('bk-a').value = localStorage.getItem('TBP_bk_a') || "";
-        // Load Terms
-        document.getElementById('tc-t').value = localStorage.getItem('TBP_tc_t') || "1. Payment is due within 7 days.\n2. Materials belong to the business until paid in full.";
+        // Load Profile
+        document.getElementById('pr-n').value = localStorage.getItem('TBP_pr_n') || "";
+        document.getElementById('pr-a').value = localStorage.getItem('TBP_pr_a') || "";
+        document.getElementById('pr-p').value = localStorage.getItem('TBP_pr_p') || "";
+        document.getElementById('pr-e').value = localStorage.getItem('TBP_pr_e') || "";
+        document.getElementById('pr-w').value = localStorage.getItem('TBP_pr_w') || "";
+        
+        // Load Logo
+        const savedLogo = localStorage.getItem('TBP_LOGO');
+        if(savedLogo) {
+            document.getElementById('prof-logo-img').src = savedLogo;
+            document.getElementById('prof-logo-img').style.display = "block";
+            document.getElementById('prof-logo-hint').style.display = "none";
+        }
     };
 </script>
 </body>
