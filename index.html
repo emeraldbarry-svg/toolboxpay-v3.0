@@ -3,58 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v20.9 SOLID</title>
+    <title>toolboxpay - v21.0 FLAT</title>
     <style>
-        /* RESET [cite: 2026-02-28] */
+        /* TOTAL RESET [cite: 2026-02-28] */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #4a4a4a; color: #fff; font-family: sans-serif; width: 100%; }
+        body { background-color: #4a4a4a; color: #ffffff; font-family: Arial, sans-serif; width: 100%; -webkit-text-size-adjust: 100%; }
 
-        /* HEADER & LOGO [cite: 2020-02-20] */
+        /* HEADER [cite: 2020-02-20] */
         header { background: #4a4a4a; padding: 25px 0; text-align: center; border-bottom: 5px solid #ff6600; }
-        .logo { font-size: 26px; font-weight: 900; text-transform: uppercase; }
+        .logo { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
         .logo span { color: #ff6600; }
 
         /* NAV [cite: 2026-02-28] */
-        nav { background: #222; border-bottom: 2px solid #000; overflow-x: auto; }
+        nav { background: #1a1a1a; border-bottom: 2px solid #000; overflow-x: auto; white-space: nowrap; }
         .nav-inner { display: flex; padding: 12px; gap: 8px; width: max-content; }
-        .nav-btn { width: 105px; padding: 12px 0; background: #333; color: #ff6600; text-align: center; border-radius: 10px; font-weight: 900; font-size: 11px; border: 2px solid #444; text-transform: uppercase; }
-
-        /* CONTENT WRAP [cite: 2026-02-28] */
-        .wrapper { padding: 20px; max-width: 450px; margin: 0 auto; }
-        .card { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 2px solid #000; display: none; }
-
-        /* THE FIX: SOLID BLOCK HEADERS [cite: 2026-02-28] */
-        .header-block {
-            background: #000;
-            color: #ff6600;
-            padding: 15px;
-            text-align: center;
-            font-weight: 900;
-            text-transform: uppercase;
-            border-radius: 10px;
-            border: 1px solid #ff6600;
-            margin-bottom: 20px;
-            font-size: 18px;
-            display: block;
+        .nav-btn { 
+            width: 105px; padding: 14px 0; background: #333; color: #ff6600; 
+            text-align: center; border-radius: 8px; font-weight: 900; 
+            font-size: 11px; border: 2px solid #444; text-transform: uppercase; 
         }
 
-        label { color: #ff6600; font-size: 11px; font-weight: 900; display: block; margin-bottom: 6px; text-transform: uppercase; }
+        /* THE FIX: FLAT CONTENT [cite: 2026-02-28] */
+        .main-content { padding: 20px; max-width: 500px; margin: 0 auto; }
+        
+        /* NO CARDS - TEXT SITS DIRECTLY ON BODY [cite: 2026-02-28] */
+        .view-section { display: none; width: 100%; }
+        .active-view { display: block !important; }
+
+        .big-title { 
+            color: #ff6600; font-size: 24px; font-weight: 900; 
+            text-transform: uppercase; margin-bottom: 20px; 
+            display: block; border-left: 5px solid #ff6600; padding-left: 15px;
+        }
+
+        .input-label { 
+            color: #ffffff; font-size: 13px; font-weight: 900; 
+            display: block; margin-bottom: 10px; text-transform: uppercase; 
+            letter-spacing: 1px;
+        }
         
         input, textarea { 
-            width: 100%; 
-            padding: 18px; 
-            background: #000; 
-            border: 1px solid #444; 
-            color: #fff; 
-            border-radius: 10px; 
-            margin-bottom: 15px; 
-            font-size: 16px; 
-            display: block; 
-            outline: none;
+            width: 100%; padding: 18px; background: #000000; 
+            border: 2px solid #555555; color: #ffffff; border-radius: 10px; 
+            margin-bottom: 25px; font-size: 18px; display: block; outline: none;
         }
 
-        .calc-res { background: #000; padding: 20px; border-radius: 12px; border: 2px solid #ff6600; text-align: center; }
-        .val { font-size: 26px; font-weight: 900; color: #fff; }
+        /* CALC BOXES [cite: 2026-02-28] */
+        .calc-panel { background: #000; padding: 25px; border-radius: 15px; border: 2px solid #ff6600; text-align: center; }
+        .calc-text { color: #ff6600; font-size: 12px; font-weight: 900; margin-bottom: 5px; }
+        .calc-total { font-size: 32px; font-weight: 900; color: #ffffff; }
     </style>
 </head>
 <body>
@@ -63,81 +60,85 @@
 
     <nav>
         <div class="nav-inner">
-            <div id="nb1" class="nav-btn" style="background:#ff6600; color:#fff; border-color:#fff;" onclick="tab(1)">Profile</div>
-            <div id="nb2" class="nav-btn" onclick="tab(2)">Bank</div>
-            <div id="nb3" class="nav-btn" onclick="tab(3)">VAT</div>
-            <div id="nb4" class="nav-btn" onclick="tab(4)">Biz Calc</div>
+            <div id="t1" class="nav-btn" style="background:#ff6600; color:#fff; border-color:#fff;" onclick="openTab(1)">Profile</div>
+            <div id="t2" class="nav-btn" onclick="openTab(2)">Bank</div>
+            <div id="t3" class="nav-btn" onclick="openTab(3)">VAT</div>
+            <div id="t4" class="nav-btn" onclick="openTab(4)">Biz Calc</div>
         </div>
     </nav>
 
-    <div class="wrapper">
-        <div id="c1" class="card" style="display: block;">
-            <div class="header-block">Business Profile</div>
-            <label>Business Name</label>
-            <input type="text" id="f1" oninput="sv('f1')">
-            <label>Specialising In</label>
-            <input type="text" id="f2" oninput="sv('f2')">
-            <label>Address</label>
-            <textarea id="f3" rows="3" oninput="sv('f3')"></textarea>
+    <main class="main-content">
+        <div id="v1" class="view-section active-view">
+            <h2 class="big-title">Business Profile</h2>
+            <label class="input-label">Business Name</label>
+            <input type="text" id="f1" placeholder="Type here..." oninput="save('f1')">
+            
+            <label class="input-label">Specialising In</label>
+            <input type="text" id="f2" placeholder="e.g. Electrical" oninput="save('f2')">
+            
+            <label class="input-label">Business Address</label>
+            <textarea id="f3" rows="4" placeholder="Full address..." oninput="save('f3')"></textarea>
         </div>
 
-        <div id="c2" class="card">
-            <div class="header-block">Bank Details</div>
-            <label>Bank Name</label>
-            <input type="text" id="f4" oninput="sv('f4')">
-            <label>Sort Code</label>
-            <input type="text" id="f5" placeholder="00-00-00" oninput="sv('f5')">
-            <label>Account Number</label>
-            <input type="text" id="f6" oninput="sv('f6')">
+        <div id="v2" class="view-section">
+            <h2 class="big-title">Bank Details</h2>
+            <label class="input-label">Bank Name</label>
+            <input type="text" id="f4" oninput="save('f4')">
+            
+            <label class="input-label">Sort Code</label>
+            <input type="text" id="f5" placeholder="00-00-00" oninput="save('f5')">
+            
+            <label class="input-label">Account Number</label>
+            <input type="text" id="f6" oninput="save('f6')">
         </div>
 
-        <div id="c3" class="card">
-            <div class="header-block">VAT Calc</div>
-            <label>Net Amount (£)</label>
-            <input type="number" id="vIn" oninput="cV()">
-            <div class="calc-res">
-                <div style="color:#ff6600; font-size:10px; font-weight:900;">GROSS TOTAL</div>
-                <div id="vOut" class="val">£0.00</div>
+        <div id="v3" class="view-section">
+            <h2 class="big-title">VAT Calc</h2>
+            <label class="input-label">Amount (£)</label>
+            <input type="number" id="vIn" oninput="calcV()">
+            <div class="calc-panel">
+                <div class="calc-text">TOTAL INC VAT</div>
+                <div id="vOut" class="calc-total">£0.00</div>
             </div>
         </div>
 
-        <div id="c4" class="card">
-            <div class="header-block">Business Calc</div>
-            <label>Labour (£)</label>
-            <input type="number" id="bL" oninput="cB()">
-            <label>Materials (£)</label>
-            <input type="number" id="bM" oninput="cB()">
-            <label>Markup (%)</label>
-            <input type="number" id="bMk" value="20" oninput="cB()">
-            <div class="calc-res">
-                <div style="color:#ff6600; font-size:10px; font-weight:900;">REC. QUOTE</div>
-                <div id="bQ" class="val">£0.00</div>
+        <div id="v4" class="view-section">
+            <h2 class="big-title">Business Calc</h2>
+            <label class="input-label">Labour (£)</label>
+            <input type="number" id="bL" oninput="calcB()">
+            <label class="input-label">Materials (£)</label>
+            <input type="number" id="bM" oninput="calcB()">
+            <label class="input-label">Markup (%)</label>
+            <input type="number" id="bMk" value="20" oninput="calcB()">
+            <div class="calc-panel">
+                <div class="calc-text">REC. QUOTE</div>
+                <div id="bQ" class="calc-total">£0.00</div>
             </div>
         </div>
-    </div>
+    </main>
 
 <script>
-    function tab(n) {
+    function openTab(n) {
         for(let i=1; i<=4; i++) {
-            document.getElementById('c' + i).style.display = 'none';
-            let b = document.getElementById('nb' + i);
+            document.getElementById('v' + i).classList.remove('active-view');
+            let b = document.getElementById('t' + i);
             b.style.background = '#333'; b.style.color = '#ff6600'; b.style.borderColor = '#444';
         }
-        document.getElementById('c' + n).style.display = 'block';
-        let act = document.getElementById('nb' + n);
+        document.getElementById('v' + n).classList.add('active-view');
+        let act = document.getElementById('t' + n);
         act.style.background = '#ff6600'; act.style.color = '#fff'; act.style.borderColor = '#fff';
     }
 
-    function sv(id) {
-        localStorage.setItem('TBOX_V209_' + id, document.getElementById(id).value);
+    function save(id) {
+        localStorage.setItem('TBOX_V21_' + id, document.getElementById(id).value);
     }
 
-    function cV() {
+    function calcV() {
         let n = parseFloat(document.getElementById('vIn').value) || 0;
         document.getElementById('vOut').innerText = "£" + (n * 1.2).toFixed(2);
     }
 
-    function cB() {
+    function calcB() {
         let l = parseFloat(document.getElementById('bL').value) || 0;
         let m = parseFloat(document.getElementById('bM').value) || 0;
         let mk = (parseFloat(document.getElementById('bMk').value) || 0) / 100;
@@ -146,8 +147,8 @@
 
     window.onload = function() {
         ['f1', 'f2', 'f3', 'f4', 'f5', 'f6'].forEach(id => {
-            let val = localStorage.getItem('TBOX_V209_' + id);
-            if (val) document.getElementById(id).value = val;
+            let val = localStorage.getItem('TBOX_V21_' + id);
+            if (val && document.getElementById(id)) document.getElementById(id).value = val;
         });
     };
 </script>
