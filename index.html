@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.34 GIANT MIRROR</title>
+    <title>toolboxpay - v21.35 BALANCE</title>
     <style>
-        /* THE ULTIMATE SCALE SYSTEM [cite: 2020-02-20, 2026-02-28] */
+        /* THE WORKING SYSTEM - RESTORED */
         * { 
             box-sizing: border-box; 
             margin: 0; 
@@ -14,53 +14,54 @@
             font-weight: 900 !important;
         }
         
-        body { background-color: #1a1a1a; color: #ffffff; padding-top: 240px; }
+        body { background-color: #1a1a1a; color: #ffffff; padding-top: 180px; }
 
-        /* HEADER & NAVIGATION [cite: 2020-02-20, 2026-02-28] */
+        /* FIXED HEADER & NAV */
         .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #1a1a1a; }
-        header { background: #000; padding: 50px 0; text-align: center; border-bottom: 12px solid #ff6600; }
-        .logo { font-size: 42px; text-transform: uppercase; letter-spacing: 2px; }
+        header { background: #111; padding: 35px 0; text-align: center; border-bottom: 8px solid #ff6600; }
+        .logo { font-size: 32px; text-transform: uppercase; }
         .logo .orange { color: #ff6600; }
         .logo .white { color: #ffffff; }
 
-        nav { background: #000; overflow-x: auto; border-bottom: 8px solid #333; }
-        .nav-inner { display: flex; padding: 35px; gap: 30px; width: max-content; }
+        nav { background: #000; overflow-x: auto; border-bottom: 4px solid #444; }
+        .nav-inner { display: flex; padding: 20px; gap: 15px; width: max-content; }
         .nav-btn { 
-            width: 180px; padding: 35px 0; background: #333; color: #ff6600; 
-            text-align: center; border-radius: 20px; 
-            font-size: 22px; border: 4px solid #555; text-transform: uppercase;
+            width: 140px; padding: 25px 0; background: #333; color: #ff6600; 
+            text-align: center; border-radius: 15px; 
+            font-size: 16px; border: 3px solid #555; text-transform: uppercase;
+            cursor: pointer;
         }
 
-        /* GIANT CONTAINER SYSTEM [cite: 2026-02-28] */
-        .container { padding: 40px; max-width: 900px; margin: 0 auto; }
-        .card { display: none; background: #111; padding: 70px; border-radius: 60px; border: 12px solid #ff6600; }
+        /* CONTAINER SYSTEM */
+        .container { padding: 20px; max-width: 700px; margin: 0 auto; }
+        .card { display: none; background: #111; padding: 45px; border-radius: 40px; border: 10px solid #ff6600; }
         .active { display: block !important; }
 
-        .title { color: #ff6600; font-size: 50px; text-transform: uppercase; margin-bottom: 70px; text-align: center; }
-        .label { color: #ffffff; font-size: 32px; display: block; margin-bottom: 35px; text-transform: uppercase; }
+        .title { color: #ff6600; font-size: 36px; text-transform: uppercase; margin-bottom: 45px; text-align: center; }
+        .label { color: #ffffff; font-size: 22px; display: block; margin-bottom: 25px; text-transform: uppercase; }
 
-        /* THE HUGE FIELD FORMULA FROM YOUR SCREENSHOTS [cite: 2026-02-28] */
+        /* THE EXACT INPUT FORMULA FROM YOUR SCREENSHOTS */
         input, textarea { 
             width: 100% !important; 
             display: block !important;
             background: #ffffff !important; 
             color: #000000 !important; 
             -webkit-text-fill-color: #000000 !important; 
-            border: 12px solid #ff6600 !important; 
-            border-radius: 40px !important;
-            margin-bottom: 90px !important; 
-            font-size: 55px !important; /* Increased for that "Huge" feel [cite: 2026-02-28] */
+            border: 10px solid #ff6600 !important; 
+            border-radius: 30px !important;
+            margin-bottom: 60px !important; 
+            font-size: 38px !important; 
             outline: none !important;
-            padding: 75px 50px !important; /* Maximum tap targets [cite: 2026-02-28] */
+            padding: 55px 35px !important; 
             appearance: none !important;
             -webkit-appearance: none !important;
         }
 
-        textarea { min-height: 400px !important; }
+        textarea { min-height: 280px !important; }
 
-        /* HUGE RESULT BOXES [cite: 2026-02-28] */
-        .res-box { background: #000; padding: 80px; border-radius: 50px; border: 12px solid #ff6600; text-align: center; }
-        .res-text { font-size: 110px; color: #ffffff; }
+        /* RESULT SYSTEM */
+        .res-box { background: #000; padding: 50px; border-radius: 35px; border: 10px solid #ff6600; text-align: center; }
+        .res-text { font-size: 80px; color: #ffffff; }
     </style>
 </head>
 <body>
@@ -81,21 +82,21 @@
         <div id="v1" class="card active">
             <h2 class="title">BUSINESS PROFILE</h2>
             <label class="label">TRADING NAME</label>
-            <input type="text" id="g_name" placeholder="NAME" oninput="sv('g_name')">
+            <input type="text" id="b_name" placeholder="NAME" oninput="sv('b_name')">
             <label class="label">SPECIALISING IN</label>
-            <input type="text" id="g_trade" placeholder="TRADE" oninput="sv('g_trade')">
+            <input type="text" id="b_trade" placeholder="TRADE" oninput="sv('b_trade')">
             <label class="label">BUSINESS ADDRESS</label>
-            <textarea id="g_addr" placeholder="ADDRESS" oninput="sv('g_addr')"></textarea>
+            <textarea id="b_addr" placeholder="ADDRESS" oninput="sv('b_addr')"></textarea>
         </div>
 
         <div id="v2" class="card">
             <h2 class="title">BANK DETAILS</h2>
             <label class="label">BANK NAME</label>
-            <input type="text" id="g_bank" placeholder="BANK" oninput="sv('g_bank')">
+            <input type="text" id="b_bank" placeholder="BANK" oninput="sv('b_bank')">
             <label class="label">SORT CODE</label>
-            <input type="text" id="g_sort" placeholder="00-00-00" oninput="sv('g_sort')">
+            <input type="text" id="b_sort" placeholder="00-00-00" oninput="sv('b_sort')">
             <label class="label">ACCOUNT NUMBER</label>
-            <input type="text" id="g_acc" placeholder="NUMBER" oninput="sv('g_acc')">
+            <input type="text" id="b_acc" placeholder="NUMBER" oninput="sv('b_acc')">
         </div>
 
         <div id="v3" class="card">
@@ -118,37 +119,25 @@
     </main>
 
 <script>
+    /* FIXED NAVIGATION LOGIC */
     function st(n) {
         for(let i=1; i<=4; i++) {
-            document.getElementById('v' + i).classList.remove('active');
-            let b = document.getElementById('m' + i);
-            b.style.background = '#333'; b.style.color = '#ff6600';
+            document.getElementById('v' + i).style.display = 'none';
+            let btn = document.getElementById('m' + i);
+            btn.style.background = '#333';
+            btn.style.color = '#ff6600';
         }
-        document.getElementById('v' + n).classList.add('active');
-        let act = document.getElementById('m' + n);
-        act.style.background = '#ff6600'; act.style.color = '#fff';
+        document.getElementById('v' + n).style.display = 'block';
+        let actBtn = document.getElementById('m' + n);
+        actBtn.style.background = '#ff6600';
+        actBtn.style.color = '#fff';
     }
 
-    function sv(id) { localStorage.setItem('TBOX_G_' + id, document.getElementById(id).value); }
+    /* AUTO-SAVE FUNCTION */
+    function sv(id) { 
+        localStorage.setItem('TBOX_B_' + id, document.getElementById(id).value); 
+    }
 
     function doV() {
         let n = parseFloat(document.getElementById('vIn').value) || 0;
-        document.getElementById('vOut').innerText = "£" + (n * 1.2).toFixed(2);
-    }
-
-    function doB() {
-        let l = parseFloat(document.getElementById('bL').value) || 0;
-        let m = parseFloat(document.getElementById('bM').value) || 0;
-        let mk = (parseFloat(document.getElementById('bMk').value) || 0) / 100;
-        document.getElementById('bQ').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
-    }
-
-    window.onload = function() {
-        ['g_name', 'g_trade', 'g_addr', 'g_bank', 'g_sort', 'g_acc'].forEach(id => {
-            let val = localStorage.getItem('TBOX_G_' + id);
-            if (val && document.getElementById(id)) document.getElementById(id).value = val;
-        });
-    };
-</script>
-</body>
-</html>
+        document.getElementById('
