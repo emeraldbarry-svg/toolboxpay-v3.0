@@ -3,65 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.17 FORCE</title>
+    <title>toolboxpay - v21.18 DEEP FORCE</title>
     <style>
-        /* BRITISH SPELLING & UNIFIED FONT */
+        /* UNIFIED SYSTEM FONT [cite: 2026-02-28] */
         * { 
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            font-family: Arial, Helvetica, sans-serif !important; 
+            font-family: sans-serif !important; 
+            -webkit-font-smoothing: antialiased;
         }
         
-        body { background-color: #2a2a2a; color: #ffffff; padding-top: 180px; }
+        body { background-color: #2a2a2a; color: #ffffff; padding-top: 190px; }
 
-        /* FIXED HEADER */
+        /* HEADER & LOGO [cite: 2020-02-20] */
         .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #2a2a2a; }
-        header { background: #1a1a1a; padding: 35px 0; text-align: center; border-bottom: 8px solid #ff6600; }
-        .logo { font-size: 34px; font-weight: 900; text-transform: uppercase; }
+        header { background: #1a1a1a; padding: 40px 0; text-align: center; border-bottom: 10px solid #ff6600; }
+        .logo { font-size: 36px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
         .logo .orange { color: #ff6600; }
         .logo .white { color: #ffffff; }
 
-        nav { background: #000; overflow-x: auto; border-bottom: 2px solid #444; }
-        .nav-inner { display: flex; padding: 25px; gap: 15px; width: max-content; }
+        nav { background: #000; overflow-x: auto; border-bottom: 3px solid #444; }
+        .nav-inner { display: flex; padding: 30px; gap: 20px; width: max-content; }
         .nav-btn { 
-            width: 130px; padding: 22px 0; background: #333; color: #ff6600; 
-            text-align: center; border-radius: 12px; font-weight: 900; 
-            font-size: 15px; border: 1px solid #555; text-transform: uppercase;
+            width: 140px; padding: 25px 0; background: #333; color: #ff6600; 
+            text-align: center; border-radius: 15px; font-weight: 900; 
+            font-size: 16px; border: 2px solid #555; text-transform: uppercase;
         }
 
-        /* CARD STYLE */
-        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
-        .card { display: none; background: #1a1a1a; padding: 45px; border-radius: 35px; border: 6px solid #ff6600; }
+        /* CARD STYLE [cite: 2026-02-28] */
+        .container { padding: 20px; max-width: 650px; margin: 0 auto; }
+        .card { display: none; background: #1a1a1a; padding: 50px; border-radius: 40px; border: 8px solid #ff6600; }
         .active { display: block !important; }
 
-        .title { color: #ff6600; font-size: 32px; font-weight: 900; text-transform: uppercase; margin-bottom: 40px; text-align: center; }
-        .label { color: #ffffff; font-size: 20px; font-weight: 900; display: block; margin-bottom: 20px; text-transform: uppercase; }
+        .title { color: #ff6600; font-size: 34px; font-weight: 900; text-transform: uppercase; margin-bottom: 50px; text-align: center; }
+        .label { color: #ffffff; font-size: 22px; font-weight: 900; display: block; margin-bottom: 25px; text-transform: uppercase; }
 
-        /* THE FORCE-FILL FIX */
+        /* THE DEEP-FORCE FIELD FIX [cite: 2026-02-28] */
         input, textarea { 
-            width: 100%; 
-            height: 120px !important; /* HARD HEIGHT */
-            padding: 40px !important; /* HARD PADDING */
+            width: 100% !important; 
+            display: block !important;
             background: #ffffff !important; 
-            border: 6px solid #ff6600 !important; 
-            border-radius: 20px;
-            margin-bottom: 60px !important; 
-            display: block;
-            outline: none;
             color: #000000 !important; 
             -webkit-text-fill-color: #000000 !important; 
-            font-size: 32px !important; /* MASSIVE TEXT */
+            border: 8px solid #ff6600 !important; 
+            border-radius: 25px !important;
+            margin-bottom: 70px !important; 
+            font-size: 36px !important; /* MASSIVE [cite: 2026-02-28] */
             font-weight: 900 !important;
-            appearance: none;
-            -webkit-appearance: none;
+            outline: none !important;
+            
+            /* PADDING OVER HEIGHT TO FORCE SCALE [cite: 2026-02-28] */
+            padding-top: 50px !important;
+            padding-bottom: 50px !important;
+            padding-left: 30px !important;
+            padding-right: 30px !important;
+            
+            /* DISABLE BROWSER DEFAULTS */
+            appearance: none !important;
+            -webkit-appearance: none !important;
         }
 
-        textarea { height: 200px !important; } /* Extra space for address */
+        textarea { min-height: 250px !important; }
 
-        /* CALC BOXES */
-        .res-box { background: #000; padding: 40px; border-radius: 30px; border: 4px solid #ff6600; text-align: center; }
-        .res-text { font-size: 55px; font-weight: 900; color: #ffffff; }
+        /* CALC RESULTS [cite: 2026-02-28] */
+        .res-box { background: #000; padding: 50px; border-radius: 35px; border: 5px solid #ff6600; text-align: center; }
+        .res-text { font-size: 65px; font-weight: 900; color: #ffffff; }
     </style>
 </head>
 <body>
@@ -82,25 +89,25 @@
         <div id="v1" class="card active">
             <h2 class="title">Business Profile</h2>
             <label class="label">Trading Name</label>
-            <input type="text" id="z1" placeholder="NAME" oninput="save('z1')">
+            <input type="text" id="w1" placeholder="NAME" oninput="save('w1')">
             
             <label class="label">Specialising In</label>
-            <input type="text" id="z2" placeholder="TRADE" oninput="save('z2')">
+            <input type="text" id="w2" placeholder="TRADE" oninput="save('w2')">
             
             <label class="label">Business Address</label>
-            <textarea id="z3" placeholder="ADDRESS" oninput="save('z3')"></textarea>
+            <textarea id="w3" placeholder="ADDRESS" oninput="save('w3')"></textarea>
         </div>
 
         <div id="v2" class="card">
             <h2 class="title">Bank Details</h2>
             <label class="label">Bank Name</label>
-            <input type="text" id="z4" placeholder="BANK" oninput="save('z4')">
+            <input type="text" id="w4" placeholder="BANK" oninput="save('w4')">
             
             <label class="label">Sort Code</label>
-            <input type="text" id="z5" placeholder="00-00-00" oninput="save('z5')">
+            <input type="text" id="w5" placeholder="00-00-00" oninput="save('w5')">
             
             <label class="label">Account Number</label>
-            <input type="text" id="z6" placeholder="NUMBER" oninput="save('z6')">
+            <input type="text" id="w6" placeholder="NUMBER" oninput="save('w6')">
         </div>
 
         <div id="v3" class="card">
@@ -108,7 +115,7 @@
             <label class="label">Net Amount (£)</label>
             <input type="number" id="vIn" oninput="doV()">
             <div class="res-box">
-                <div style="color:#ff6600; font-size:18px; font-weight:900; margin-bottom:20px;">TOTAL (INC 20% VAT)</div>
+                <div style="color:#ff6600; font-size:22px; font-weight:900; margin-bottom:25px;">TOTAL (INC 20% VAT)</div>
                 <div id="vOut" class="res-text">£0.00</div>
             </div>
         </div>
@@ -125,7 +132,7 @@
             <input type="number" id="bMk" value="20" oninput="doB()">
             
             <div class="res-box">
-                <div style="color:#ff6600; font-size:18px; font-weight:900; margin-bottom:20px;">REC. QUOTE</div>
+                <div style="color:#ff6600; font-size:22px; font-weight:900; margin-bottom:25px;">REC. QUOTE</div>
                 <div id="bQ" class="res-text">£0.00</div>
             </div>
         </div>
@@ -139,12 +146,12 @@
             b.style.background = '#333'; b.style.color = '#ff6600';
         }
         document.getElementById('v' + n).classList.add('active');
-        let act = document.getElementById('btn' + n);
-        if(act) { act.style.background = '#ff6600'; act.style.color = '#fff'; }
+        let act = document.getElementById('m' + n);
+        act.style.background = '#ff6600'; act.style.color = '#fff';
     }
 
     function save(id) {
-        localStorage.setItem('TBOX_V2117_' + id, document.getElementById(id).value);
+        localStorage.setItem('TBOX_V2118_' + id, document.getElementById(id).value);
     }
 
     function doV() {
@@ -160,8 +167,8 @@
     }
 
     window.onload = function() {
-        ['z1', 'z2', 'z3', 'z4', 'z5', 'z6'].forEach(id => {
-            let val = localStorage.getItem('TBOX_V2117_' + id);
+        ['w1', 'w2', 'w3', 'w4', 'w5', 'w6'].forEach(id => {
+            let val = localStorage.getItem('TBOX_V2118_' + id);
             if (val && document.getElementById(id)) document.getElementById(id).value = val;
         });
     };
