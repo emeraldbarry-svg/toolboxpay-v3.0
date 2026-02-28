@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v13.6</title>
+    <title>toolboxpay - v13.7</title>
     <style>
-        /* THEME & LAYOUT */
+        /* THEME & LAYOUT [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: #4a4a4a; color: #fff; font-family: sans-serif; height: 100vh; overflow: hidden; }
+        
+        /* Prevent the whole screen from scrolling wildly */
+        body { 
+            background: #4a4a4a; color: #fff; font-family: sans-serif; 
+            height: 100vh; width: 100vw; overflow: hidden; position: fixed;
+        }
 
         /* HEADER */
         #dashboard-header { 
-            position: fixed; top: 0; width: 100%; 
-            background: #4a4a4a; padding: 10px 5px; z-index: 99999; 
-            border-bottom: 3px solid #ff6600;
+            background: #4a4a4a; padding: 10px 5px; 
+            border-bottom: 3px solid #ff6600; z-index: 1000;
         }
         .logo { text-align: center; font-size: 24px; font-weight: 900; margin-bottom: 8px; }
         .logo .o { color: #ff6600; }
@@ -29,37 +33,43 @@
         .jump-btn { 
             background: #222; border: 2px solid #444; border-radius: 15px; 
             padding: 22px 10px; display: flex; flex-direction: column; 
-            align-items: center; min-width: 100px; flex-shrink: 0;
+            align-items: center; min-width: 105px; flex-shrink: 0;
             cursor: pointer;
         }
         .jump-btn i { font-style: normal; font-size: 22px; margin-bottom: 5px; pointer-events: none; }
         .jump-btn span { color: #888; font-weight: 800; font-size: 10px; text-transform: uppercase; pointer-events: none; }
         
-        /* ACTIVE STATE */
-        .jump-btn.active { background: #ff6600 !important; border-color: #ffffff !important; }
+        /* THE GLOW [cite: 2026-02-28] */
+        .jump-btn.active { 
+            background: #ff6600 !important; 
+            border-color: #ffffff !important; 
+        }
         .jump-btn.active span { color: #ffffff !important; }
 
-        /* PAGE CONTENT - LOCKED VIEWPORT */
+        /* CONTENT AREA - INDEPENDENT SCROLLING */
         #content-area { 
-            margin-top: 155px; height: calc(100vh - 155px); 
-            overflow-y: auto; padding: 15px; 
+            height: calc(100vh - 160px); 
+            overflow-y: auto; padding: 15px;
             -webkit-overflow-scrolling: touch;
         }
         
-        /* HIDDEN BY DEFAULT TO PREVENT OVERLAP */
+        /* HIDE ALL BY DEFAULT */
         .section-box { 
             display: none; 
-            background: #1e1e1e; border-radius: 25px; padding: 30px 20px; 
-            border: 2px solid #333; margin-bottom: 40px;
+            background: #1e1e1e; border-radius: 25px; padding: 25px; 
+            border: 2px solid #333; margin-bottom: 20px;
         }
         
-        /* SHOW ONLY THE ACTIVE SECTION */
-        .section-box.active-page { display: block; }
+        /* ONLY THE SELECTED ONE SHOWS */
+        .section-box.visible { display: block; }
 
-        .section-title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 25px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; text-align: center; }
-        .readme-card { background: #111; padding: 15px; border-radius: 12px; border-left: 4px solid #ff6600; margin-bottom: 15px; font-size: 14px; line-height: 1.6; }
+        .section-title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 8px; text-align: center; }
 
-        /* FORMS */
+        /* README RESTORED */
+        .readme-card { background: #111; padding: 15px; border-radius: 12px; border-left: 4px solid #ff6600; margin-bottom: 12px; font-size: 14px; line-height: 1.6; }
+        .readme-card b { color: #ff6600; }
+
+        /* INPUTS & BUTTONS */
         label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; }
         input, select, textarea { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 18px; border-radius: 12px; font-size: 16px; margin-bottom: 15px; outline: none; }
         .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; font-size: 16px; margin-top: 10px; }
@@ -74,36 +84,37 @@
 
     <div id="dashboard-header">
         <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
-        <div class="tile-strip" id="nav-strip">
-            <div class="jump-btn active" id="btn-r-box" onclick="showPage('r-box')"><i>📖</i><span>ReadMe</span></div>
-            <div class="jump-btn" id="btn-q-box" onclick="showPage('q-box')"><i>📝</i><span>Quotes</span></div>
-            <div class="jump-btn" id="btn-c-box" onclick="showPage('c-box')"><i>👥</i><span>Clients</span></div>
-            <div class="jump-btn" id="btn-m-box" onclick="showPage('m-box')"><i>🧮</i><span>Calc</span></div>
-            <div class="jump-btn" id="btn-p-box" onclick="showPage('p-box')"><i>📸</i><span>Gallery</span></div>
-            <div class="jump-btn" id="btn-b-box" onclick="showPage('b-box')"><i>🏦</i><span>Profile</span></div>
+        <div class="tile-strip">
+            <div class="jump-btn active" id="btn-readme" onclick="swap('readme')"><i>📖</i><span>ReadMe</span></div>
+            <div class="jump-btn" id="btn-quotes" onclick="swap('quotes')"><i>📝</i><span>Quotes</span></div>
+            <div class="jump-btn" id="btn-clients" onclick="swap('clients')"><i>👥</i><span>Clients</span></div>
+            <div class="jump-btn" id="btn-calc" onclick="swap('calc')"><i>🧮</i><span>Calc</span></div>
+            <div class="jump-btn" id="btn-gallery" onclick="swap('gallery')"><i>📸</i><span>Gallery</span></div>
+            <div class="jump-btn" id="btn-profile" onclick="swap('profile')"><i>🏦</i><span>Profile</span></div>
         </div>
     </div>
 
     <div id="content-area">
-        <div id="r-box" class="section-box active-page">
+        <div id="page-readme" class="section-box visible">
             <div class="section-title">Operating Manual</div>
-            <div class="readme-card"><b>No More Scrolling:</b> This app now uses "Single Page Mode". You will never see two categories at once.</div>
-            <div class="readme-card"><b>Instant Buttons:</b> Tap any category above to swap the tool immediately.</div>
-            <div class="readme-card"><b>Auto-Save:</b> Your business details in the Profile tab and Client records are saved to your phone's memory automatically.</div>
+            <div class="readme-card"><b>1. Fixed Navigation:</b> Tapping the top buttons now swaps the screen entirely. You can no longer scroll "between" sections.</div>
+            <div class="readme-card"><b>2. Quotes:</b> Select a client, add labour/materials, and hit send. It uses your saved profile details automatically.</div>
+            <div class="readme-card"><b>3. Client Gallery:</b> Tag photos to specific clients to keep a visual record of every job.</div>
+            <div class="readme-card"><b>4. Auto-Save:</b> Your Bank Details and Clients are saved the moment you type them.</div>
         </div>
 
-        <div id="q-box" class="section-box">
+        <div id="page-quotes" class="section-box">
             <div class="section-title">Job Quote</div>
             <label>Select Client</label><select id="q-cli-pick"></select>
-            <div id="lab-container"><div class="item-row" style="display:flex;gap:5px;margin-bottom:10px;"><input type="text" class="l-desc" style="flex:2;" placeholder="Labour Task"><input type="number" class="l-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
+            <div id="lab-container"><div class="item-row" style="display:flex;gap:5px;margin-bottom:10px;"><input type="text" class="l-desc" style="flex:2;" placeholder="Labour"><input type="number" class="l-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
             <button class="add-row-btn" onclick="addR('lab-container','l-desc','l-price')">+ ADD LABOUR</button>
-            <div id="mat-container"><div class="item-row" style="display:flex;gap:5px;margin-bottom:10px;"><input type="text" class="m-desc" style="flex:2;" placeholder="Material Item"><input type="number" class="m-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
+            <div id="mat-container"><div class="item-row" style="display:flex;gap:5px;margin-bottom:10px;"><input type="text" class="m-desc" style="flex:2;" placeholder="Material"><input type="number" class="m-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
             <button class="add-row-btn" onclick="addR('mat-container','m-desc','m-price')">+ ADD MATERIAL</button>
             <div class="total-box"><div class="total-val" id="qt">£0.00</div></div>
-            <button class="btn-green" onclick="sendW()">Send Quote</button>
+            <button class="btn-green" onclick="sendW()">Send WhatsApp Quote</button>
         </div>
 
-        <div id="c-box" class="section-box">
+        <div id="page-clients" class="section-box">
             <div class="section-title">Client Records</div>
             <label>Name</label><input type="text" id="cn">
             <label>Address</label><textarea id="ca" style="height:60px;"></textarea>
@@ -112,7 +123,7 @@
             <div id="cl-list" style="margin-top:20px;"></div>
         </div>
 
-        <div id="m-box" class="section-box">
+        <div id="page-calc" class="section-box">
             <div class="section-title">Pricing Tool</div>
             <label>Day Rate (£)</label><input type="number" id="dr" oninput="calcM()">
             <label>Days</label><input type="number" id="dn" oninput="calcM()">
@@ -120,16 +131,16 @@
             <div class="total-box"><div class="total-val" id="mt">£0.00</div></div>
         </div>
 
-        <div id="p-box" class="section-box">
+        <div id="page-gallery" class="section-box">
             <div class="section-title">Job Gallery</div>
             <label>Filter</label><select id="p-filter" onchange="loadP()"><option value="ALL">All Photos</option></select>
             <label>Tag Client</label><select id="p-tag-cli"></select>
             <input type="file" id="pf" style="display:none;" onchange="handleP(this)">
-            <button class="btn-green" onclick="document.getElementById('pf').click()">Take Photo</button>
+            <button class="btn-green" onclick="document.getElementById('pf').click()">Add Photo</button>
             <div id="p-grid" style="margin-top:20px;"></div>
         </div>
 
-        <div id="b-box" class="section-box">
+        <div id="page-profile" class="section-box">
             <div class="section-title">Business Profile</div>
             <label>Trading Name</label><input type="text" id="bn" oninput="sv('bn',this.value)">
             <label>Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
@@ -139,26 +150,103 @@
     </div>
 
 <script>
-    /* PAGE SWAP LOGIC */
-    function showPage(id) {
-        // 1. Hide all sections
-        document.querySelectorAll('.section-box').forEach(box => box.classList.remove('active-page'));
-        // 2. Remove active from all buttons
-        document.querySelectorAll('.jump-btn').forEach(btn => btn.classList.remove('active'));
+    /* THE HARD-WIRED SWAP [cite: 2026-02-28] */
+    function swap(pageId) {
+        // 1. Hide all boxes
+        const boxes = document.querySelectorAll('.section-box');
+        boxes.forEach(box => box.classList.remove('visible'));
         
-        // 3. Show the selected section
-        document.getElementById(id).classList.add('active-page');
-        // 4. Highlight the button
-        document.getElementById('btn-' + id).classList.add('active');
+        // 2. Show the specific box
+        const target = document.getElementById('page-' + pageId);
+        if(target) target.classList.add('visible');
         
-        // 5. Reset scroll of the content area to the top
+        // 3. Clear all button glows
+        const btns = document.querySelectorAll('.jump-btn');
+        btns.forEach(btn => btn.classList.remove('active'));
+        
+        // 4. Glow the active one
+        const activeBtn = document.getElementById('btn-' + pageId);
+        if(activeBtn) {
+            activeBtn.classList.add('active');
+            activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+
+        // 5. Back to top of the new page
         document.getElementById('content-area').scrollTop = 0;
-        
-        // 6. Center the button in the horizontal strip
-        document.getElementById('btn-' + id).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
 
-    /* CORE UTILITIES */
+    /* BUSINESS LOGIC */
     function addR(id, d, p) {
         const div = document.createElement('div');
-        div.className = 'item-row'; div.style.display="flex"; div.style.gap="5px"; div.style.marginBottom="1
+        div.className = 'item-row'; div.style.display="flex"; div.style.gap="5px"; div.style.marginBottom="10px";
+        div.innerHTML = `<input type="text" class="${d}" style="flex:2;"><input type="number" class="${p}" style="flex:0.8;" oninput="runTotal()"><span onclick="this.parentElement.remove();runTotal();" style="color:red;padding:10px;font-weight:bold;">×</span>`;
+        document.getElementById(id).appendChild(div);
+    }
+    function runTotal() {
+        let t = 0; document.querySelectorAll('.l-price, .m-price').forEach(i => t += parseFloat(i.value) || 0);
+        document.getElementById('qt').innerText = "£" + t.toFixed(2);
+    }
+    function sendW() {
+        const b = document.getElementById('bn').value; const s = document.getElementById('sc').value; const a = document.getElementById('an').value;
+        let msg = `*QUOTE FROM ${b}*%0A%0A*TOTAL: ${document.getElementById('qt').innerText}*%0A%0APay: ${s} / ${a}`;
+        window.open("https://wa.me/?text=" + msg);
+    }
+    function saveC() {
+        let n = document.getElementById('cn').value; if(!n) return;
+        let l = JSON.parse(localStorage.getItem('TBP_CL') || "[]");
+        l.push({n, a: document.getElementById('ca').value, t: document.getElementById('ctel').value});
+        localStorage.setItem('TBP_CL', JSON.stringify(l));
+        document.getElementById('cn').value=''; loadC();
+    }
+    function loadC() {
+        let l = JSON.parse(localStorage.getItem('TBP_CL') || "[]");
+        let h = ""; let s = '<option>Select Client...</option>';
+        l.forEach(c => {
+            h += `<div style="background:#000;padding:15px;border-radius:15px;margin-bottom:10px;border-left:4px solid #ff6600;"><b>${c.n}</b></div>`;
+            s += `<option value="${c.n}">${c.n}</option>`;
+        });
+        document.getElementById('cl-list').innerHTML = h;
+        document.getElementById('q-cli-pick').innerHTML = s;
+        document.getElementById('p-tag-cli').innerHTML = s;
+        document.getElementById('p-filter').innerHTML = '<option value="ALL">All Photos</option>' + s;
+    }
+    function handleP(input) {
+        const cli = document.getElementById('p-tag-cli').value;
+        if(cli === "Select Client...") return alert("Tag client first");
+        if(input.files[0]) {
+            let r = new FileReader();
+            r.onload = function(e) {
+                let ph = JSON.parse(localStorage.getItem('TBP_PH_V7') || "[]");
+                ph.push({src: e.target.result, cli: cli});
+                localStorage.setItem('TBP_PH_V7', JSON.stringify(ph)); loadP();
+            };
+            r.readAsDataURL(input.files[0]);
+        }
+    }
+    function loadP() {
+        const f = document.getElementById('p-filter').value;
+        const ph = JSON.parse(localStorage.getItem('TBP_PH_V7') || "[]");
+        let h = "";
+        ph.forEach(p => {
+            if(f === "ALL" || p.cli === f) h += `<div class="photo-card"><img src="${p.src}"><div style="padding:10px;color:#ff6600;">${p.cli}</div></div>`;
+        });
+        document.getElementById('p-grid').innerHTML = h;
+    }
+    function calcM() {
+        let r = parseFloat(document.getElementById('dr').value) || 0;
+        let d = parseFloat(document.getElementById('dn').value) || 0;
+        let m = parseFloat(document.getElementById('mc').value) || 0;
+        document.getElementById('mt').innerText = "£" + ((r * d + m) * 1.2).toFixed(2);
+    }
+    function sv(k, v) { localStorage.setItem('TBP_' + k, v); }
+
+    window.onload = function() {
+        loadC(); loadP();
+        document.getElementById('bn').value = localStorage.getItem('TBP_bn') || "";
+        document.getElementById('sc').value = localStorage.getItem('TBP_sc') || "";
+        document.getElementById('an').value = localStorage.getItem('TBP_an') || "";
+        document.getElementById('tc').value = localStorage.getItem('TBP_tc') || "";
+    };
+</script>
+</body>
+</html>
