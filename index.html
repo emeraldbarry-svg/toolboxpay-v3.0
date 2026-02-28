@@ -3,6 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>toolboxpay - v21.47 MASTER</title>
+    <style>
+        /* BRAND STANDARDS */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif !important; font-weight: 900 !important; }
+        body { background-color: #1a1a1a; color: #ffffff; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+
+        .app-width { width: 100%; max-width: 500px; }
+
+        /* LOGO */
+        header { padding: 25px 0; text-align: center; }
+        .logo { font-size: 30px; text-transform: uppercase; }
+        .logo .orange { color: #ff6600; }
+        .logo .white { color: #ffffff; }
+
+        /* NAV - MATCHING YOUR IMAGE */
+        nav { background: #000; padding: 12px; border: 4px solid #444; border-bottom: 8px solid #ff6600; border-radius: 15px; margin-bottom: 25px; }
+        .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .nav-btn { 
+            height: 60px; /* Locked height for stability [cite: 2026-02-28] */
+            background: #333; color: #ff6600; border: 3px solid #555; 
+            border-radius: 12px; text-transform: uppercase; cursor: pointer; 
+            font-size: 14px; display: flex; align-items: center; justify-content: center;
+        }
+        .nav-btn.active-btn { background: #ff6600 !important; color: #fff !important; border-color: #fff !important; }
+
+        /* CARDS */
+        .card { display: none; background: #111; padding: 25px; border-radius: 20px; border: 8px solid #ff6600; }
+        .active-card { display: block !important; }
+        .title { color: #ff6600; font-size: 24px; text-transform: uppercase; margin-bottom: 25px; text-align: center; }
+
+        /* INPUTS - FIXED TEXT VISIBILITY */
+        .field-group { margin-bottom: 25px; }
+        .label { color: #ffffff; font-size: 14px; display: block; margin-bottom: 8px; text-transform: uppercase; padding-left: 5px; }
+        
+        input, textarea { 
+            width: 100% !important; 
+            background: #ffffff !important; 
+            color: #000000 !important; 
+            border: 6px solid #ff6600 !important; 
+            border-radius: 15px !important; 
+            font-size: 22px !important; /* Bold and visible [cite: 2026-02-28] */
+            padding: 15px !important; /* Balanced for Laptop/Mobile [cite: 2026-02-28] */
+            display: block !important;
+            outline: none !important;
+        }
+        textarea { min-height: 100px; resize: none; }
+
+        /* CALC RESULTS [cite: 2026-02-28] */
+        .res-box { background: #000; padding: 30px; border-radius: 15px; border: 6px solid #ff6600; text-align: center; margin-top: 10px; }
+        .res-text { font-size: 45px; color: #ffffff; }
+    </style>
+</head>
+<body>
+
+    <div class="app-width">
+        <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
+        
+        <nav>
+            <div class="nav-grid">
+                <button id="m1" class="nav-btn active-btn" onclick="st(1)">Profile</button>
+                <button id="m2" class="nav-btn" onclick="st(2)">Bank</button>
+                <button id="m3" class="nav-btn" onclick="st(3)">VAT</button>
+                <button id="m4" class="nav-btn" onclick="st(4)">Biz Calc</button>
+            </div>
+        </nav>
+
+        <main>
+            <div id="v1" class="card active-card">
+                <h2 class="title">BUSINESS PROFILE</h2>
+                <div class="field-group">
+                    <label class="label">TRADING NAME</label>
+                    <input type="text" id="m_name" placeholder="Name" oninput="sv('m_name')">
+                </div>
+                <div class="field-group">
+                    <label class="label">SPECIALISING IN</label>
+                    <input type="text" id="m_trade" placeholder="Trade" oninput="sv('m_trade')">
+                </div>
+                <div class="field-group">
+                    <label class="label">ADDRESS</label>
+                    <textarea id="m_addr" placeholder="Full Address" oninput="sv('m_addr')"></textarea>
+                </div>
+            </div>
+
+            <div id="v2" class="card">
+                <h2 class="title">BANK DETAILS</h2>
+                <div class="field-group"><label class="label">BANK NAME</label><input type="text" id="m_bank" oninput="sv('m_bank')"></div>
+                <div class="field-group"><label class="label">SORT CODE</label><input type="text" id="m_sort" oninput="sv('m_sort')"></div>
+                <div class="field-group"><label class="label">ACCOUNT NUMBER</label><input type="text" id="m_acc" oninput="sv('m_acc')"></div>
+            </div>
+
+            <div id="v3" class="card">
+                <h2 class="title">VAT CALCULATOR</h2>
+                <label class="label">NET AMOUNT (£)</label>
+                <input type="number" id="vIn" placeholder="0.00" oninput="doV()">
+                <div class="res-box"><div id="vOut" class="res-text">£0.00</div></div>
+            </div>
+
+            <div id="v4" class="card">
+                <h2 class="title">BUSINESS CALC</h2>
+                <label class="label">LABOUR (£)</label><input type="number" id="bL" oninput="doB()">
+                <label class="label">MATERIALS (£)</label><input type="number" id="bM" oninput="doB()">
+                <label class="label">MARKUP (%)</label><input type="number" id="bMk" value="20" oninput="doB()">
+                <div class="res-box"><div id="bQ" class="res-text">£0.00</div></div>
+            </div>
+        </main>
+    </div>
+
+<script>
+    /* NO-FAIL TAB SWITCHER [cite: 2026-02-28] */
+    function st(n) {
+        for(let i=1; i<=4; i++) {
+            document.getElementById('v' + i).style.display = 'none';
+            document.getElementById('m' + i).classList.remove('active-btn');
+        }
+        document.getElementById('v' + n).style.display = 'block';
+        document.getElementById('m' + n).classList.add('active-btn');
+    }
+
+    /* SAVE DATA [cite: 2026-02-26] */
+    function sv(id) { localStorage.setItem('TBOX_M_' + id, document.getElementById(id).value); }
+
+    function doV() {
+        let n = parseFloat(document.getElementById('vIn').value) || 0;
+        document.getElementById('vOut').innerText = "£" + (n * 1.2).toFixed(2);
+    }
+
+    function doB() {
+        let l = parseFloat(document.getElementById('bL').value) || 0;
+        let m = parseFloat(document.getElementById('bM').value) || 0;
+        let mk = (parseFloat(document.getElementById('bMk').value) || 0) / 100;
+        document.getElementById('bQ').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
+    }
+
+    window.onload = function() {
+        ['m_name', 'm_trade', 'm_addr', 'm_bank', 'm_sort', 'm_acc'].forEach(id => {
+            let val = localStorage.getItem('TBOX_M_' + id);
+            if (val && document.getElementById(id)) document.getElementById(id).value = val;
+        });
+    };
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>toolboxpay - v21.46 HARD RESET</title>
     <style>
         /* THE STABLE SYSTEM [cite: 2020-02-20, 2026-02-28] */
