@@ -3,44 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>toolboxpay - v20.3 FLEX</title>
+    <title>toolboxpay - v20.4 FIX</title>
     <style>
-        /* CORE RESET [cite: 2026-02-28] */
+        /* RESET ALL CLIPPING */
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #4a4a4a; color: #fff; font-family: sans-serif; width: 100vw; overflow-x: hidden; }
+        
+        body { 
+            background-color: #4a4a4a; 
+            color: #fff; 
+            font-family: sans-serif; 
+            width: 100vw; 
+            min-height: 100vh;
+            overflow-y: auto; /* Ensures scrolling is always possible */
+        }
 
-        header { width: 100%; padding: 25px 0; text-align: center; border-bottom: 5px solid #ff6600; background: #4a4a4a; }
+        header { 
+            width: 100%; 
+            padding: 25px 0; 
+            text-align: center; 
+            border-bottom: 5px solid #ff6600; 
+            background: #4a4a4a; 
+        }
         .logo { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
         .logo span { color: #ff6600; }
 
-        /* NAV [cite: 2026-02-28] */
-        nav { width: 100%; background: #222; border-bottom: 2px solid #333; overflow-x: auto; white-space: nowrap; }
+        /* NAV */
+        nav { width: 100%; background: #222; border-bottom: 2px solid #333; overflow-x: auto; white-space: nowrap; position: sticky; top: 0; z-index: 100; }
         nav::-webkit-scrollbar { display: none; }
         .nav-inner { display: flex; padding: 15px; gap: 10px; width: max-content; }
         .nav-btn { flex: 0 0 115px; background: #333; color: #ff6600; padding: 15px 0; border-radius: 12px; text-align: center; font-weight: 900; text-transform: uppercase; border: 2px solid #444; font-size: 12px; cursor: pointer; }
 
-        /* DYNAMIC CARD - FIXED SHORTNESS [cite: 2026-02-28] */
-        .content { padding: 15px; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        /* CONTENT AREA - REMOVED ALL HEIGHT LIMITS */
+        .content { 
+            padding: 20px; 
+            width: 100%; 
+            padding-bottom: 100px; /* Extra space at bottom so text isn't cut off */
+        }
+        
         .card { 
             background: #1e1e1e; 
             padding: 25px; 
             border-radius: 20px; 
-            border: 1px solid #000; 
+            border: 2px solid #000; 
             width: 100%; 
             max-width: 450px;
-            height: auto; /* Card grows with content */
-            min-height: min-content; 
+            margin: 0 auto;
             display: block;
-            overflow: hidden;
-            margin-bottom: 30px;
+            height: auto; 
         }
         
-        .card-h { color: #ff6600; text-transform: uppercase; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #ff6600; padding-bottom: 12px; font-size: 18px; font-weight: 900; }
+        .card-h { 
+            color: #ff6600; 
+            text-transform: uppercase; 
+            text-align: center; 
+            margin-bottom: 25px; 
+            border-bottom: 2px solid #ff6600; 
+            padding-bottom: 12px; 
+            font-size: 18px; 
+            font-weight: 900; 
+        }
 
         label { color: #ff6600; font-size: 11px; font-weight: 900; display: block; margin-bottom: 8px; text-transform: uppercase; }
         
-        /* INPUTS [cite: 2026-02-28] */
-        input, textarea { 
+        /* INPUTS - INCREASED HEIGHT */
+        input { 
             width: 100%; 
             padding: 18px; 
             background: #000; 
@@ -49,44 +75,41 @@
             border-radius: 10px; 
             margin-bottom: 20px; 
             font-size: 16px; 
-            outline: none; 
             display: block; 
-            font-family: sans-serif;
-            resize: none; /* Prevents manual stretching breaking the layout */
+            outline: none;
         }
         
-        .box { background: #000; padding: 15px; border-radius: 12px; border: 1px solid #333; text-align: center; margin-top: 10px; }
-        .val { font-size: 22px; font-weight: 900; margin-top: 5px; }
+        .view { display: none; width: 100%; }
+        .view.active { display: block; }
     </style>
 </head>
 <body>
 
-<div class="app-shell">
     <header><div class="logo">TOOLBOX<span>PAY</span></div></header>
 
     <nav>
         <div class="nav-inner">
-            <div id="b1" class="nav-btn" style="background:#ff6600; color:#fff; border-color:#fff;" onclick="tab(1)" ontouchstart="">Profile</div>
-            <div id="b2" class="nav-btn" onclick="tab(2)" ontouchstart="">Bank</div>
-            <div id="b3" class="nav-btn" onclick="tab(3)" ontouchstart="">VAT</div>
-            <div id="b4" class="nav-btn" onclick="tab(4)" ontouchstart="">Biz Calc</div>
+            <div id="b1" class="nav-btn" style="background:#ff6600; color:#fff; border-color:#fff;" onclick="tab(1)">Profile</div>
+            <div id="b2" class="nav-btn" onclick="tab(2)">Bank</div>
+            <div id="b3" class="nav-btn" onclick="tab(3)">VAT</div>
+            <div id="b4" class="nav-btn" onclick="tab(4)">Biz Calc</div>
         </div>
     </nav>
 
     <main class="content">
-        <div id="s1" style="display: block; width: 100%;">
+        <div id="v1" class="view active">
             <div class="card">
                 <h2 class="card-h">Business Profile</h2>
                 <label>Business Name</label>
                 <input type="text" id="f1" placeholder="Enter Name" oninput="sv('f1')">
                 <label>Specialising In</label>
                 <input type="text" id="f2" placeholder="e.g. Electrical" oninput="sv('f2')">
-                <label>Registered Address</label>
-                <textarea id="f3" rows="4" placeholder="Full Address" oninput="sv('f3')"></textarea>
+                <label>Business Address</label>
+                <input type="text" id="f3" placeholder="Street, Town, Postcode" oninput="sv('f3')">
             </div>
         </div>
 
-        <div id="s2" style="display: none; width: 100%;">
+        <div id="v2" class="view">
             <div class="card">
                 <h2 class="card-h">Bank Details</h2>
                 <label>Bank Name</label>
@@ -94,20 +117,23 @@
                 <label>Sort Code</label>
                 <input type="text" id="f5" placeholder="00-00-00" oninput="sv('f5')">
                 <label>Account Number</label>
-                <input type="text" id="f6" placeholder="00000000" oninput="sv('f6')">
+                <input type="text" id="f6" oninput="sv('f6')">
             </div>
         </div>
 
-        <div id="s3" style="display: none; width: 100%;">
+        <div id="v3" class="view">
             <div class="card">
                 <h2 class="card-h">VAT Quick Calc</h2>
-                <label>Net Amount (£)</label>
+                <label>Amount (£)</label>
                 <input type="number" id="vIn" oninput="cV()">
-                <div class="box"><div style="color:#ff6600; font-size:10px; font-weight:900;">TOTAL (INC VAT)</div><div id="vOut" class="val">£0.00</div></div>
+                <div style="background:#000; padding:20px; border-radius:12px; text-align:center; border:1px solid #333;">
+                    <div style="color:#ff6600; font-size:10px; font-weight:900;">INC. VAT</div>
+                    <div id="vOut" style="font-size:24px; font-weight:900;">£0.00</div>
+                </div>
             </div>
         </div>
 
-        <div id="s4" style="display: none; width: 100%;">
+        <div id="v4" class="view">
             <div class="card">
                 <h2 class="card-h">Business Calc</h2>
                 <label>Labour (£)</label>
@@ -116,55 +142,12 @@
                 <input type="number" id="bM" oninput="cB()">
                 <label>Markup (%)</label>
                 <input type="number" id="bMk" value="20" oninput="cB()">
-                <div class="box" style="border-color:#ff6600;"><div style="color:#ff6600; font-size:10px; font-weight:900;">REC. QUOTE</div><div id="bQ" class="val">£0.00</div></div>
+                <div style="background:#000; padding:20px; border-radius:12px; text-align:center; border:2px solid #ff6600;">
+                    <div style="color:#ff6600; font-size:10px; font-weight:900;">REC. QUOTE</div>
+                    <div id="bQ" style="font-size:24px; font-weight:900;">£0.00</div>
+                </div>
             </div>
         </div>
     </main>
-</div>
 
 <script>
-    /* MASTER TAB FUNCTION [cite: 2026-02-28] */
-    function tab(n) {
-        for(let i=1; i<=4; i++) {
-            document.getElementById('s' + i).style.display = 'none';
-            let btn = document.getElementById('b' + i);
-            btn.style.backgroundColor = '#333';
-            btn.style.color = '#ff6600';
-            btn.style.borderColor = '#444';
-        }
-        document.getElementById('s' + n).style.display = 'block';
-        const activeB = document.getElementById('b' + n);
-        activeB.style.backgroundColor = '#ff6600';
-        activeB.style.color = '#fff';
-        activeB.style.borderColor = '#fff';
-        activeB.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-    }
-
-    /* AUTO-SAVE [cite: 2026-02-26] */
-    function sv(id) {
-        localStorage.setItem('TB_FLEX_' + id, document.getElementById(id).value);
-    }
-
-    function cV() {
-        let n = parseFloat(document.getElementById('vIn').value) || 0;
-        document.getElementById('vOut').innerText = "£" + (n * 1.2).toFixed(2);
-    }
-
-    function cB() {
-        let l = parseFloat(document.getElementById('bL').value) || 0;
-        let m = parseFloat(document.getElementById('bM').value) || 0;
-        let mk = (parseFloat(document.getElementById('bMk').value) || 0) / 100;
-        document.getElementById('bQ').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
-    }
-
-    /* DATA RESTORE [cite: 2026-02-28] */
-    window.onload = function() {
-        ['f1', 'f2', 'f3', 'f4', 'f5', 'f6'].forEach(id => {
-            let val = localStorage.getItem('TB_FLEX_' + id);
-            if (val) document.getElementById(id).value = val;
-        });
-    };
-</script>
-
-</body>
-</html>
