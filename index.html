@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.28 ULTIMATE SYNC</title>
+    <title>toolboxpay - v21.29 DUPLICATE</title>
     <style>
-        /* THE ULTIMATE SCALE FORMULA [cite: 2020-02-20, 2026-02-28] */
+        /* THE WORKING SYSTEM - DO NOT CHANGE [cite: 2020-02-20, 2026-02-28] */
         * { 
             box-sizing: border-box; 
             margin: 0; 
@@ -16,10 +16,10 @@
         
         body { background-color: #1a1a1a; color: #ffffff; padding-top: 180px; }
 
-        /* HEADER & NAVIGATION [cite: 2020-02-20] */
+        /* HEADER [cite: 2020-02-20] */
         .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #1a1a1a; }
         header { background: #111; padding: 45px 0; text-align: center; border-bottom: 10px solid #ff6600; }
-        .logo { font-size: 38px; text-transform: uppercase; letter-spacing: 2px; }
+        .logo { font-size: 38px; text-transform: uppercase; }
         .logo .orange { color: #ff6600; }
         .logo .white { color: #ffffff; }
 
@@ -31,15 +31,15 @@
             font-size: 18px; border: 3px solid #555; text-transform: uppercase;
         }
 
-        /* MAX SCALE CONTAINERS [cite: 2026-02-28] */
+        /* CONTAINER SYSTEM [cite: 2026-02-28] */
         .container { padding: 25px; max-width: 700px; margin: 0 auto; }
         .card { display: none; background: #111; padding: 55px; border-radius: 50px; border: 10px solid #ff6600; }
         .active { display: block !important; }
 
         .title { color: #ff6600; font-size: 40px; text-transform: uppercase; margin-bottom: 55px; text-align: center; }
-        .label { color: #ffffff; font-size: 24px; display: block; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px; }
+        .label { color: #ffffff; font-size: 24px; display: block; margin-bottom: 30px; text-transform: uppercase; }
 
-        /* THE ULTIMATE FIELD FORMULA [cite: 2026-02-28] */
+        /* THE EXACT INPUT FORMULA FROM YOUR SCREENSHOTS [cite: 2026-02-28] */
         input, textarea { 
             width: 100% !important; 
             display: block !important;
@@ -49,19 +49,17 @@
             border: 10px solid #ff6600 !important; 
             border-radius: 30px !important;
             margin-bottom: 75px !important; 
-            font-size: 42px !important; /* Maximum readability [cite: 2026-02-28] */
+            font-size: 42px !important; 
             outline: none !important;
-            padding: 60px 40px !important; /* Massive tap targets [cite: 2026-02-28] */
+            padding: 60px 40px !important; 
             appearance: none !important;
             -webkit-appearance: none !important;
         }
 
-        input::placeholder, textarea::placeholder { color: #999 !important; }
         textarea { min-height: 300px !important; }
 
-        /* MAX SCALE RESULTS [cite: 2026-02-28] */
-        .res-box { background: #000; padding: 60px; border-radius: 40px; border: 10px solid #ff6600; text-align: center; margin-top: 30px; }
-        .res-label { color: #ff6600; font-size: 28px; margin-bottom: 25px; text-transform: uppercase; }
+        /* RESULTS BOX - DUPLICATED STYLE [cite: 2026-02-28] */
+        .res-box { background: #000; padding: 60px; border-radius: 40px; border: 10px solid #ff6600; text-align: center; }
         .res-text { font-size: 85px; color: #ffffff; }
     </style>
 </head>
@@ -82,53 +80,40 @@
     <main class="container">
         <div id="v1" class="card active">
             <h2 class="title">Business Profile</h2>
-            <label class="label">Full Trading Name</label>
-            <input type="text" id="u_name" placeholder="NAME" oninput="sv('u_name')">
-            
+            <label class="label">Trading Name</label>
+            <input type="text" id="dup_name" placeholder="NAME" oninput="sv('dup_name')">
             <label class="label">Specialising In</label>
-            <input type="text" id="u_trade" placeholder="TRADE" oninput="sv('u_trade')">
-            
+            <input type="text" id="dup_trade" placeholder="TRADE" oninput="sv('dup_trade')">
             <label class="label">Business Address</label>
-            <textarea id="u_addr" placeholder="ADDRESS" oninput="sv('u_addr')"></textarea>
+            <textarea id="dup_addr" placeholder="ADDRESS" oninput="sv('dup_addr')"></textarea>
         </div>
 
         <div id="v2" class="card">
             <h2 class="title">Bank Details</h2>
             <label class="label">Bank Name</label>
-            <input type="text" id="u_bank" placeholder="BANK" oninput="sv('u_bank')">
-            
+            <input type="text" id="dup_bank" placeholder="BANK" oninput="sv('dup_bank')">
             <label class="label">Sort Code</label>
-            <input type="text" id="u_sort" placeholder="00-00-00" oninput="sv('u_sort')">
-            
+            <input type="text" id="dup_sort" placeholder="00-00-00" oninput="sv('dup_sort')">
             <label class="label">Account Number</label>
-            <input type="text" id="u_acc" placeholder="NUMBER" oninput="sv('u_acc')">
+            <input type="text" id="dup_acc" placeholder="NUMBER" oninput="sv('dup_acc')">
         </div>
 
         <div id="v3" class="card">
             <h2 class="title">VAT Calculator</h2>
             <label class="label">Net Amount (£)</label>
             <input type="number" id="vIn" placeholder="0.00" oninput="doV()">
-            <div class="res-box">
-                <div class="res-label">Total (Inc 20% VAT)</div>
-                <div id="vOut" class="res-text">£0.00</div>
-            </div>
+            <div class="res-box"><div id="vOut" class="res-text">£0.00</div></div>
         </div>
 
         <div id="v4" class="card">
             <h2 class="title">Business Calc</h2>
             <label class="label">Labour Cost (£)</label>
             <input type="number" id="bL" placeholder="0.00" oninput="doB()">
-            
             <label class="label">Materials Cost (£)</label>
             <input type="number" id="bM" placeholder="0.00" oninput="doB()">
-            
             <label class="label">Markup (%)</label>
             <input type="number" id="bMk" value="20" oninput="doB()">
-            
-            <div class="res-box">
-                <div class="res-label">Quote Total</div>
-                <div id="bQ" class="res-text">£0.00</div>
-            </div>
+            <div class="res-box"><div id="bQ" class="res-text">£0.00</div></div>
         </div>
     </main>
 
@@ -144,7 +129,7 @@
         act.style.background = '#ff6600'; act.style.color = '#fff';
     }
 
-    function sv(id) { localStorage.setItem('TBOX_U_' + id, document.getElementById(id).value); }
+    function sv(id) { localStorage.setItem('TBOX_DUP_' + id, document.getElementById(id).value); }
 
     function doV() {
         let n = parseFloat(document.getElementById('vIn').value) || 0;
@@ -159,8 +144,8 @@
     }
 
     window.onload = function() {
-        ['u_name', 'u_trade', 'u_addr', 'u_bank', 'u_sort', 'u_acc'].forEach(id => {
-            let val = localStorage.getItem('TBOX_U_' + id);
+        ['dup_name', 'dup_trade', 'dup_addr', 'dup_bank', 'dup_sort', 'dup_acc'].forEach(id => {
+            let val = localStorage.getItem('TBOX_DUP_' + id);
             if (val && document.getElementById(id)) document.getElementById(id).value = val;
         });
     };
