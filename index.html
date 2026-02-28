@@ -3,106 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v19.4 LOCK</title>
+    <title>toolboxpay - Universal v19.6</title>
+    <style>
+        /* RESET & BASE [cite: 2020-02-20, 2026-02-21] */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #111; color: #fff; font-family: -apple-system, sans-serif; overflow-x: hidden; }
+
+        /* THE WRAPPER - This keeps it centred on Laptop and full on Phone [cite: 2026-02-28] */
+        .app-shell {
+            width: 100%;
+            max-width: 480px; /* Limits width on Laptop */
+            margin: 0 auto;
+            background-color: #4a4a4a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        /* HEADER [cite: 2020-02-20] */
+        header { padding: 25px; text-align: center; border-bottom: 4px solid #ff6600; background: #4a4a4a; }
+        .logo { font-size: 26px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .logo span { color: #ff6600; }
+
+        /* NAVIGATION [cite: 2026-02-28] */
+        nav { background: #222; border-bottom: 2px solid #333; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        nav::-webkit-scrollbar { display: none; }
+        .nav-inner { display: flex; padding: 15px; gap: 10px; width: max-content; }
+        .nav-btn { width: 120px; background: #333; color: #ff6600; padding: 15px 5px; border-radius: 12px; text-align: center; font-weight: 900; text-transform: uppercase; border: 2px solid #444; cursor: pointer; }
+        .nav-btn.active { background: #ff6600; color: #fff; border-color: #fff; }
+
+        /* CONTENT CARDS [cite: 2026-02-28] */
+        .content-area { padding: 20px; flex-grow: 1; }
+        .card { background: #1e1e1e; padding: 25px; border-radius: 20px; border: 1px solid #000; width: 100%; }
+        .card-title { color: #ff6600; text-transform: uppercase; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; font-size: 18px; }
+
+        /* FORM ELEMENTS [cite: 2026-02-28] */
+        label { color: #ff6600; font-size: 11px; font-weight: 900; display: block; margin-bottom: 8px; text-transform: uppercase; }
+        input { width: 100%; padding: 16px; background: #000; border: 1px solid #444; color: #fff; border-radius: 10px; margin-bottom: 20px; font-size: 16px; outline: none; }
+        input:focus { border-color: #ff6600; }
+
+        /* TAB LOGIC */
+        .tab-view { display: none; }
+        .tab-view.active { display: block; }
+    </style>
 </head>
-<body style="background-color: #111; color: #fff; font-family: sans-serif; margin: 0; padding: 0; width: 100vw; overflow-x: hidden;">
+<body>
 
-    <div id="app" style="width: 100%; max-width: 500px; margin: 0 auto; background-color: #4a4a4a; min-height: 100vh; display: flex; flex-direction: column; align-items: center;">
-        
-        <header style="width: 100%; padding: 20px 0; text-align: center; border-bottom: 4px solid #ff6600; background-color: #4a4a4a;">
-            <h1 style="margin: 0; text-transform: uppercase; font-size: 26px; font-weight: 900;">
-                TOOLBOX<span style="color: #ff6600;">PAY</span>
-            </h1>
-        </header>
+<div class="app-shell">
+    <header><div class="logo">TOOLBOX<span>PAY</span></div></header>
 
-        <div style="width: 100%; background-color: #222; border-bottom: 2px solid #333;">
-            <div id="nav-container" style="display: flex; overflow-x: auto; padding: 15px; gap: 12px; scrollbar-width: none; -ms-overflow-style: none;">
-                <style>#nav-container::-webkit-scrollbar { display: none; }</style>
-                <div id="x1" onclick="tab(1)" style="flex: 0 0 120px; background: #333; color: #ff6600; padding: 15px 0; border-radius: 12px; text-align: center; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid #444;">PROFILE</div>
-                <div id="x2" onclick="tab(2)" style="flex: 0 0 120px; background: #ff6600; color: #fff; padding: 15px 0; border-radius: 12px; text-align: center; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid #fff;">BANK</div>
-                <div id="x3" onclick="tab(3)" style="flex: 0 0 120px; background: #333; color: #ff6600; padding: 15px 0; border-radius: 12px; text-align: center; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid #444;">CALC</div>
+    <nav>
+        <div class="nav-inner">
+            <div id="btn1" class="nav-btn" onclick="openTab(1)">Profile</div>
+            <div id="btn2" class="nav-btn active" onclick="openTab(2)">Bank</div>
+            <div id="btn3" class="nav-btn" onclick="openTab(3)">Calc</div>
+        </div>
+    </nav>
+
+    <main class="content-area">
+        <div id="view1" class="tab-view">
+            <div class="card">
+                <h2 class="card-title">Business Profile</h2>
+                <label>Business Name</label>
+                <input type="text" id="f1" placeholder="e.g. Toolboxpay" oninput="save('f1')">
+                <label>Specialising In</label>
+                <input type="text" id="f2" placeholder="e.g. Electrical" oninput="save('f2')">
             </div>
         </div>
 
-        <div id="content" style="width: 100%; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center;">
-            
-            <div id="sec2" style="display: block; width: 100%; max-width: 420px;">
-                <div style="background: #1e1e1e; padding: 25px; border-radius: 20px; border: 1px solid #000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                    <h2 style="color: #ff6600; text-transform: uppercase; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; font-size: 18px;">Bank Details</h2>
-                    
-                    <label style="color: #ff6600; font-size: 11px; font-weight: 900; display: block; margin-bottom: 6px; text-transform: uppercase;">Bank Name</label>
-                    <input type="text" id="f4" placeholder="e.g. Nationwide" style="width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: #fff; border-radius: 10px; margin-bottom: 18px; font-size: 16px; box-sizing: border-box;" oninput="sv('f4')">
-                    
-                    <label style="color: #ff6600; font-size: 11px; font-weight: 900; display: block; margin-bottom: 6px; text-transform: uppercase;">Branch (If known)</label>
-                    <input type="text" id="f7" placeholder="e.g. Wellingborough" style="width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: #fff; border-radius: 10px; margin-bottom: 18px; font-size: 16px; box-sizing: border-box;" oninput="sv('f7')">
-
-                    <label style="color: #ff6600; font-size: 11px; font-weight: 900; display: block; margin-bottom: 6px; text-transform: uppercase;">Sort Code</label>
-                    <input type="text" id="f5" placeholder="00-00-00" style="width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: #fff; border-radius: 10px; margin-bottom: 18px; font-size: 16px; box-sizing: border-box;" oninput="sv('f5')">
-                    
-                    <label style="color: #ff6600; font-size: 11px; font-weight: 900; display: block; margin-bottom: 6px; text-transform: uppercase;">Account Number</label>
-                    <input type="text" id="f6" placeholder="00000000" style="width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: #fff; border-radius: 10px; margin-bottom: 18px; font-size: 16px; box-sizing: border-box;" oninput="sv('f6')">
-
-                    <label style="color: #ff6600; font-size: 11px; font-weight: 900; display: block; margin-bottom: 6px; text-transform: uppercase;">IBAN Number</label>
-                    <input type="text" id="f8" placeholder="GB00 XXXX..." style="width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: #fff; border-radius: 10px; margin-bottom: 5px; font-size: 16px; box-sizing: border-box;" oninput="sv('f8')">
-                </div>
+        <div id="view2" class="tab-view active">
+            <div class="card">
+                <h2 class="card-title">Bank Details</h2>
+                <label>Bank Name</label>
+                <input type="text" id="f4" placeholder="e.g. Nationwide" oninput="save('f4')">
+                <label>Branch (If known)</label>
+                <input type="text" id="f7" placeholder="e.g. Wellingborough" oninput="save('f7')">
+                <label>Sort Code</label>
+                <input type="text" id="f5" placeholder="00-00-00" oninput="save('f5')">
+                <label>Account Number</label>
+                <input type="text" id="f6" placeholder="00000000" oninput="save('f6')">
+                <label>IBAN Number</label>
+                <input type="text" id="f8" placeholder="GB00 XXXX..." oninput="save('f8')">
             </div>
-
-            <div id="sec1" style="display: none; width: 100%; max-width: 420px;">
-                <div style="background: #1e1e1e; padding: 25px; border-radius: 20px; border: 1px solid #000;">
-                    <h2 style="color: #ff6600; text-transform: uppercase; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; font-size: 18px;">Business Profile</h2>
-                    <label style="color: #ff6600; font-size: 11px; font-weight: 900; display: block; margin-bottom: 6px; text-transform: uppercase;">Business Name</label>
-                    <input type="text" id="f1" placeholder="Enter Name" style="width: 100%; padding: 15px; background: #000; border: 1px solid #444; color: #fff; border-radius: 10px; margin-bottom: 18px; font-size: 16px; box-sizing: border-box;" oninput="sv('f1')">
-                </div>
-            </div>
-
-            <div id="sec3" style="display: none; width: 100%; max-width: 420px;">
-                <div style="background: #1e1e1e; padding: 25px; border-radius: 20px; border: 1px solid #000;">
-                    <h2 style="color: #ff6600; text-transform: uppercase; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; font-size: 18px;">VAT Calculator</h2>
-                    <input type="number" id="netInput" placeholder="0.00" style="width: 100%; padding: 15px; background: #000; border: 2px solid #ff6600; color: #fff; border-radius: 10px; text-align: center; font-size: 20px;" oninput="calcVAT()">
-                </div>
-            </div>
-
         </div>
-    </div>
 
-    <script>
-        function tab(n) {
-            document.getElementById('sec1').style.display = 'none';
-            document.getElementById('sec2').style.display = 'none';
-            document.getElementById('sec3').style.display = 'none';
-            
-            for(let i=1; i<=3; i++) {
-                let btn = document.getElementById('x' + i);
-                btn.style.background = '#333';
-                btn.style.color = '#ff6600';
-                btn.style.borderColor = '#444';
-            }
+        <div id="view3" class="tab-view">
+            <div class="card">
+                <h2 class="card-title">VAT Calculator</h2>
+                <label>Net Amount (£)</label>
+                <input type="number" id="vNet" placeholder="0.00" oninput="doCalc()">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center;">
+                    <div style="background:#000; padding:10px; border-radius:8px; border:1px solid #333;">
+                        <div style="color:#ff6600; font-size:10px; font-weight:900;">VAT</div>
+                        <div id="vTax" style="font-size:16px; font-weight:900; margin-top:5px;">£0.00</div>
+                    </div>
+                    <div style="background:#000; padding:10px; border-radius:8px; border:1px solid #333;">
+                        <div style="color:#ff6600; font-size:10px; font-weight:900;">GROSS</div>
+                        <div id="vTotal" style="font-size:16px; font-weight:900; margin-top:5px; color:#25D366;">£0.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
 
-            document.getElementById('sec' + n).style.display = 'block';
-            let activeBtn = document.getElementById('x' + n);
-            activeBtn.style.background = '#ff6600';
-            activeBtn.style.color = '#fff';
-            activeBtn.style.borderColor = '#fff';
-        }
+<script>
+    /* TAB CONTROLS [cite: 2026-02-28] */
+    function openTab(n) {
+        document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('view' + n).classList.add('active');
+        document.getElementById('btn' + n).classList.add('active');
+    }
 
-        function sv(id) {
-            localStorage.setItem('SAVE_' + id, document.getElementById(id).value);
-        }
+    /* STORAGE [cite: 2026-02-26] */
+    function save(id) {
+        localStorage.setItem('TBOX_' + id, document.getElementById(id).value);
+    }
 
-        function calcVAT() {
-            let net = parseFloat(document.getElementById('netInput').value) || 0;
-            let vat = net * 0.20;
-            let gross = net + vat;
-            // Add UI updates if needed
-        }
+    function doCalc() {
+        let net = parseFloat(document.getElementById('vNet').value) || 0;
+        let vat = net * 0.20;
+        document.getElementById('vTax').innerText = "£" + vat.toFixed(2);
+        document.getElementById('vTotal').innerText = "£" + (net + vat).toFixed(2);
+    }
 
-        window.onload = function() {
-            const fields = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8'];
-            fields.forEach(id => {
-                const val = localStorage.getItem('SAVE_' + id);
-                if (val && document.getElementById(id)) document.getElementById(id).value = val;
-            });
-        };
-    </script>
+    window.onload = function() {
+        ['f1', 'f2', 'f4', 'f5', 'f6', 'f7', 'f8'].forEach(id => {
+            let val = localStorage.getItem('TBOX_' + id);
+            if (val) document.getElementById(id).value = val;
+        });
+    };
+</script>
+
 </body>
 </html>
