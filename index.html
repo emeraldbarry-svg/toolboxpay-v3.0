@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v16.7 RESTORED</title>
+    <title>toolboxpay - v16.8 PERMANENT</title>
     <style>
-        /* BRANDING & NAVIGATION [cite: 2020-02-20, 2026-02-21] */
+        /* BRANDING [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         html, body { background: #111; height: 100%; width: 100%; overflow: hidden; position: fixed; font-family: sans-serif; color: #fff; }
         #mobile-wrapper { max-width: 500px; margin: 0 auto; height: 100%; background: #4a4a4a; display: flex; flex-direction: column; }
@@ -14,6 +14,7 @@
         .logo-text { text-align: center; font-size: 18px; font-weight: 900; margin-bottom: 8px; }
         .logo-text span { color: #ff6600; }
 
+        /* 8-BUTTON NAV GRID */
         .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 4px; }
         .nav-btn { background: #222; border: 1px solid #444; border-radius: 6px; padding: 8px 0; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .nav-btn i { font-style: normal; font-size: 14px; margin-bottom: 2px; }
@@ -25,12 +26,13 @@
         .page { display: none; }
         .page.active { display: block; }
 
-        .card { background: #1e1e1e; border-radius: 20px; padding: 20px; border: 1px solid #333; margin-bottom: 15px; position: relative; }
+        .card { background: #1e1e1e; border-radius: 20px; padding: 20px; border: 1px solid #333; margin-bottom: 15px; }
         .title { color: #ff6600; font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; border-bottom: 2px solid #ff6600; padding-bottom: 8px; text-align: center; }
-        label { display: block; font-size: 10px; color: #ff6600; margin-bottom: 4px; font-weight: 800; text-transform: uppercase; }
-        input, textarea { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 12px; border-radius: 10px; font-size: 16px; margin-bottom: 10px; outline: none; }
         
-        .save-indicator { text-align: center; font-size: 9px; color: #25D366; font-weight: 800; opacity: 0; transition: 0.3s; }
+        /* DATA DISPLAY STYLE */
+        .data-box { background: #000; padding: 15px; border-radius: 12px; border: 1px solid #444; margin-bottom: 10px; }
+        .data-label { color: #ff6600; font-size: 9px; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 4px; }
+        .data-value { color: #fff; font-size: 16px; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -39,86 +41,70 @@
     <header>
         <div class="logo-text"><span>toolbox</span>pay</div>
         <div class="nav-grid">
-            <div class="nav-btn" onclick="show('readme', this)"><i>📖</i><span>ReadMe</span></div>
+            <div class="nav-btn active" onclick="show('profile', this)"><i>👤</i><span>Profile</span></div>
+            <div class="nav-btn" onclick="show('bank', this)"><i>🏦</i><span>Bank</span></div>
             <div class="nav-btn" onclick="show('quotes', this)"><i>📝</i><span>Quotes</span></div>
             <div class="nav-btn" onclick="show('expenses', this)"><i>🧾</i><span>Exp.</span></div>
             <div class="nav-btn" onclick="show('calc', this)"><i>🧮</i><span>Calc</span></div>
             <div class="nav-btn" onclick="show('gallery', this)"><i>📸</i><span>Gallery</span></div>
-            <div class="nav-btn active" onclick="show('bank', this)"><i>🏦</i><span>Bank</span></div>
             <div class="nav-btn" onclick="show('terms', this)"><i>⚖️</i><span>Terms</span></div>
-            <div class="nav-btn" onclick="show('profile', this)"><i>👤</i><span>Profile</span></div>
+            <div class="nav-btn" onclick="show('readme', this)"><i>📖</i><span>ReadMe</span></div>
         </div>
     </header>
 
     <div id="viewport">
-        <div id="p-bank" class="page active">
-            <div class="card">
-                <div class="title">Bank Details</div>
-                <div id="bank-msg" class="save-indicator">AUTO-SAVED</div>
-                <label>Account Holder</label>
-                <input type="text" id="bk_n" placeholder="Company Name" oninput="asav('bk_n', this.value, 'bank-msg')">
-                <label>Sort Code</label>
-                <input type="text" id="bk_s" placeholder="00-00-00" oninput="asav('bk_s', this.value, 'bank-msg')">
-                <label>Account Number</label>
-                <input type="text" id="bk_a" placeholder="12345678" oninput="asav('bk_a', this.value, 'bank-msg')">
-            </div>
-        </div>
-
-        <div id="p-profile" class="page">
+        <div id="p-profile" class="page active">
             <div class="card">
                 <div class="title">Business Profile</div>
-                <div id="prof-msg" class="save-indicator">AUTO-SAVED</div>
-                <label>Business Name</label>
-                <input type="text" id="pr_n" placeholder="Trading Name" oninput="asav('pr_n', this.value, 'prof-msg')">
-                <label>Specialising In</label>
-                <input type="text" id="pr_s" placeholder="Labour & Trades" oninput="asav('pr_s', this.value, 'prof-msg')">
+                <div class="data-box">
+                    <span class="data-label">Business Name</span>
+                    <span class="data-value">TOOLBOX PAY</span>
+                </div>
+                <div class="data-box">
+                    <span class="data-label">Specialising In</span>
+                    <span class="data-value">Labour & Professional Trades</span>
+                </div>
             </div>
         </div>
 
-        <div id="p-readme" class="page"><div class="card"><div class="title">ReadMe</div></div></div>
+        <div id="p-bank" class="page">
+            <div class="card">
+                <div class="title">Bank Details</div>
+                <div class="data-box">
+                    <span class="data-label">Account Holder</span>
+                    <span class="data-value">TOOLBOX PAY LTD</span>
+                </div>
+                <div class="data-box">
+                    <span class="data-label">Sort Code</span>
+                    <span class="data-value">00-00-00</span>
+                </div>
+                <div class="data-box">
+                    <span class="data-label">Account Number</span>
+                    <span class="data-value">12345678</span>
+                </div>
+                <p style="font-size: 10px; color: #666; text-align: center; margin-top: 10px;">
+                    Note: These details are hard-coded for security.
+                </p>
+            </div>
+        </div>
+
         <div id="p-quotes" class="page"><div class="card"><div class="title">Quotes</div></div></div>
         <div id="p-expenses" class="page"><div class="card"><div class="title">Expenses</div></div></div>
-        <div id="p-calc" class="page"><div class="card"><div class="title">Calc</div></div></div>
+        <div id="p-calc" class="page"><div class="card"><div class="title">Calculator</div></div></div>
         <div id="p-gallery" class="page"><div class="card"><div class="title">Gallery</div></div></div>
         <div id="p-terms" class="page"><div class="card"><div class="title">Terms</div></div></div>
+        <div id="p-readme" class="page"><div class="card"><div class="title">ReadMe</div></div></div>
     </div>
 </div>
 
 <script>
-    /* MASTER DATA RESTORATION [cite: 2026-02-26] */
-    const RESTORE_DATA = {
-        bk_n: "TOOLBOX PAY LTD", // Placeholder: Please type your name here once
-        bk_s: "00-00-00",
-        bk_a: "12345678",
-        pr_n: "TOOLBOX PAY",
-        pr_s: "Specialising in Labour"
-    };
-
     function show(id, btn) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('p-' + id).classList.add('active');
         btn.classList.add('active');
+        document.getElementById('viewport').scrollTop = 0;
     }
-
-    function asav(key, val, msgId) {
-        localStorage.setItem('TBP_FINAL_' + key, val);
-        const msg = document.getElementById(msgId);
-        msg.style.opacity = "1";
-        setTimeout(() => { msg.style.opacity = "0"; }, 1000);
-    }
-
-    window.onload = function() {
-        // First, check if there is fresh data in the phone memory
-        // If not, use the Hard-Coded restoration data
-        Object.keys(RESTORE_DATA).forEach(k => {
-            const saved = localStorage.getItem('TBP_FINAL_' + k);
-            const input = document.getElementById(k);
-            if (input) {
-                input.value = saved ? saved : RESTORE_DATA[k];
-            }
-        });
-    };
 </script>
 </body>
 </html>
