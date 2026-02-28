@@ -3,60 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.13 UNIFIED</title>
+    <title>toolboxpay - v21.14</title>
     <style>
-        /* UNIFIED FONT & BRITISH THEME */
+        /* RESET & SINGLE FONT SOURCE */
         * { 
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            font-family: 'Arial Black', Gadget, sans-serif !important; 
+            font-family: sans-serif !important; 
         }
         
-        body { background-color: #2a2a2a; color: #ffffff; padding-top: 140px; }
+        body { background-color: #2a2a2a; color: #ffffff; padding-top: 150px; }
 
-        /* HEADER & LOGO */
+        /* HEADER */
         .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #2a2a2a; }
-        header { background: #1a1a1a; padding: 15px 0; text-align: center; border-bottom: 5px solid #ff6600; }
-        .logo { font-size: 24px; text-transform: uppercase; }
+        header { background: #1a1a1a; padding: 20px 0; text-align: center; border-bottom: 5px solid #ff6600; }
+        .logo { font-size: 26px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
         .logo .orange { color: #ff6600; }
         .logo .white { color: #ffffff; }
 
         nav { background: #000; overflow-x: auto; border-bottom: 2px solid #444; }
-        .nav-inner { display: flex; padding: 10px; gap: 10px; width: max-content; }
+        .nav-inner { display: flex; padding: 12px; gap: 10px; width: max-content; }
         .nav-btn { 
-            width: 105px; padding: 14px 0; background: #333; color: #ff6600; 
+            width: 110px; padding: 15px 0; background: #333; color: #ff6600; 
             text-align: center; border-radius: 8px; font-weight: 900; 
-            font-size: 11px; border: 1px solid #555; text-transform: uppercase;
+            font-size: 12px; border: 1px solid #555; text-transform: uppercase;
         }
 
-        /* CARD STRUCTURE */
-        .container { padding: 15px; max-width: 500px; margin: 0 auto; }
-        .card { display: none; background: #1a1a1a; padding: 25px; border-radius: 15px; border: 3px solid #ff6600; }
+        /* CARD STYLE */
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .card { display: none; background: #1a1a1a; padding: 30px; border-radius: 20px; border: 4px solid #ff6600; }
         .active { display: block !important; }
 
-        .title { color: #ff6600; font-size: 22px; text-transform: uppercase; margin-bottom: 20px; text-align: center; }
-        .label { color: #ffffff; font-size: 14px; display: block; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .title { color: #ff6600; font-size: 24px; font-weight: 900; text-transform: uppercase; margin-bottom: 25px; text-align: center; }
+        .label { color: #ffffff; font-size: 15px; font-weight: 900; display: block; margin-bottom: 12px; text-transform: uppercase; }
 
-        /* UNIFIED INPUT STYLE */
+        /* TEXT THROUGHPUT FIX */
         input, textarea { 
             width: 100%; 
-            padding: 18px; 
+            min-height: 60px; /* Force height so text isn't short */
+            padding: 20px; 
             background: #ffffff !important; 
             border: 3px solid #ff6600 !important; 
             border-radius: 12px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             display: block;
             outline: none;
             color: #000000 !important; 
             -webkit-text-fill-color: #000000 !important; 
-            font-size: 18px !important;
+            font-size: 20px !important; /* Larger text for better visibility */
             font-weight: 900 !important;
+            line-height: 1.5; /* Prevents text clipping */
         }
 
         /* CALC BOXES */
-        .calc-panel { background: #000; padding: 25px; border-radius: 12px; border: 1px solid #ff6600; text-align: center; }
-        .calc-res { font-size: 32px; color: #ffffff; }
+        .res-box { background: #000; padding: 25px; border-radius: 15px; border: 2px solid #ff6600; text-align: center; margin-top: 10px; }
+        .res-text { font-size: 36px; font-weight: 900; color: #ffffff; }
     </style>
 </head>
 <body>
@@ -65,94 +67,56 @@
         <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
         <nav>
             <div class="nav-inner">
-                <div id="btn1" class="nav-btn" style="background:#ff6600; color:#fff;" onclick="st(1)">Profile</div>
-                <div id="btn2" class="nav-btn" onclick="st(2)">Bank</div>
-                <div id="btn3" class="nav-btn" onclick="st(3)">VAT</div>
-                <div id="btn4" class="nav-btn" onclick="st(4)">Biz Calc</div>
+                <div id="b1" class="nav-btn" style="background:#ff6600; color:#fff;" onclick="tab(1)">Profile</div>
+                <div id="b2" class="nav-btn" onclick="tab(2)">Bank</div>
+                <div id="b3" class="nav-btn" onclick="tab(3)">VAT</div>
+                <div id="b4" class="nav-btn" onclick="tab(4)">Biz Calc</div>
             </div>
         </nav>
     </div>
 
     <main class="container">
-        <div id="view1" class="card active">
+        <div id="s1" class="card active">
             <h2 class="title">Business Profile</h2>
-            <label class="label">Trading Name</label>
-            <input type="text" id="v1_name" placeholder="Enter Business Name" oninput="sv('v1_name')">
+            <label class="label">Full Trading Name</label>
+            <input type="text" id="p1" placeholder="Enter Business Name" oninput="save('p1')">
             
             <label class="label">Specialising In</label>
-            <input type="text" id="v1_trade" placeholder="e.g. Electrical Contractor" oninput="sv('v1_trade')">
+            <input type="text" id="p2" placeholder="e.g. Plumbing" oninput="save('p2')">
             
             <label class="label">Business Address</label>
-            <textarea id="v1_addr" rows="3" placeholder="Street, City, Postcode" oninput="sv('v1_addr')"></textarea>
+            <textarea id="p3" rows="3" placeholder="Full Address" oninput="save('p3')"></textarea>
         </div>
 
-        <div id="view2" class="card">
+        <div id="s2" class="card">
             <h2 class="title">Bank Details</h2>
-            <label class="label">Bank Name</label>
-            <input type="text" id="v2_bank" placeholder="e.g. NatWest" oninput="sv('v2_bank')">
+            <label class="label">Bank Institution</label>
+            <input type="text" id="p4" placeholder="Bank Name" oninput="save('p4')">
             
             <label class="label">Sort Code</label>
-            <input type="text" id="v2_sort" placeholder="00-00-00" oninput="sv('v2_sort')">
+            <input type="text" id="p5" placeholder="00-00-00" oninput="save('p5')">
             
             <label class="label">Account Number</label>
-            <input type="text" id="v2_acc" placeholder="8-Digit Number" oninput="sv('v2_acc')">
+            <input type="text" id="p6" placeholder="8-Digit Number" oninput="save('p6')">
         </div>
 
-        <div id="view3" class="card">
+        <div id="s3" class="card">
             <h2 class="title">VAT Calculator</h2>
-            <label class="label">Net Amount (£)</label>
-            <input type="number" id="vIn" oninput="calcV()">
-            <div class="calc-panel">
-                <div style="color:#ff6600; font-size:11px; margin-bottom:5px;">TOTAL (INC 20% VAT)</div>
-                <div id="vOut" class="calc-res">£0.00</div>
+            <label class="label">Amount Before VAT (£)</label>
+            <input type="number" id="vIn" oninput="doV()">
+            <div class="res-box">
+                <div style="color:#ff6600; font-size:12px; margin-bottom:10px;">TOTAL (INC 20% VAT)</div>
+                <div id="vOut" class="res-text">£0.00</div>
             </div>
         </div>
 
-        <div id="view4" class="card">
+        <div id="s4" class="card">
             <h2 class="title">Business Calc</h2>
             <label class="label">Labour Cost (£)</label>
-            <input type="number" id="bL" oninput="calcB()">
+            <input type="number" id="bL" oninput="doB()">
             
             <label class="label">Materials Cost (£)</label>
-            <input type="number" id="bM" oninput="calcB()">
+            <input type="number" id="bM" oninput="doB()">
             
             <label class="label">Profit Markup (%)</label>
-            <input type="number" id="bMk" value="20" oninput="calcB()">
-            
-            <div class="calc-panel">
-                <div style="color:#ff6600; font-size:11px; margin-bottom:5px;">RECOMMENDED QUOTE</div>
-                <div id="bQ" class="calc-res">£0.00</div>
-            </div>
-        </div>
-    </main>
-
-<script>
-    function st(n) {
-        for(let i=1; i<=4; i++) {
-            document.getElementById('view' + i).classList.remove('active');
-            let b = document.getElementById('btn' + i);
-            b.style.background = '#333'; b.style.color = '#ff6600';
-        }
-        document.getElementById('view' + n).classList.add('active');
-        let act = document.getElementById('btn' + n);
-        act.style.background = '#ff6600'; act.style.color = '#fff';
-    }
-
-    function sv(id) {
-        localStorage.setItem('TBOX_V2113_' + id, document.getElementById(id).value);
-    }
-
-    function calcV() {
-        let n = parseFloat(document.getElementById('vIn').value) || 0;
-        document.getElementById('vOut').innerText = "£" + (n * 1.2).toFixed(2);
-    }
-
-    function calcB() {
-        let l = parseFloat(document.getElementById('bL').value) || 0;
-        let m = parseFloat(document.getElementById('bM').value) || 0;
-        let mk = (parseFloat(document.getElementById('bMk').value) || 0) / 100;
-        document.getElementById('bQ').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
-    }
-
-    window.onload = function() {
-        ['v1_name', 'v1_trade', 'v1_addr', 'v2_bank', 'v2_sort', 'v2_acc'].forEach(id => {
+            <input type="number" id="bMk" value="20" oninput="doB()">
