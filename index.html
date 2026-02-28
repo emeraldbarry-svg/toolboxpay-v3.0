@@ -3,108 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v16.8 PERMANENT</title>
+    <title>toolboxpay - EMERGENCY RESTORE</title>
     <style>
-        /* BRANDING [cite: 2020-02-20, 2026-02-21] */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        html, body { background: #111; height: 100%; width: 100%; overflow: hidden; position: fixed; font-family: sans-serif; color: #fff; }
-        #mobile-wrapper { max-width: 500px; margin: 0 auto; height: 100%; background: #4a4a4a; display: flex; flex-direction: column; }
+        /* RESET EVERYTHING [cite: 2020-02-20] */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #111; color: #fff; font-family: sans-serif; padding: 10px; }
         
-        header { background: #4a4a4a; padding: 8px; border-bottom: 3px solid #ff6600; flex-shrink: 0; z-index: 1000; }
-        .logo-text { text-align: center; font-size: 18px; font-weight: 900; margin-bottom: 8px; }
-        .logo-text span { color: #ff6600; }
+        /* HEADER [cite: 2026-02-21] */
+        .header { text-align: center; padding: 20px; border-bottom: 3px solid #ff6600; margin-bottom: 20px; }
+        .logo { font-size: 24px; font-weight: 900; text-transform: uppercase; }
+        .logo span { color: #ff6600; }
 
-        /* 8-BUTTON NAV GRID */
-        .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 4px; }
-        .nav-btn { background: #222; border: 1px solid #444; border-radius: 6px; padding: 8px 0; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .nav-btn i { font-style: normal; font-size: 14px; margin-bottom: 2px; }
-        .nav-btn span { color: #aaa; font-weight: 800; font-size: 7px; text-transform: uppercase; }
-        .nav-btn.active { background: #ff6600 !important; border-color: #fff !important; }
-        .nav-btn.active span { color: #fff !important; }
+        /* NAVIGATION - 2 ROWS OF 4 */
+        .nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 20px; }
+        .btn { background: #333; color: #fff; border: 1px solid #ff6600; padding: 10px 2px; text-align: center; border-radius: 5px; font-size: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .btn.active { background: #ff6600; color: #000; }
 
-        #viewport { flex-grow: 1; overflow-y: auto; padding: 15px; -webkit-overflow-scrolling: touch; }
+        /* CONTENT CARDS */
         .page { display: none; }
         .page.active { display: block; }
-
-        .card { background: #1e1e1e; border-radius: 20px; padding: 20px; border: 1px solid #333; margin-bottom: 15px; }
-        .title { color: #ff6600; font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; border-bottom: 2px solid #ff6600; padding-bottom: 8px; text-align: center; }
+        .card { background: #222; border: 1px solid #444; border-radius: 15px; padding: 20px; }
+        .title { color: #ff6600; font-size: 18px; font-weight: 900; margin-bottom: 15px; border-bottom: 1px solid #ff6600; padding-bottom: 5px; }
         
-        /* DATA DISPLAY STYLE */
-        .data-box { background: #000; padding: 15px; border-radius: 12px; border: 1px solid #444; margin-bottom: 10px; }
-        .data-label { color: #ff6600; font-size: 9px; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 4px; }
-        .data-value { color: #fff; font-size: 16px; font-weight: 600; }
+        /* DATA FIELDS */
+        .box { margin-bottom: 15px; }
+        .lbl { color: #ff6600; font-size: 10px; font-weight: 900; display: block; margin-bottom: 5px; }
+        .val { background: #000; padding: 12px; border-radius: 5px; border: 1px solid #555; display: block; font-size: 16px; font-weight: 700; color: #fff; min-height: 20px; }
     </style>
 </head>
 <body>
 
-<div id="mobile-wrapper">
-    <header>
-        <div class="logo-text"><span>toolbox</span>pay</div>
-        <div class="nav-grid">
-            <div class="nav-btn active" onclick="show('profile', this)"><i>👤</i><span>Profile</span></div>
-            <div class="nav-btn" onclick="show('bank', this)"><i>🏦</i><span>Bank</span></div>
-            <div class="nav-btn" onclick="show('quotes', this)"><i>📝</i><span>Quotes</span></div>
-            <div class="nav-btn" onclick="show('expenses', this)"><i>🧾</i><span>Exp.</span></div>
-            <div class="nav-btn" onclick="show('calc', this)"><i>🧮</i><span>Calc</span></div>
-            <div class="nav-btn" onclick="show('gallery', this)"><i>📸</i><span>Gallery</span></div>
-            <div class="nav-btn" onclick="show('terms', this)"><i>⚖️</i><span>Terms</span></div>
-            <div class="nav-btn" onclick="show('readme', this)"><i>📖</i><span>ReadMe</span></div>
-        </div>
-    </header>
+    <div class="header">
+        <div class="logo"><span>toolbox</span>pay</div>
+    </div>
+
+    <div class="nav">
+        <div class="btn active" onclick="tab('prof', this)">Profile</div>
+        <div class="btn" onclick="tab('bank', this)">Bank</div>
+        <div class="btn" onclick="tab('quote', this)">Quotes</div>
+        <div class="btn" onclick="tab('exp', this)">Expenses</div>
+        <div class="btn" onclick="tab('calc', this)">Calc</div>
+        <div class="btn" onclick="tab('gal', this)">Gallery</div>
+        <div class="btn" onclick="tab('terms', this)">Terms</div>
+        <div class="btn" onclick="tab('read', this)">ReadMe</div>
+    </div>
 
     <div id="viewport">
-        <div id="p-profile" class="page active">
+        <div id="prof" class="page active">
             <div class="card">
                 <div class="title">Business Profile</div>
-                <div class="data-box">
-                    <span class="data-label">Business Name</span>
-                    <span class="data-value">TOOLBOX PAY</span>
+                <div class="box">
+                    <span class="lbl">Business Name</span>
+                    <span class="val">TOOLBOX PAY</span>
                 </div>
-                <div class="data-box">
-                    <span class="data-label">Specialising In</span>
-                    <span class="data-value">Labour & Professional Trades</span>
+                <div class="box">
+                    <span class="lbl">Specialising In</span>
+                    <span class="val">Labour & Trades</span>
                 </div>
             </div>
         </div>
 
-        <div id="p-bank" class="page">
+        <div id="bank" class="page">
             <div class="card">
                 <div class="title">Bank Details</div>
-                <div class="data-box">
-                    <span class="data-label">Account Holder</span>
-                    <span class="data-value">TOOLBOX PAY LTD</span>
+                <div class="box">
+                    <span class="lbl">Account Holder</span>
+                    <span class="val">TOOLBOX PAY LTD</span>
                 </div>
-                <div class="data-box">
-                    <span class="data-label">Sort Code</span>
-                    <span class="data-value">00-00-00</span>
+                <div class="box">
+                    <span class="lbl">Sort Code</span>
+                    <span class="val">00-00-00</span>
                 </div>
-                <div class="data-box">
-                    <span class="data-label">Account Number</span>
-                    <span class="data-value">12345678</span>
+                <div class="box">
+                    <span class="lbl">Account Number</span>
+                    <span class="val">12345678</span>
                 </div>
-                <p style="font-size: 10px; color: #666; text-align: center; margin-top: 10px;">
-                    Note: These details are hard-coded for security.
-                </p>
             </div>
         </div>
 
-        <div id="p-quotes" class="page"><div class="card"><div class="title">Quotes</div></div></div>
-        <div id="p-expenses" class="page"><div class="card"><div class="title">Expenses</div></div></div>
-        <div id="p-calc" class="page"><div class="card"><div class="title">Calculator</div></div></div>
-        <div id="p-gallery" class="page"><div class="card"><div class="title">Gallery</div></div></div>
-        <div id="p-terms" class="page"><div class="card"><div class="title">Terms</div></div></div>
-        <div id="p-readme" class="page"><div class="card"><div class="title">ReadMe</div></div></div>
+        <div id="quote" class="page"><div class="card"><div class="title">Quotes</div></div></div>
+        <div id="exp" class="page"><div class="card"><div class="title">Expenses</div></div></div>
+        <div id="calc" class="page"><div class="card"><div class="title">Calculator</div></div></div>
+        <div id="gal" class="page"><div class="card"><div class="title">Gallery</div></div></div>
+        <div id="terms" class="page"><div class="card"><div class="title">Terms</div></div></div>
+        <div id="read" class="page"><div class="card"><div class="title">ReadMe</div></div></div>
     </div>
-</div>
 
-<script>
-    function show(id, btn) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('p-' + id).classList.add('active');
-        btn.classList.add('active');
-        document.getElementById('viewport').scrollTop = 0;
-    }
-</script>
+    <script>
+        function tab(id, btn) {
+            // Hide all pages
+            var pages = document.getElementsByClassName('page');
+            for (var i = 0; i < pages.length; i++) {
+                pages[i].style.display = 'none';
+            }
+            // Deactivate all buttons
+            var buttons = document.getElementsByClassName('btn');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            // Show selected
+            document.getElementById(id).style.display = 'block';
+            btn.classList.add('active');
+        }
+    </script>
 </body>
 </html>
