@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v15.2</title>
+    <title>toolboxpay - v15.3</title>
     <style>
         /* CORE SETUP */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -60,18 +60,20 @@
         .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 16px; margin-bottom: 10px; }
         .btn-red { background: #ff4444; color: #fff; }
         .btn-orange { background: #ff6600; color: #fff; }
+        .btn-plus { width: 50px; height: 50px; background: #ff6600; color: #fff; border-radius: 10px; border: none; font-size: 24px; font-weight: 900; margin-bottom: 15px; }
 
-        /* GALLERY REVIEW SYSTEM */
-        #photo-preview { width: 100%; height: 250px; background: #000; border-radius: 12px; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; overflow: hidden; position: relative; }
-        #photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+        /* EXPENSE STYLING */
+        #receipt-preview { width: 100%; height: 200px; background: #000; border-radius: 12px; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; overflow: hidden; }
+        #receipt-preview img { width: 100%; height: 100%; object-fit: contain; }
         
-        #review-controls { display: none; gap: 10px; margin-bottom: 15px; }
-        #job-details { display: none; }
+        .exp-item-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .exp-item-row input[type="text"] { flex: 2; margin-bottom: 0; }
+        .exp-item-row input[type="number"] { flex: 1; margin-bottom: 0; }
 
-        .gallery-item { background: #111; padding: 15px; border-radius: 12px; border-left: 5px solid #ff6600; margin-bottom: 12px; color: #fff; display: flex; align-items: center; }
-        .gallery-item img { width: 70px; height: 70px; border-radius: 8px; margin-right: 15px; object-fit: cover; border: 1px solid #333; }
-        .gallery-info b { color: #ff6600; font-size: 16px; }
-        .gallery-info p { font-size: 12px; color: #888; margin-top: 2px; }
+        .expense-log-card { background: #111; padding: 15px; border-radius: 12px; border-left: 5px solid #ff6600; margin-bottom: 12px; color: #fff; }
+        .expense-log-card img { width: 50px; height: 50px; border-radius: 5px; float: left; margin-right: 15px; background: #222; object-fit: cover; }
+        .expense-log-card b { color: #ff6600; }
+        .expense-log-card small { color: #888; display: block; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -82,54 +84,67 @@
         <div class="nav-grid">
             <div class="nav-btn" onclick="show('readme')"><i>📖</i><span>ReadMe</span></div>
             <div class="nav-btn" onclick="show('quotes')"><i>📝</i><span>Quotes</span></div>
-            <div class="nav-btn" onclick="show('clients')"><i>👥</i><span>Clients</span></div>
+            <div class="nav-btn active" id="btn-expenses" onclick="show('expenses')"><i>🧾</i><span>Expenses</span></div>
             <div class="nav-btn" onclick="show('calc')"><i>🧮</i><span>Calc</span></div>
-            <div class="nav-btn active" id="btn-gallery" onclick="show('gallery')"><i>📸</i><span>Gallery</span></div>
+            <div class="nav-btn" onclick="show('gallery')"><i>📸</i><span>Gallery</span></div>
             <div class="nav-btn" onclick="show('profile')"><i>🏦</i><span>Profile</span></div>
         </div>
     </header>
 
     <div id="viewport">
-        <div id="p-gallery" class="page active">
+        <div id="p-expenses" class="page active">
             <div class="card">
-                <div class="title">Job Gallery</div>
+                <div class="title">Expense Logger</div>
                 
-                <div id="photo-preview">
-                    <span id="preview-text" style="color:#666; font-weight:800;">PREVIEW AREA</span>
-                    <img id="img-output" style="display:none;">
+                <div id="receipt-preview">
+                    <span id="exp-preview-text" style="color:#666; font-weight:800;">RECEIPT PREVIEW</span>
+                    <img id="exp-img-output" style="display:none;">
                 </div>
 
-                <div id="capture-zone">
-                    <label>Take or Upload Photo</label>
-                    <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handleCapture(this)">
+                <div id="exp-capture-zone">
+                    <label>Snap Receipt</label>
+                    <input type="file" id="exp-file-input" accept="image/*" capture="environment" onchange="handleExpCapture(this)">
                 </div>
 
-                <div id="review-controls">
-                    <button class="btn-green btn-red" onclick="retake()">RETAKE ❌</button>
-                    <button class="btn-green" onclick="acceptPhoto()">ACCEPT ✅</button>
+                <div id="exp-review-controls" style="display:none; gap:10px; margin-bottom:15px;">
+                    <button class="btn-green btn-red" onclick="retakeExp()">RETAKE ❌</button>
+                    <button class="btn-green" onclick="acceptExp()">ACCEPT ✅</button>
                 </div>
 
-                <div id="job-details">
-                    <label>Custom Job Name</label>
-                    <input type="text" id="gal-name" placeholder="e.g. Bathroom Tiling">
+                <div id="exp-details" style="display:none;">
+                    <label>Date of Expense</label>
+                    <input type="date" id="exp-date">
 
-                    <label>Date Taken</label>
-                    <input type="date" id="gal-date">
+                    <label>Items Purchased</label>
+                    <div id="exp-items-container">
+                        <div class="exp-item-row">
+                            <input type="text" placeholder="Item (e.g. Nails)" class="exp-desc">
+                            <input type="number" placeholder="£" class="exp-val">
+                        </div>
+                    </div>
+                    <button class="btn-plus" onclick="addExpRow()">+</button>
 
-                    <label>Link to Client</label>
-                    <select id="gal-client"></select>
-
-                    <button class="btn-green btn-orange" onclick="saveToGallery()">SAVE TO RECORD</button>
+                    <button class="btn-green btn-orange" onclick="saveExpense()">LOG EXPENSE</button>
                 </div>
             </div>
 
-            <div id="gallery-list"></div>
+            <div id="expense-list"></div>
         </div>
 
         <div id="p-readme" class="page"><div class="card"><div class="title">Manual</div></div></div>
-        <div id="p-quotes" class="page"><div class="card"><div class="title">Quotes</div></div></div>
-        <div id="p-clients" class="page"><div class="card"><div class="title">Clients</div></div></div>
+        <div id="p-quotes" class="page">
+            <div class="card">
+                <div class="title">Job Quote</div>
+                <label>Date</label><input type="date" id="q-date">
+                <label>Customer Name</label><input type="text" id="q-cust-name">
+                <label>Address</label><input type="text" id="q-addr">
+                <label>Work Description</label><textarea id="q-work"></textarea>
+                <div class="total-box"><div class="total-val">£0.00</div></div>
+                <button class="btn-green">Send Quote</button>
+            </div>
+        </div>
         <div id="p-calc" class="page"><div class="card"><div class="title">Calc</div></div></div>
+        <div id="p-gallery" class="page"><div class="card"><div class="title">Gallery</div></div></div>
         <div id="p-profile" class="page"><div class="card"><div class="title">Profile</div></div></div>
     </div>
 </div>
@@ -143,81 +158,85 @@
         document.getElementById('viewport').scrollTop = 0;
     }
 
-    /* GALLERY REVIEW SYSTEM [cite: 2026-02-28] */
-    function handleCapture(input) {
+    /* EXPENSE ENGINE [cite: 2026-02-28] */
+    function handleExpCapture(input) {
         if (input.files && input.files[0]) {
             let reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('img-output').src = e.target.result;
-                document.getElementById('img-output').style.display = "block";
-                document.getElementById('preview-text').style.display = "none";
-                
-                // Show Review Buttons, Hide Capture Input
-                document.getElementById('capture-zone').style.display = "none";
-                document.getElementById('review-controls').style.display = "flex";
+                document.getElementById('exp-img-output').src = e.target.result;
+                document.getElementById('exp-img-output').style.display = "block";
+                document.getElementById('exp-preview-text').style.display = "none";
+                document.getElementById('exp-capture-zone').style.display = "none";
+                document.getElementById('exp-review-controls').style.display = "flex";
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    function retake() {
-        // Reset the capture process [cite: 2026-02-28]
-        document.getElementById('img-output').src = "";
-        document.getElementById('img-output').style.display = "none";
-        document.getElementById('preview-text').style.display = "block";
-        document.getElementById('file-input').value = "";
+    function retakeExp() {
+        document.getElementById('exp-img-output').src = "";
+        document.getElementById('exp-img-output').style.display = "none";
+        document.getElementById('exp-preview-text').style.display = "block";
+        document.getElementById('exp-capture-zone').style.display = "block";
+        document.getElementById('exp-review-controls').style.display = "none";
+        document.getElementById('exp-details').style.display = "none";
+    }
+
+    function acceptExp() {
+        document.getElementById('exp-review-controls').style.display = "none";
+        document.getElementById('exp-details').style.display = "block";
+    }
+
+    function addExpRow() {
+        const container = document.getElementById('exp-items-container');
+        const row = document.createElement('div');
+        row.className = 'exp-item-row';
+        row.innerHTML = `<input type="text" placeholder="Item" class="exp-desc"><input type="number" placeholder="£" class="exp-val">`;
+        container.appendChild(row);
+    }
+
+    function saveExpense() {
+        const date = document.getElementById('exp-date').value;
+        const img = document.getElementById('exp-img-output').src;
+        const descs = document.querySelectorAll('.exp-desc');
+        const vals = document.querySelectorAll('.exp-val');
         
-        document.getElementById('capture-zone').style.display = "block";
-        document.getElementById('review-controls').style.display = "none";
-        document.getElementById('job-details').style.display = "none";
+        let items = [];
+        let total = 0;
+        descs.forEach((d, i) => {
+            if(d.value) {
+                let v = parseFloat(vals[i].value) || 0;
+                items.push(d.value + " (£" + v.toFixed(2) + ")");
+                total += v;
+            }
+        });
+
+        let expenses = JSON.parse(localStorage.getItem('TBP_EXPENSES') || "[]");
+        expenses.unshift({ date, img, items: items.join(", "), total: total.toFixed(2) });
+        localStorage.setItem('TBP_EXPENSES', JSON.stringify(expenses));
+
+        retakeExp();
+        renderExpenses();
     }
 
-    function acceptPhoto() {
-        // Lock the image and show detail fields [cite: 2026-02-28]
-        document.getElementById('review-controls').style.display = "none";
-        document.getElementById('job-details').style.display = "block";
-    }
-
-    function saveToGallery() {
-        const name = document.getElementById('gal-name').value;
-        const date = document.getElementById('gal-date').value;
-        const client = document.getElementById('gal-client').value;
-        const img = document.getElementById('img-output').src;
-
-        if(!name) { alert("Please enter a Custom Job Name"); return; }
-
-        let photos = JSON.parse(localStorage.getItem('TBP_PHOTOS') || "[]");
-        photos.unshift({ name, date, client, img });
-        localStorage.setItem('TBP_PHOTOS', JSON.stringify(photos));
-
-        // Full reset back to start
-        retake();
-        renderGallery();
-    }
-
-    function renderGallery() {
-        let photos = JSON.parse(localStorage.getItem('TBP_PHOTOS') || "[]");
+    function renderExpenses() {
+        let expenses = JSON.parse(localStorage.getItem('TBP_EXPENSES') || "[]");
         let h = "";
-        photos.forEach(p => {
-            h += `<div class="gallery-item">
-                    <img src="${p.img}">
-                    <div class="gallery-info">
-                        <b>${p.name}</b>
-                        <p>${p.client} | ${p.date}</p>
-                    </div>
+        expenses.forEach(e => {
+            h += `<div class="expense-log-card">
+                    <img src="${e.img}">
+                    <b>Total: £${e.total}</b>
+                    <small>${e.date}</small>
+                    <div style="font-size:11px; margin-top:5px; color:#aaa;">${e.items}</div>
+                    <div style="clear:both;"></div>
                   </div>`;
         });
-        document.getElementById('gallery-list').innerHTML = h;
-
-        let clients = JSON.parse(localStorage.getItem('TBP_L') || "[]");
-        let s = "<option>General Job</option>";
-        clients.forEach(c => s += `<option>${c.n}</option>`);
-        document.getElementById('gal-client').innerHTML = s;
+        document.getElementById('expense-list').innerHTML = h;
     }
 
     window.onload = function() {
-        renderGallery();
-        document.getElementById('gal-date').valueAsDate = new Date();
+        renderExpenses();
+        document.getElementById('exp-date').valueAsDate = new Date();
     };
 </script>
 </body>
