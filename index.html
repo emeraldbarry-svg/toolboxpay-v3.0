@@ -3,28 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>toolboxpay - v20.1 FIXED</title>
+    <title>toolboxpay - v20.2 TOUCH</title>
     <style>
-        /* FULL WIDTH SETUP [cite: 2026-02-28] */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* FULL BLEED & THEME */
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background-color: #4a4a4a; color: #fff; font-family: sans-serif; width: 100vw; overflow-x: hidden; }
 
-        /* HEADER [cite: 2020-02-20] */
         header { width: 100%; padding: 25px 0; text-align: center; border-bottom: 5px solid #ff6600; background: #4a4a4a; }
         .logo { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
         .logo span { color: #ff6600; }
 
-        /* NAV RIBBON [cite: 2026-02-28] */
-        nav { width: 100%; background: #222; border-bottom: 2px solid #333; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+        /* NAV SCROLLBAR HIDDEN */
+        nav { width: 100%; background: #222; border-bottom: 2px solid #333; overflow-x: auto; white-space: nowrap; }
+        nav::-webkit-scrollbar { display: none; }
         .nav-inner { display: flex; padding: 15px; gap: 10px; width: max-content; }
-        .nav-btn { flex: 0 0 115px; background: #333; color: #ff6600; padding: 15px 0; border-radius: 12px; text-align: center; font-weight: 900; text-transform: uppercase; border: 2px solid #444; font-size: 12px; cursor: pointer; }
+        
+        /* BUTTON BASE STYLE */
+        .nav-btn { 
+            flex: 0 0 115px; 
+            background: #333; 
+            color: #ff6600; 
+            padding: 15px 0; 
+            border-radius: 12px; 
+            text-align: center; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            border: 2px solid #444; 
+            font-size: 12px; 
+            cursor: pointer;
+        }
 
-        /* CONTENT AREA [cite: 2026-02-28] */
         .content { padding: 15px; width: 100%; }
         .card { background: #1e1e1e; padding: 25px; border-radius: 20px; border: 1px solid #000; width: 100%; margin-bottom: 20px; }
         .card-h { color: #ff6600; text-transform: uppercase; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; font-size: 18px; font-weight: 900; }
 
-        /* INPUTS [cite: 2026-02-28] */
         label { color: #ff6600; font-size: 11px; font-weight: 900; display: block; margin-bottom: 8px; text-transform: uppercase; }
         input, textarea { width: 100%; padding: 16px; background: #000; border: 1px solid #444; color: #fff; border-radius: 10px; margin-bottom: 20px; font-size: 16px; outline: none; display: block; }
         
@@ -39,15 +51,15 @@
 
     <nav>
         <div class="nav-inner">
-            <div id="btn1" class="nav-btn" style="background:#ff6600; color:#fff; border-color:#fff;" onclick="tab(1)">Profile</div>
-            <div id="btn2" class="nav-btn" onclick="tab(2)">Bank</div>
-            <div id="btn3" class="nav-btn" onclick="tab(3)">VAT</div>
-            <div id="btn4" class="nav-btn" onclick="tab(4)">Biz Calc</div>
+            <div id="b1" class="nav-btn" style="background:#ff6600; color:#fff; border-color:#fff;" onclick="tab(1)" ontouchstart="">Profile</div>
+            <div id="b2" class="nav-btn" onclick="tab(2)" ontouchstart="">Bank</div>
+            <div id="b3" class="nav-btn" onclick="tab(3)" ontouchstart="">VAT</div>
+            <div id="b4" class="nav-btn" onclick="tab(4)" ontouchstart="">Biz Calc</div>
         </div>
     </nav>
 
     <main class="content">
-        <div id="tab1" style="display: block;">
+        <div id="s1" style="display: block;">
             <div class="card">
                 <h2 class="card-h">Business Profile</h2>
                 <label>Business Name</label>
@@ -55,95 +67,87 @@
                 <label>Specialising In</label>
                 <input type="text" id="f2" placeholder="e.g. Electrical" oninput="sv('f2')">
                 <label>Address</label>
-                <textarea id="f3" rows="3" oninput="sv('f3')"></textarea>
+                <textarea id="f3" rows="3" oninput="sv('f3')" style="width:100%; background:#000; border:1px solid #444; border-radius:10px; color:#fff; padding:15px; font-family:sans-serif;"></textarea>
             </div>
         </div>
 
-        <div id="tab2" style="display: none;">
+        <div id="s2" style="display: none;">
             <div class="card">
                 <h2 class="card-h">Bank Details</h2>
                 <label>Bank Name</label>
                 <input type="text" id="f4" oninput="sv('f4')">
-                <label>Branch</label>
-                <input type="text" id="f7" oninput="sv('f7')">
                 <label>Sort Code</label>
                 <input type="text" id="f5" oninput="sv('f5')">
                 <label>Account Number</label>
                 <input type="text" id="f6" oninput="sv('f6')">
-                <label>IBAN</label>
-                <input type="text" id="f8" oninput="sv('f8')">
             </div>
         </div>
 
-        <div id="tab3" style="display: none;">
+        <div id="s3" style="display: none;">
             <div class="card">
                 <h2 class="card-h">VAT Calc</h2>
-                <label>Amount (£)</label>
-                <input type="number" id="vIn" oninput="calcV()">
-                <div class="box"><div style="color:#ff6600; font-size:10px;">GROSS TOTAL</div><div id="vTot" class="val">£0.00</div></div>
+                <label>Net Amount (£)</label>
+                <input type="number" id="vIn" oninput="cV()">
+                <div class="box"><div style="color:#ff6600; font-size:10px; font-weight:900;">TOTAL (INC VAT)</div><div id="vOut" class="val">£0.00</div></div>
             </div>
         </div>
 
-        <div id="tab4" style="display: none;">
+        <div id="s4" style="display: none;">
             <div class="card">
                 <h2 class="card-h">Business Calc</h2>
                 <label>Labour (£)</label>
-                <input type="number" id="bLab" oninput="calcB()">
+                <input type="number" id="bL" oninput="cB()">
                 <label>Materials (£)</label>
-                <input type="number" id="bMat" oninput="calcB()">
+                <input type="number" id="bM" oninput="cB()">
                 <label>Markup (%)</label>
-                <input type="number" id="bMark" value="20" oninput="calcB()">
-                <div class="box" style="border-color:#ff6600;"><div style="color:#ff6600; font-size:10px;">REC. QUOTE</div><div id="bQuo" class="val">£0.00</div></div>
+                <input type="number" id="bMk" value="20" oninput="cB()">
+                <div class="box" style="border-color:#ff6600;"><div style="color:#ff6600; font-size:10px;">REC. QUOTE</div><div id="bQ" class="val">£0.00</div></div>
             </div>
         </div>
     </main>
 </div>
 
 <script>
-    /* DIRECT ACTION BUTTONS [cite: 2026-02-28] */
+    /* MASTER TAB FUNCTION */
     function tab(n) {
-        // Hide all
+        // Reset all buttons and sections
         for(let i=1; i<=4; i++) {
-            document.getElementById('tab' + i).style.display = 'none';
-            let b = document.getElementById('btn' + i);
-            b.style.background = '#333';
-            b.style.color = '#ff6600';
-            b.style.borderColor = '#444';
+            document.getElementById('s' + i).style.display = 'none';
+            let btn = document.getElementById('b' + i);
+            btn.style.backgroundColor = '#333';
+            btn.style.color = '#ff6600';
+            btn.style.borderColor = '#444';
         }
-        // Show selected
-        document.getElementById('tab' + n).style.display = 'block';
-        let active = document.getElementById('btn' + n);
-        active.style.background = '#ff6600';
-        active.style.color = '#fff';
-        active.style.borderColor = '#fff';
+        // Force illuminate active button
+        const activeS = document.getElementById('s' + n);
+        const activeB = document.getElementById('b' + n);
+        activeS.style.display = 'block';
+        activeB.style.backgroundColor = '#ff6600';
+        activeB.style.color = '#fff';
+        activeB.style.borderColor = '#fff';
+        
+        activeB.scrollIntoView({ behavior: 'smooth', inline: 'center' });
     }
 
-    /* AUTO-SAVE [cite: 2026-02-26] */
+    /* AUTO-SAVE */
     function sv(id) {
-        localStorage.setItem('TB_V21_' + id, document.getElementById(id).value);
+        localStorage.setItem('TB_FINAL_' + id, document.getElementById(id).value);
     }
 
-    function calcV() {
+    function cV() {
         let n = parseFloat(document.getElementById('vIn').value) || 0;
-        document.getElementById('vTot').innerText = "£" + (n * 1.2).toFixed(2);
+        document.getElementById('vOut').innerText = "£" + (n * 1.2).toFixed(2);
     }
 
-    function calcB() {
-        let l = parseFloat(document.getElementById('bLab').value) || 0;
-        let m = parseFloat(document.getElementById('bMat').value) || 0;
-        let mk = (parseFloat(document.getElementById('bMark').value) || 0) / 100;
-        document.getElementById('bQuo').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
+    function cB() {
+        let l = parseFloat(document.getElementById('bL').value) || 0;
+        let m = parseFloat(document.getElementById('bM').value) || 0;
+        let mk = (parseFloat(document.getElementById('bMk').value) || 0) / 100;
+        document.getElementById('bQ').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
     }
 
-    /* RESTORE DATA [cite: 2026-02-28] */
+    /* DATA RESTORE */
     window.onload = function() {
-        const ids = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8'];
-        ids.forEach(id => {
-            let val = localStorage.getItem('TB_V21_' + id);
-            if (val) document.getElementById(id).value = val;
-        });
-    };
-</script>
-
-</body>
-</html>
+        ['f1', 'f2', 'f3', 'f4', 'f5', 'f6'].forEach(id => {
+            let val = localStorage.getItem('TB_FINAL_' + id);
+            if (val) document.
