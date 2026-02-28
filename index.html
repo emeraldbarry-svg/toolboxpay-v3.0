@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v12.3</title>
+    <title>toolboxpay - v12.4</title>
     <style>
-        /* THEME & LAYOUT */
+        /* THEME & LAYOUT [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
-        /* STICKY HEADER */
+        /* STICKY HEADER [cite: 2026-02-28] */
         #dashboard-header { 
             position: sticky; top: 0; width: 100%; max-width: 420px; 
             background: #4a4a4a; padding: 15px 20px; z-index: 100; 
@@ -25,28 +25,20 @@
         .jump-btn { background: #222; border: 1px solid #444; border-radius: 12px; padding: 10px; text-decoration: none; display: flex; flex-direction: column; align-items: center; min-width: 85px; }
         .jump-btn span { color: #ff6600; font-weight: 800; font-size: 10px; text-transform: uppercase; margin-top: 4px; }
 
-        /* CONTENT CONTAINERS */
+        /* CONTENT CONTAINERS [cite: 2026-02-28] */
         #content-area { width: 100%; max-width: 420px; padding: 20px; }
         .section-box { background: #1e1e1e; border-radius: 25px; padding: 25px; border: 1px solid #333; margin-bottom: 80vh; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .section-title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; text-align: center; }
 
-        /* FORM STYLING */
+        /* FORM STYLING [cite: 2020-02-20] */
         label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
         input, textarea, select { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 15px; outline: none; margin-bottom: 20px; }
         .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 16px; }
 
-        /* CRM CARDS */
-        .cli-card { background: #000; padding: 18px; border-radius: 18px; margin-bottom: 15px; border-left: 5px solid #ff6600; position: relative; }
-        .cli-tools { display: flex; gap: 10px; margin-top: 12px; }
-        .tool-btn { flex: 1; background: #222; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 10px; font-size: 11px; font-weight: 800; text-align: center; text-decoration: none; text-transform: uppercase; }
-        .tool-btn.call { color: #25D366; border-color: #25D366; }
-        .tool-btn.del { color: #ff4444; border-color: #ff4444; flex: 0.3; }
-
-        /* GALLERY TILES */
-        .photo-wrap { background: #000; border-radius: 15px; overflow: hidden; position: relative; border: 1px solid #333; margin-bottom: 10px; }
-        .photo-wrap img { width: 100%; height: 140px; object-fit: cover; }
-        .photo-tag { position: absolute; bottom: 10px; left: 10px; background: rgba(255,102,0,0.85); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 900; text-transform: uppercase; }
-        .photo-del { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; border: none; padding: 5px 8px; border-radius: 5px; cursor: pointer; }
+        /* PROFIT DISPLAY [cite: 2026-02-28] */
+        .profit-bar { background: #000; padding: 15px; border-radius: 12px; border: 1px solid #333; margin-top: 10px; display: flex; justify-content: space-between; }
+        .profit-label { font-size: 10px; color: #888; text-transform: uppercase; }
+        .profit-val { font-size: 16px; color: #25D366; font-weight: 800; }
 
         .total-box { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; margin: 20px 0; text-align: right; }
         .total-val { font-size: 45px; color: #ff6600; font-weight: 900; }
@@ -71,49 +63,60 @@
         <div id="r-box" class="section-box">
             <div class="section-title">Operating Manual</div>
             <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:15px; border-radius:15px; border-left:4px solid #ff6600;">
-                <p>• <b>Clients:</b> Use the "CALL" button to dial directly. Use "WhatsApp" to open a chat with their address pre-loaded.</p><br>
-                <p>• <b>Photos:</b> Select "Before" or "After" when uploading. This organizes your evidence for every job.</p><br>
-                <p>• <b>Calc:</b> Always add a 20% material markup to cover your time and fuel picking up supplies.</p>
+                <p>• <b>Profit Tracking:</b> The calculator now shows your <b>Take Home Pay</b>. This is your total minus materials and VAT/Tax provision.</p><br>
+                <p>• <b>Receipt Mode:</b> Use the toggle in the Quote section to turn a Quote into a <b>Proof of Payment</b> receipt.</p><br>
+                <p>• <b>Client Memory:</b> Always save a client first; this allows you to pull their site address into quotes with one click.</p>
             </div>
         </div>
 
         <div id="q-box" class="section-box">
-            <div class="section-title">Job Quote</div>
+            <div class="section-title">Quote / Receipt</div>
             <label>Select Client</label><select id="q-cli-pick"><option>Loading...</option></select>
-            <label>Labour/Materials Description</label><textarea id="qd" style="height:100px;"></textarea>
-            <label>Total Price (£)</label><input type="number" id="qp" oninput="upQ()">
+            <label>Description</label><textarea id="qd" style="height:100px;"></textarea>
+            <label>Price (£)</label><input type="number" id="qp" oninput="upQ()">
+            
+            <div style="background:#111; padding:15px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                <label style="margin-bottom:0; color:#fff;">Receipt Mode (Mark as Paid)</label>
+                <input type="checkbox" id="receipt-mode" style="width:30px; margin-bottom:0;">
+            </div>
+
             <div style="background:#111; padding:15px; border-radius:12px; margin-bottom:20px;">
                 <input type="checkbox" id="tc-on" checked> <label for="tc-on" style="display:inline; color:#fff; font-size:12px;">Include Terms & Conditions</label>
             </div>
+
             <div class="total-box"><div class="total-val" id="qt">£0.00</div></div>
-            <button class="btn-green" onclick="sendW()">Send Quote</button>
+            <button class="btn-green" onclick="sendW()">Send via WhatsApp</button>
         </div>
 
         <div id="c-box" class="section-box">
-            <div class="section-title">Client Database</div>
+            <div class="section-title">Client Records</div>
             <label>Name</label><input type="text" id="cn">
-            <label>Site Address</label><textarea id="ca" style="height:60px;"></textarea>
-            <label>Phone Number</label><input type="tel" id="ctel">
-            <button class="btn-green" style="background:#ff6600; color:#fff;" onclick="saveC()">Save New Client</button>
+            <label>Address</label><textarea id="ca" style="height:60px;"></textarea>
+            <label>Phone</label><input type="tel" id="ctel">
+            <button class="btn-green" style="background:#ff6600; color:#fff;" onclick="saveC()">Add Client</button>
             <div id="cl-list" style="margin-top:20px;"></div>
         </div>
 
         <div id="m-box" class="section-box">
-            <div class="section-title">Pricing Tool</div>
+            <div class="section-title">Profit Calculator</div>
             <label>Day Rate (£)</label><input type="number" id="cr" oninput="upM()">
-            <label>Days Worked</label><input type="number" id="cd" oninput="upM()">
-            <label>Materials (£)</label><input type="number" id="cm" oninput="upM()">
-            <div class="total-box"><div class="total-val" id="mt">£0.00</div></div>
+            <label>Days</label><input type="number" id="cd" oninput="upM()">
+            <label>Materials Cost (£)</label><input type="number" id="cm" oninput="upM()">
+            
+            <div class="profit-bar">
+                <div><span class="profit-label">Net Profit (Labour)</span><div class="profit-val" id="net-labour">£0.00</div></div>
+                <div><span class="profit-label">Tax Provision (20%)</span><div class="profit-val" id="tax-prov" style="color:#ff4444;">£0.00</div></div>
+            </div>
+
+            <div class="total-box"><div class="profit-label">Gross Quote Total (Inc. 20% Markup)</div><div class="total-val" id="mt">£0.00</div></div>
         </div>
 
         <div id="p-box" class="section-box">
             <div class="section-title">Job Gallery</div>
-            <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <select id="p-tag" style="margin-bottom:0; flex:1;"><option value="Before">Before</option><option value="During">During</option><option value="After">After</option></select>
-                <input type="file" id="p-file" accept="image/*" style="display:none;" onchange="addP(this)">
-                <button class="btn-green" style="padding:16px; margin-bottom:0; flex:1;" onclick="document.getElementById('p-file').click()">Upload Photo</button>
-            </div>
-            <div id="p-grid" style="display:grid; grid-template-columns:1fr; gap:15px;"></div>
+            <select id="p-tag"><option value="Before">Before</option><option value="During">During</option><option value="After">After</option></select>
+            <input type="file" id="p-file" accept="image/*" style="display:none;" onchange="addP(this)">
+            <button class="btn-green" onclick="document.getElementById('p-file').click()">Capture Image</button>
+            <div id="p-grid" style="display:grid; grid-template-columns:1fr; gap:15px; margin-top:20px;"></div>
         </div>
 
         <div id="b-box" class="section-box">
@@ -121,24 +124,28 @@
             <label>Trading Name</label><input type="text" id="bn" oninput="sv('bn',this.value)">
             <label>Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
             <label>Account No.</label><input type="text" id="an" oninput="sv('an',this.value)">
-            <label>Master T&Cs</label>
-            <textarea id="master-tc" style="height:120px;" oninput="sv('tc',this.value)"></textarea>
+            <label>Master T&Cs</label><textarea id="master-tc" style="height:120px;" oninput="sv('tc',this.value)"></textarea>
         </div>
 
     </div>
 
 <script>
-    /* CORE LOGIC */
+    /* MATH LOGIC [cite: 2026-02-28] */
     function upQ() { document.getElementById('qt').innerText = "£" + (parseFloat(document.getElementById('qp').value) || 0).toFixed(2); }
     function upM() {
         var r = parseFloat(document.getElementById('cr').value) || 0;
         var d = parseFloat(document.getElementById('cd').value) || 0;
         var m = parseFloat(document.getElementById('cm').value) || 0;
-        document.getElementById('mt').innerText = "£" + ((r * d + m) * 1.2).toFixed(2);
+        var labour = r * d;
+        var gross = (labour + m) * 1.2;
+        var tax = labour * 0.20;
+        document.getElementById('mt').innerText = "£" + gross.toFixed(2);
+        document.getElementById('net-labour').innerText = "£" + labour.toFixed(2);
+        document.getElementById('tax-prov').innerText = "£" + tax.toFixed(2);
     }
     function sv(k, v) { localStorage.setItem('TBP_' + k, v); }
 
-    /* CRM LOGIC */
+    /* CRM [cite: 2026-02-28] */
     function saveC() {
         var n = document.getElementById('cn').value;
         var a = document.getElementById('ca').value;
@@ -154,12 +161,11 @@
         var list = JSON.parse(localStorage.getItem('TBP_LIST') || "[]");
         var h = ""; var sel = '<option>Select Client...</option>';
         list.forEach((c, i) => {
-            h += `<div class="cli-card">
+            h += `<div style="background:#000; padding:15px; border-radius:15px; margin-bottom:10px; border-left:4px solid #ff6600;">
                     <b>${c.n}</b><br><small>${c.a}</small>
-                    <div class="cli-tools">
-                        <a href="tel:${c.t}" class="tool-btn call">Call</a>
-                        <a href="https://wa.me/${c.t}?text=Hi ${c.n}, regarding the job at ${c.a}:" class="tool-btn">WhatsApp</a>
-                        <div class="tool-btn del" onclick="delC(${i})">X</div>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <a href="tel:${c.t}" style="flex:1; background:#222; color:#25D366; text-align:center; padding:8px; border-radius:8px; text-decoration:none; font-size:12px; font-weight:800; border:1px solid #25D366;">CALL</a>
+                        <div style="flex:0.3; background:#222; color:red; text-align:center; padding:8px; border-radius:8px; border:1px solid red; font-size:12px;" onclick="delC(${i})">X</div>
                     </div>
                   </div>`;
             sel += `<option value="${i}">${c.n}</option>`;
@@ -174,7 +180,7 @@
         showC();
     }
 
-    /* GALLERY LOGIC */
+    /* PHOTOS [cite: 2026-02-28] */
     function addP(input) {
         if (input.files && input.files[0]) {
             var tag = document.getElementById('p-tag').value;
@@ -192,10 +198,10 @@
         var ph = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
         var h = "";
         ph.forEach((p, i) => {
-            h += `<div class="photo-wrap">
-                    <img src="${p.src}">
-                    <div class="photo-tag">${p.tag} - ${p.date}</div>
-                    <button class="photo-del" onclick="delP(${i})">DEL</button>
+            h += `<div style="position:relative; background:#000; border-radius:15px; overflow:hidden;">
+                    <img src="${p.src}" style="width:100%; height:150px; object-fit:cover;">
+                    <div style="position:absolute; bottom:10px; left:10px; background:rgba(255,102,0,0.8); color:#fff; padding:4px 8px; border-radius:5px; font-size:10px;">${p.tag} - ${p.date}</div>
+                    <div style="position:absolute; top:10px; right:10px; background:red; color:#fff; padding:5px; border-radius:5px; font-size:10px;" onclick="delP(${i})">X</div>
                   </div>`;
         });
         document.getElementById('p-grid').innerHTML = h;
@@ -210,216 +216,28 @@
     function sendW() {
         var d = document.getElementById('qd').value;
         var p = document.getElementById('qt').innerText;
-        var b = document.getElementById<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v12.3</title>
-    <style>
-        /* THEME & LAYOUT */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        var b = document.getElementById('bn').value;
+        var s = document.getElementById('sc').value;
+        var a = document.getElementById('an').value;
+        var tc = document.getElementById('master-tc').value;
+        var type = document.getElementById('receipt-mode').checked ? "PAID RECEIPT" : "JOB QUOTE";
         
-        /* STICKY HEADER */
-        #dashboard-header { 
-            position: sticky; top: 0; width: 100%; max-width: 420px; 
-            background: #4a4a4a; padding: 15px 20px; z-index: 100; 
-            border-bottom: 2px solid #ff6600; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        var msg = `ToolboxPay ${type}:%0A${d}%0A%0ATotal: ${p}%0A%0APayment to: ${b}%0A${s} / ${a}`;
+        if(!document.getElementById('receipt-mode').checked && document.getElementById('tc-on').checked) {
+            msg += `%0A%0ATerms:%0A${encodeURIComponent(tc)}`;
+        } else if(document.getElementById('receipt-mode').checked) {
+            msg += `%0A%0AStatus: Payment Received with Thanks.`;
         }
-        .logo { text-align: center; font-size: 32px; font-weight: 900; letter-spacing: -2px; margin-bottom: 15px; }
-        .logo .o { color: #ff6600; }
-        .logo .w { color: #ffffff; }
-
-        .tile-strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; -webkit-overflow-scrolling: touch; }
-        .tile-strip::-webkit-scrollbar { display: none; }
-        .jump-btn { background: #222; border: 1px solid #444; border-radius: 12px; padding: 10px; text-decoration: none; display: flex; flex-direction: column; align-items: center; min-width: 85px; }
-        .jump-btn span { color: #ff6600; font-weight: 800; font-size: 10px; text-transform: uppercase; margin-top: 4px; }
-
-        /* CONTENT CONTAINERS */
-        #content-area { width: 100%; max-width: 420px; padding: 20px; }
-        .section-box { background: #1e1e1e; border-radius: 25px; padding: 25px; border: 1px solid #333; margin-bottom: 80vh; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .section-title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; text-align: center; }
-
-        /* FORM STYLING */
-        label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        input, textarea, select { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 15px; outline: none; margin-bottom: 20px; }
-        .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 16px; }
-
-        /* CRM CARDS */
-        .cli-card { background: #000; padding: 18px; border-radius: 18px; margin-bottom: 15px; border-left: 5px solid #ff6600; position: relative; }
-        .cli-tools { display: flex; gap: 10px; margin-top: 12px; }
-        .tool-btn { flex: 1; background: #222; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 10px; font-size: 11px; font-weight: 800; text-align: center; text-decoration: none; text-transform: uppercase; }
-        .tool-btn.call { color: #25D366; border-color: #25D366; }
-        .tool-btn.del { color: #ff4444; border-color: #ff4444; flex: 0.3; }
-
-        /* GALLERY TILES */
-        .photo-wrap { background: #000; border-radius: 15px; overflow: hidden; position: relative; border: 1px solid #333; margin-bottom: 10px; }
-        .photo-wrap img { width: 100%; height: 140px; object-fit: cover; }
-        .photo-tag { position: absolute; bottom: 10px; left: 10px; background: rgba(255,102,0,0.85); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 900; text-transform: uppercase; }
-        .photo-del { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; border: none; padding: 5px 8px; border-radius: 5px; cursor: pointer; }
-
-        .total-box { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; margin: 20px 0; text-align: right; }
-        .total-val { font-size: 45px; color: #ff6600; font-weight: 900; }
-    </style>
-</head>
-<body>
-
-    <div id="dashboard-header">
-        <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
-        <div class="tile-strip">
-            <a href="#r-box" class="jump-btn"><i>📖</i><span>ReadMe</span></a>
-            <a href="#q-box" class="jump-btn"><i>📝</i><span>Quotes</span></a>
-            <a href="#c-box" class="jump-btn"><i>👥</i><span>Clients</span></a>
-            <a href="#m-box" class="jump-btn"><i>🧮</i><span>Calc</span></a>
-            <a href="#p-box" class="jump-btn"><i>📸</i><span>Photos</span></a>
-            <a href="#b-box" class="jump-btn"><i>🏦</i><span>Profile</span></a>
-        </div>
-    </div>
-
-    <div id="content-area">
-        
-        <div id="r-box" class="section-box">
-            <div class="section-title">Operating Manual</div>
-            <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:15px; border-radius:15px; border-left:4px solid #ff6600;">
-                <p>• <b>Clients:</b> Use the "CALL" button to dial directly. Use "WhatsApp" to open a chat with their address pre-loaded.</p><br>
-                <p>• <b>Photos:</b> Select "Before" or "After" when uploading. This organizes your evidence for every job.</p><br>
-                <p>• <b>Calc:</b> Always add a 20% material markup to cover your time and fuel picking up supplies.</p>
-            </div>
-        </div>
-
-        <div id="q-box" class="section-box">
-            <div class="section-title">Job Quote</div>
-            <label>Select Client</label><select id="q-cli-pick"><option>Loading...</option></select>
-            <label>Labour/Materials Description</label><textarea id="qd" style="height:100px;"></textarea>
-            <label>Total Price (£)</label><input type="number" id="qp" oninput="upQ()">
-            <div style="background:#111; padding:15px; border-radius:12px; margin-bottom:20px;">
-                <input type="checkbox" id="tc-on" checked> <label for="tc-on" style="display:inline; color:#fff; font-size:12px;">Include Terms & Conditions</label>
-            </div>
-            <div class="total-box"><div class="total-val" id="qt">£0.00</div></div>
-            <button class="btn-green" onclick="sendW()">Send Quote</button>
-        </div>
-
-        <div id="c-box" class="section-box">
-            <div class="section-title">Client Database</div>
-            <label>Name</label><input type="text" id="cn">
-            <label>Site Address</label><textarea id="ca" style="height:60px;"></textarea>
-            <label>Phone Number</label><input type="tel" id="ctel">
-            <button class="btn-green" style="background:#ff6600; color:#fff;" onclick="saveC()">Save New Client</button>
-            <div id="cl-list" style="margin-top:20px;"></div>
-        </div>
-
-        <div id="m-box" class="section-box">
-            <div class="section-title">Pricing Tool</div>
-            <label>Day Rate (£)</label><input type="number" id="cr" oninput="upM()">
-            <label>Days Worked</label><input type="number" id="cd" oninput="upM()">
-            <label>Materials (£)</label><input type="number" id="cm" oninput="upM()">
-            <div class="total-box"><div class="total-val" id="mt">£0.00</div></div>
-        </div>
-
-        <div id="p-box" class="section-box">
-            <div class="section-title">Job Gallery</div>
-            <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <select id="p-tag" style="margin-bottom:0; flex:1;"><option value="Before">Before</option><option value="During">During</option><option value="After">After</option></select>
-                <input type="file" id="p-file" accept="image/*" style="display:none;" onchange="addP(this)">
-                <button class="btn-green" style="padding:16px; margin-bottom:0; flex:1;" onclick="document.getElementById('p-file').click()">Upload Photo</button>
-            </div>
-            <div id="p-grid" style="display:grid; grid-template-columns:1fr; gap:15px;"></div>
-        </div>
-
-        <div id="b-box" class="section-box">
-            <div class="section-title">Business Profile</div>
-            <label>Trading Name</label><input type="text" id="bn" oninput="sv('bn',this.value)">
-            <label>Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
-            <label>Account No.</label><input type="text" id="an" oninput="sv('an',this.value)">
-            <label>Master T&Cs</label>
-            <textarea id="master-tc" style="height:120px;" oninput="sv('tc',this.value)"></textarea>
-        </div>
-
-    </div>
-
-<script>
-    /* CORE LOGIC */
-    function upQ() { document.getElementById('qt').innerText = "£" + (parseFloat(document.getElementById('qp').value) || 0).toFixed(2); }
-    function upM() {
-        var r = parseFloat(document.getElementById('cr').value) || 0;
-        var d = parseFloat(document.getElementById('cd').value) || 0;
-        var m = parseFloat(document.getElementById('cm').value) || 0;
-        document.getElementById('mt').innerText = "£" + ((r * d + m) * 1.2).toFixed(2);
-    }
-    function sv(k, v) { localStorage.setItem('TBP_' + k, v); }
-
-    /* CRM LOGIC */
-    function saveC() {
-        var n = document.getElementById('cn').value;
-        var a = document.getElementById('ca').value;
-        var t = document.getElementById('ctel').value;
-        if(!n) return;
-        var list = JSON.parse(localStorage.getItem('TBP_LIST') || "[]");
-        list.push({n, a, t});
-        localStorage.setItem('TBP_LIST', JSON.stringify(list));
-        document.getElementById('cn').value=''; document.getElementById('ca').value=''; document.getElementById('ctel').value='';
-        showC();
-    }
-    function showC() {
-        var list = JSON.parse(localStorage.getItem('TBP_LIST') || "[]");
-        var h = ""; var sel = '<option>Select Client...</option>';
-        list.forEach((c, i) => {
-            h += `<div class="cli-card">
-                    <b>${c.n}</b><br><small>${c.a}</small>
-                    <div class="cli-tools">
-                        <a href="tel:${c.t}" class="tool-btn call">Call</a>
-                        <a href="https://wa.me/${c.t}?text=Hi ${c.n}, regarding the job at ${c.a}:" class="tool-btn">WhatsApp</a>
-                        <div class="tool-btn del" onclick="delC(${i})">X</div>
-                    </div>
-                  </div>`;
-            sel += `<option value="${i}">${c.n}</option>`;
-        });
-        document.getElementById('cl-list').innerHTML = h;
-        document.getElementById('q-cli-pick').innerHTML = sel;
-    }
-    function delC(i) {
-        var list = JSON.parse(localStorage.getItem('TBP_LIST') || "[]");
-        list.splice(i, 1);
-        localStorage.setItem('TBP_LIST', JSON.stringify(list));
-        showC();
+        window.open("https://wa.me/?text=" + msg);
     }
 
-    /* GALLERY LOGIC */
-    function addP(input) {
-        if (input.files && input.files[0]) {
-            var tag = document.getElementById('p-tag').value;
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var ph = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
-                ph.push({src: e.target.result, tag: tag, date: new Date().toLocaleDateString('en-GB')});
-                localStorage.setItem('TBP_PH', JSON.stringify(ph));
-                showP();
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    function showP() {
-        var ph = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
-        var h = "";
-        ph.forEach((p, i) => {
-            h += `<div class="photo-wrap">
-                    <img src="${p.src}">
-                    <div class="photo-tag">${p.tag} - ${p.date}</div>
-                    <button class="photo-del" onclick="delP(${i})">DEL</button>
-                  </div>`;
-        });
-        document.getElementById('p-grid').innerHTML = h;
-    }
-    function delP(i) {
-        var ph = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
-        ph.splice(i, 1);
-        localStorage.setItem('TBP_PH', JSON.stringify(ph));
-        showP();
-    }
-
-    function sendW() {
-        var d = document.getElementById('qd').value;
-        var p = document.getElementById('qt').innerText;
-        var b = document.getElementById
+    window.onload = function() {
+        showC(); showP();
+        document.getElementById('bn').value = localStorage.getItem('TBP_bn') || "";
+        document.getElementById('sc').value = localStorage.getItem('TBP_sc') || "";
+        document.getElementById('an').value = localStorage.getItem('TBP_an') || "";
+        document.getElementById('master-tc').value = localStorage.getItem('TBP_tc') || "1. Quote valid for 30 days.\n2. 25% material deposit required.\n3. Payment due on completion.";
+    };
+</script>
+</body>
+</html>
