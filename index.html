@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.9 REFRESH</title>
+    <title>toolboxpay - v21.10</title>
     <style>
-        /* BRITISH ENGLISH & THEME [cite: 2020-02-20, 2020-02-21] */
+        /* BRITISH ENGLISH & THEME */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #2a2a2a; color: #ffffff; font-family: Arial, sans-serif; padding-top: 140px; }
 
-        /* PINNED HEADER [cite: 2026-02-28] */
+        /* FIXED HEADER */
         .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #2a2a2a; }
         header { background: #1a1a1a; padding: 15px 0; text-align: center; border-bottom: 5px solid #ff6600; }
         .logo { font-size: 24px; font-weight: 900; text-transform: uppercase; }
@@ -24,31 +24,32 @@
             font-size: 11px; border: 1px solid #555; text-transform: uppercase;
         }
 
-        /* CARDS [cite: 2026-02-28] */
+        /* CARDS */
         .container { padding: 15px; max-width: 500px; margin: 0 auto; }
         .card { display: none; background: #1a1a1a; padding: 25px; border-radius: 15px; border: 3px solid #ff6600; }
         .active { display: block !important; }
 
         .title { color: #ff6600; font-size: 22px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; text-align: center; }
-        .label { color: #ffffff; font-size: 13px; font-weight: 900; display: block; margin-bottom: 8px; text-transform: uppercase; }
+        .label { color: #ffffff; font-size: 13px; font-weight: 900; display: block; margin-bottom: 4px; text-transform: uppercase; }
+        .sub-label { color: #aaaaaa; font-size: 11px; margin-bottom: 10px; display: block; }
 
-        /* THE THROUGHPUT FIX: STANDARD WHITE FOR MAX CONTRAST [cite: 2026-02-28] */
+        /* HIGH-VISIBILITY INPUTS */
         input, textarea { 
             width: 100%; 
             padding: 18px; 
-            background: #ffffff !important; /* Pure White background */
+            background: #ffffff !important; 
             border: 2px solid #ff6600 !important; 
             border-radius: 12px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             display: block;
             outline: none;
-            color: #000000 !important; /* Pure Black typed text */
+            color: #000000 !important; 
             -webkit-text-fill-color: #000000 !important; 
             font-size: 18px !important;
             font-weight: 900;
         }
 
-        /* CALCULATORS [cite: 2026-02-28] */
+        /* CALCULATORS */
         .calc-panel { background: #000; padding: 25px; border-radius: 12px; border: 1px solid #ff6600; text-align: center; }
         .calc-res { font-size: 32px; font-weight: 900; color: #ffffff; }
     </style>
@@ -70,91 +71,27 @@
     <main class="container">
         <div id="view1" class="card active">
             <h2 class="title">Business Profile</h2>
-            <label class="label">Business Name</label>
-            <input type="text" id="d1" placeholder="Enter Name" oninput="saveData('d1')">
             
-            <label class="label">Specializing In</label>
-            <input type="text" id="d2" placeholder="e.g. Labour" oninput="saveData('d2')">
+            <label class="label">Trading Name</label>
+            <span class="sub-label">Your registered business or personal trading name.</span>
+            <input type="text" id="d1" placeholder="Enter Trading Name" oninput="saveData('d1')">
+            
+            <label class="label">Trade Specialism</label>
+            <span class="sub-label">The primary service you provide (e.g. Plumbing).</span>
+            <input type="text" id="d2" placeholder="e.g. Electrical Contractor" oninput="saveData('d2')">
             
             <label class="label">Business Address</label>
-            <textarea id="d3" rows="3" placeholder="Full Address" oninput="saveData('d3')"></textarea>
+            <span class="sub-label">Include your house number and postcode.</span>
+            <textarea id="d3" rows="3" placeholder="Full Business Address" oninput="saveData('d3')"></textarea>
         </div>
 
         <div id="view2" class="card">
             <h2 class="title">Bank Details</h2>
-            <label class="label">Bank Name</label>
-            <input type="text" id="d4" placeholder="e.g. NatWest" oninput="saveData('d4')">
+            
+            <label class="label">Account Holder</label>
+            <span class="sub-label">The name exactly as it appears on your bank card.</span>
+            <input type="text" id="d4" placeholder="Full Name" oninput="saveData('d4')">
             
             <label class="label">Sort Code</label>
-            <input type="text" id="d5" placeholder="00-00-00" oninput="saveData('d5')">
-
-            <label class="label">Account Number</label>
-            <input type="text" id="d6" placeholder="Account No." oninput="saveData('d6')">
-        </div>
-
-        <div id="view3" class="card">
-            <h2 class="title">VAT Calc</h2>
-            <label class="label">Amount (£)</label>
-            <input type="number" id="vIn" oninput="calcV()">
-            <div class="calc-panel">
-                <div style="color:#ff6600; font-size:11px; font-weight:bold;">TOTAL (INC VAT)</div>
-                <div id="vOut" class="calc-res">£0.00</div>
-            </div>
-        </div>
-
-        <div id="view4" class="card">
-            <h2 class="title">Business Calc</h2>
-            <label class="label">Labour (£)</label>
-            <input type="number" id="bL" oninput="calcB()">
-            <label class="label">Materials (£)</label>
-            <input type="number" id="bM" oninput="calcB()">
-            <label class="label">Markup (%)</label>
-            <input type="number" id="bMk" value="20" oninput="calcB()">
-            <div class="calc-panel">
-                <div style="color:#ff6600; font-size:11px; font-weight:bold;">REC. QUOTE</div>
-                <div id="bQ" class="calc-res">£0.00</div>
-            </div>
-        </div>
-    </main>
-
-<script>
-    function st(n) {
-        for(let i=1; i<=4; i++) {
-            document.getElementById('view' + i).classList.remove('active');
-            let b = document.getElementById('btn' + i);
-            b.style.background = '#333'; b.style.color = '#ff6600';
-        }
-        document.getElementById('view' + n).classList.add('active');
-        let act = document.getElementById('btn' + n);
-        act.style.background = '#ff6600'; act.style.color = '#fff';
-    }
-
-    function saveData(id) {
-        const val = document.getElementById(id).value;
-        localStorage.setItem('TBOX_V219_' + id, val);
-    }
-
-    function calcV() {
-        let n = parseFloat(document.getElementById('vIn').value) || 0;
-        document.getElementById('vOut').innerText = "£" + (n * 1.2).toFixed(2);
-    }
-
-    function calcB() {
-        let l = parseFloat(document.getElementById('bL').value) || 0;
-        let m = parseFloat(document.getElementById('bM').value) || 0;
-        let mk = (parseFloat(document.getElementById('bMk').value) || 0) / 100;
-        document.getElementById('bQ').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
-    }
-
-    window.onload = function() {
-        ['d1', 'd2', 'd3', 'd4', 'd5', 'd6'].forEach(id => {
-            let val = localStorage.getItem('TBOX_V219_' + id);
-            if (val && document.getElementById(id)) {
-                document.getElementById(id).value = val;
-            }
-        });
-    };
-</script>
-
-</body>
-</html>
+            <span class="sub-label">Six-digit code (e.g. 00-00-00).</span>
+            <input type="text" id="d5" placeholder
