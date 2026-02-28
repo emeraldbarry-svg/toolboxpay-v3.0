@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v11.5</title>
+    <title>toolboxpay - v11.6</title>
     <style>
         /* BRANDING & THEME [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -17,21 +17,20 @@
         .logo .w { color: #ffffff; }
 
         /* THE "NO-FAIL" NAV SYSTEM [cite: 2026-02-27] */
-        /* We use hidden checkboxes to toggle the views so NO SCRIPT is needed to open them */
         .nav-trigger { display: none; }
         .view { display: none; width: 100%; position: absolute; top: 120px; left: 0; padding: 20px; background: #4a4a4a; min-height: 100vh; z-index: 10; }
         
-        /* When a checkbox is ticked, show the matching view */
         #t-quote:checked ~ #view-quote,
         #t-clients:checked ~ #view-clients,
         #t-calc:checked ~ #view-calc,
-        #t-bank:checked ~ #view-bank { display: block; }
+        #t-bank:checked ~ #view-bank,
+        #t-photos:checked ~ #view-photos { display: block; }
 
         /* TILES */
-        .stack { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-        .tile-label { background: #222; border-radius: 20px; padding: 25px; display: flex; align-items: center; border: 2px solid #333; cursor: pointer; }
-        .icon-box { width: 50px; height: 50px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 24px; }
-        .tile-label span { color: #ff6600; font-weight: 900; font-size: 18px; text-transform: uppercase; }
+        .stack { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .tile-label { background: #222; border-radius: 20px; padding: 22px; display: flex; align-items: center; border: 2px solid #333; cursor: pointer; }
+        .icon-box { width: 45px; height: 45px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 22px; }
+        .tile-label span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; }
 
         /* CARDS */
         .card { background: #1e1e1e; border-radius: 25px; padding: 25px; border: 1px solid #333; }
@@ -42,6 +41,12 @@
         
         .total-display { font-size: 50px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 15px; }
         .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 16px; }
+
+        /* GALLERY STYLE [cite: 2026-02-27] */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .photo-card { background: #000; border-radius: 12px; height: 120px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; border: 1px solid #333; }
+        .photo-card img { width: 100%; height: 100%; object-fit: cover; }
+        .del-photo { position: absolute; top: 5px; right: 5px; background: rgba(255,0,0,0.8); color: white; padding: 4px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; cursor: pointer; }
 
         .cli-row { background: #000; padding: 15px; border-radius: 12px; margin-top: 10px; border-left: 4px solid #ff6600; display: flex; justify-content: space-between; align-items: center; }
     </style>
@@ -57,11 +62,13 @@
     <input type="checkbox" id="t-clients" class="nav-trigger">
     <input type="checkbox" id="t-calc" class="nav-trigger">
     <input type="checkbox" id="t-bank" class="nav-trigger">
+    <input type="checkbox" id="t-photos" class="nav-trigger">
 
     <div class="stack">
         <label for="t-quote" class="tile-label"><div class="icon-box">📝</div><span>Job Quotes</span></label>
         <label for="t-clients" class="tile-label"><div class="icon-box">👥</div><span>Clients</span></label>
         <label for="t-calc" class="tile-label"><div class="icon-box">🧮</div><span>Calculator</span></label>
+        <label for="t-photos" class="tile-label"><div class="icon-box">📸</div><span>Job Photos</span></label>
         <label for="t-bank" class="tile-label"><div class="icon-box">🏦</div><span>Bank Setup</span></label>
     </div>
 
@@ -94,6 +101,15 @@
         </div>
     </div>
 
+    <div id="view-photos" class="view">
+        <label for="t-photos" class="back-btn">← DASHBOARD</label>
+        <div class="card">
+            <label>Add New Photo</label>
+            <input type="file" id="p-in" accept="image/*" onchange="addP(this)">
+            <div class="grid" id="p-grid"></div>
+        </div>
+    </div>
+
     <div id="view-bank" class="view">
         <label for="t-bank" class="back-btn">← DASHBOARD</label>
         <div class="card">
@@ -105,7 +121,7 @@
 </div>
 
 <script>
-    /* DATA LOGIC ONLY [cite: 2026-02-26, 2026-02-27] */
+    /* MATH & PERSISTENCE [cite: 2026-02-26, 2026-02-27] */
     function upQ() { document.getElementById('qt').innerText = "£" + (parseFloat(document.getElementById('qp').value) || 0).toFixed(2); }
     function upC() {
         var r = parseFloat(document.getElementById('cr').value) || 0;
@@ -114,6 +130,7 @@
     }
     function sv(k, v) { localStorage.setItem('TBP_' + k, v); }
 
+    /* CLIENTS [cite: 2026-02-27] */
     var clients = JSON.parse(localStorage.getItem('TBP_LIST') || "[]");
     function saveC() {
         var n = document.getElementById('cn').value;
@@ -128,14 +145,36 @@
     function showC() {
         var html = "";
         for (var i = 0; i < clients.length; i++) {
-            html += '<div class="cli-row"><div><b>'+clients[i].n+'</b><br>'+clients[i].a+'</div><div style="color:red; font-weight:bold;" onclick="delC('+i+')">DEL</div></div>';
+            html += '<div class="cli-row"><div><b>'+clients[i].n+'</b><br>'+clients[i].a+'</div><div style="color:red;" onclick="delC('+i+')">DEL</div></div>';
         }
         document.getElementById('cl-list').innerHTML = html;
     }
     function delC(i) { clients.splice(i, 1); localStorage.setItem('TBP_LIST', JSON.stringify(clients)); showC(); }
 
+    /* PHOTOS [cite: 2026-02-27] */
+    var photos = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
+    function addP(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                photos.push(e.target.result);
+                localStorage.setItem('TBP_PH', JSON.stringify(photos));
+                showP();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function showP() {
+        var html = "";
+        for (var i = 0; i < photos.length; i++) {
+            html += '<div class="photo-card"><img src="'+photos[i]+'"><div class="del-photo" onclick="delP('+i+')">X</div></div>';
+        }
+        document.getElementById('p-grid').innerHTML = html;
+    }
+    function delP(i) { photos.splice(i, 1); localStorage.setItem('TBP_PH', JSON.stringify(photos)); showP(); }
+
     window.onload = function() {
-        showC();
+        showC(); showP();
         document.getElementById('bn').value = localStorage.getItem('TBP_bn') || "";
         document.getElementById('sc').value = localStorage.getItem('TBP_sc') || "";
         document.getElementById('an').value = localStorage.getItem('TBP_an') || "";
