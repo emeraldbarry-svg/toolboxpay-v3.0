@@ -3,125 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v11.6</title>
+    <title>toolboxpay - v11.7</title>
     <style>
-        /* BRANDING & THEME [cite: 2020-02-20, 2026-02-21] */
+        /* THEME [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; }
-        #app-viewport { width: 100%; max-width: 420px; padding: 20px; position: relative; }
+        html { scroll-behavior: smooth; }
+        body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; padding-bottom: 100px; }
+        #app-viewport { width: 100%; max-width: 420px; padding: 20px; }
 
-        /* HEADER - NO CLOCKS [cite: 2026-02-27] */
+        /* HEADER [cite: 2026-02-27] */
         .header { text-align: center; padding: 40px 0 20px 0; }
         .logo { font-size: 38px; font-weight: 900; letter-spacing: -2px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* THE "NO-FAIL" NAV SYSTEM [cite: 2026-02-27] */
-        .nav-trigger { display: none; }
-        .view { display: none; width: 100%; position: absolute; top: 120px; left: 0; padding: 20px; background: #4a4a4a; min-height: 100vh; z-index: 10; }
-        
-        #t-quote:checked ~ #view-quote,
-        #t-clients:checked ~ #view-clients,
-        #t-calc:checked ~ #view-calc,
-        #t-bank:checked ~ #view-bank,
-        #t-photos:checked ~ #view-photos { display: block; }
-
-        /* TILES */
-        .stack { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-        .tile-label { background: #222; border-radius: 20px; padding: 22px; display: flex; align-items: center; border: 2px solid #333; cursor: pointer; }
+        /* DASHBOARD TILES */
+        .stack { display: flex; flex-direction: column; gap: 12px; margin-bottom: 50px; }
+        .jump-link { background: #222; border-radius: 20px; padding: 22px; display: flex; align-items: center; border: 2px solid #333; text-decoration: none; cursor: pointer; }
         .icon-box { width: 45px; height: 45px; background: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 22px; }
-        .tile-label span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; }
+        .jump-link span { color: #ff6600; font-weight: 900; font-size: 16px; text-transform: uppercase; }
 
-        /* CARDS */
-        .card { background: #1e1e1e; border-radius: 25px; padding: 25px; border: 1px solid #333; }
-        .back-btn { background: #000; color: #ff6600; border: 2px solid #ff6600; padding: 12px 20px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 12px; margin-bottom: 20px; display: inline-block; text-align: center; }
+        /* SECTIONS [cite: 2026-02-27] */
+        .section-container { background: #1e1e1e; border-radius: 25px; padding: 25px; border: 1px solid #333; margin-top: 60px; min-height: 400px; }
+        .section-title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .back-to-top { display: block; text-align: center; color: #888; text-decoration: none; font-size: 12px; margin-top: 20px; font-weight: bold; }
         
+        /* FORMS */
         label { display: block; font-size: 11px; color: #888; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
-        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; outline: none; display: block; }
-        
+        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 18px; border-radius: 15px; margin-bottom: 15px; font-size: 16px; outline: none; }
         .total-display { font-size: 50px; color: #ff6600; font-weight: 900; text-align: right; margin-top: 15px; }
-        .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 16px; }
+        .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; font-size: 16px; cursor: pointer; }
 
-        /* GALLERY STYLE [cite: 2026-02-27] */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .photo-card { background: #000; border-radius: 12px; height: 120px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; border: 1px solid #333; }
-        .photo-card img { width: 100%; height: 100%; object-fit: cover; }
-        .del-photo { position: absolute; top: 5px; right: 5px; background: rgba(255,0,0,0.8); color: white; padding: 4px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; cursor: pointer; }
-
-        .cli-row { background: #000; padding: 15px; border-radius: 12px; margin-top: 10px; border-left: 4px solid #ff6600; display: flex; justify-content: space-between; align-items: center; }
+        /* LISTS & GALLERY [cite: 2026-02-27] */
+        .item-row { background: #000; padding: 15px; border-radius: 12px; margin-top: 10px; border-left: 4px solid #ff6600; display: flex; justify-content: space-between; }
+        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .photo-item { background: #000; border-radius: 12px; height: 120px; overflow: hidden; border: 1px solid #333; position: relative; }
+        .photo-item img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body>
 
 <div id="app-viewport">
-    <div class="header">
+    <div class="header" id="top">
         <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
     </div>
 
-    <input type="checkbox" id="t-quote" class="nav-trigger">
-    <input type="checkbox" id="t-clients" class="nav-trigger">
-    <input type="checkbox" id="t-calc" class="nav-trigger">
-    <input type="checkbox" id="t-bank" class="nav-trigger">
-    <input type="checkbox" id="t-photos" class="nav-trigger">
-
     <div class="stack">
-        <label for="t-quote" class="tile-label"><div class="icon-box">📝</div><span>Job Quotes</span></label>
-        <label for="t-clients" class="tile-label"><div class="icon-box">👥</div><span>Clients</span></label>
-        <label for="t-calc" class="tile-label"><div class="icon-box">🧮</div><span>Calculator</span></label>
-        <label for="t-photos" class="tile-label"><div class="icon-box">📸</div><span>Job Photos</span></label>
-        <label for="t-bank" class="tile-label"><div class="icon-box">🏦</div><span>Bank Setup</span></label>
+        <a href="#view-quote" class="jump-link"><div class="icon-box">📝</div><span>Job Quotes</span></a>
+        <a href="#view-clients" class="jump-link"><div class="icon-box">👥</div><span>Clients</span></a>
+        <a href="#view-calc" class="jump-link"><div class="icon-box">🧮</div><span>Calculator</span></a>
+        <a href="#view-photos" class="jump-link"><div class="icon-box">📸</div><span>Job Photos</span></a>
+        <a href="#view-bank" class="jump-link"><div class="icon-box">🏦</div><span>Bank Setup</span></a>
     </div>
 
-    <div id="view-quote" class="view">
-        <label for="t-quote" class="back-btn">← DASHBOARD</label>
-        <div class="card">
-            <label>Labour Description</label><textarea id="qd" style="height:100px;"></textarea>
-            <label>Price (£)</label><input type="number" id="qp" oninput="upQ()">
-            <div class="total-display" id="qt">£0.00</div>
-            <button class="btn-green">Send Quote</button>
-        </div>
+    <div id="view-quote" class="section-container">
+        <div class="section-title">New Quote</div>
+        <label>Labour Description</label><textarea id="qd" style="height:100px;"></textarea>
+        <label>Price (£)</label><input type="number" id="qp" oninput="upQ()">
+        <div class="total-display" id="qt">£0.00</div>
+        <button class="btn-green">Send Quote</button>
+        <a href="#top" class="back-to-top">↑ BACK TO DASHBOARD</a>
     </div>
 
-    <div id="view-clients" class="view">
-        <label for="t-clients" class="back-btn">← DASHBOARD</label>
-        <div class="card">
-            <label>Full Name</label><input type="text" id="cn">
-            <label>Address</label><textarea id="ca" style="height:60px;"></textarea>
-            <button class="btn-green" style="background:#ff6600;" onclick="saveC()">Save Client</button>
-        </div>
+    <div id="view-clients" class="section-container">
+        <div class="section-title">Client Database</div>
+        <label>Full Name</label><input type="text" id="cn">
+        <label>Address</label><textarea id="ca" style="height:60px;"></textarea>
+        <button class="btn-green" style="background:#ff6600;" onclick="saveC()">Save Client</button>
         <div id="cl-list"></div>
+        <a href="#top" class="back-to-top">↑ BACK TO DASHBOARD</a>
     </div>
 
-    <div id="view-calc" class="view">
-        <label for="t-calc" class="back-btn">← DASHBOARD</label>
-        <div class="card">
-            <label>Day Rate (£)</label><input type="number" id="cr" oninput="upC()">
-            <label>Days Worked</label><input type="number" id="cd" oninput="upC()">
-            <div class="total-display" id="ct">£0.00</div>
-        </div>
+    <div id="view-calc" class="section-container">
+        <div class="section-title">Calculator</div>
+        <label>Day Rate (£)</label><input type="number" id="cr" oninput="upC()">
+        <label>Days Worked</label><input type="number" id="cd" oninput="upC()">
+        <div class="total-display" id="ct">£0.00</div>
+        <a href="#top" class="back-to-top">↑ BACK TO DASHBOARD</a>
     </div>
 
-    <div id="view-photos" class="view">
-        <label for="t-photos" class="back-btn">← DASHBOARD</label>
-        <div class="card">
-            <label>Add New Photo</label>
-            <input type="file" id="p-in" accept="image/*" onchange="addP(this)">
-            <div class="grid" id="p-grid"></div>
-        </div>
+    <div id="view-photos" class="section-container">
+        <div class="section-title">Job Photos</div>
+        <label>Upload Photo</label><input type="file" accept="image/*" onchange="addP(this)">
+        <div class="photo-grid" id="p-grid"></div>
+        <a href="#top" class="back-to-top">↑ BACK TO DASHBOARD</a>
     </div>
 
-    <div id="view-bank" class="view">
-        <label for="t-bank" class="back-btn">← DASHBOARD</label>
-        <div class="card">
-            <label>Business Name</label><input type="text" id="bn" oninput="sv('bn',this.value)">
-            <label>Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
-            <label>Account No.</label><input type="text" id="an" oninput="sv('an',this.value)">
-        </div>
+    <div id="view-bank" class="section-container">
+        <div class="section-title">Bank Setup</div>
+        <label>Business Name</label><input type="text" id="bn" oninput="sv('bn',this.value)">
+        <label>Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
+        <label>Account No.</label><input type="text" id="an" oninput="sv('an',this.value)">
+        <a href="#top" class="back-to-top">↑ BACK TO DASHBOARD</a>
     </div>
 </div>
 
 <script>
-    /* MATH & PERSISTENCE [cite: 2026-02-26, 2026-02-27] */
+    /* LOGIC [cite: 2026-02-26, 2026-02-27] */
     function upQ() { document.getElementById('qt').innerText = "£" + (parseFloat(document.getElementById('qp').value) || 0).toFixed(2); }
     function upC() {
         var r = parseFloat(document.getElementById('cr').value) || 0;
@@ -130,7 +108,6 @@
     }
     function sv(k, v) { localStorage.setItem('TBP_' + k, v); }
 
-    /* CLIENTS [cite: 2026-02-27] */
     var clients = JSON.parse(localStorage.getItem('TBP_LIST') || "[]");
     function saveC() {
         var n = document.getElementById('cn').value;
@@ -138,20 +115,16 @@
         if(!n) return;
         clients.push({n: n, a: a});
         localStorage.setItem('TBP_LIST', JSON.stringify(clients));
-        document.getElementById('cn').value = '';
-        document.getElementById('ca').value = '';
         showC();
     }
     function showC() {
-        var html = "";
+        var h = "";
         for (var i = 0; i < clients.length; i++) {
-            html += '<div class="cli-row"><div><b>'+clients[i].n+'</b><br>'+clients[i].a+'</div><div style="color:red;" onclick="delC('+i+')">DEL</div></div>';
+            h += '<div class="item-row"><div><b>'+clients[i].n+'</b><br>'+clients[i].a+'</div></div>';
         }
-        document.getElementById('cl-list').innerHTML = html;
+        document.getElementById('cl-list').innerHTML = h;
     }
-    function delC(i) { clients.splice(i, 1); localStorage.setItem('TBP_LIST', JSON.stringify(clients)); showC(); }
 
-    /* PHOTOS [cite: 2026-02-27] */
     var photos = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
     function addP(input) {
         if (input.files && input.files[0]) {
@@ -165,13 +138,10 @@
         }
     }
     function showP() {
-        var html = "";
-        for (var i = 0; i < photos.length; i++) {
-            html += '<div class="photo-card"><img src="'+photos[i]+'"><div class="del-photo" onclick="delP('+i+')">X</div></div>';
-        }
-        document.getElementById('p-grid').innerHTML = html;
+        var h = "";
+        for (var i = 0; i < photos.length; i++) { h += '<div class="photo-item"><img src="'+photos[i]+'"></div>'; }
+        document.getElementById('p-grid').innerHTML = h;
     }
-    function delP(i) { photos.splice(i, 1); localStorage.setItem('TBP_PH', JSON.stringify(photos)); showP(); }
 
     window.onload = function() {
         showC(); showP();
