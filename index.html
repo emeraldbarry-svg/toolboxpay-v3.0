@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v12.7</title>
+    <title>toolboxpay - v12.8</title>
     <style>
         /* THEME & LAYOUT [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         
-        /* SNAP SCROLL LOGIC */
         html { 
             scroll-behavior: smooth; 
-            scroll-snap-type: y mandatory; /* Forces the snap on the vertical axis */
+            scroll-snap-type: y mandatory; 
         }
         
         body { 
@@ -34,12 +33,28 @@
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        .tile-strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
+        .tile-strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; }
         .tile-strip::-webkit-scrollbar { display: none; }
-        .jump-btn { background: #222; border: 1px solid #444; border-radius: 12px; padding: 10px; text-decoration: none; display: flex; flex-direction: column; align-items: center; min-width: 85px; }
-        .jump-btn span { color: #ff6600; font-weight: 800; font-size: 10px; text-transform: uppercase; margin-top: 4px; }
+        
+        /* BUTTON ILLUMINATION */
+        .jump-btn { 
+            background: #222; border: 1px solid #444; border-radius: 12px; 
+            padding: 10px; text-decoration: none; display: flex; 
+            flex-direction: column; align-items: center; min-width: 85px;
+            transition: all 0.3s ease;
+        }
+        .jump-btn span { color: #888; font-weight: 800; font-size: 10px; text-transform: uppercase; margin-top: 4px; }
+        
+        /* THE ACTIVE STATE */
+        .jump-btn.active { 
+            background: #ff6600; 
+            border-color: #fff; 
+            box-shadow: 0 0 15px rgba(255,102,0,0.4);
+        }
+        .jump-btn.active span { color: #fff; }
+        .jump-btn.active i { filter: brightness(2); }
 
-        /* CONTENT CONTAINERS WITH SNAP POINTS */
+        /* CONTENT CONTAINERS */
         #content-area { width: 100%; max-width: 420px; padding: 20px; }
         
         .section-box { 
@@ -47,12 +62,10 @@
             border-radius: 25px; 
             padding: 25px; 
             border: 1px solid #333; 
-            margin-bottom: 100px; /* Spacing between sections */
+            margin-bottom: 100px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            
-            /* SNAP POINT SETTINGS [cite: 2026-02-28] */
             scroll-snap-align: start; 
-            scroll-margin-top: 160px; /* Accounts for the sticky header height */
+            scroll-margin-top: 180px; /* Adjusted for better illumination trigger */
         }
 
         .section-title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; text-align: center; }
@@ -73,8 +86,7 @@
         .total-box { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; margin: 20px 0; text-align: right; }
         .total-val { font-size: 45px; color: #ff6600; font-weight: 900; }
         
-        /* BUFFER AT BOTTOM */
-        .footer-spacer { height: 50vh; scroll-snap-align: none; }
+        .footer-spacer { height: 60vh; }
     </style>
 </head>
 <body>
@@ -82,12 +94,12 @@
     <div id="dashboard-header">
         <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         <div class="tile-strip">
-            <a href="#r-box" class="jump-btn"><span>ReadMe</span></a>
-            <a href="#q-box" class="jump-btn"><span>Quotes</span></a>
-            <a href="#c-box" class="jump-btn"><span>Clients</span></a>
-            <a href="#m-box" class="jump-btn"><span>Calc</span></a>
-            <a href="#p-box" class="jump-btn"><span>Photos</span></a>
-            <a href="#b-box" class="jump-btn"><span>Profile</span></a>
+            <a href="#r-box" class="jump-btn active" id="btn-r"><i>📖</i><span>ReadMe</span></a>
+            <a href="#q-box" class="jump-btn" id="btn-q"><i>📝</i><span>Quotes</span></a>
+            <a href="#c-box" class="jump-btn" id="btn-c"><i>👥</i><span>Clients</span></a>
+            <a href="#m-box" class="jump-btn" id="btn-m"><i>🧮</i><span>Calc</span></a>
+            <a href="#p-box" class="jump-btn" id="btn-p"><i>📸</i><span>Photos</span></a>
+            <a href="#b-box" class="jump-btn" id="btn-b"><i>🏦</i><span>Profile</span></a>
         </div>
     </div>
 
@@ -96,8 +108,8 @@
         <div id="r-box" class="section-box">
             <div class="section-title">Operating Manual</div>
             <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:15px; border-radius:15px; border-left:4px solid #ff6600;">
-                <p>• <b>Snap-Scrolling:</b> Swipe up or down and the app will lock to the next tool automatically.</p><br>
-                <p>• <b>Itemised List:</b> Use the windows below to separate Labour and Materials.</p>
+                <p>• <b>Active Tracking:</b> The buttons at the top now illuminate as you move through your toolbox.</p><br>
+                <p>• <b>Snap-Lock:</b> The screen will lock onto each section for easier mobile use.</p>
             </div>
         </div>
 
@@ -129,9 +141,7 @@
                 <input type="checkbox" id="receipt-mode" style="width:30px; margin-bottom:0;">
             </div>
 
-            <div class="total-box">
-                <div class="total-val" id="quote-total-display">£0.00</div>
-            </div>
+            <div class="total-box"><div class="total-val" id="quote-total-display">£0.00</div></div>
             <button class="btn-green" onclick="sendWhatsAppQuote()">Send via WhatsApp</button>
         </div>
 
@@ -163,15 +173,40 @@
             <div class="section-title">Business Profile</div>
             <label>Trading Name</label><input type="text" id="bn" oninput="sv('bn',this.value)">
             <label>Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
-            <label>Account No.</label><input type="text" id="an" oninput="sv('an',this.value)">
-            <label>T&Cs</label><textarea id="mtc" style="height:120px;" oninput="sv('tc',this.value)"></textarea>
+            <label>Account Number</label><input type="text" id="an" oninput="sv('an',this.value)">
+            <label>Master T&Cs</label><textarea id="mtc" style="height:120px;" oninput="sv('tc',this.value)"></textarea>
         </div>
 
         <div class="footer-spacer"></div>
     </div>
 
 <script>
-    /* LOGIC [cite: 2026-02-28] */
+    /* ILLUMINATION LOGIC [cite: 2026-02-28] */
+    const sections = document.querySelectorAll(".section-box");
+    const navBtns = document.querySelectorAll(".jump-btn");
+
+    window.addEventListener("scroll", () => {
+        let current = "";
+        sections.forEach((section) => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            // Trigger light-up when section is near the header
+            if (pageYOffset >= (sectionTop - 250)) {
+                current = section.getAttribute("id");
+            }
+        });
+
+        navBtns.forEach((btn) => {
+            btn.classList.remove("active");
+            if (btn.getAttribute("href") === `#${current}`) {
+                btn.classList.add("active");
+                // Auto-scroll the horizontal menu if the active button is out of view
+                btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+        });
+    });
+
+    /* ITEMISER SCRIPT */
     function addNewRow(containerId, descClass, priceClass) {
         const container = document.getElementById(containerId);
         const div = document.createElement('div');
@@ -204,8 +239,7 @@
         const b = document.getElementById('bn').value;
         const s = document.getElementById('sc').value;
         const a = document.getElementById('an').value;
-        let msg = `*${isReceipt ? 'PAID RECEIPT' : 'JOB QUOTE'}*%0A%0A`;
-        msg += `*LABOUR:*%0A`;
+        let msg = `*${isReceipt ? 'PAID RECEIPT' : 'JOB QUOTE'}*%0A%0A*LABOUR:*%0A`;
         document.querySelectorAll('#lab-container .item-row').forEach(row => {
             let d = row.querySelector('.l-desc').value;
             let p = row.querySelector('.l-price').value;
@@ -217,20 +251,16 @@
             let p = row.querySelector('.m-price').value;
             if(d) msg += `- ${d}: £${parseFloat(p || 0).toFixed(2)}%0A`;
         });
-        msg += `%0A*TOTAL: ${document.getElementById('quote-total-display').innerText}*%0A%0A`;
-        msg += `Bank: ${b}%0ASort: ${s}%0AAcc: ${a}`;
+        msg += `%0A*TOTAL: ${document.getElementById('quote-total-display').innerText}*%0A%0APay: ${b} (${s}/${a})`;
         if(!isReceipt) msg += `%0A%0A*Terms:*%0A${encodeURIComponent(document.getElementById('mtc').value)}`;
         window.open("https://wa.me/?text=" + msg);
     }
 
     function saveClient() {
-        let n = document.getElementById('cn').value;
-        let a = document.getElementById('ca').value;
-        let t = document.getElementById('ctel').value;
+        let n = document.getElementById('cn').value; let a = document.getElementById('ca').value; let t = document.getElementById('ctel').value;
         if(!n) return;
         let list = JSON.parse(localStorage.getItem('TBP_CL') || "[]");
-        list.push({n, a, t});
-        localStorage.setItem('TBP_CL', JSON.stringify(list));
+        list.push({n, a, t}); localStorage.setItem('TBP_CL', JSON.stringify(list));
         document.getElementById('cn').value=''; document.getElementById('ca').value=''; document.getElementById('ctel').value='';
         loadClients();
     }
@@ -251,9 +281,7 @@
             let reader = new FileReader();
             reader.onload = function(e) {
                 let ph = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
-                ph.push(e.target.result);
-                localStorage.setItem('TBP_PH', JSON.stringify(ph));
-                loadPhotos();
+                ph.push(e.target.result); localStorage.setItem('TBP_PH', JSON.stringify(ph)); loadPhotos();
             };
             reader.readAsDataURL(input.files[0]);
         }
@@ -261,8 +289,7 @@
 
     function loadPhotos() {
         let ph = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
-        let h = "";
-        ph.forEach(p => h += `<img src="${p}" style="width:100%; height:150px; object-fit:cover; border-radius:15px; margin-bottom:10px;">`);
+        let h = ""; ph.forEach(p => h += `<img src="${p}" style="width:100%; height:150px; object-fit:cover; border-radius:15px; margin-bottom:10px;">`);
         document.getElementById('p-grid').innerHTML = h;
     }
 
