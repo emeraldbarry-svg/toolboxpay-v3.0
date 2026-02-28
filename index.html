@@ -3,134 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v18.7 TEXT-FIX</title>
+    <title>toolboxpay - v18.8 FORCE-TEXT</title>
     <style>
-        /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
+        /* CORE RESET [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: #111; color: #ffffff; font-family: sans-serif; overflow: hidden; position: fixed; width: 100%; height: 100%; }
-        #app-frame { max-width: 500px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; background: #4a4a4a; }
+        body { background-color: #111111 !important; margin: 0; font-family: sans-serif; overflow: hidden; position: fixed; width: 100%; height: 100%; }
         
-        header { background: #4a4a4a; padding: 15px; text-align: center; }
-        .brand-logo { font-size: 26px; font-weight: 900; text-transform: uppercase; color: #ffffff !important; display: block; }
-        .brand-logo span { color: #ff6600 !important; }
+        #app-shell { max-width: 500px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; background-color: #4a4a4a !important; }
+        
+        header { background-color: #4a4a4a !important; padding: 20px; text-align: center; border-bottom: 3px solid #ff6600; }
 
         /* HORIZONTAL SCROLLING NAV [cite: 2026-02-28] */
         .nav-ribbon {
             display: flex;
             overflow-x: auto;
-            gap: 12px;
+            gap: 10px;
             padding: 10px 15px 25px 15px;
-            background: #4a4a4a;
-            border-bottom: 2px solid #333;
+            background-color: #4a4a4a !important;
             -webkit-overflow-scrolling: touch;
         }
         .nav-ribbon::-webkit-scrollbar { display: none; }
 
-        .nav-box { 
+        .nav-item { 
             flex: 0 0 130px; 
-            background: #222; 
-            border: 2px solid #444; 
+            background-color: #222222 !important; 
+            border: 2px solid #444444 !important; 
             border-radius: 15px; 
             padding: 20px 5px; 
             text-align: center; 
             cursor: pointer;
         }
-        .nav-box span { color: #ff6600 !important; font-size: 12px; font-weight: 900; text-transform: uppercase; display: block; visibility: visible; }
-        .nav-box.active { background: #ff6600 !important; border-color: #ffffff !important; }
-        .nav-box.active span { color: #ffffff !important; }
+        .nav-item.lit { background-color: #ff6600 !important; border-color: #ffffff !important; }
 
         /* CONTENT AREAS [cite: 2026-02-28] */
-        #content-viewport { flex-grow: 1; padding: 20px; overflow-y: auto; }
-        .tab-layer { display: none; }
-        .tab-layer.active { display: block; }
+        #viewport { flex-grow: 1; padding: 20px; overflow-y: auto; background-color: #4a4a4a !important; }
+        .page-layer { display: none; }
+        .page-layer.lit { display: block; }
 
-        .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-bottom: 20px; }
-        .title-text { color: #ff6600 !important; font-size: 22px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; text-align: center; display: block; }
+        .content-card { background-color: #1e1e1e !important; border-radius: 25px; padding: 30px; border: 1px solid #333333; margin-bottom: 20px; }
         
-        label { display: block; font-size: 12px; color: #ff6600 !important; margin-bottom: 8px; font-weight: 900; text-transform: uppercase; visibility: visible; }
-        input { width: 100%; background: #000; border: 1px solid #444; color: #ffffff !important; padding: 18px; border-radius: 15px; font-size: 18px; margin-bottom: 20px; outline: none; display: block; }
-        input:focus { border-color: #ff6600; }
-
-        .calc-result { font-size: 38px; color: #25D366 !important; text-align: center; font-weight: 900; padding: 20px; background: #000; border-radius: 15px; border: 1px solid #333; }
+        /* INPUT STYLES */
+        input { width: 100%; background-color: #000000 !important; border: 1px solid #444444 !important; color: #ffffff !important; padding: 18px; border-radius: 12px; font-size: 18px; margin-bottom: 20px; outline: none; display: block; }
     </style>
 </head>
 <body>
 
-<div id="app-frame">
+<div id="app-shell">
     <header>
-        <div class="brand-logo">TOOLBOX<span>PAY</span></div>
+        <h1 style="color: #ffffff !important; font-size: 26px; font-weight: 900; text-transform: uppercase;">TOOLBOX<span style="color: #ff6600 !important;">PAY</span></h1>
     </header>
 
     <div class="nav-ribbon">
-        <div id="btn-1" class="nav-box active" onclick="tab(1)"><span>Profile</span></div>
-        <div id="btn-2" class="nav-box" onclick="tab(2)"><span>Bank</span></div>
-        <div id="btn-3" class="nav-box" onclick="tab(3)"><span>Calc</span></div>
-        <div id="btn-4" class="nav-box" onclick="tab(4)"><span>Gallery</span></div>
-        <div id="btn-5" class="nav-box" onclick="tab(5)"><span>Quotes</span></div>
-        <div id="btn-6" class="nav-box" onclick="tab(6)"><span>Expenses</span></div>
-        <div id="btn-7" class="nav-box" onclick="tab(7)"><span>Terms</span></div>
-        <div id="btn-8" class="nav-box" onclick="tab(8)"><span>ReadMe</span></div>
+        <div id="btn1" class="nav-item lit" onclick="show(1)"><span style="color:inherit; font-size:12px; font-weight:900; text-transform:uppercase; color:#ff6600;">Profile</span></div>
+        <div id="btn2" class="nav-item" onclick="show(2)"><span style="color:inherit; font-size:12px; font-weight:900; text-transform:uppercase; color:#ff6600;">Bank</span></div>
+        <div id="btn3" class="nav-item" onclick="show(3)"><span style="color:inherit; font-size:12px; font-weight:900; text-transform:uppercase; color:#ff6600;">Calc</span></div>
+        <div id="btn4" class="nav-item" onclick="show(4)"><span style="color:inherit; font-size:12px; font-weight:900; text-transform:uppercase; color:#ff6600;">Gallery</span></div>
+        <div id="btn5" class="nav-item" onclick="show(5)"><span style="color:inherit; font-size:12px; font-weight:900; text-transform:uppercase; color:#ff6600;">Quotes</span></div>
+        <div id="btn6" class="nav-item" onclick="show(6)"><span style="color:inherit; font-size:12px; font-weight:900; text-transform:uppercase; color:#ff6600;">Expenses</span></div>
+        <div id="btn7" class="nav-item" onclick="show(7)"><span style="color:inherit; font-size:12px; font-weight:900; text-transform:uppercase; color:#ff6600;">Terms</span></div>
+        <div id="btn8" class="nav-item" onclick="show(8)"><span style="color:inherit; font-size:12px; font-weight:900; text-transform:uppercase; color:#ff6600;">ReadMe</span></div>
     </div>
 
-    <div id="content-viewport">
-        <div id="tab-1" class="tab-layer active">
-            <div class="card">
-                <div class="title-text">Business Profile</div>
-                <label>Business Name</label>
-                <input type="text" id="in-name" placeholder="Enter Business Name">
-                <label>Specialising In</label>
-                <input type="text" id="in-spec" placeholder="e.g. Electrician">
+    <div id="viewport">
+        <div id="pg1" class="page-layer lit">
+            <div class="content-card">
+                <h2 style="color: #ff6600 !important; font-size: 22px; font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px;">Business Profile</h2>
+                <label style="color: #ff6600 !important; font-size: 11px; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 8px;">Business Name</label>
+                <input type="text" placeholder="Enter Name">
+                <label style="color: #ff6600 !important; font-size: 11px; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 8px;">Specialising In</label>
+                <input type="text" placeholder="e.g. Plumbing">
             </div>
         </div>
 
-        <div id="tab-2" class="tab-layer">
-            <div class="card">
-                <div class="title-text">Bank Details</div>
-                <label>Bank Name</label>
-                <input type="text" id="in-bank" placeholder="Nationwide">
-                <label>Sort Code</label>
-                <input type="text" id="in-sort" placeholder="00-00-00">
-                <label>Account Number</label>
-                <input type="text" id="in-acc" placeholder="00000000">
+        <div id="pg2" class="page-layer">
+            <div class="content-card">
+                <h2 style="color: #ff6600 !important; font-size: 22px; font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px;">Bank Details</h2>
+                <label style="color: #ff6600 !important; font-size: 11px; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 8px;">Bank Name</label>
+                <input type="text" placeholder="Nationwide">
+                <label style="color: #ff6600 !important; font-size: 11px; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 8px;">Sort Code</label>
+                <input type="text" placeholder="00-00-00">
+                <label style="color: #ff6600 !important; font-size: 11px; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 8px;">Account Number</label>
+                <input type="text" placeholder="00000000">
             </div>
         </div>
 
-        <div id="tab-3" class="tab-layer">
-            <div class="card">
-                <div class="title-text">VAT Calculator</div>
-                <label>Net Amount (£)</label>
-                <input type="number" id="in-net" placeholder="0.00" oninput="runVat()">
-                <div class="calc-result" id="res-total">£0.00</div>
+        <div id="pg3" class="page-layer">
+            <div class="content-card">
+                <h2 style="color: #ff6600 !important; font-size: 22px; font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px;">VAT Calculator</h2>
+                <label style="color: #ff6600 !important; font-size: 11px; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 8px;">Net Amount (£)</label>
+                <input type="number" id="vNet" placeholder="0.00" oninput="vCalc()">
+                <div id="vRes" style="font-size: 40px; color: #25D366 !important; text-align: center; font-weight: 900; background: #000; padding: 20px; border-radius: 15px; margin-top: 10px;">£0.00</div>
             </div>
         </div>
 
-        <div id="tab-4" class="tab-layer"><div class="card"><div class="title-text">Gallery</div></div></div>
-        <div id="tab-5" class="tab-layer"><div class="card"><div class="title-text">Quotes</div></div></div>
-        <div id="tab-6" class="tab-layer"><div class="card"><div class="title-text">Expenses</div></div></div>
-        <div id="tab-7" class="tab-layer"><div class="card"><div class="title-text">Terms</div></div></div>
-        <div id="tab-8" class="tab-layer"><div class="card"><div class="title-text">ReadMe</div></div></div>
+        <div id="pg4" class="page-layer"><div class="content-card"><h2 style="color:#ff6600; text-align:center;">Gallery</h2></div></div>
+        <div id="pg5" class="page-layer"><div class="content-card"><h2 style="color:#ff6600; text-align:center;">Quotes</h2></div></div>
+        <div id="pg6" class="page-layer"><div class="content-card"><h2 style="color:#ff6600; text-align:center;">Expenses</h2></div></div>
+        <div id="pg7" class="page-layer"><div class="content-card"><h2 style="color:#ff6600; text-align:center;">Terms</h2></div></div>
+        <div id="pg8" class="page-layer"><div class="content-card"><h2 style="color:#ff6600; text-align:center;">ReadMe</h2></div></div>
     </div>
 </div>
 
 <script>
-    function tab(n) {
-        // Switch Pages
-        var layers = document.getElementsByClassName('tab-layer');
-        for (var i = 0; i < layers.length; i++) { layers[i].classList.remove('active'); }
-        document.getElementById('tab-' + n).classList.add('active');
+    function show(n) {
+        // Switch Layers
+        var layers = document.getElementsByClassName('page-layer');
+        for (var i = 0; i < layers.length; i++) { layers[i].classList.remove('lit'); }
+        document.getElementById('pg' + n).classList.add('lit');
 
-        // Switch Buttons
-        var btns = document.getElementsByClassName('nav-box');
-        for (var j = 0; j < btns.length; j++) { btns[j].classList.remove('active'); }
-        document.getElementById('btn-' + n).classList.add('active');
+        // Switch Nav Buttons
+        var btns = document.getElementsByClassName('nav-item');
+        for (var j = 0; j < btns.length; j++) { 
+            btns[j].classList.remove('lit'); 
+            btns[j].firstElementChild.style.color = '#ff6600';
+        }
+        document.getElementById('btn' + n).classList.add('lit');
+        document.getElementById('btn' + n).firstElementChild.style.color = '#ffffff';
 
-        // Center scroll
-        document.getElementById('btn-' + n).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        // Center the ribbon
+        document.getElementById('btn' + n).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
 
-    function runVat() {
-        var val = parseFloat(document.getElementById('in-net').value) || 0;
-        document.getElementById('res-total').innerText = "£" + (val * 1.20).toFixed(2);
+    function vCalc() {
+        var net = parseFloat(document.getElementById('vNet').value) || 0;
+        document.getElementById('vRes').innerText = "£" + (net * 1.20).toFixed(2);
     }
 </script>
 
