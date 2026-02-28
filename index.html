@@ -3,99 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v12.9</title>
+    <title>toolboxpay - v13.0</title>
     <style>
         /* THEME & LAYOUT [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
-        body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
+        html { 
+            scroll-behavior: smooth; 
+            scroll-snap-type: y proximity; /* Changed from 'mandatory' to 'proximity' to stop the jumping */
+        }
+        
+        body { background: #4a4a4a; color: #fff; font-family: sans-serif; min-height: 100vh; }
+
         /* STICKY HEADER */
         #dashboard-header { 
-            position: sticky; top: 0; width: 100%; max-width: 420px; 
-            background: #4a4a4a; padding: 15px 20px; z-index: 100; 
-            border-bottom: 2px solid #ff6600; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: sticky; top: 0; width: 100%; 
+            background: #4a4a4a; padding: 15px 10px; z-index: 1000; 
+            border-bottom: 2px solid #ff6600;
         }
-        .logo { text-align: center; font-size: 32px; font-weight: 900; letter-spacing: -2px; margin-bottom: 15px; }
+        .logo { text-align: center; font-size: 28px; font-weight: 900; margin-bottom: 12px; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        .tile-strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; }
+        .tile-strip { display: flex; gap: 8px; overflow-x: auto; padding: 5px; scrollbar-width: none; }
         .tile-strip::-webkit-scrollbar { display: none; }
         
+        /* TWO-COLOUR ACTIVE BUTTON */
         .jump-btn { 
-            background: #222; border: 1px solid #444; border-radius: 12px; 
-            padding: 10px; text-decoration: none; display: flex; 
-            flex-direction: column; align-items: center; min-width: 85px;
-            transition: all 0.3s ease;
+            background: #222; border: 2px solid #444; border-radius: 12px; 
+            padding: 12px 15px; text-decoration: none; display: flex; 
+            flex-direction: column; align-items: center; min-width: 90px;
+            transition: 0.2s;
         }
         .jump-btn span { color: #888; font-weight: 800; font-size: 10px; text-transform: uppercase; margin-top: 4px; }
-        .jump-btn.active { background: #ff6600; border-color: #fff; }
-        .jump-btn.active span { color: #fff; }
+        
+        /* ACTIVE STATE: Orange Body, White Border */
+        .jump-btn.active { 
+            background: #ff6600 !important; 
+            border-color: #ffffff !important; 
+            box-shadow: 0 0 10px rgba(255,102,0,0.5);
+        }
+        .jump-btn.active span { color: #ffffff !important; }
+        .jump-btn.active i { filter: brightness(2); }
 
-        /* CONTENT CONTAINERS */
-        #content-area { width: 100%; max-width: 420px; padding: 20px; }
+        /* CONTENT AREA */
+        #content-area { width: 100%; max-width: 420px; margin: 0 auto; padding: 20px; }
+        
         .section-box { 
             background: #1e1e1e; border-radius: 25px; padding: 25px; 
-            border: 1px solid #333; margin-bottom: 100px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            scroll-snap-align: start; scroll-margin-top: 180px;
+            border: 1px solid #333; margin-bottom: 60vh; /* Large gap to prevent overlapping snaps */
+            scroll-snap-align: start; 
+            scroll-margin-top: 170px; /* Aligns with header */
         }
         .section-title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; text-align: center; }
 
-        /* GALLERY SPECIFIC */
-        .photo-card { position: relative; background: #000; border-radius: 15px; overflow: hidden; margin-bottom: 15px; border: 1px solid #333; }
-        .photo-card img { width: 100%; height: 200px; object-fit: cover; display: block; }
-        .photo-info { padding: 10px; background: rgba(0,0,0,0.8); display: flex; justify-content: space-between; align-items: center; }
-        .tag-pill { background: #ff6600; color: #fff; padding: 4px 8px; border-radius: 5px; font-size: 10px; font-weight: 800; }
-
-        /* FORM STYLING */
+        /* FORM ELEMENTS */
         label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; }
-        input, select, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 15px; margin-bottom: 20px; outline: none; }
+        input, select, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 15px; margin-bottom: 15px; outline: none; }
         .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
-        .add-row-btn { background: #444; color: #ff6600; border: 1px dashed #ff6600; padding: 10px; border-radius: 10px; width: 100%; font-weight: 900; margin-bottom: 20px; }
-        .item-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
-        .item-row input { margin-bottom: 0 !important; }
+        
+        /* ITEM ROWS */
+        .item-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        .item-row input { margin-bottom: 0; }
+        .add-row-btn { background: #333; color: #ff6600; border: 1px dashed #ff6600; padding: 10px; border-radius: 10px; width: 100%; font-weight: 900; margin-bottom: 20px; cursor: pointer; }
+
         .total-box { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; margin: 20px 0; text-align: right; }
-        .total-val { font-size: 45px; color: #ff6600; font-weight: 900; }
-        .footer-spacer { height: 60vh; }
+        .total-val { font-size: 40px; color: #ff6600; font-weight: 900; }
+        
+        .photo-card { background: #000; border-radius: 15px; overflow: hidden; margin-bottom: 15px; border: 1px solid #333; }
+        .photo-card img { width: 100%; height: 200px; object-fit: cover; }
     </style>
 </head>
 <body>
 
     <div id="dashboard-header">
         <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
-        <div class="tile-strip">
-            <a href="#r-box" class="jump-btn active"><span>ReadMe</span></a>
-            <a href="#q-box" class="jump-btn"><span>Quotes</span></a>
-            <a href="#c-box" class="jump-btn"><span>Clients</span></a>
-            <a href="#m-box" class="jump-btn"><span>Calc</span></a>
-            <a href="#p-box" class="jump-btn"><span>Gallery</span></a>
-            <a href="#b-box" class="jump-btn"><span>Profile</span></a>
+        <div class="tile-strip" id="nav-strip">
+            <a href="#r-box" class="jump-btn active" onclick="smoothJump(event, 'r-box')"><i>📖</i><span>ReadMe</span></a>
+            <a href="#q-box" class="jump-btn" onclick="smoothJump(event, 'q-box')"><i>📝</i><span>Quotes</span></a>
+            <a href="#c-box" class="jump-btn" onclick="smoothJump(event, 'c-box')"><i>👥</i><span>Clients</span></a>
+            <a href="#m-box" class="jump-btn" onclick="smoothJump(event, 'm-box')"><i>🧮</i><span>Calc</span></a>
+            <a href="#p-box" class="jump-btn" onclick="smoothJump(event, 'p-box')"><i>📸</i><span>Gallery</span></a>
+            <a href="#b-box" class="jump-btn" onclick="smoothJump(event, 'b-box')"><i>🏦</i><span>Profile</span></a>
         </div>
     </div>
 
     <div id="content-area">
-        
         <div id="r-box" class="section-box">
             <div class="section-title">Operating Manual</div>
             <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:15px; border-radius:15px; border-left:4px solid #ff6600;">
-                <p>• <b>Smart Gallery:</b> Photos are now linked to customers. Use the <b>Filter</b> to see only one client's photos.</p><br>
-                <p>• <b>Navigation:</b> Use the top bar to jump or just scroll and watch the buttons illuminate.</p>
+                <p>• <b>Smoother Navigation:</b> Tap the top buttons to glide directly to a tool.</p><br>
+                <p>• <b>Gallery Filters:</b> Link photos to clients to keep your records tidy.</p>
             </div>
         </div>
 
         <div id="q-box" class="section-box">
             <div class="section-title">Job Quote</div>
-            <label>Select Client</label><select id="q-cli-pick"><option>Loading...</option></select>
-            <label>Labour</label>
-            <div id="lab-container"><div class="item-row"><input type="text" class="l-desc" style="flex:2;" placeholder="Description"><input type="number" class="l-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
+            <label>Client</label><select id="q-cli-pick"></select>
+            <label>Labour Window</label>
+            <div id="lab-container"><div class="item-row"><input type="text" class="l-desc" style="flex:2;" placeholder="Labour Task"><input type="number" class="l-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
             <button class="add-row-btn" onclick="addNewRow('lab-container', 'l-desc', 'l-price')">+ ADD LABOUR</button>
-            <label>Materials</label>
+            <label>Materials Window</label>
             <div id="mat-container"><div class="item-row"><input type="text" class="m-desc" style="flex:2;" placeholder="Material"><input type="number" class="m-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
             <button class="add-row-btn" onclick="addNewRow('mat-container', 'm-desc', 'm-price')">+ ADD MATERIAL</button>
-            <div class="total-box"><div class="total-val" id="quote-total-display">£0.00</div></div>
-            <button class="btn-green" onclick="sendWhatsAppQuote()">Send Quote</button>
+            <div class="total-box"><div class="total-val" id="qt">£0.00</div></div>
+            <button class="btn-green" onclick="sendW()">Send Quote</button>
         </div>
 
         <div id="c-box" class="section-box">
@@ -103,34 +115,24 @@
             <label>Name</label><input type="text" id="cn">
             <label>Address</label><textarea id="ca" style="height:60px;"></textarea>
             <label>Phone</label><input type="tel" id="ctel">
-            <button class="btn-green" style="background:#ff6600; color:#fff;" onclick="saveClient()">Save Client</button>
+            <button class="btn-green" style="background:#ff6600; color:#fff;" onclick="saveC()">Save Client</button>
             <div id="cl-list" style="margin-top:20px;"></div>
         </div>
 
         <div id="m-box" class="section-box">
             <div class="section-title">Pricing Tool</div>
-            <label>Day Rate (£)</label><input type="number" id="day-r" oninput="calcP()">
-            <label>Days</label><input type="number" id="day-n" oninput="calcP()">
-            <label>Materials (£)</label><input type="number" id="mat-c" oninput="calcP()">
-            <div class="total-box"><div class="total-val" id="calc-res">£0.00</div></div>
+            <label>Day Rate (£)</label><input type="number" id="dr" oninput="calcM()">
+            <label>Days</label><input type="number" id="dn" oninput="calcM()">
+            <label>Materials (£)</label><input type="number" id="mc" oninput="calcM()">
+            <div class="total-box"><div class="total-val" id="mt">£0.00</div></div>
         </div>
 
         <div id="p-box" class="section-box">
             <div class="section-title">Job Gallery</div>
-            
-            <div style="background:#222; padding:15px; border-radius:15px; margin-bottom:20px; border:1px solid #444;">
-                <label>Filter by Client</label>
-                <select id="p-filter" onchange="loadPhotos()">
-                    <option value="ALL">Show All Photos</option>
-                </select>
-            </div>
-
-            <label>Link to Client</label>
-            <select id="p-client-tag"><option>Select Client...</option></select>
-            
-            <input type="file" id="p-file" accept="image/*" style="display:none;" onchange="handlePhoto(this)">
-            <button class="btn-green" onclick="document.getElementById('p-file').click()">Capture Job Photo</button>
-            
+            <label>Filter By Client</label><select id="p-filter" onchange="loadP()"><option value="ALL">All Photos</option></select>
+            <label>Tag to Client</label><select id="p-tag-cli"></select>
+            <input type="file" id="pf" style="display:none;" onchange="handleP(this)">
+            <button class="btn-green" onclick="document.getElementById('pf').click()">Add Photo</button>
             <div id="p-grid" style="margin-top:20px;"></div>
         </div>
 
@@ -139,146 +141,126 @@
             <label>Trading Name</label><input type="text" id="bn" oninput="sv('bn',this.value)">
             <label>Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
             <label>Account Number</label><input type="text" id="an" oninput="sv('an',this.value)">
-            <label>T&Cs</label><textarea id="mtc" style="height:120px;" oninput="sv('tc',this.value)"></textarea>
+            <label>Terms</label><textarea id="tc" oninput="sv('tc',this.value)"></textarea>
         </div>
-
-        <div class="footer-spacer"></div>
     </div>
 
 <script>
-    /* GALLERY LOGIC [cite: 2026-02-28] */
-    function handlePhoto(input) {
-        const clientName = document.getElementById('p-client-tag').value;
-        if (clientName === "Select Client...") { alert("Please select a client first!"); return; }
+    /* FIX FOR JUMPY SCROLLING [cite: 2026-02-28] */
+    function smoothJump(e, id) {
+        e.preventDefault();
+        const target = document.getElementById(id);
+        // Temporarily disable snap to prevent fighting the browser
+        document.documentElement.style.scrollSnapType = "none";
         
-        if (input.files[0]) {
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                let ph = JSON.parse(localStorage.getItem('TBP_PH_V2') || "[]");
-                ph.push({
-                    src: e.target.result,
-                    client: clientName,
-                    date: new Date().toLocaleDateString('en-GB')
-                });
-                localStorage.setItem('TBP_PH_V2', JSON.stringify(ph));
-                loadPhotos();
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function loadPhotos() {
-        const filter = document.getElementById('p-filter').value;
-        const ph = JSON.parse(localStorage.getItem('TBP_PH_V2') || "[]");
-        let h = "";
-        
-        ph.forEach((p, index) => {
-            if (filter === "ALL" || p.client === filter) {
-                h += `
-                <div class="photo-card">
-                    <img src="${p.src}">
-                    <div class="photo-info">
-                        <div>
-                            <span class="tag-pill">${p.client}</span>
-                            <div style="font-size:10px; color:#888; margin-top:5px;">${p.date}</div>
-                        </div>
-                        <button onclick="delPhoto(${index})" style="background:none; border:none; color:red; font-weight:900;">DELETE</button>
-                    </div>
-                </div>`;
-            }
+        window.scrollTo({
+            top: target.offsetTop - 160,
+            behavior: "smooth"
         });
-        document.getElementById('p-grid').innerHTML = h || "<p style='text-align:center; color:#666;'>No photos found for this client.</p>";
+
+        // Re-enable snap after the move is done
+        setTimeout(() => {
+            document.documentElement.style.scrollSnapType = "y proximity";
+        }, 1000);
     }
 
-    function delPhoto(i) {
-        let ph = JSON.parse(localStorage.getItem('TBP_PH_V2') || "[]");
-        ph.splice(i, 1);
-        localStorage.setItem('TBP_PH_V2', JSON.stringify(ph));
-        loadPhotos();
-    }
-
-    /* CLIENT & NAV LOGIC */
-    function saveClient() {
-        let n = document.getElementById('cn').value;
-        let a = document.getElementById('ca').value;
-        let t = document.getElementById('ctel').value;
-        if(!n) return;
-        let list = JSON.parse(localStorage.getItem('TBP_CL') || "[]");
-        list.push({n, a, t});
-        localStorage.setItem('TBP_CL', JSON.stringify(list));
-        document.getElementById('cn').value=''; document.getElementById('ca').value=''; document.getElementById('ctel').value='';
-        loadClients();
-    }
-
-    function loadClients() {
-        let list = JSON.parse(localStorage.getItem('TBP_CL') || "[]");
-        let h = ""; 
-        let sel = '<option>Select Client...</option>';
-        let filterSel = '<option value="ALL">Show All Photos</option>';
-        
-        list.forEach(c => {
-            h += `<div style="background:#000; padding:15px; border-radius:15px; margin-bottom:10px; border-left:4px solid #ff6600;"><b>${c.n}</b><br><small>${c.a}</small></div>`;
-            sel += `<option value="${c.n}">${c.n}</option>`;
-            filterSel += `<option value="${c.n}">${c.n}</option>`;
-        });
-        
-        document.getElementById('cl-list').innerHTML = h;
-        document.getElementById('q-cli-pick').innerHTML = sel;
-        document.getElementById('p-client-tag').innerHTML = sel;
-        document.getElementById('p-filter').innerHTML = filterSel;
-    }
-
-    /* NAVIGATION GLOW */
+    /* NAVIGATION HIGHLIGHTER */
     window.addEventListener("scroll", () => {
         let current = "";
-        document.querySelectorAll(".section-box").forEach((section) => {
-            if (pageYOffset >= (section.offsetTop - 250)) { current = section.getAttribute("id"); }
+        document.querySelectorAll(".section-box").forEach(sb => {
+            if (pageYOffset >= (sb.offsetTop - 200)) { current = sb.getAttribute("id"); }
         });
-        document.querySelectorAll(".jump-btn").forEach((btn) => {
+        document.querySelectorAll(".jump-btn").forEach(btn => {
             btn.classList.remove("active");
-            if (btn.getAttribute("href") === `#${current}`) { 
+            if (btn.getAttribute("href") === "#" + current) {
                 btn.classList.add("active");
                 btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
             }
         });
     });
 
-    /* STANDARD HELPERS */
-    function addNewRow(id, dCl, pCl) {
-        const div = document.createElement('div');
-        div.className = 'item-row';
-        div.innerHTML = `<input type="text" class="${dCl}" style="flex:2;" placeholder="Desc"><input type="number" class="${pCl}" style="flex:0.8;" placeholder="£" oninput="runTotal()"><span onclick="this.parentElement.remove(); runTotal();" style="color:red; font-weight:900;">×</span>`;
-        document.getElementById(id).appendChild(div);
+    /* ITEMISER & QUOTES */
+    function addNewRow(contId, dCl, pCl) {
+        const d = document.createElement('div');
+        d.className = 'item-row';
+        d.innerHTML = `<input type="text" class="${dCl}" style="flex:2;"><input type="number" class="${pCl}" style="flex:0.8;" oninput="runTotal()"><span onclick="this.parentElement.remove();runTotal();" style="color:red;padding:10px;">×</span>`;
+        document.getElementById(contId).appendChild(d);
     }
     function runTotal() {
         let t = 0; document.querySelectorAll('.l-price, .m-price').forEach(i => t += parseFloat(i.value) || 0);
-        document.getElementById('quote-total-display').innerText = "£" + t.toFixed(2);
+        document.getElementById('qt').innerText = "£" + t.toFixed(2);
     }
-    function calcP() {
-        let r = parseFloat(document.getElementById('day-r').value) || 0;
-        let d = parseFloat(document.getElementById('day-n').value) || 0;
-        let m = parseFloat(document.getElementById('mat-c').value) || 0;
-        document.getElementById('calc-res').innerText = "£" + ((r * d + m) * 1.2).toFixed(2);
-    }
-    function sv(k, v) { localStorage.setItem('TBP_' + k, v); }
-
-    function sendWhatsAppQuote() {
-        const b = document.getElementById('bn').value; const s = document.getElementById('sc').value; const a = document.getElementById('an').value;
-        let msg = `*JOB QUOTE*%0A%0A*LABOUR:*%0A`;
-        document.querySelectorAll('#lab-container .item-row').forEach(row => {
-            let d = row.querySelector('.l-desc').value; let p = row.querySelector('.l-price').value;
-            if(d) msg += `- ${d}: £${parseFloat(p || 0).toFixed(2)}%0A`;
+    function sendW() {
+        const b = document.getElementById('bn').value;
+        const s = document.getElementById('sc').value;
+        const a = document.getElementById('an').value;
+        let msg = `*QUOTE*%0A%0A*LABOUR:*%0A`;
+        document.querySelectorAll('#lab-container .item-row').forEach(r => {
+            let d = r.querySelector('.l-desc').value; let p = r.querySelector('.l-price').value;
+            if(d) msg += `- ${d}: £${parseFloat(p||0).toFixed(2)}%0A`;
         });
-        msg += `%0A*TOTAL: ${document.getElementById('quote-total-display').innerText}*%0A%0APay: ${b} (${s}/${a})`;
+        msg += `%0A*TOTAL: ${document.getElementById('qt').innerText}*%0A%0APay: ${b} (${s}/${a})`;
         window.open("https://wa.me/?text=" + msg);
     }
 
+    /* CLIENTS & PHOTOS */
+    function saveC() {
+        let n = document.getElementById('cn').value;
+        if(!n) return;
+        let l = JSON.parse(localStorage.getItem('TBP_CL') || "[]");
+        l.push({n, a: document.getElementById('ca').value, t: document.getElementById('ctel').value});
+        localStorage.setItem('TBP_CL', JSON.stringify(l));
+        document.getElementById('cn').value=''; loadC();
+    }
+    function loadC() {
+        let l = JSON.parse(localStorage.getItem('TBP_CL') || "[]");
+        let h = ""; let s = '<option>Select Client...</option>';
+        l.forEach(c => {
+            h += `<div style="background:#000;padding:15px;border-radius:15px;margin-bottom:10px;border-left:4px solid #ff6600;"><b>${c.n}</b></div>`;
+            s += `<option value="${c.n}">${c.n}</option>`;
+        });
+        document.getElementById('cl-list').innerHTML = h;
+        document.getElementById('q-cli-pick').innerHTML = s;
+        document.getElementById('p-tag-cli').innerHTML = s;
+        document.getElementById('p-filter').innerHTML = '<option value="ALL">All Photos</option>' + s;
+    }
+    function handleP(input) {
+        const cli = document.getElementById('p-tag-cli').value;
+        if(cli === "Select Client...") { alert("Tag a client first"); return; }
+        if(input.files[0]) {
+            let r = new FileReader();
+            r.onload = function(e) {
+                let ph = JSON.parse(localStorage.getItem('TBP_PH_V3') || "[]");
+                ph.push({src: e.target.result, cli: cli});
+                localStorage.setItem('TBP_PH_V3', JSON.stringify(ph)); loadP();
+            };
+            r.readAsDataURL(input.files[0]);
+        }
+    }
+    function loadP() {
+        const f = document.getElementById('p-filter').value;
+        const ph = JSON.parse(localStorage.getItem('TBP_PH_V3') || "[]");
+        let h = "";
+        ph.forEach(p => {
+            if(f === "ALL" || p.cli === f) h += `<div class="photo-card"><img src="${p.src}"><div style="padding:10px;font-size:10px;color:#ff6600;">${p.cli}</div></div>`;
+        });
+        document.getElementById('p-grid').innerHTML = h;
+    }
+
+    function calcM() {
+        let r = parseFloat(document.getElementById('dr').value) || 0;
+        let d = parseFloat(document.getElementById('dn').value) || 0;
+        let m = parseFloat(document.getElementById('mc').value) || 0;
+        document.getElementById('mt').innerText = "£" + ((r * d + m) * 1.2).toFixed(2);
+    }
+    function sv(k, v) { localStorage.setItem('TBP_' + k, v); }
+
     window.onload = function() {
-        loadClients(); loadPhotos();
+        loadC(); loadP();
         document.getElementById('bn').value = localStorage.getItem('TBP_bn') || "";
         document.getElementById('sc').value = localStorage.getItem('TBP_sc') || "";
         document.getElementById('an').value = localStorage.getItem('TBP_an') || "";
-        document.getElementById('mtc').value = localStorage.getItem('TBP_tc') || "1. Valid for 30 days.";
+        document.getElementById('tc').value = localStorage.getItem('TBP_tc') || "";
     };
 </script>
 </body>
