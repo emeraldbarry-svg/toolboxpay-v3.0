@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v15.9</title>
+    <title>toolboxpay - v16.0</title>
     <style>
         /* CORE SETUP */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -53,26 +53,23 @@
         .title { color: #ff6600; font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; border-bottom: 2px solid #ff6600; padding-bottom: 8px; text-align: center; }
         
         label { display: block; font-size: 10px; color: #ff6600; margin-bottom: 4px; font-weight: 800; text-transform: uppercase; }
-        input, select, textarea { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 14px; border-radius: 10px; font-size: 16px; margin-bottom: 12px; outline: none; }
-        
-        .btn-green { width: 100%; background: #25D366; color: #000; padding: 18px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 14px; cursor: pointer; }
-        .btn-red { background: #ff4444; color: #fff; }
-        .btn-orange { background: #ff6600; color: #fff; }
-        .btn-plus { width: 50px; height: 50px; background: #ff6600; color: #fff; border-radius: 10px; border: none; font-size: 24px; font-weight: 900; margin-bottom: 15px; cursor: pointer; }
+        input { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 14px; border-radius: 10px; font-size: 18px; margin-bottom: 12px; outline: none; }
 
-        /* EXPENSE ENGINE STYLES */
-        #receipt-preview { width: 100%; height: 200px; background: #000; border-radius: 12px; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; overflow: hidden; }
-        #receipt-preview img { width: 100%; height: 100%; object-fit: contain; }
-        
-        .exp-item-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .exp-item-row input[type="text"] { flex: 2; margin-bottom: 0; }
-        .exp-item-row input[type="number"] { flex: 1; margin-bottom: 0; }
+        /* CALC SPECIFIC */
+        .calc-display { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; text-align: right; margin-top: 10px; }
+        .calc-total { color: #ff6600; font-size: 32px; font-weight: 900; display: block; }
+        .calc-sub { color: #888; font-size: 12px; font-weight: 800; margin-top: 5px; }
 
-        .expense-log-card { background: #111; padding: 15px; border-radius: 12px; border-left: 5px solid #ff6600; margin-bottom: 12px; color: #fff; position: relative; }
-        .expense-log-card img { width: 60px; height: 60px; border-radius: 8px; float: left; margin-right: 15px; background: #222; object-fit: cover; }
-        .expense-log-card b { color: #ff6600; font-size: 16px; }
-        .expense-log-card p { font-size: 11px; color: #aaa; margin-top: 4px; line-height: 1.3; }
-        .expense-log-card .date-stamp { position: absolute; top: 15px; right: 15px; font-size: 10px; color: #666; font-weight: 800; }
+        .vat-toggle { display: flex; align-items: center; justify-content: space-between; background: #222; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .vat-toggle span { color: #fff; font-weight: 800; font-size: 14px; }
+        
+        /* British Switch Style */
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #ff6600; }
+        input:checked + .slider:before { transform: translateX(24px); }
     </style>
 </head>
 <body>
@@ -83,8 +80,8 @@
         <div class="nav-grid">
             <div class="nav-btn" id="btn-readme" onclick="show('readme')"><i>📖</i><span>ReadMe</span></div>
             <div class="nav-btn" id="btn-quotes" onclick="show('quotes')"><i>📝</i><span>Quotes</span></div>
-            <div class="nav-btn active" id="btn-expenses" onclick="show('expenses')"><i>🧾</i><span>Exp.</span></div>
-            <div class="nav-btn" id="btn-calc" onclick="show('calc')"><i>🧮</i><span>Calc</span></div>
+            <div class="nav-btn" id="btn-expenses" onclick="show('expenses')"><i>🧾</i><span>Exp.</span></div>
+            <div class="nav-btn active" id="btn-calc" onclick="show('calc')"><i>🧮</i><span>Calc</span></div>
             <div class="nav-btn" id="btn-gallery" onclick="show('gallery')"><i>📸</i><span>Gallery</span></div>
             <div class="nav-btn" id="btn-bank" onclick="show('bank')"><i>🏦</i><span>Bank</span></div>
             <div class="nav-btn" id="btn-terms" onclick="show('terms')"><i>⚖️</i><span>Terms</span></div>
@@ -93,59 +90,18 @@
     </header>
 
     <div id="viewport">
-        <div id="p-expenses" class="page active">
+        <div id="p-calc" class="page active">
             <div class="card">
-                <div class="title">Expense Logger</div>
+                <div class="title">Labour Calculator</div>
                 
-                <div id="receipt-preview">
-                    <span id="exp-hint" style="color:#666; font-weight:800; font-size:10px;">SNAP RECEIPT</span>
-                    <img id="exp-img-out" style="display:none;">
-                </div>
+                <label>Day Rate (£)</label>
+                <input type="number" id="calc-rate" placeholder="0.00" oninput="runCalc()">
 
-                <div id="exp-snap-zone">
-                    <label>Receipt Camera</label>
-                    <input type="file" id="exp-file" accept="image/*" capture="environment" onchange="previewExp(this)">
-                </div>
+                <label>Days Worked</label>
+                <input type="number" id="calc-days" value="1" oninput="runCalc()">
 
-                <div id="exp-review" style="display:none; gap:10px; margin-bottom:15px;">
-                    <button class="btn-green btn-red" onclick="resetExp()">RETAKE ❌</button>
-                    <button class="btn-green" onclick="acceptExp()">ACCEPT ✅</button>
-                </div>
-
-                <div id="exp-data-entry" style="display:none;">
-                    <label>Expense Date</label>
-                    <input type="date" id="exp-date">
-
-                    <label>Items & Labour</label>
-                    <div id="exp-rows">
-                        <div class="exp-item-row">
-                            <input type="text" placeholder="Item Name" class="row-desc">
-                            <input type="number" placeholder="£" class="row-val">
-                        </div>
-                    </div>
-                    <button class="btn-plus" onclick="addExpRow()">+</button>
-
-                    <button class="btn-green btn-orange" onclick="saveExp()">SAVE EXPENSE</button>
-                </div>
-            </div>
-
-            <div id="expense-history">
-                </div>
-        </div>
-
-        <div id="p-readme" class="page"><div class="card"><div class="title">Manual</div></div></div>
-        <div id="p-quotes" class="page"><div class="card"><div class="title">Quotes</div></div></div>
-        <div id="p-calc" class="page"><div class="card"><div class="title">Calc</div></div></div>
-        <div id="p-gallery" class="page"><div class="card"><div class="title">Gallery</div></div></div>
-        <div id="p-bank" class="page"><div class="card"><div class="title">Bank</div></div></div>
-        <div id="p-terms" class="page"><div class="card"><div class="title">Terms</div></div></div>
-        <div id="p-profile" class="page"><div class="card"><div class="title">Profile</div></div></div>
-    </div>
-</div>
-
-<script>
-    function show(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('p-' + id).classList.add('active');
-        document.getElementById('btn-' +
+                <div class="vat-toggle">
+                    <span>ADD VAT (20%)</span>
+                    <label class="switch">
+                        <input type="checkbox" id="calc-vat" onchange="runCalc()">
+                        <span class="slider">
