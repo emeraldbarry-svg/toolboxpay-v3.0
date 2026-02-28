@@ -2,118 +2,145 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - Phase 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>toolboxpay - Phase 1.2</title>
     <style>
         /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background-color: #111 !important; font-family: sans-serif; overflow: hidden; position: fixed; width: 100%; height: 100%; }
-        #app-frame { max-width: 500px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; background-color: #4a4a4a !important; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #4a4a4a; color: #ffffff; font-family: sans-serif; min-height: 100vh; padding-bottom: 50px; }
         
-        header { background-color: #4a4a4a !important; padding: 20px; text-align: center; border-bottom: 3px solid #ff6600; }
+        header { background-color: #4a4a4a; padding: 25px; text-align: center; border-bottom: 4px solid #ff6600; }
+        .logo { font-size: 28px; font-weight: 900; text-transform: uppercase; color: #ffffff; }
+        .logo span { color: #ff6600; }
 
         /* HORIZONTAL SCROLLING NAV [cite: 2026-02-28] */
         .nav-ribbon {
             display: flex;
             overflow-x: auto;
-            gap: 12px;
-            padding: 10px 15px 25px 15px;
-            background-color: #4a4a4a !important;
+            gap: 15px;
+            padding: 15px;
+            background-color: #222222;
             -webkit-overflow-scrolling: touch;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .nav-ribbon::-webkit-scrollbar { display: none; }
 
         .nav-item { 
-            flex: 0 0 130px; 
-            background-color: #222 !important; 
-            border: 2px solid #444 !important; 
-            border-radius: 15px; 
-            padding: 20px 5px; 
+            flex: 0 0 140px; 
+            background-color: #333333; 
+            border: 2px solid #ff6600; 
+            border-radius: 12px; 
+            padding: 15px 5px; 
             text-align: center; 
             cursor: pointer;
+            color: #ff6600;
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
         }
-        .nav-item.active { background-color: #ff6600 !important; border-color: #fff !important; }
+        .nav-item.active { background-color: #ff6600; color: #ffffff; border-color: #ffffff; }
 
         /* CONTENT AREAS [cite: 2026-02-28] */
-        #viewport { flex-grow: 1; padding: 20px; overflow-y: auto; background-color: #4a4a4a !important; }
+        .main-content { max-width: 500px; margin: 0 auto; padding: 20px; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        .form-card { background-color: #1e1e1e !important; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-bottom: 20px; }
+        .card { background-color: #1e1e1e; border-radius: 20px; padding: 25px; border: 1px solid #000000; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .card-h2 { color: #ff6600; font-size: 22px; font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; }
         
-        /* INPUT STYLES [cite: 2026-02-28] */
-        label { display: block; font-size: 11px; color: #ff6600 !important; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
-        input { width: 100%; background-color: #000 !important; border: 1px solid #444 !important; color: #fff !important; padding: 18px; border-radius: 12px; font-size: 18px; margin-bottom: 20px; outline: none; display: block; }
-        input:focus { border-color: #ff6600 !important; }
+        /* INPUTS [cite: 2026-02-28] */
+        label { display: block; font-size: 12px; color: #ff6600; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
+        input, textarea { 
+            width: 100%; 
+            background-color: #000000; 
+            border: 1px solid #444444; 
+            color: #ffffff; 
+            padding: 18px; 
+            border-radius: 10px; 
+            font-size: 17px; 
+            margin-bottom: 25px; 
+            outline: none; 
+            display: block;
+        }
     </style>
 </head>
 <body>
 
-<div id="app-frame">
-    <header>
-        <h1 style="color: #fff !important; font-size: 26px; font-weight: 900; text-transform: uppercase;">TOOLBOX<span style="color: #ff6600 !important;">PAY</span></h1>
-    </header>
+<header>
+    <div class="logo">TOOLBOX<span>PAY</span></div>
+</header>
 
-    <div class="nav-ribbon">
-        <div id="btn-p" class="nav-item active" onclick="go('p')"><span style="color:#ff6600; font-size:12px; font-weight:900; text-transform:uppercase;" id="txt-p">Profile</span></div>
-        <div id="btn-b" class="nav-item" onclick="go('b')"><span style="color:#ff6600; font-size:12px; font-weight:900; text-transform:uppercase;" id="txt-b">Bank</span></div>
+<div class="nav-ribbon">
+    <div id="btn-profile" class="nav-item active" onclick="showTab('profile')">Profile</div>
+    <div id="btn-bank" class="nav-item" onclick="showTab('bank')">Bank</div>
+</div>
+
+<div class="main-content">
+    <div id="view-profile" class="tab-content active">
+        <div class="card">
+            <h2 class="card-h2">Business Profile</h2>
+            
+            <label>Business Name</label>
+            <input type="text" id="p-name" placeholder="e.g. Toolboxpay Ltd" oninput="save('p-name')">
+            
+            <label>Specialising In</label>
+            <input type="text" id="p-spec" placeholder="e.g. Electrical / Plumbing" oninput="save('p-spec')">
+            
+            <label>Business Address</label>
+            <textarea id="p-addr" rows="3" placeholder="Full trading address..." oninput="save('p-addr')"></textarea>
+            
+            <label>VAT Registration Number</label>
+            <input type="text" id="p-vat" placeholder="Enter VAT Number" oninput="save('p-vat')">
+            
+            <label>Company Registration Number</label>
+            <input type="text" id="p-reg" placeholder="Enter Reg Number" oninput="save('p-reg')">
+            
+            <label>Contact Email</label>
+            <input type="email" id="p-email" placeholder="email@example.com" oninput="save('p-email')">
+        </div>
     </div>
 
-    <div id="viewport">
-        <div id="view-p" class="tab-content active">
-            <div class="form-card">
-                <h2 style="color: #ff6600 !important; font-size: 20px; font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px;">Business Profile</h2>
-                <label>Business Name</label>
-                <input type="text" id="bizName" placeholder="Enter Name" oninput="saveData('bizName')">
-                <label>Specialising In</label>
-                <input type="text" id="bizSpec" placeholder="e.g. App Development" oninput="saveData('bizSpec')">
-            </div>
-        </div>
-
-        <div id="view-b" class="tab-content">
-            <div class="form-card">
-                <h2 style="color: #ff6600 !important; font-size: 20px; font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px;">Bank Details</h2>
-                <label>Bank Name</label>
-                <input type="text" id="bankName" placeholder="e.g. Nationwide" oninput="saveData('bankName')">
-                <label>Sort Code</label>
-                <input type="text" id="bankSort" placeholder="00-00-00" oninput="saveData('bankSort')">
-                <label>Account Number</label>
-                <input type="text" id="bankAcc" placeholder="00000000" oninput="saveData('bankAcc')">
-            </div>
+    <div id="view-bank" class="tab-content">
+        <div class="card">
+            <h2 class="card-h2">Bank Details</h2>
+            <label>Bank Name</label>
+            <input type="text" id="b-name" placeholder="e.g. Nationwide" oninput="save('b-name')">
+            <label>Sort Code</label>
+            <input type="text" id="b-sort" placeholder="00-00-00" oninput="save('b-sort')">
+            <label>Account Number</label>
+            <input type="text" id="b-acc" placeholder="00000000" oninput="save('b-acc')">
         </div>
     </div>
 </div>
 
 <script>
-    /* DYNAMIC STORAGE [cite: 2026-02-26, 2026-02-28] */
-    const keys = ['bizName', 'bizSpec', 'bankName', 'bankSort', 'bankAcc'];
+    /* DYNAMIC STORAGE [cite: 2026-02-26] */
+    const inputs = ['p-name', 'p-spec', 'p-addr', 'p-vat', 'p-reg', 'p-email', 'b-name', 'b-sort', 'b-acc'];
 
-    function saveData(id) {
-        localStorage.setItem('TBP_' + id, document.getElementById(id).value);
+    function save(id) {
+        localStorage.setItem('PAY_' + id, document.getElementById(id).value);
     }
 
-    function loadData() {
-        keys.forEach(id => {
-            const val = localStorage.getItem('TBP_' + id);
+    function load() {
+        inputs.forEach(id => {
+            const val = localStorage.getItem('PAY_' + id);
             if (val) document.getElementById(id).value = val;
         });
     }
 
-    function go(id) {
-        // Switch Tabs
-        document.querySelectorAll('.tab-content').forEach(v => v.classList.remove('active'));
+    function showTab(id) {
+        // Switch Views
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.getElementById('view-' + id).classList.add('active');
 
         // Switch Buttons
-        document.querySelectorAll('.nav-item').forEach(b => {
-            b.classList.remove('active');
-            b.firstElementChild.style.color = '#ff6600';
-        });
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
         document.getElementById('btn-' + id).classList.add('active');
-        document.getElementById('txt-' + id).style.color = '#ffffff';
     }
 
-    window.onload = loadData;
+    window.onload = load;
 </script>
 
 </body>
