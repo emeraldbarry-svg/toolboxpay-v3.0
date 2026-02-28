@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v15.5</title>
+    <title>toolboxpay - v15.6</title>
     <style>
         /* CORE SETUP [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -25,20 +25,22 @@
             flex-shrink: 0; z-index: 9999;
         }
 
-        .logo-text { text-align: center; font-size: 22px; font-weight: 900; margin-bottom: 10px; color: #fff; }
+        .logo-text { text-align: center; font-size: 20px; font-weight: 900; margin-bottom: 10px; color: #fff; }
         .logo-text span { color: #ff6600; }
 
-        .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        /* FIXED NAV GRID [cite: 2026-02-28] */
+        .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
         
         .nav-btn { 
-            background: #222; border: 1px solid #444; border-radius: 10px; 
-            padding: 10px 2px; text-align: center; cursor: pointer;
-            touch-action: manipulation;
+            background: #222; border: 1px solid #444; border-radius: 8px; 
+            padding: 8px 2px; text-align: center; cursor: pointer;
+            transition: 0.2s;
         }
         
-        .nav-btn i { font-style: normal; font-size: 18px; display: block; margin-bottom: 2px; }
-        .nav-btn span { color: #aaa; font-weight: 800; font-size: 9px; text-transform: uppercase; display: block; }
+        .nav-btn i { font-style: normal; font-size: 16px; display: block; margin-bottom: 2px; pointer-events: none; }
+        .nav-btn span { color: #aaa; font-weight: 800; font-size: 8px; text-transform: uppercase; display: block; pointer-events: none; }
         
+        /* ACTIVE STATE [cite: 2026-02-28] */
         .nav-btn.active { background: #ff6600 !important; border-color: #fff !important; }
         .nav-btn.active span { color: #fff !important; }
 
@@ -56,10 +58,9 @@
         label { display: block; font-size: 10px; color: #ff6600; margin-bottom: 4px; font-weight: 800; text-transform: uppercase; }
         input, select, textarea { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 14px; border-radius: 10px; font-size: 16px; margin-bottom: 12px; outline: none; }
         
-        .btn-green { width: 100%; background: #25D366; color: #000; padding: 18px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 14px; cursor: pointer; }
-
-        /* LOGO PREVIEW [cite: 2026-02-28] */
-        #logo-container { width: 100px; height: 100px; background: #000; border: 2px dashed #ff6600; border-radius: 15px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .btn-green { width: 100%; background: #25D366; color: #000; padding: 18px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 14px; }
+        
+        #logo-container { width: 80px; height: 80px; background: #000; border: 2px dashed #ff6600; border-radius: 12px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #logo-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
     </style>
 </head>
@@ -69,116 +70,151 @@
     <header>
         <div class="logo-text"><span>toolbox</span>pay</div>
         <div class="nav-grid">
-            <div class="nav-btn" id="btn-readme" onclick="show('readme')"><i>📖</i><span>ReadMe</span></div>
+            <div class="nav-btn active" id="btn-readme" onclick="show('readme')"><i>📖</i><span>ReadMe</span></div>
             <div class="nav-btn" id="btn-quotes" onclick="show('quotes')"><i>📝</i><span>Quotes</span></div>
             <div class="nav-btn" id="btn-expenses" onclick="show('expenses')"><i>🧾</i><span>Exp.</span></div>
             <div class="nav-btn" id="btn-calc" onclick="show('calc')"><i>🧮</i><span>Calc</span></div>
             <div class="nav-btn" id="btn-gallery" onclick="show('gallery')"><i>📸</i><span>Gallery</span></div>
             <div class="nav-btn" id="btn-bank" onclick="show('bank')"><i>🏦</i><span>Bank</span></div>
             <div class="nav-btn" id="btn-terms" onclick="show('terms')"><i>⚖️</i><span>Terms</span></div>
-            <div class="nav-btn active" id="btn-profile" onclick="show('profile')"><i>👤</i><span>Profile</span></div>
+            <div class="nav-btn" id="btn-profile" onclick="show('profile')"><i>👤</i><span>Profile</span></div>
         </div>
     </header>
 
     <div id="viewport">
-        <div id="p-profile" class="page active">
+        <div id="p-readme" class="page active">
             <div class="card">
-                <div class="title">Business Setup</div>
-                
-                <div id="logo-container" onclick="document.getElementById('logo-input').click()">
-                    <span id="logo-hint" style="color:#666; font-size:10px; text-align:center;">TAP TO<br>ADD LOGO</span>
-                    <img id="logo-img" style="display:none;">
+                <div class="title">Operating Manual</div>
+                <p style="color:#fff; font-size:14px; line-height:1.6;">Welcome back. All systems are restored. Use the grid above to navigate between your business tools.</p>
+            </div>
+        </div>
+
+        <div id="p-quotes" class="page">
+            <div class="card">
+                <div class="title">Job Quote</div>
+                <label>Date</label><input type="date" id="q-date">
+                <label>Customer Details</label>
+                <input type="text" id="q-cust" placeholder="Client Name">
+                <textarea id="q-work" placeholder="Work to be carried out..."></textarea>
+                <button class="btn-green">Generate Quote</button>
+            </div>
+        </div>
+
+        <div id="p-expenses" class="page">
+            <div class="card">
+                <div class="title">Expenses</div>
+                <label>Log purchases and snap receipts here.</label>
+                <button class="btn-green">Add New Expense</button>
+            </div>
+        </div>
+
+        <div id="p-calc" class="page">
+            <div class="card">
+                <div class="title">Pricing Tool</div>
+                <label>Day Rate (£)</label><input type="number" id="dr" oninput="math()">
+                <label>Days</label><input type="number" id="dw" value="1" oninput="math()">
+                <div style="background:#000; padding:15px; border-radius:10px; text-align:right;">
+                    <span id="c-total" style="color:#ff6600; font-size:24px; font-weight:900;">£0.00</span>
                 </div>
-                <input type="file" id="logo-input" accept="image/*" style="display:none;" onchange="handleLogo(this)">
+            </div>
+        </div>
 
-                <label>Business Name</label>
-                <input type="text" id="pr-name" placeholder="Trading Name" oninput="sv('pr_n',this.value)">
-
-                <label>Business Address</label>
-                <textarea id="pr-addr" placeholder="Office / Home Address" style="height:80px;" oninput="sv('pr_a',this.value)"></textarea>
-
-                <label>Phone Number</label>
-                <input type="tel" id="pr-phone" placeholder="01234 567890" oninput="sv('pr_p',this.value)">
-
-                <label>Email Address</label>
-                <input type="email" id="pr-email" placeholder="contact@business.com" oninput="sv('pr_e',this.value)">
-
-                <label>Website Address</label>
-                <input type="url" id="pr-web" placeholder="www.yourwebsite.com" oninput="sv('pr_w',this.value)">
-                
-                <button class="btn-green" onclick="alert('Business Details Saved!')">Save Setup</button>
+        <div id="p-gallery" class="page">
+            <div class="card">
+                <div class="title">Job Gallery</div>
+                <button class="btn-green">Capture Job Photo</button>
             </div>
         </div>
 
         <div id="p-bank" class="page">
             <div class="card">
                 <div class="title">Banking Details</div>
-                <label>Account Holder</label>
-                <input type="text" id="bk-name" oninput="sv('bk_n',this.value)">
-                
-                <label>Sort Code</label>
-                <input type="text" id="bk-sort" oninput="sv('bk_s',this.value)">
-
-                <label>Account Number</label>
-                <input type="text" id="bk-acc" oninput="sv('bk_a',this.value)">
+                <label>Account Name</label><input type="text" id="bk-name" oninput="sv('bk_n',this.value)">
+                <label>Sort Code</label><input type="text" id="bk-sort" oninput="sv('bk_s',this.value)">
+                <label>Account Number</label><input type="text" id="bk-acc" oninput="sv('bk_a',this.value)">
             </div>
         </div>
 
-        <div id="p-readme" class="page"><div class="card"><div class="title">Manual</div></div></div>
-        <div id="p-quotes" class="page"><div class="card"><div class="title">Quotes</div></div></div>
-        <div id="p-expenses" class="page"><div class="card"><div class="title">Expenses</div></div></div>
-        <div id="p-calc" class="page"><div class="card"><div class="title">Calc</div></div></div>
-        <div id="p-gallery" class="page"><div class="card"><div class="title">Gallery</div></div></div>
-        <div id="p-terms" class="page"><div class="card"><div class="title">Terms</div></div></div>
+        <div id="p-terms" class="page">
+            <div class="card">
+                <div class="title">Terms & Conditions</div>
+                <textarea id="tc-text" style="height:200px;" oninput="sv('tc_t',this.value)"></textarea>
+            </div>
+        </div>
+
+        <div id="p-profile" class="page">
+            <div class="card">
+                <div class="title">Business Setup</div>
+                <div id="logo-container" onclick="document.getElementById('l-in').click()">
+                    <img id="l-img" style="display:none;">
+                    <span id="l-hint" style="color:#666; font-size:9px;">LOGO</span>
+                </div>
+                <input type="file" id="l-in" style="display:none;" onchange="handleLogo(this)">
+                <label>Business Name</label><input type="text" id="pr-name" oninput="sv('pr_n',this.value)">
+                <label>Email</label><input type="email" id="pr-email" oninput="sv('pr_e',this.value)">
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
+    /* THE RESTORED ENGINE [cite: 2026-02-28] */
     function show(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        // 1. Hide all pages
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(p => p.classList.remove('active'));
+
+        // 2. Turn off all lights
+        const btns = document.querySelectorAll('.nav-btn');
+        btns.forEach(b => b.classList.remove('active'));
+
+        // 3. Light up chosen tab & show page
         document.getElementById('p-' + id).classList.add('active');
         document.getElementById('btn-' + id).classList.add('active');
+        
+        // 4. Scroll to top of viewport
         document.getElementById('viewport').scrollTop = 0;
     }
 
-    /* LOGO HANDLING [cite: 2026-02-28] */
+    function sv(k, v) { localStorage.setItem('TBP_' + k, v); }
+
+    function math() {
+        let r = parseFloat(document.getElementById('dr').value) || 0;
+        let d = parseFloat(document.getElementById('dw').value) || 0;
+        document.getElementById('c-total').innerText = "£" + (r * d).toFixed(2);
+    }
+
     function handleLogo(input) {
         if (input.files && input.files[0]) {
             let reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('logo-img').src = e.target.result;
-                document.getElementById('logo-img').style.display = "block";
-                document.getElementById('logo-hint').style.display = "none";
+                document.getElementById('l-img').src = e.target.result;
+                document.getElementById('l-img').style.display = "block";
+                document.getElementById('l-hint').style.display = "none";
                 localStorage.setItem('TBP_LOGO', e.target.result);
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    /* PERSISTENCE [cite: 2026-02-26] */
-    function sv(k, v) { localStorage.setItem('TBP_' + k, v); }
-
     window.onload = function() {
-        // Load Profile
-        document.getElementById('pr-name').value = localStorage.getItem('TBP_pr_n') || "";
-        document.getElementById('pr-addr').value = localStorage.getItem('TBP_pr_a') || "";
-        document.getElementById('pr-phone').value = localStorage.getItem('TBP_pr_p') || "";
-        document.getElementById('pr-email').value = localStorage.getItem('TBP_pr_e') || "";
-        document.getElementById('pr-web').value = localStorage.getItem('TBP_pr_w') || "";
-        
-        // Load Logo
-        const savedLogo = localStorage.getItem('TBP_LOGO');
-        if(savedLogo) {
-            document.getElementById('logo-img').src = savedLogo;
-            document.getElementById('logo-img').style.display = "block";
-            document.getElementById('logo-hint').style.display = "none";
-        }
-
-        // Load Bank
+        // Restore Bank
         document.getElementById('bk-name').value = localStorage.getItem('TBP_bk_n') || "";
         document.getElementById('bk-sort').value = localStorage.getItem('TBP_bk_s') || "";
         document.getElementById('bk-acc').value = localStorage.getItem('TBP_bk_a') || "";
+        // Restore Profile
+        document.getElementById('pr-name').value = localStorage.getItem('TBP_pr_n') || "";
+        document.getElementById('pr-email').value = localStorage.getItem('TBP_pr_e') || "";
+        // Restore Terms
+        document.getElementById('tc-text').value = localStorage.getItem('TBP_tc_t') || "Default Terms...";
+        // Restore Logo
+        const savedLogo = localStorage.getItem('TBP_LOGO');
+        if(savedLogo) {
+            document.getElementById('l-img').src = savedLogo;
+            document.getElementById('l-img').style.display = "block";
+            document.getElementById('l-hint').style.display = "none";
+        }
+        document.getElementById('q-date').valueAsDate = new Date();
     };
 </script>
 </body>
