@@ -3,132 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.49 FORCE RESET</title>
+    <title>toolboxpay - v21.50 STABLE</title>
     <style>
-        /* THE VISUAL LOCK */
+        /* THE RESET: NO TRICKS, JUST BUTTONS [cite: 2026-02-28] */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif !important; font-weight: 900 !important; }
-        body { background-color: #1a1a1a; color: #ffffff; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        body { background-color: #1a1a1a; color: #ffffff; padding: 20px; display: flex; flex-direction: column; align-items: center; }
 
-        .shell { width: 100%; max-width: 500px; }
+        .app-container { width: 100%; max-width: 500px; }
 
-        /* LOGO */
-        header { padding: 25px 0; text-align: center; }
+        /* HEADER [cite: 2020-02-20] */
+        header { padding: 20px 0; text-align: center; }
         .logo { font-size: 30px; text-transform: uppercase; }
         .logo .orange { color: #ff6600; }
         .logo .white { color: #ffffff; }
 
-        /* NAV - 2x2 GRID */
-        nav { background: #000; padding: 12px; border: 4px solid #444; border-bottom: 8px solid #ff6600; border-radius: 15px; margin-bottom: 25px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn { 
-            height: 60px; background: #333; color: #ff6600; border: 3px solid #555; 
-            border-radius: 12px; text-transform: uppercase; cursor: pointer; 
-            font-size: 14px; display: flex; align-items: center; justify-content: center;
+        /* NAV GRID: THE 2x2 LOCK */
+        nav { 
+            background: #000; padding: 15px; border: 4px solid #444; 
+            border-bottom: 8px solid #ff6600; border-radius: 15px; margin-bottom: 25px; 
         }
-        .btn-on { background: #ff6600 !important; color: #fff !important; border-color: #fff !important; }
+        .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .nav-btn { 
+            height: 65px; background: #333; color: #ff6600; border: 3px solid #555; 
+            border-radius: 12px; text-transform: uppercase; cursor: pointer; 
+            font-size: 15px; display: flex; align-items: center; justify-content: center;
+        }
+        .nav-btn.active { background: #ff6600 !important; color: #fff !important; border-color: #fff !important; }
 
-        /* CONTENT */
-        .box { display: none; background: #111; padding: 25px; border-radius: 20px; border: 8px solid #ff6600; }
-        .box-on { display: block !important; }
-        .tt { color: #ff6600; font-size: 24px; text-transform: uppercase; margin-bottom: 25px; text-align: center; }
+        /* CARDS */
+        .card { display: none; background: #111; padding: 25px; border-radius: 20px; border: 8px solid #ff6600; }
+        .card.active { display: block !important; }
+        .title { color: #ff6600; font-size: 24px; text-transform: uppercase; margin-bottom: 25px; text-align: center; }
 
-        /* INPUTS - BRITISH ENGLISH LABOUR */
-        .lbl { color: #ffffff; font-size: 14px; display: block; margin-bottom: 8px; text-transform: uppercase; }
+        /* INPUTS: LARGE & VISIBLE [cite: 2026-02-28] */
+        .label { color: #ffffff; font-size: 14px; display: block; margin-bottom: 8px; text-transform: uppercase; }
         input, textarea { 
             width: 100% !important; background: #ffffff !important; color: #000000 !important; 
             border: 6px solid #ff6600 !important; border-radius: 15px !important; 
-            font-size: 22px !important; padding: 15px !important; margin-bottom: 25px !important;
+            font-size: 22px !important; padding: 18px !important; margin-bottom: 25px !important;
             display: block !important; outline: none !important;
         }
         textarea { min-height: 120px; resize: none; }
 
-        /* CALCULATIONS [cite: 2026-02-28] */
-        .res { background: #000; padding: 30px; border-radius: 15px; border: 6px solid #ff6600; text-align: center; }
-        .res-out { font-size: 45px; color: #ffffff; }
+        /* CALC BOXES [cite: 2026-02-28] */
+        .res-container { background: #000; padding: 30px; border-radius: 15px; border: 6px solid #ff6600; text-align: center; }
+        .res-val { font-size: 45px; color: #ffffff; }
     </style>
 </head>
 <body>
 
-    <div class="shell">
+    <div class="app-container">
         <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
         
         <nav>
-            <div class="grid">
-                <button id="b1" class="btn btn-on" onclick="go(1)">Profile</button>
-                <button id="b2" class="btn" onclick="go(2)">Bank</button>
-                <button id="b3" class="btn" onclick="go(3)">VAT</button>
-                <button id="b4" class="btn" onclick="go(4)">Biz Calc</button>
+            <div class="nav-grid">
+                <button id="tab1" class="nav-btn active" onclick="show(1)">Profile</button>
+                <button id="tab2" class="nav-btn" onclick="show(2)">Bank</button>
+                <button id="tab3" class="nav-btn" onclick="show(3)">VAT</button>
+                <button id="tab4" class="nav-btn" onclick="show(4)">Biz Calc</button>
             </div>
         </nav>
 
         <main>
-            <div id="p1" class="box box-on">
-                <h2 class="tt">BUSINESS PROFILE</h2>
-                <label class="lbl">TRADING NAME</label>
-                <input type="text" id="f_name" placeholder="Name" oninput="save('f_name')">
-                <label class="lbl">SPECIALISING IN</label>
-                <input type="text" id="f_trade" placeholder="Trade" oninput="save('f_trade')">
-                <label class="lbl">ADDRESS</label>
-                <textarea id="f_addr" placeholder="Address" oninput="save('f_addr')"></textarea>
+            <div id="page1" class="card active">
+                <h2 class="title">BUSINESS PROFILE</h2>
+                <label class="label">TRADING NAME</label>
+                <input type="text" id="d_name" placeholder="Name" oninput="store('d_name')">
+                <label class="label">SPECIALISING IN</label>
+                <input type="text" id="d_trade" placeholder="Trade" oninput="store('d_trade')">
+                <label class="label">ADDRESS</label>
+                <textarea id="d_addr" placeholder="Address" oninput="store('d_addr')"></textarea>
             </div>
 
-            <div id="p2" class="box">
-                <h2 class="tt">BANK DETAILS</h2>
-                <label class="lbl">BANK NAME</label><input type="text" id="f_bank" oninput="save('f_bank')">
-                <label class="lbl">SORT CODE</label><input type="text" id="f_sort" oninput="save('f_sort')">
-                <label class="lbl">ACCOUNT NUMBER</label><input type="text" id="f_acc" oninput="save('f_acc')">
+            <div id="page2" class="card">
+                <h2 class="title">BANK DETAILS</h2>
+                <label class="label">BANK NAME</label><input type="text" id="d_bank" oninput="store('d_bank')">
+                <label class="label">SORT CODE</label><input type="text" id="d_sort" oninput="store('d_sort')">
+                <label class="label">ACCOUNT NUMBER</label><input type="text" id="d_acc" oninput="store('d_acc')">
             </div>
 
-            <div id="p3" class="box">
-                <h2 class="tt">VAT CALCULATOR</h2>
-                <label class="lbl">NET AMOUNT (£)</label>
-                <input type="number" id="vIn" placeholder="0.00" oninput="calcV()">
-                <div class="res"><div id="vOut" class="res-out">£0.00</div></div>
+            <div id="page3" class="card">
+                <h2 class="title">VAT CALCULATOR</h2>
+                <label class="label">NET AMOUNT (£)</label>
+                <input type="number" id="vIn" placeholder="0.00" oninput="runV()">
+                <div class="res-container"><div id="vOut" class="res-val">£0.00</div></div>
             </div>
 
-            <div id="p4" class="box">
-                <h2 class="tt">BUSINESS CALC</h2>
-                <label class="lbl">LABOUR (£)</label><input type="number" id="bL" oninput="calcB()">
-                <label class="lbl">MATERIALS (£)</label><input type="number" id="bM" oninput="calcB()">
-                <label class="lbl">MARKUP (%)</label><input type="number" id="bMk" value="20" oninput="calcB()">
-                <div class="res"><div id="bQ" class="res-out">£0.00</div></div>
+            <div id="page4" class="card">
+                <h2 class="title">BUSINESS CALC</h2>
+                <label class="label">LABOUR (£)</label><input type="number" id="bL" oninput="runB()">
+                <label class="label">MATERIALS (£)</label><input type="number" id="bM" oninput="runB()">
+                <label class="label">MARKUP (%)</label><input type="number" id="bMk" value="20" oninput="runB()">
+                <div class="res-container"><div id="bQ" class="res-val">£0.00</div></div>
             </div>
         </main>
     </div>
 
 <script>
-    /* NEW FORCE-LOGIC [cite: 2026-02-28] */
-    function go(n) {
-        // Force reset all displays
+    /* THE INDESTRUCTIBLE SWITCHER [cite: 2026-02-28] */
+    function show(n) {
         for(let i=1; i<=4; i++) {
-            document.getElementById('p' + i).classList.remove('box-on');
-            document.getElementById('b' + i).classList.remove('btn-on');
+            document.getElementById('page' + i).classList.remove('active');
+            document.getElementById('tab' + i).classList.remove('active');
         }
-        // Force activate selection
-        document.getElementById('p' + n).classList.add('box-on');
-        document.getElementById('b' + n).classList.add('btn-on');
+        document.getElementById('page' + n).classList.add('active');
+        document.getElementById('tab' + n).classList.add('active');
         window.scrollTo(0, 0);
     }
 
-    /* AUTO-SAVE [cite: 2026-02-26] */
-    function save(id) { localStorage.setItem('TBOX_F_' + id, document.getElementById(id).value); }
+    /* DATA PERSISTENCE [cite: 2026-02-26] */
+    function store(id) { localStorage.setItem('TBOX_D_' + id, document.getElementById(id).value); }
 
-    function calcV() {
-        let val = parseFloat(document.getElementById('vIn').value) || 0;
-        document.getElementById('vOut').innerText = "£" + (val * 1.2).toFixed(2);
+    function runV() {
+        let v = parseFloat(document.getElementById('vIn').value) || 0;
+        document.getElementById('vOut').innerText = "£" + (v * 1.2).toFixed(2);
     }
 
-    function calcB() {
+    function runB() {
         let l = parseFloat(document.getElementById('bL').value) || 0;
         let m = parseFloat(document.getElementById('bM').value) || 0;
         let mk = (parseFloat(document.getElementById('bMk').value) || 0) / 100;
         document.getElementById('bQ').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
     }
 
-    /* INITIAL LOAD */
     window.onload = function() {
-        ['f_name', 'f_trade', 'f_addr', 'f_bank', 'f_sort', 'f_acc'].forEach(id => {
-            let val = localStorage.getItem('TBOX_F_' + id);
+        ['d_name', 'd_trade', 'd_addr', 'd_bank', 'd_sort', 'd_acc'].forEach(id => {
+            let val = localStorage.getItem('TBOX_D_' + id);
             if (val && document.getElementById(id)) document.getElementById(id).value = val;
         });
     };
