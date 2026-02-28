@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v19</title>
+    <title>toolboxpay - v19.2</title>
 </head>
 <body style="background-color: #111; color: #fff; font-family: sans-serif; margin: 0; padding: 0;">
 
@@ -16,13 +16,14 @@
         </header>
 
         <div id="nav-container" style="display: flex; overflow-x: auto; padding: 20px; gap: 15px; background-color: #222; border-bottom: 2px solid #333;">
-            <div id="x1" onclick="tab(1)" style="flex: 0 0 140px; background: #ff6600; color: #fff; padding: 20px 10px; border-radius: 15px; text-align: center; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid #fff;">PROFILE</div>
-            <div id="x2" onclick="tab(2)" style="flex: 0 0 140px; background: #333; color: #ff6600; padding: 20px 10px; border-radius: 15px; text-align: center; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid #444;">BANK</div>
+            <div id="x1" onclick="tab(1)" style="flex: 0 0 140px; background: #333; color: #ff6600; padding: 20px 10px; border-radius: 15px; text-align: center; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid #444;">PROFILE</div>
+            <div id="x2" onclick="tab(2)" style="flex: 0 0 140px; background: #ff6600; color: #fff; padding: 20px 10px; border-radius: 15px; text-align: center; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid #fff;">BANK</div>
+            <div id="x3" onclick="tab(3)" style="flex: 0 0 140px; background: #333; color: #ff6600; padding: 20px 10px; border-radius: 15px; text-align: center; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid #444;">CALC</div>
         </div>
 
         <div id="content" style="padding: 20px;">
             
-            <div id="sec1" style="display: block;">
+            <div id="sec1" style="display: none;">
                 <div style="background: #1e1e1e; padding: 30px; border-radius: 25px; border: 1px solid #000;">
                     <h2 style="color: #ff6600; text-transform: uppercase; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #ff6600; padding-bottom: 10px;">Business Profile</h2>
                     
@@ -37,18 +38,42 @@
                 </div>
             </div>
 
-            <div id="sec2" style="display: none;">
+            <div id="sec2" style="display: block;">
                 <div style="background: #1e1e1e; padding: 30px; border-radius: 25px; border: 1px solid #000;">
                     <h2 style="color: #ff6600; text-transform: uppercase; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #ff6600; padding-bottom: 10px;">Bank Details</h2>
                     
                     <label style="color: #ff6600; font-size: 12px; font-weight: 900; display: block; margin-bottom: 10px; text-transform: uppercase;">Bank Name</label>
                     <input type="text" id="f4" placeholder="e.g. Nationwide" style="width: 100%; padding: 20px; background: #000; border: 1px solid #444; color: #fff; border-radius: 12px; margin-bottom: 25px; font-size: 18px;" oninput="sv('f4')">
                     
+                    <label style="color: #ff6600; font-size: 12px; font-weight: 900; display: block; margin-bottom: 10px; text-transform: uppercase;">Branch (If known)</label>
+                    <input type="text" id="f7" placeholder="e.g. Wellingborough" style="width: 100%; padding: 20px; background: #000; border: 1px solid #444; color: #fff; border-radius: 12px; margin-bottom: 25px; font-size: 18px;" oninput="sv('f7')">
+
                     <label style="color: #ff6600; font-size: 12px; font-weight: 900; display: block; margin-bottom: 10px; text-transform: uppercase;">Sort Code</label>
                     <input type="text" id="f5" placeholder="00-00-00" style="width: 100%; padding: 20px; background: #000; border: 1px solid #444; color: #fff; border-radius: 12px; margin-bottom: 25px; font-size: 18px;" oninput="sv('f5')">
                     
                     <label style="color: #ff6600; font-size: 12px; font-weight: 900; display: block; margin-bottom: 10px; text-transform: uppercase;">Account Number</label>
                     <input type="text" id="f6" placeholder="00000000" style="width: 100%; padding: 20px; background: #000; border: 1px solid #444; color: #fff; border-radius: 12px; margin-bottom: 25px; font-size: 18px;" oninput="sv('f6')">
+
+                    <label style="color: #ff6600; font-size: 12px; font-weight: 900; display: block; margin-bottom: 10px; text-transform: uppercase;">IBAN Number</label>
+                    <input type="text" id="f8" placeholder="GB00 XXXX 0000..." style="width: 100%; padding: 20px; background: #000; border: 1px solid #444; color: #fff; border-radius: 12px; margin-bottom: 25px; font-size: 18px;" oninput="sv('f8')">
+                </div>
+            </div>
+
+            <div id="sec3" style="display: none;">
+                <div style="background: #1e1e1e; padding: 30px; border-radius: 25px; border: 1px solid #000;">
+                    <h2 style="color: #ff6600; text-transform: uppercase; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #ff6600; padding-bottom: 10px;">VAT Calculator</h2>
+                    <label style="color: #ff6600; font-size: 12px; font-weight: 900; display: block; margin-bottom: 10px; text-transform: uppercase;">Net Amount (£)</label>
+                    <input type="number" id="netInput" placeholder="0.00" style="width: 100%; padding: 20px; background: #000; border: 2px solid #ff6600; color: #fff; border-radius: 12px; margin-bottom: 25px; font-size: 24px; text-align: center;" oninput="calcVAT()">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div style="background: #000; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #333;">
+                            <span style="color: #ff6600; font-size: 10px; font-weight: 900; text-transform: uppercase;">VAT (20%)</span>
+                            <div id="vatTotal" style="font-size: 20px; font-weight: 900; margin-top: 5px;">£0.00</div>
+                        </div>
+                        <div style="background: #000; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #333;">
+                            <span style="color: #ff6600; font-size: 10px; font-weight: 900; text-transform: uppercase;">Gross Total</span>
+                            <div id="grossTotal" style="font-size: 20px; font-weight: 900; margin-top: 5px; color: #25D366;">£0.00</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -57,31 +82,39 @@
 
     <script>
         function tab(n) {
-            // Hide everything
             document.getElementById('sec1').style.display = 'none';
             document.getElementById('sec2').style.display = 'none';
+            document.getElementById('sec3').style.display = 'none';
             
-            // Reset buttons
-            document.getElementById('x1').style.background = '#333';
-            document.getElementById('x1').style.color = '#ff6600';
-            document.getElementById('x1').style.borderColor = '#444';
-            document.getElementById('x2').style.background = '#333';
-            document.getElementById('x2').style.color = '#ff6600';
-            document.getElementById('x2').style.borderColor = '#444';
+            for(let i=1; i<=3; i++) {
+                let btn = document.getElementById('x' + i);
+                btn.style.background = '#333';
+                btn.style.color = '#ff6600';
+                btn.style.borderColor = '#444';
+            }
 
-            // Show active
             document.getElementById('sec' + n).style.display = 'block';
-            document.getElementById('x' + n).style.background = '#ff6600';
-            document.getElementById('x' + n).style.color = '#fff';
-            document.getElementById('x' + n).style.borderColor = '#fff';
+            let activeBtn = document.getElementById('x' + n);
+            activeBtn.style.background = '#ff6600';
+            activeBtn.style.color = '#fff';
+            activeBtn.style.borderColor = '#fff';
+            activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         }
 
         function sv(id) {
             localStorage.setItem('SAVE_' + id, document.getElementById(id).value);
         }
 
+        function calcVAT() {
+            let net = parseFloat(document.getElementById('netInput').value) || 0;
+            let vat = net * 0.20;
+            let gross = net + vat;
+            document.getElementById('vatTotal').innerText = "£" + vat.toFixed(2);
+            document.getElementById('grossTotal').innerText = "£" + gross.toFixed(2);
+        }
+
         window.onload = function() {
-            const fields = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6'];
+            const fields = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8'];
             fields.forEach(id => {
                 const val = localStorage.getItem('SAVE_' + id);
                 if (val) document.getElementById(id).value = val;
