@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v12.5</title>
+    <title>toolboxpay - v12.6</title>
     <style>
-        /* THEME & LAYOUT */
+        /* THEME & LAYOUT [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
@@ -20,7 +20,7 @@
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        .tile-strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; -webkit-overflow-scrolling: touch; }
+        .tile-strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
         .tile-strip::-webkit-scrollbar { display: none; }
         .jump-btn { background: #222; border: 1px solid #444; border-radius: 12px; padding: 10px; text-decoration: none; display: flex; flex-direction: column; align-items: center; min-width: 85px; }
         .jump-btn span { color: #ff6600; font-weight: 800; font-size: 10px; text-transform: uppercase; margin-top: 4px; }
@@ -30,18 +30,19 @@
         .section-box { background: #1e1e1e; border-radius: 25px; padding: 25px; border: 1px solid #333; margin-bottom: 80vh; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .section-title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; text-align: center; }
 
-        /* DYNAMIC ITEM LISTS */
+        /* ITEMISED LISTS */
         .item-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
-        .item-row input { margin-bottom: 0; padding: 12px; font-size: 14px; }
-        .desc-input { flex: 2; }
-        .price-input { flex: 1; text-align: right; }
-        .add-btn { background: #ff6600; color: #fff; border: none; border-radius: 50%; width: 30px; height: 30px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
-        .remove-btn { color: #ff4444; font-size: 18px; font-weight: 900; padding: 0 5px; }
+        .item-row input { margin-bottom: 0 !important; padding: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 10px; }
+        .desc-in { flex: 2; }
+        .price-in { flex: 0.8; text-align: right; }
+        .rem-btn { color: #ff4444; font-weight: 900; padding: 0 5px; cursor: pointer; font-size: 20px; }
+
+        .add-row-btn { background: #444; color: #ff6600; border: 1px dashed #ff6600; padding: 10px; border-radius: 10px; width: 100%; font-weight: 900; margin-bottom: 20px; cursor: pointer; }
 
         /* FORM STYLING */
         label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        input, textarea, select { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 15px; outline: none; margin-bottom: 20px; }
-        .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 16px; }
+        input, select, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 15px; margin-bottom: 20px; outline: none; }
+        .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; font-size: 16px; cursor: pointer; }
 
         .total-box { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; margin: 20px 0; text-align: right; }
         .total-val { font-size: 45px; color: #ff6600; font-weight: 900; }
@@ -52,12 +53,12 @@
     <div id="dashboard-header">
         <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         <div class="tile-strip">
-            <a href="#r-box" class="jump-btn"><i>📖</i><span>ReadMe</span></a>
-            <a href="#q-box" class="jump-btn"><i>📝</i><span>Quotes</span></a>
-            <a href="#c-box" class="jump-btn"><i>👥</i><span>Clients</span></a>
-            <a href="#m-box" class="jump-btn"><i>🧮</i><span>Calc</span></a>
-            <a href="#p-box" class="jump-btn"><i>📸</i><span>Photos</span></a>
-            <a href="#b-box" class="jump-btn"><i>🏦</i><span>Profile</span></a>
+            <a href="#r-box" class="jump-btn"><span>ReadMe</span></a>
+            <a href="#q-box" class="jump-btn"><span>Quotes</span></a>
+            <a href="#c-box" class="jump-btn"><span>Clients</span></a>
+            <a href="#m-box" class="jump-btn"><span>Calc</span></a>
+            <a href="#p-box" class="jump-btn"><span>Photos</span></a>
+            <a href="#b-box" class="jump-btn"><span>Profile</span></a>
         </div>
     </div>
 
@@ -66,41 +67,46 @@
         <div id="r-box" class="section-box">
             <div class="section-title">Operating Manual</div>
             <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:15px; border-radius:15px; border-left:4px solid #ff6600;">
-                <p>• <b>Itemised Quotes:</b> Use the <b>[+]</b> buttons to add individual labour tasks or materials. This breakdown builds trust with clients.</p><br>
-                <p>• <b>Automatic Totals:</b> The Grand Total updates instantly as you add or remove items.</p><br>
-                <p>• <b>Pro Tip:</b> Keep descriptions short (e.g., "Kitchen Rewire" or "Consumer Unit").</p>
+                <p>• <b>Itemised Quotes:</b> Use the "ADD LABOUR" and "ADD MATERIAL" buttons to build your quote row-by-row.</p><br>
+                <p>• <b>Live Totals:</b> The Grand Total at the bottom will recalculate as soon as you enter a price in any row.</p>
             </div>
         </div>
 
         <div id="q-box" class="section-box">
             <div class="section-title">Job Quote</div>
-            <label>Select Client</label><select id="q-cli-pick"><option>Loading...</option></select>
             
-            <label>Labour Items</label>
-            <div id="labour-list">
+            <label>Select Client</label>
+            <select id="q-cli-pick"><option>Loading...</option></select>
+            
+            <label>Labour Window</label>
+            <div id="lab-container">
                 <div class="item-row">
-                    <input type="text" class="desc-input lab-desc" placeholder="Work description">
-                    <input type="number" class="price-input lab-price" placeholder="£" oninput="upQ()">
+                    <input type="text" class="desc-in l-desc" placeholder="e.g. 1st Fix Labour">
+                    <input type="number" class="price-in l-price" placeholder="£" oninput="runTotal()">
                 </div>
             </div>
-            <button class="add-btn" onclick="addItem('labour-list', 'lab-desc', 'lab-price')">+</button>
+            <button class="add-row-btn" onclick="addNewRow('lab-container', 'l-desc', 'l-price')">+ ADD LABOUR ITEM</button>
 
-            <label>Materials</label>
-            <div id="materials-list">
+            <label>Materials Window</label>
+            <div id="mat-container">
                 <div class="item-row">
-                    <input type="text" class="desc-input mat-desc" placeholder="Material description">
-                    <input type="number" class="price-input mat-price" placeholder="£" oninput="upQ()">
+                    <input type="text" class="desc-in m-desc" placeholder="e.g. 2.5mm Cable">
+                    <input type="number" class="price-in m-price" placeholder="£" oninput="runTotal()">
                 </div>
             </div>
-            <button class="add-btn" onclick="addItem('materials-list', 'mat-desc', 'mat-price')">+</button>
+            <button class="add-row-btn" onclick="addNewRow('mat-container', 'm-desc', 'm-price')">+ ADD MATERIAL ITEM</button>
 
             <div style="background:#111; padding:15px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
                 <label style="margin-bottom:0; color:#fff;">Receipt Mode (Paid)</label>
-                <input type="checkbox" id="receipt-mode" style="width:30px; margin-bottom:0;" onchange="upQ()">
+                <input type="checkbox" id="receipt-mode" style="width:30px; margin-bottom:0;">
             </div>
 
-            <div class="total-box"><div class="total-val" id="qt">£0.00</div></div>
-            <button class="btn-green" onclick="sendW()">Send Quote</button>
+            <div class="total-box">
+                <div style="font-size:10px; color:#888; text-transform:uppercase;">Grand Total</div>
+                <div class="total-val" id="quote-total-display">£0.00</div>
+            </div>
+            
+            <button class="btn-green" onclick="sendWhatsAppQuote()">Send via WhatsApp</button>
         </div>
 
         <div id="c-box" class="section-box">
@@ -108,23 +114,22 @@
             <label>Name</label><input type="text" id="cn">
             <label>Address</label><textarea id="ca" style="height:60px;"></textarea>
             <label>Phone</label><input type="tel" id="ctel">
-            <button class="btn-green" style="background:#ff6600; color:#fff;" onclick="saveC()">Add Client</button>
+            <button class="btn-green" style="background:#ff6600; color:#fff;" onclick="saveClient()">Save Client</button>
             <div id="cl-list" style="margin-top:20px;"></div>
         </div>
 
         <div id="m-box" class="section-box">
             <div class="section-title">Pricing Tool</div>
-            <label>Day Rate (£)</label><input type="number" id="cr" oninput="upM()">
-            <label>Days</label><input type="number" id="cd" oninput="upM()">
-            <label>Materials Cost (£)</label><input type="number" id="cm" oninput="upM()">
-            <div class="total-box"><div class="total-val" id="mt">£0.00</div></div>
+            <label>Day Rate (£)</label><input type="number" id="day-r" oninput="calcP()">
+            <label>Days</label><input type="number" id="day-n" oninput="calcP()">
+            <label>Materials (£)</label><input type="number" id="mat-c" oninput="calcP()">
+            <div class="total-box"><div class="total-val" id="calc-res">£0.00</div></div>
         </div>
 
         <div id="p-box" class="section-box">
             <div class="section-title">Job Gallery</div>
-            <select id="p-tag"><option value="Before">Before</option><option value="During">During</option><option value="After">After</option></select>
-            <input type="file" id="p-file" accept="image/*" style="display:none;" onchange="addP(this)">
-            <button class="btn-green" onclick="document.getElementById('p-file').click()">Upload Photo</button>
+            <input type="file" id="p-file" accept="image/*" style="display:none;" onchange="handlePhoto(this)">
+            <button class="btn-green" onclick="document.getElementById('p-file').click()">Upload Image</button>
             <div id="p-grid" style="display:grid; grid-template-columns:1fr; gap:15px; margin-top:20px;"></div>
         </div>
 
@@ -133,114 +138,119 @@
             <label>Trading Name</label><input type="text" id="bn" oninput="sv('bn',this.value)">
             <label>Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
             <label>Account No.</label><input type="text" id="an" oninput="sv('an',this.value)">
-            <label>Master T&Cs</label><textarea id="master-tc" style="height:120px;" oninput="sv('tc',this.value)"></textarea>
+            <label>T&Cs</label><textarea id="mtc" style="height:120px;" oninput="sv('tc',this.value)"></textarea>
         </div>
-
     </div>
 
 <script>
-    /* ITEMISED LOGIC */
-    function addItem(listId, descClass, priceClass) {
-        var div = document.createElement('div');
+    /* ITEMISER LOGIC [cite: 2026-02-28] */
+    function addNewRow(containerId, descClass, priceClass) {
+        const container = document.getElementById(containerId);
+        const div = document.createElement('div');
         div.className = 'item-row';
-        div.innerHTML = `<input type="text" class="desc-input ${descClass}" placeholder="Description">
-                         <input type="number" class="price-input ${priceClass}" placeholder="£" oninput="upQ()">
-                         <span class="remove-btn" onclick="this.parentElement.remove(); upQ();">×</span>`;
-        document.getElementById(listId).appendChild(div);
+        div.innerHTML = `<input type="text" class="desc-in ${descClass}" placeholder="Description">
+                         <input type="number" class="price-in ${priceClass}" placeholder="£" oninput="runTotal()">
+                         <span class="rem-btn" onclick="this.parentElement.remove(); runTotal();">×</span>`;
+        container.appendChild(div);
     }
 
-    function upQ() {
-        var total = 0;
-        document.querySelectorAll('.lab-price, .mat-price').forEach(input => {
-            total += parseFloat(input.value) || 0;
+    function runTotal() {
+        let t = 0;
+        document.querySelectorAll('.l-price, .m-price').forEach(input => {
+            t += parseFloat(input.value) || 0;
         });
-        document.getElementById('qt').innerText = "£" + total.toFixed(2);
+        document.getElementById('quote-total-display').innerText = "£" + t.toFixed(2);
     }
 
-    function upM() {
-        var r = parseFloat(document.getElementById('cr').value) || 0;
-        var d = parseFloat(document.getElementById('cd').value) || 0;
-        var m = parseFloat(document.getElementById('cm').value) || 0;
-        document.getElementById('mt').innerText = "£" + ((r * d + m) * 1.2).toFixed(2);
-    }
-
+    /* GENERAL HELPERS */
     function sv(k, v) { localStorage.setItem('TBP_' + k, v); }
-
-    /* WHATSAPP GENERATOR */
-    function sendW() {
-        var type = document.getElementById('receipt-mode').checked ? "PAID RECEIPT" : "JOB QUOTE";
-        var b = document.getElementById('bn').value;
-        var s = document.getElementById('sc').value;
-        var a = document.getElementById('an').value;
-        var tc = document.getElementById('master-tc').value;
-        
-        var message = `ToolboxPay ${type}:%0A%0A`;
-        
-        message += `*LABOUR:*%0A`;
-        document.querySelectorAll('.item-row').forEach(row => {
-            var d = row.querySelector('.lab-desc');
-            var p = row.querySelector('.lab-price');
-            if(d && d.value) message += `- ${d.value}: £${parseFloat(p.value).toFixed(2)}%0A`;
-        });
-
-        message += `%0A*MATERIALS:*%0A`;
-        document.querySelectorAll('.item-row').forEach(row => {
-            var d = row.querySelector('.mat-desc');
-            var p = row.querySelector('.mat-price');
-            if(d && d.value) message += `- ${d.value}: £${parseFloat(p.value).toFixed(2)}%0A`;
-        });
-
-        message += `%0A*TOTAL: ${document.getElementById('qt').innerText}*%0A%0A`;
-        message += `Pay to: ${b}%0AAcc: ${a}%0ASort: ${s}`;
-
-        if(!document.getElementById('receipt-mode').checked) {
-            message += `%0A%0A*Terms:*%0A${encodeURIComponent(tc)}`;
-        } else {
-            message += `%0A%0AStatus: Paid in Full - Thank you!`;
-        }
-        
-        window.open("https://wa.me/?text=" + message);
+    function calcP() {
+        let r = parseFloat(document.getElementById('day-r').value) || 0;
+        let d = parseFloat(document.getElementById('day-n').value) || 0;
+        let m = parseFloat(document.getElementById('mat-c').value) || 0;
+        document.getElementById('calc-res').innerText = "£" + ((r * d + m) * 1.2).toFixed(2);
     }
 
-    /* PREVIOUS PERSISTENCE LOGIC */
-    function saveC() {
-        var n = document.getElementById('cn').value; var a = document.getElementById('ca').value; var t = document.getElementById('ctel').value;
+    /* WHATSAPP SCRIPT */
+    function sendWhatsAppQuote() {
+        const isReceipt = document.getElementById('receipt-mode').checked;
+        const b = document.getElementById('bn').value;
+        const s = document.getElementById('sc').value;
+        const a = document.getElementById('an').value;
+        
+        let msg = `*${isReceipt ? 'PAID RECEIPT' : 'JOB QUOTE'}*%0A%0A`;
+        
+        msg += `*LABOUR:*%0A`;
+        document.querySelectorAll('#lab-container .item-row').forEach(row => {
+            let d = row.querySelector('.l-desc').value;
+            let p = row.querySelector('.l-price').value;
+            if(d) msg += `- ${d}: £${parseFloat(p || 0).toFixed(2)}%0A`;
+        });
+
+        msg += `%0A*MATERIALS:*%0A`;
+        document.querySelectorAll('#mat-container .item-row').forEach(row => {
+            let d = row.querySelector('.m-desc').value;
+            let p = row.querySelector('.m-price').value;
+            if(d) msg += `- ${d}: £${parseFloat(p || 0).toFixed(2)}%0A`;
+        });
+
+        msg += `%0A*TOTAL: ${document.getElementById('quote-total-display').innerText}*%0A%0A`;
+        msg += `Bank: ${b}%0ASort: ${s}%0AAcc: ${a}`;
+
+        if(!isReceipt) msg += `%0A%0A*Terms:*%0A${encodeURIComponent(document.getElementById('mtc').value)}`;
+        
+        window.open("https://wa.me/?text=" + msg);
+    }
+
+    /* PERSISTENCE */
+    function saveClient() {
+        let n = document.getElementById('cn').value;
+        let a = document.getElementById('ca').value;
+        let t = document.getElementById('ctel').value;
         if(!n) return;
-        var list = JSON.parse(localStorage.getItem('TBP_LIST') || "[]");
-        list.push({n, a, t}); localStorage.setItem('TBP_LIST', JSON.stringify(list));
-        document.getElementById('cn').value=''; document.getElementById('ca').value=''; document.getElementById('ctel').value=''; showC();
+        let list = JSON.parse(localStorage.getItem('TBP_CL') || "[]");
+        list.push({n, a, t});
+        localStorage.setItem('TBP_CL', JSON.stringify(list));
+        document.getElementById('cn').value=''; document.getElementById('ca').value=''; document.getElementById('ctel').value='';
+        loadClients();
     }
-    function showC() {
-        var list = JSON.parse(localStorage.getItem('TBP_LIST') || "[]");
-        var h = ""; var sel = '<option>Select Client...</option>';
-        list.forEach((c, i) => {
+    function loadClients() {
+        let list = JSON.parse(localStorage.getItem('TBP_CL') || "[]");
+        let h = ""; let sel = '<option>Select Client...</option>';
+        list.forEach(c => {
             h += `<div style="background:#000; padding:15px; border-radius:15px; margin-bottom:10px; border-left:4px solid #ff6600;"><b>${c.n}</b><br><small>${c.a}</small></div>`;
-            sel += `<option value="${i}">${c.n}</option>`;
+            sel += `<option>${c.n}</option>`;
         });
         document.getElementById('cl-list').innerHTML = h;
         document.getElementById('q-cli-pick').innerHTML = sel;
     }
-    function addP(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
+
+    function handlePhoto(input) {
+        if (input.files[0]) {
+            let reader = new FileReader();
             reader.onload = function(e) {
-                var ph = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
-                ph.push({src: e.target.result, tag: document.getElementById('p-tag').value, date: new Date().toLocaleDateString('en-GB')});
-                localStorage.setItem('TBP_PH', JSON.stringify(ph)); showP();
+                let ph = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
+                ph.push(e.target.result);
+                localStorage.setItem('TBP_PH', JSON.stringify(ph));
+                loadPhotos();
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
-    function showP() {
-        var ph = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
-        var h = ""; ph.forEach((p, i) => {
-            h += `<div style="position:relative; background:#000; border-radius:15px; overflow:hidden; margin-bottom:10px;"><img src="${p.src}" style="width:100%; height:150px; object-fit:cover;"><div style="position:absolute; bottom:10px; left:10px; background:rgba(255,102,0,0.8); color:#fff; padding:4px 8px; border-radius:5px; font-size:10px;">${p.tag} - ${p.date}</div></div>`;
-        });
+    function loadPhotos() {
+        let ph = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
+        let h = "";
+        ph.forEach(p => h += `<img src="${p}" style="width:100%; height:150px; object-fit:cover; border-radius:15px;">`);
         document.getElementById('p-grid').innerHTML = h;
     }
 
     window.onload = function() {
-        showC(); showP();
+        loadClients(); loadPhotos();
         document.getElementById('bn').value = localStorage.getItem('TBP_bn') || "";
         document.getElementById('sc').value = localStorage.getItem('TBP_sc') || "";
-        document
+        document.getElementById('an').value = localStorage.getItem('TBP_an') || "";
+        document.getElementById('mtc').value = localStorage.getItem('TBP_tc') || "1. Valid for 30 days.\n2. Payment on completion.";
+    };
+</script>
+</body>
+</html>
