@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.45 UNIVERSAL</title>
+    <title>toolboxpay - v21.46 HARD RESET</title>
     <style>
-        /* THE UNIVERSAL SYSTEM [cite: 2020-02-20, 2026-02-28] */
+        /* THE STABLE SYSTEM [cite: 2020-02-20, 2026-02-28] */
         * { 
             box-sizing: border-box; 
             margin: 0; 
@@ -17,7 +17,7 @@
         body { 
             background-color: #1a1a1a; 
             color: #ffffff; 
-            padding: 15px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -25,52 +25,47 @@
 
         .main-app {
             width: 100%;
-            max-width: 550px; /* Prevents stretching on laptop */
+            max-width: 500px;
         }
 
-        /* HEADER - NO FIXED POSITIONING TO AVOID CLICK BLOCKING [cite: 2026-02-28] */
-        header { 
-            padding: 25px 0; 
-            text-align: center; 
-            background: #000; 
-            border-radius: 15px 15px 0 0;
-            border-bottom: 4px solid #444;
-        }
-        .logo { font-size: 28px; text-transform: uppercase; }
+        /* LOGO [cite: 2020-02-20] */
+        header { padding: 30px 0; text-align: center; }
+        .logo { font-size: 32px; text-transform: uppercase; }
         .logo .orange { color: #ff6600; }
         .logo .white { color: #ffffff; }
 
-        /* NAVIGATION - TABS THAT WORK ON BOTH [cite: 2026-02-28] */
+        /* BUTTONS - SIMPLE CLICKABLE GRID [cite: 2026-02-28] */
         nav { 
             background: #000; 
-            border-bottom: 8px solid #ff6600; 
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 0 0 15px 15px;
+            padding: 15px; 
+            border: 4px solid #444; 
+            border-bottom: 8px solid #ff6600;
+            border-radius: 15px;
+            margin-bottom: 25px;
         }
         .nav-grid { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
-            gap: 8px; 
+            gap: 10px; 
         }
         .nav-btn { 
-            padding: 18px 10px; 
+            padding: 20px 10px; 
             background: #333; 
             color: #ff6600; 
-            border-radius: 10px; 
-            font-size: 14px; 
             border: 2px solid #555; 
-            text-transform: uppercase; 
+            border-radius: 10px;
+            text-transform: uppercase;
             cursor: pointer;
-            width: 100%;
+            font-size: 14px;
+            text-align: center;
         }
         .nav-btn.active-btn { 
             background: #ff6600 !important; 
             color: #fff !important; 
-            border-color: #fff !important; 
+            border-color: #fff !important;
         }
 
-        /* CONTENT CARDS [cite: 2026-02-28] */
+        /* CARDS [cite: 2026-02-28] */
         .card { 
             display: none; 
             background: #111; 
@@ -80,10 +75,10 @@
         }
         .active-card { display: block !important; }
 
-        .title { color: #ff6600; font-size: 26px; text-transform: uppercase; margin-bottom: 25px; text-align: center; }
+        .title { color: #ff6600; font-size: 24px; text-transform: uppercase; margin-bottom: 25px; text-align: center; }
         .label { color: #ffffff; font-size: 15px; display: block; margin-bottom: 10px; text-transform: uppercase; }
 
-        /* INPUTS - BALANCED FOR LAPTOP & MOBILE [cite: 2026-02-28] */
+        /* INPUTS - GUARANTEED VISIBLE [cite: 2026-02-28] */
         input, textarea { 
             width: 100% !important; 
             background: #ffffff !important; 
@@ -91,17 +86,16 @@
             border: 6px solid #ff6600 !important; 
             border-radius: 12px !important; 
             margin-bottom: 25px !important; 
-            font-size: 22px !important; 
-            padding: 18px !important; 
-            outline: none !important;
+            font-size: 20px !important; 
+            padding: 15px !important; 
             display: block !important;
+            outline: none !important;
         }
+        textarea { min-height: 120px; resize: none; }
 
-        textarea { min-height: 140px; resize: none; }
-
-        /* CALCULATOR RESULTS [cite: 2026-02-28] */
+        /* RESULTS [cite: 2026-02-28] */
         .res-box { background: #000; padding: 30px; border-radius: 15px; border: 6px solid #ff6600; text-align: center; }
-        .res-text { font-size: 45px; color: #ffffff; }
+        .res-text { font-size: 40px; color: #ffffff; }
     </style>
 </head>
 <body>
@@ -124,21 +118,21 @@
             <div id="v1" class="card active-card">
                 <h2 class="title">BUSINESS PROFILE</h2>
                 <label class="label">TRADING NAME</label>
-                <input type="text" id="u_name" placeholder="Name" oninput="sv('u_name')">
+                <input type="text" id="r_name" placeholder="Name" oninput="sv('r_name')">
                 <label class="label">SPECIALISING IN</label>
-                <input type="text" id="u_trade" placeholder="Trade" oninput="sv('u_trade')">
+                <input type="text" id="r_trade" placeholder="Trade" oninput="sv('r_trade')">
                 <label class="label">BUSINESS ADDRESS</label>
-                <textarea id="u_addr" placeholder="Address" oninput="sv('u_addr')"></textarea>
+                <textarea id="r_addr" placeholder="Address" oninput="sv('r_addr')"></textarea>
             </div>
 
             <div id="v2" class="card">
                 <h2 class="title">BANK DETAILS</h2>
                 <label class="label">BANK NAME</label>
-                <input type="text" id="u_bank" placeholder="BANK" oninput="sv('u_bank')">
+                <input type="text" id="r_bank" placeholder="BANK" oninput="sv('r_bank')">
                 <label class="label">SORT CODE</label>
-                <input type="text" id="u_sort" placeholder="00-00-00" oninput="sv('u_sort')">
+                <input type="text" id="r_sort" placeholder="00-00-00" oninput="sv('r_sort')">
                 <label class="label">ACCOUNT NUMBER</label>
-                <input type="text" id="u_acc" placeholder="NUMBER" oninput="sv('u_acc')">
+                <input type="text" id="r_acc" placeholder="NUMBER" oninput="sv('r_acc')">
             </div>
 
             <div id="v3" class="card">
@@ -162,21 +156,21 @@
     </div>
 
 <script>
-    /* THE BULLETPROOF SWITCHER [cite: 2026-02-28] */
+    /* DIRECT STYLE TOGGLE [cite: 2026-02-28] */
     function st(n) {
-        // Step 1: Hide all via explicit style
+        // Hide all cards
         for(let i=1; i<=4; i++) {
             document.getElementById('v' + i).style.display = 'none';
             document.getElementById('m' + i).classList.remove('active-btn');
         }
-        // Step 2: Show selected
+        // Show the one you clicked
         document.getElementById('v' + n).style.display = 'block';
         document.getElementById('m' + n).classList.add('active-btn');
     }
 
-    /* DATA PERSISTENCE [cite: 2026-02-26] */
+    /* SAVE DATA [cite: 2026-02-26] */
     function sv(id) { 
-        localStorage.setItem('TBOX_U_' + id, document.getElementById(id).value); 
+        localStorage.setItem('TBOX_R_' + id, document.getElementById(id).value); 
     }
 
     function doV() {
@@ -191,10 +185,9 @@
         document.getElementById('bQ').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
     }
 
-    /* LOAD ON BOOT */
     window.onload = function() {
-        ['u_name', 'u_trade', 'u_addr', 'u_bank', 'u_sort', 'u_acc'].forEach(id => {
-            let val = localStorage.getItem('TBOX_U_' + id);
+        ['r_name', 'r_trade', 'r_addr', 'r_bank', 'r_sort', 'r_acc'].forEach(id => {
+            let val = localStorage.getItem('TBOX_R_' + id);
             if (val && document.getElementById(id)) document.getElementById(id).value = val;
         });
     };
