@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v16.1</title>
+    <title>toolboxpay - v16.2</title>
     <style>
-        /* CORE SETUP */
+        /* CORE SETUP [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         
         html, body { 
@@ -52,15 +52,13 @@
         .card { background: #1e1e1e; border-radius: 20px; padding: 20px; border: 1px solid #333; margin-bottom: 15px; }
         .title { color: #ff6600; font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; border-bottom: 2px solid #ff6600; padding-bottom: 8px; text-align: center; }
         
+        label { display: block; font-size: 10px; color: #ff6600; margin-bottom: 4px; font-weight: 800; text-transform: uppercase; }
+        input, textarea { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 14px; border-radius: 10px; font-size: 16px; margin-bottom: 12px; outline: none; }
+        
         .btn-green { width: 100%; background: #25D366; color: #000; padding: 18px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 14px; cursor: pointer; }
-
-        /* GALLERY FEED */
-        #gallery-feed { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
-        .photo-card { background: #000; border-radius: 15px; border: 1px solid #333; overflow: hidden; position: relative; }
-        .photo-card img { width: 100%; height: auto; display: block; }
-        .photo-meta { padding: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .photo-date { color: #ff6600; font-size: 10px; font-weight: 900; }
-        .photo-del { color: #ff4444; font-size: 10px; font-weight: 900; cursor: pointer; }
+        .btn-orange { background: #ff6600; color: #fff; margin-top: 5px; }
+        
+        .save-indicator { text-align: center; font-size: 9px; color: #25D366; font-weight: 800; text-transform: uppercase; margin-top: -10px; margin-bottom: 10px; opacity: 0; transition: 0.3s; }
     </style>
 </head>
 <body>
@@ -73,20 +71,88 @@
             <div class="nav-btn" id="btn-quotes" onclick="show('quotes')"><i>📝</i><span>Quotes</span></div>
             <div class="nav-btn" id="btn-expenses" onclick="show('expenses')"><i>🧾</i><span>Exp.</span></div>
             <div class="nav-btn" id="btn-calc" onclick="show('calc')"><i>🧮</i><span>Calc</span></div>
-            <div class="nav-btn active" id="btn-gallery" onclick="show('gallery')"><i>📸</i><span>Gallery</span></div>
-            <div class="nav-btn" id="btn-bank" onclick="show('bank')"><i>🏦</i><span>Bank</span></div>
+            <div class="nav-btn" id="btn-gallery" onclick="show('gallery')"><i>📸</i><span>Gallery</span></div>
+            <div class="nav-btn active" id="btn-bank" onclick="show('bank')"><i>🏦</i><span>Bank</span></div>
             <div class="nav-btn" id="btn-terms" onclick="show('terms')"><i>⚖️</i><span>Terms</span></div>
             <div class="nav-btn" id="btn-profile" onclick="show('profile')"><i>👤</i><span>Profile</span></div>
         </div>
     </header>
 
     <div id="viewport">
-        <div id="p-gallery" class="page active">
+        <div id="p-bank" class="page active">
             <div class="card">
-                <div class="title">Job Photos</div>
-                <label style="text-align:center; display:block; margin-bottom:15px; color:#aaa;">Document your work specialising in excellence.</label>
+                <div class="title">Bank Account</div>
+                <div id="bank-save-msg" class="save-indicator">AUTO-SAVED</div>
                 
-                <input type="file" id="gal-input" accept="image/*" capture="environment" style="display:none;" onchange="addPhoto(this)">
-                <button class="btn-green" onclick="document.getElementById('gal-input').click()">CAPTURE NEW PHOTO 📸</button>
+                <label>Account Holder Name</label>
+                <input type="text" id="bk-n" placeholder="Trading Name" oninput="asav('bk_n', this.value, 'bank-save-msg')">
 
-                <div id="gallery-feed">
+                <label>Sort Code</label>
+                <input type="text" id="bk-s" placeholder="00-00-00" oninput="asav('bk_s', this.value, 'bank-save-msg')">
+
+                <label>Account Number</label>
+                <input type="text" id="bk-a" placeholder="12345678" oninput="asav('bk_a', this.value, 'bank-save-msg')">
+
+                <button class="btn-green btn-orange" onclick="copyBank()">COPY DETAILS 📋</button>
+            </div>
+        </div>
+
+        <div id="p-terms" class="page">
+            <div class="card">
+                <div class="title">T&Cs</div>
+                <div id="terms-save-msg" class="save-indicator">AUTO-SAVED</div>
+                
+                <label>Standard Terms of Business</label>
+                <textarea id="tc-t" style="height: 300px;" placeholder="e.g. Labour and materials must be paid..." oninput="asav('tc_t', this.value, 'terms-save-msg')"></textarea>
+            </div>
+        </div>
+
+        <div id="p-readme" class="page"><div class="card"><div class="title">Manual</div></div></div>
+        <div id="p-quotes" class="page"><div class="card"><div class="title">Quotes</div></div></div>
+        <div id="p-expenses" class="page"><div class="card"><div class="title">Expenses</div></div></div>
+        <div id="p-calc" class="page"><div class="card"><div class="title">Calc</div></div></div>
+        <div id="p-gallery" class="page"><div class="card"><div class="title">Gallery</div></div></div>
+        <div id="p-profile" class="page"><div class="card"><div class="title">Profile</div></div></div>
+    </div>
+</div>
+
+<script>
+    function show(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('p-' + id).classList.add('active');
+        document.getElementById('btn-' + id).classList.add('active');
+        document.getElementById('viewport').scrollTop = 0;
+    }
+
+    /* AUTO-SAVE ENGINE [cite: 2026-02-26] */
+    let saveTimeout;
+    function asav(key, val, msgId) {
+        localStorage.setItem('TBP_' + key, val);
+        const msg = document.getElementById(msgId);
+        msg.style.opacity = "1";
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => { msg.style.opacity = "0"; }, 1000);
+    }
+
+    /* UTILITIES [cite: 2026-02-28] */
+    function copyBank() {
+        const n = localStorage.getItem('TBP_bk_n') || "";
+        const s = localStorage.getItem('TBP_bk_s') || "";
+        const a = localStorage.getItem('TBP_bk_a') || "";
+        const text = `PAYMENT DETAILS:\nName: ${n}\nSort: ${s}\nAcc: ${a}`;
+        navigator.clipboard.writeText(text);
+        alert("Bank details copied to clipboard!");
+    }
+
+    window.onload = function() {
+        // Load Banking
+        document.getElementById('bk-n').value = localStorage.getItem('TBP_bk_n') || "";
+        document.getElementById('bk-s').value = localStorage.getItem('TBP_bk_s') || "";
+        document.getElementById('bk-a').value = localStorage.getItem('TBP_bk_a') || "";
+        // Load Terms
+        document.getElementById('tc-t').value = localStorage.getItem('TBP_tc_t') || "1. Payment is due within 7 days.\n2. Materials belong to the business until paid in full.";
+    };
+</script>
+</body>
+</html>
