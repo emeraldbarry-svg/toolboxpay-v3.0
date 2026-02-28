@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v17.0 PERMANENT</title>
+    <title>toolboxpay - v17.1 UTILITY</title>
     <style>
         /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -14,7 +14,7 @@
         .logo-text { text-align: center; font-size: 20px; font-weight: 900; margin-bottom: 10px; }
         .logo-text span { color: #ff6600; }
 
-        /* 8-BUTTON NAVIGATION GRID [cite: 2026-02-28] */
+        /* 8-BUTTON NAV [cite: 2026-02-28] */
         .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 4px; }
         .nav-btn { background: #222; border: 1px solid #444; border-radius: 6px; padding: 10px 0; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .nav-btn i { font-style: normal; font-size: 14px; margin-bottom: 2px; }
@@ -26,12 +26,22 @@
         .page { display: none; }
         .page.active { display: block; }
 
-        /* PERMANENT DATA CARDS [cite: 2026-02-28] */
-        .card { background: #1e1e1e; border-radius: 20px; padding: 25px; border: 1px solid #333; margin-bottom: 15px; }
-        .title { color: #ff6600; font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 8px; text-align: center; }
-        
-        .static-label { color: #ff6600; font-size: 10px; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; display: block; }
-        .static-value { color: #fff; font-size: 18px; font-weight: 700; background: #000; padding: 15px; border-radius: 10px; border: 1px solid #444; display: block; margin-bottom: 15px; }
+        /* UI ELEMENTS [cite: 2026-02-28] */
+        .card { background: #1e1e1e; border-radius: 20px; padding: 20px; border: 1px solid #333; margin-bottom: 15px; }
+        .title { color: #ff6600; font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; border-bottom: 2px solid #ff6600; padding-bottom: 8px; text-align: center; }
+        label { display: block; font-size: 10px; color: #ff6600; margin-bottom: 4px; font-weight: 800; text-transform: uppercase; }
+        input { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 12px; border-radius: 10px; font-size: 16px; margin-bottom: 10px; outline: none; }
+        .static-val { background: #000; padding: 12px; border-radius: 10px; border: 1px solid #444; color: #fff; font-weight: 700; margin-bottom: 15px; display: block; }
+        .btn-green { width: 100%; background: #25D366; color: #000; padding: 18px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 14px; cursor: pointer; }
+
+        /* CALC [cite: 2026-02-28] */
+        .calc-res { font-size: 24px; color: #25D366; text-align: center; font-weight: 900; padding: 10px; }
+
+        /* GALLERY [cite: 2026-02-28] */
+        #gallery-feed { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
+        .photo-card { background: #000; border-radius: 15px; overflow: hidden; border: 1px solid #333; }
+        .photo-card img { width: 100%; display: block; }
+        .photo-meta { padding: 8px; display: flex; justify-content: space-between; font-size: 10px; font-weight: 800; }
     </style>
 </head>
 <body>
@@ -40,47 +50,62 @@
     <header>
         <div class="logo-text"><span>TOOLBOX</span>PAY</div>
         <div class="nav-grid">
-            <div class="nav-btn active" onclick="nav('profile', this)"><i>👤</i><span>Profile</span></div>
+            <div class="nav-btn active" onclick="nav('calc', this)"><i>🧮</i><span>Calc</span></div>
+            <div class="nav-btn" onclick="nav('gallery', this)"><i>📸</i><span>Gallery</span></div>
+            <div class="nav-btn" onclick="nav('profile', this)"><i>👤</i><span>Profile</span></div>
             <div class="nav-btn" onclick="nav('bank', this)"><i>🏦</i><span>Bank</span></div>
             <div class="nav-btn" onclick="nav('quotes', this)"><i>📝</i><span>Quotes</span></div>
             <div class="nav-btn" onclick="nav('expenses', this)"><i>🧾</i><span>Exp.</span></div>
-            <div class="nav-btn" onclick="nav('calc', this)"><i>🧮</i><span>Calc</span></div>
-            <div class="nav-btn" onclick="nav('gallery', this)"><i>📸</i><span>Gallery</span></div>
             <div class="nav-btn" onclick="nav('terms', this)"><i>⚖️</i><span>Terms</span></div>
             <div class="nav-btn" onclick="nav('readme', this)"><i>📖</i><span>ReadMe</span></div>
         </div>
     </header>
 
     <div id="viewport">
-        <div id="p-profile" class="page active">
+        <div id="p-calc" class="page active">
+            <div class="card">
+                <div class="title">VAT & Margin Calc</div>
+                <label>Net Amount (£)</label>
+                <input type="number" id="c-net" placeholder="0.00" oninput="runCalc()">
+                <label>VAT Rate (%)</label>
+                <input type="number" id="c-vat" value="20" oninput="runCalc()">
+                <div class="calc-res" id="c-total">Total: £0.00</div>
+            </div>
+        </div>
+
+        <div id="p-gallery" class="page">
+            <div class="card">
+                <div class="title">Job Gallery</div>
+                <input type="file" id="gal-in" accept="image/*" capture="environment" style="display:none" onchange="addImg(this)">
+                <button class="btn-green" onclick="document.getElementById('gal-in').click()">TAKE PHOTO 📸</button>
+                <div id="gallery-feed"></div>
+            </div>
+        </div>
+
+        <div id="p-profile" class="page">
             <div class="card">
                 <div class="title">Business Profile</div>
-                <span class="static-label">Business Name</span>
-                <span class="static-value">Toolboxpay</span>
-                
-                <span class="static-label">Specialising In</span>
-                <span class="static-value">App development</span>
+                <label>Business Name</label>
+                <span class="static-val">Toolboxpay</span>
+                <label>Specialising In</label>
+                <span class="static-val">App development</span>
             </div>
         </div>
 
         <div id="p-bank" class="page">
             <div class="card">
                 <div class="title">Bank Details</div>
-                <span class="static-label">Bank Name</span>
-                <span class="static-value">Nationwide</span>
-
-                <span class="static-label">Sort Code</span>
-                <span class="static-value">07-02-46</span>
-
-                <span class="static-label">Account Number</span>
-                <span class="static-value">30067390</span>
+                <label>Bank Name</label>
+                <span class="static-val">Nationwide</span>
+                <label>Sort Code</label>
+                <span class="static-val">07-02-46</span>
+                <label>Account Number</label>
+                <span class="static-val">30067390</span>
             </div>
         </div>
 
         <div id="p-quotes" class="page"><div class="card"><div class="title">Quotes</div></div></div>
         <div id="p-expenses" class="page"><div class="card"><div class="title">Expenses</div></div></div>
-        <div id="p-calc" class="page"><div class="card"><div class="title">Calculator</div></div></div>
-        <div id="p-gallery" class="page"><div class="card"><div class="title">Gallery</div></div></div>
         <div id="p-terms" class="page"><div class="card"><div class="title">Terms</div></div></div>
         <div id="p-readme" class="page"><div class="card"><div class="title">ReadMe</div></div></div>
     </div>
@@ -94,6 +119,39 @@
         btn.classList.add('active');
         document.getElementById('viewport').scrollTop = 0;
     }
+
+    /* CALC LOGIC [cite: 2026-02-28] */
+    function runCalc() {
+        const net = parseFloat(document.getElementById('c-net').value) || 0;
+        const vat = parseFloat(document.getElementById('c-vat').value) || 0;
+        const total = net + (net * (vat / 100));
+        document.getElementById('c-total').innerText = "Total: £" + total.toFixed(2);
+    }
+
+    /* GALLERY LOGIC [cite: 2026-02-28] */
+    function addImg(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let db = JSON.parse(localStorage.getItem('TBP_GALLERY') || "[]");
+                db.unshift({ img: e.target.result, date: new Date().toLocaleString('en-GB') });
+                localStorage.setItem('TBP_GALLERY', JSON.stringify(db));
+                renderGal();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function renderGal() {
+        let db = JSON.parse(localStorage.getItem('TBP_GALLERY') || "[]");
+        let h = "";
+        db.forEach(p => {
+            h += `<div class="photo-card"><img src="${p.img}"><div class="photo-meta"><span>${p.date}</span></div></div>`;
+        });
+        document.getElementById('gallery-feed').innerHTML = h;
+    }
+
+    window.onload = renderGal;
 </script>
 </body>
 </html>
