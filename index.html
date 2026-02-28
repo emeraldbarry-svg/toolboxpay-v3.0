@@ -3,81 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.5 MASTER</title>
+    <title>toolboxpay - v21.6 FINAL</title>
     <style>
-        /* LIGHT THEME TO PREVENT TEXT LOSS [cite: 2026-02-28] */
+        /* CORE RESET */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #f4f4f4; color: #333; font-family: Arial, sans-serif; padding-top: 140px; }
+        body { background-color: #2c2c2c; color: #ffffff; font-family: Arial, sans-serif; padding-top: 130px; }
 
-        /* FIXED HEADER & NAV [cite: 2026-02-28] */
-        .top-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            background: #f4f4f4;
-        }
-
-        header { background: #333; padding: 15px 0; text-align: center; border-bottom: 4px solid #ff6600; }
-        .logo { font-size: 24px; font-weight: 900; color: #fff; text-transform: uppercase; }
+        /* FIXED TOP BAR */
+        .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 999; background: #2c2c2c; }
+        
+        header { background: #1a1a1a; padding: 15px 0; text-align: center; border-bottom: 4px solid #ff6600; }
+        .logo { font-size: 22px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
         .logo span { color: #ff6600; }
 
-        nav { background: #222; overflow-x: auto; border-bottom: 2px solid #ff6600; }
+        nav { background: #000; overflow-x: auto; border-bottom: 2px solid #333; }
         .nav-inner { display: flex; padding: 10px; gap: 8px; width: max-content; }
         .nav-btn { 
-            width: 100px; padding: 12px 0; background: #444; color: #fff; 
-            text-align: center; border-radius: 6px; font-weight: bold; 
-            font-size: 11px; border: none; text-transform: uppercase;
+            width: 95px; padding: 12px 0; background: #333; color: #ff6600; 
+            text-align: center; border-radius: 6px; font-weight: 900; 
+            font-size: 10px; border: 1px solid #444; text-transform: uppercase;
         }
 
-        /* CONTENT CARDS [cite: 2026-02-28] */
-        .wrapper { padding: 15px; max-width: 500px; margin: 0 auto; }
-        .section { display: none; background: #fff; padding: 20px; border-radius: 12px; border: 2px solid #ddd; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        /* SECTION CARDS */
+        .content { padding: 15px; max-width: 480px; margin: 0 auto; }
+        .card { 
+            display: none; background: #1a1a1a; padding: 20px; 
+            border-radius: 15px; border: 2px solid #ff6600; 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4); 
+        }
         .active { display: block !important; }
 
-        .title { color: #ff6600; font-size: 20px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; text-align: center; }
-        .label { color: #555; font-size: 12px; font-weight: 900; display: block; margin-bottom: 5px; text-transform: uppercase; }
-
-        /* FORCED VISIBLE INPUTS [cite: 2026-02-28] */
-        input, textarea { 
-            width: 100%; padding: 15px; background: #f9f9f9 !important; 
-            border: 2px solid #ff6600 !important; border-radius: 8px;
-            margin-bottom: 20px; font-size: 16px; display: block;
-            color: #000 !important; font-weight: bold;
+        .card-title { 
+            color: #ff6600; font-size: 20px; font-weight: 900; 
+            text-transform: uppercase; margin-bottom: 20px; text-align: center;
+            border-bottom: 1px solid #333; padding-bottom: 10px;
         }
 
-        .calc-panel { background: #333; padding: 20px; border-radius: 10px; text-align: center; color: #fff; }
-        .calc-val { font-size: 28px; font-weight: 900; color: #ff6600; }
+        .label { 
+            color: #ffffff; font-size: 12px; font-weight: 900; 
+            display: block; margin-bottom: 8px; text-transform: uppercase; 
+        }
+
+        /* INPUT FIX: MIDNIGHT BLUE FORCES WHITE TEXT */
+        input, textarea { 
+            width: 100%; padding: 16px; background: #0e1621 !important; 
+            border: 1px solid #ff6600 !important; border-radius: 8px;
+            margin-bottom: 20px; font-size: 16px; display: block;
+            color: #ffffff !important; -webkit-text-fill-color: #ffffff !important;
+            outline: none;
+        }
+        ::placeholder { color: #5c6b7d !important; }
+
+        .res-panel { background: #000; padding: 20px; border-radius: 10px; border: 1px solid #ff6600; text-align: center; }
+        .res-total { font-size: 28px; font-weight: 900; color: #ffffff; }
     </style>
 </head>
 <body>
 
-    <div class="top-container">
+    <div class="fixed-top">
         <header><div class="logo">TOOLBOX<span>PAY</span></div></header>
         <nav>
             <div class="nav-inner">
-                <div id="t1" class="nav-btn" style="background:#ff6600;" onclick="tab(1)">Profile</div>
-                <div id="t2" class="nav-btn" onclick="tab(2)">Bank</div>
-                <div id="t3" class="nav-btn" onclick="tab(3)">VAT</div>
-                <div id="t4" class="nav-btn" onclick="tab(4)">Biz Calc</div>
+                <div id="nb1" class="nav-btn" style="background:#ff6600; color:#fff;" onclick="st(1)">Profile</div>
+                <div id="nb2" class="nav-btn" onclick="st(2)">Bank</div>
+                <div id="nb3" class="nav-btn" onclick="st(3)">VAT</div>
+                <div id="nb4" class="nav-btn" onclick="st(4)">Biz Calc</div>
             </div>
         </nav>
     </div>
 
-    <main class="wrapper">
-        <div id="v1" class="section active">
-            <h2 class="title">Business Profile</h2>
+    <main class="content">
+        <div id="s1" class="card active">
+            <h2 class="card-title">Business Profile</h2>
             <label class="label">Business Name</label>
-            <input type="text" id="f1" placeholder="Type name..." oninput="sv('f1')">
-            <label class="label">Trade / Specialism</label>
-            <input type="text" id="f2" placeholder="e.g. Electrician" oninput="sv('f2')">
-            <label class="label">Address</label>
-            <textarea id="f3" rows="3" placeholder="Full address..." oninput="sv('f3')"></textarea>
+            <input type="text" id="f1" placeholder="Enter Name..." oninput="sv('f1')">
+            <label class="label">Specialising In</label>
+            <input type="text" id="f2" placeholder="e.g. Plumbing" oninput="sv('f2')">
+            <label class="label">Business Address</label>
+            <textarea id="f3" rows="3" placeholder="Full Address..." oninput="sv('f3')"></textarea>
         </div>
 
-        <div id="v2" class="section">
-            <h2 class="title">Bank Details</h2>
+        <div id="s2" class="card">
+            <h2 class="card-title">Bank Details</h2>
             <label class="label">Bank Name</label>
             <input type="text" id="f4" oninput="sv('f4')">
             <label class="label">Sort Code</label>
@@ -86,43 +93,45 @@
             <input type="text" id="f6" oninput="sv('f6')">
         </div>
 
-        <div id="v3" class="section">
-            <h2 class="title">VAT Calculator</h2>
+        <div id="s3" class="card">
+            <h2 class="card-title">VAT Calculator</h2>
             <label class="label">Amount (£)</label>
             <input type="number" id="vIn" oninput="cV()">
-            <div class="calc-panel">
-                <div style="font-size:10px; font-weight:bold;">TOTAL INC VAT</div>
-                <div id="vOut" class="calc-val">£0.00</div>
+            <div class="res-panel">
+                <div style="color:#ff6600; font-size:10px; font-weight:bold;">TOTAL (INC VAT)</div>
+                <div id="vOut" class="res-total">£0.00</div>
             </div>
         </div>
 
-        <div id="v4" class="section">
-            <h2 class="title">Business Calc</h2>
+        <div id="s4" class="card">
+            <h2 class="card-title">Business Calc</h2>
             <label class="label">Labour (£)</label>
             <input type="number" id="bL" oninput="cB()">
             <label class="label">Materials (£)</label>
             <input type="number" id="bM" oninput="cB()">
             <label class="label">Markup (%)</label>
             <input type="number" id="bMk" value="20" oninput="cB()">
-            <div class="calc-panel">
-                <div style="font-size:10px; font-weight:bold;">RECOMMENDED QUOTE</div>
-                <div id="bQ" class="calc-val">£0.00</div>
+            <div class="res-panel">
+                <div style="color:#ff6600; font-size:10px; font-weight:bold;">REC. QUOTE</div>
+                <div id="bQ" class="res-total">£0.00</div>
             </div>
         </div>
     </main>
 
 <script>
-    function tab(n) {
+    function st(n) {
         for(let i=1; i<=4; i++) {
-            document.getElementById('v' + i).classList.remove('active');
-            document.getElementById('t' + i).style.background = '#444';
+            document.getElementById('s' + i).classList.remove('active');
+            let b = document.getElementById('nb' + i);
+            b.style.background = '#333'; b.style.color = '#ff6600';
         }
-        document.getElementById('v' + n).classList.add('active');
-        document.getElementById('t' + n).style.background = '#ff6600';
+        document.getElementById('s' + n).classList.add('active');
+        let act = document.getElementById('nb' + n);
+        act.style.background = '#ff6600'; act.style.color = '#fff';
     }
 
     function sv(id) {
-        localStorage.setItem('TBOX_V215_' + id, document.getElementById(id).value);
+        localStorage.setItem('TBOX_V216_' + id, document.getElementById(id).value);
     }
 
     function cV() {
@@ -139,7 +148,7 @@
 
     window.onload = function() {
         ['f1', 'f2', 'f3', 'f4', 'f5', 'f6'].forEach(id => {
-            let val = localStorage.getItem('TBOX_V215_' + id);
+            let val = localStorage.getItem('TBOX_V216_' + id);
             if (val) document.getElementById(id).value = val;
         });
     };
