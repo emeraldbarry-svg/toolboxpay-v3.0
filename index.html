@@ -3,70 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v13.1</title>
+    <title>toolboxpay - v13.2</title>
     <style>
         /* THEME & LAYOUT [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        
-        /* REMOVED CSS SNAP TO STOP JUMPING [cite: 2026-02-28] */
         html { scroll-behavior: smooth; }
-        
         body { background: #4a4a4a; color: #fff; font-family: sans-serif; min-height: 100vh; overflow-x: hidden; }
 
-        /* STICKY HEADER - INCREASED Z-INDEX */
+        /* HEADER - FORCED TO FRONT */
         #dashboard-header { 
             position: sticky; top: 0; width: 100%; 
-            background: #4a4a4a; padding: 10px 5px; z-index: 9999; 
-            border-bottom: 2px solid #ff6600;
+            background: #4a4a4a; padding: 15px 10px; z-index: 99999; 
+            border-bottom: 3px solid #ff6600;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
-        .logo { text-align: center; font-size: 26px; font-weight: 900; margin-bottom: 8px; pointer-events: none; }
+        .logo { text-align: center; font-size: 28px; font-weight: 900; margin-bottom: 12px; pointer-events: none; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* TILE STRIP - INCREASED TOUCH AREA */
-        .tile-strip { display: flex; gap: 6px; overflow-x: auto; padding: 10px 5px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        /* NAVIGATION STRIP */
+        .tile-strip { 
+            display: flex; gap: 10px; overflow-x: auto; padding: 5px; 
+            scrollbar-width: none; -webkit-overflow-scrolling: touch;
+        }
         .tile-strip::-webkit-scrollbar { display: none; }
         
+        /* THE BUTTONS [cite: 2026-02-28] */
         .jump-btn { 
             background: #222; border: 2px solid #444; border-radius: 12px; 
-            padding: 15px 10px; text-decoration: none; display: flex; 
-            flex-direction: column; align-items: center; min-width: 95px;
-            cursor: pointer; flex-shrink: 0;
-            transition: transform 0.1s active;
+            padding: 18px 12px; display: flex; flex-direction: column; 
+            align-items: center; min-width: 100px; flex-shrink: 0;
+            cursor: pointer; transition: 0.1s; touch-action: manipulation;
         }
-        .jump-btn span { color: #888; font-weight: 800; font-size: 10px; text-transform: uppercase; margin-top: 5px; pointer-events: none; }
-        .jump-btn i { font-style: normal; font-size: 18px; pointer-events: none; }
+        .jump-btn i { font-style: normal; font-size: 20px; margin-bottom: 4px; pointer-events: none; }
+        .jump-btn span { color: #888; font-weight: 800; font-size: 11px; text-transform: uppercase; pointer-events: none; }
         
         /* TWO-COLOUR ACTIVE STATE [cite: 2026-02-28] */
         .jump-btn.active { 
             background: #ff6600 !important; 
             border-color: #ffffff !important; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            transform: scale(0.95);
         }
         .jump-btn.active span { color: #ffffff !important; }
 
-        /* CONTENT AREA */
-        #content-area { width: 100%; max-width: 420px; margin: 0 auto; padding: 15px; }
-        
+        /* CONTENT */
+        #content-area { width: 100%; max-width: 420px; margin: 0 auto; padding: 20px; }
         .section-box { 
             background: #1e1e1e; border-radius: 25px; padding: 25px; 
-            border: 1px solid #333; margin-bottom: 50vh; /* Keeps focus on one tool at a time */
+            border: 1px solid #333; margin-bottom: 60vh;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .section-title { color: #ff6600; font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; text-align: center; }
+        .section-title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; text-align: center; }
 
-        /* INPUTS */
+        /* FORM GEAR */
         label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; }
         input, select, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 16px; margin-bottom: 15px; outline: none; }
-        .btn-green { width: 100%; background: #25D366; color: #000; padding: 18px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; font-size: 16px; margin-top: 10px; }
+        .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; font-size: 16px; cursor: pointer; }
         
-        /* QUOTE ITEM ROWS */
         .item-row { display: flex; gap: 8px; margin-bottom: 10px; }
         .item-row input { margin-bottom: 0; }
-        .add-row-btn { background: #333; color: #ff6600; border: 1px dashed #ff6600; padding: 12px; border-radius: 10px; width: 100%; font-weight: 900; margin-bottom: 20px; }
+        .add-row-btn { background: #333; color: #ff6600; border: 1px dashed #ff6600; padding: 12px; border-radius: 10px; width: 100%; font-weight: 900; margin-bottom: 20px; cursor: pointer; }
 
         .total-box { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; margin: 15px 0; text-align: right; }
-        .total-val { font-size: 38px; color: #ff6600; font-weight: 900; }
+        .total-val { font-size: 40px; color: #ff6600; font-weight: 900; }
         
         .photo-card { background: #000; border-radius: 15px; overflow: hidden; margin-bottom: 15px; border: 1px solid #333; }
         .photo-card img { width: 100%; height: 200px; object-fit: cover; }
@@ -77,21 +76,22 @@
     <div id="dashboard-header">
         <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         <div class="tile-strip" id="nav-strip">
-            <div class="jump-btn active" onclick="goto('r-box', this)"><i>📖</i><span>ReadMe</span></div>
-            <div class="jump-btn" onclick="goto('q-box', this)"><i>📝</i><span>Quotes</span></div>
-            <div class="jump-btn" onclick="goto('c-box', this)"><i>👥</i><span>Clients</span></div>
-            <div class="jump-btn" onclick="goto('m-box', this)"><i>🧮</i><span>Calc</span></div>
-            <div class="jump-btn" onclick="goto('p-box', this)"><i>📸</i><span>Gallery</span></div>
-            <div class="jump-btn" onclick="goto('b-box', this)"><i>🏦</i><span>Profile</span></div>
+            <div class="jump-btn active" id="nav-r-box" onpointerdown="goto('r-box')"><i>📖</i><span>ReadMe</span></div>
+            <div class="jump-btn" id="nav-q-box" onpointerdown="goto('q-box')"><i>📝</i><span>Quotes</span></div>
+            <div class="jump-btn" id="nav-c-box" onpointerdown="goto('c-box')"><i>👥</i><span>Clients</span></div>
+            <div class="jump-btn" id="nav-m-box" onpointerdown="goto('m-box')"><i>🧮</i><span>Calc</span></div>
+            <div class="jump-btn" id="nav-p-box" onpointerdown="goto('p-box')"><i>📸</i><span>Gallery</span></div>
+            <div class="jump-btn" id="nav-b-box" onpointerdown="goto('b-box')"><i>🏦</i><span>Profile</span></div>
         </div>
     </div>
 
     <div id="content-area">
         <div id="r-box" class="section-box">
             <div class="section-title">Operating Manual</div>
-            <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:15px; border-radius:15px; border-left:4px solid #ff6600;">
-                <p>• <b>Solid Navigation:</b> Snapping is disabled. Tap a category above to glide precisely to that section.</p><br>
-                <p>• <b>Responsive:</b> Buttons now have larger touch zones for easier use with gloves or on the move.</p>
+            <div style="font-size:14px; color:#ccc; line-height:1.6; background:#111; padding:20px; border-radius:15px; border-left:4px solid #ff6600;">
+                <p>• <b>Fixed Buttons:</b> We are now using 'PointerDown' logic. The buttons respond the instant you touch them.</p><br>
+                <p>• <b>Active Tracking:</b> The buttons glow <b>Orange & White</b> to show exactly where you are.</p><br>
+                <p>• <b>Manual Flow:</b> No more jumping. Just smooth, clean scrolling.</p>
             </div>
         </div>
 
@@ -99,7 +99,7 @@
             <div class="section-title">Job Quote</div>
             <label>Client</label><select id="q-cli-pick"></select>
             <label>Labour</label>
-            <div id="lab-container"><div class="item-row"><input type="text" class="l-desc" style="flex:2;" placeholder="Labour"><input type="number" class="l-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
+            <div id="lab-container"><div class="item-row"><input type="text" class="l-desc" style="flex:2;" placeholder="Labour Task"><input type="number" class="l-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
             <button class="add-row-btn" onclick="addNewRow('lab-container', 'l-desc', 'l-price')">+ ADD LABOUR</button>
             <label>Materials</label>
             <div id="mat-container"><div class="item-row"><input type="text" class="m-desc" style="flex:2;" placeholder="Material"><input type="number" class="m-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
@@ -144,46 +144,43 @@
     </div>
 
 <script>
-    /* ROCK SOLID NAVIGATION [cite: 2026-02-28] */
-    function goto(id, btn) {
-        // Clear active states
+    /* HYPER-RESPONSIVE NAVIGATION [cite: 2026-02-28] */
+    function goto(id) {
+        // Instant visual feedback
         document.querySelectorAll('.jump-btn').forEach(b => b.classList.remove('active'));
-        // Light up the clicked button
-        btn.classList.add('active');
-        // Scroll to target
+        document.getElementById('nav-' + id).classList.add('active');
+        
+        // Scroll logic
         const target = document.getElementById(id);
-        const offset = 150; // Distance from top to clear header
         window.scrollTo({
-            top: target.offsetTop - offset,
+            top: target.offsetTop - 150,
             behavior: "smooth"
         });
-        // Center button in view
-        btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+        // Center the button in the horizontal strip
+        document.getElementById('nav-' + id).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
 
-    /* AUTO-HIGHLIGHT ON SCROLL (NON-JUMPY) */
-    let isScrolling;
+    /* SCROLL HIGHLIGHTER (RELIABLE) */
     window.addEventListener("scroll", () => {
-        window.clearTimeout(isScrolling);
-        isScrolling = setTimeout(() => {
-            let current = "";
-            document.querySelectorAll(".section-box").forEach(sb => {
-                if (window.pageYOffset >= (sb.offsetTop - 250)) { current = sb.getAttribute("id"); }
-            });
-            document.querySelectorAll(".jump-btn").forEach(btn => {
-                btn.classList.remove("active");
-                if (btn.getAttribute("onclick").includes(current)) {
-                    btn.classList.add("active");
-                }
-            });
-        }, 100);
+        let current = "";
+        document.querySelectorAll(".section-box").forEach(sb => {
+            if (window.pageYOffset >= (sb.offsetTop - 250)) {
+                current = sb.getAttribute("id");
+            }
+        });
+        if (current) {
+            document.querySelectorAll('.jump-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById('nav-' + current);
+            if(activeBtn) activeBtn.classList.add('active');
+        }
     });
 
-    /* ITEMISER & QUOTES */
+    /* CORE LOGIC */
     function addNewRow(contId, dCl, pCl) {
         const d = document.createElement('div');
         d.className = 'item-row';
-        d.innerHTML = `<input type="text" class="${dCl}" style="flex:2;"><input type="number" class="${pCl}" style="flex:0.8;" oninput="runTotal()"><span onclick="this.parentElement.remove();runTotal();" style="color:red;padding:12px;font-weight:bold;">×</span>`;
+        d.innerHTML = `<input type="text" class="${dCl}" style="flex:2;"><input type="number" class="${pCl}" style="flex:0.8;" oninput="runTotal()"><span onclick="this.parentElement.remove();runTotal();" style="color:red;padding:12px;font-weight:bold;cursor:pointer;">×</span>`;
         document.getElementById(contId).appendChild(d);
     }
     function runTotal() {
@@ -194,16 +191,9 @@
         const b = document.getElementById('bn').value;
         const s = document.getElementById('sc').value;
         const a = document.getElementById('an').value;
-        let msg = `*QUOTE*%0A%0A*LABOUR:*%0A`;
-        document.querySelectorAll('#lab-container .item-row').forEach(r => {
-            let d = r.querySelector('.l-desc').value; let p = r.querySelector('.l-price').value;
-            if(d) msg += `- ${d}: £${parseFloat(p||0).toFixed(2)}%0A`;
-        });
-        msg += `%0A*TOTAL: ${document.getElementById('qt').innerText}*%0A%0APay: ${b} (${s}/${a})`;
+        let msg = `*QUOTE*%0A%0A*TOTAL: ${document.getElementById('qt').innerText}*%0A%0APay: ${b} (${s}/${a})`;
         window.open("https://wa.me/?text=" + msg);
     }
-
-    /* CLIENTS & PHOTOS */
     function saveC() {
         let n = document.getElementById('cn').value;
         if(!n) return;
@@ -246,7 +236,6 @@
         });
         document.getElementById('p-grid').innerHTML = h;
     }
-
     function calcM() {
         let r = parseFloat(document.getElementById('dr').value) || 0;
         let d = parseFloat(document.getElementById('dn').value) || 0;
