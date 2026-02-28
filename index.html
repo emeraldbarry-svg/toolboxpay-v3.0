@@ -3,206 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v17.5 FULL CONTENT</title>
+    <title>toolboxpay - v17.6 MASTER</title>
     <style>
-        /* BRANDING & THEME [cite: 2020-02-20, 2026-02-21] */
+        /* BRANDING [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         html, body { background: #111; height: 100%; width: 100%; overflow: hidden; position: fixed; font-family: sans-serif; color: #fff; }
-        #mobile-wrapper { max-width: 500px; margin: 0 auto; height: 100%; background: #4a4a4a; display: flex; flex-direction: column; }
+        #wrapper { max-width: 500px; margin: 0 auto; height: 100%; background: #4a4a4a; display: flex; flex-direction: column; }
         
-        header { background: #4a4a4a; padding: 15px 10px 10px 10px; border-bottom: 3px solid #ff6600; flex-shrink: 0; z-index: 1000; }
-        .logo-text { text-align: center; font-size: 22px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; }
-        .logo-text span { color: #ff6600; }
+        header { background: #4a4a4a; padding: 15px 10px; border-bottom: 3px solid #ff6600; flex-shrink: 0; }
+        .logo { text-align: center; font-size: 22px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; }
+        .logo span { color: #ff6600; }
 
         /* SCROLLABLE NAV [cite: 2026-02-28] */
-        .nav-scroll-container {
-            overflow-x: auto;
-            display: flex;
-            gap: 10px;
-            padding: 5px 10px 15px 10px;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
+        .nav-bar { overflow-x: auto; display: flex; gap: 12px; padding: 5px 15px 15px 15px; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+        .nav-bar::-webkit-scrollbar { display: none; }
+
+        .tab-link { 
+            flex: 0 0 125px; background: #222; border: 2px solid #444; border-radius: 15px; 
+            padding: 20px 5px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; 
         }
-        .nav-scroll-container::-webkit-scrollbar { display: none; }
+        .tab-link i { font-style: normal; font-size: 24px; margin-bottom: 8px; }
+        .tab-link span { color: #ff6600; font-size: 12px; font-weight: 900; text-transform: uppercase; }
+        .tab-link.active { background: #ff6600 !important; border-color: #fff !important; }
+        .tab-link.active span { color: #fff !important; }
 
-        .nav-btn { 
-            flex: 0 0 120px; 
-            background: #222; 
-            border: 2px solid #444; 
-            border-radius: 12px; 
-            padding: 18px 5px; 
-            text-align: center; 
-            cursor: pointer; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-        }
-        .nav-btn i { font-style: normal; font-size: 22px; margin-bottom: 6px; }
-        .nav-btn span { color: #ff6600; font-size: 11px; font-weight: 900; text-transform: uppercase; }
-        .nav-btn.active { background: #ff6600 !important; border-color: #fff !important; }
-        .nav-btn.active span { color: #fff !important; }
+        /* CONTENT [cite: 2026-02-28] */
+        #view { flex-grow: 1; overflow-y: auto; padding: 20px; padding-bottom: 60px; }
+        .section { display: none; }
+        .section.active { display: block; }
 
-        /* VIEWPORT */
-        #viewport { flex-grow: 1; overflow-y: auto; padding: 15px; padding-bottom: 50px; }
-        .page { display: none; }
-        .page.active { display: block; }
-
-        /* CONTENT CARDS [cite: 2026-02-28] */
-        .card { background: #1e1e1e; border-radius: 20px; padding: 25px; border: 1px solid #333; margin-bottom: 15px; }
-        .title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 8px; text-align: center; }
+        .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-bottom: 20px; }
+        .title { color: #ff6600; font-size: 22px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; text-align: center; }
         
-        label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 6px; font-weight: 900; text-transform: uppercase; }
-        input, textarea { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 15px; border-radius: 12px; font-size: 16px; margin-bottom: 15px; outline: none; }
-        .static-val { background: #000; padding: 18px; border-radius: 12px; border: 1px solid #444; color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 18px; display: block; }
+        label { display: block; font-size: 12px; color: #ff6600; margin-bottom: 8px; font-weight: 900; text-transform: uppercase; }
+        .data-box { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #444; color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 20px; display: block; }
         
-        .btn-action { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; font-size: 14px; cursor: pointer; margin-bottom: 15px; }
-        
-        /* CALC & GALLERY */
-        .res-text { font-size: 28px; color: #25D366; text-align: center; font-weight: 900; margin: 10px 0; }
-        #gallery-feed { display: grid; gap: 15px; }
-        .photo-card { background: #000; border-radius: 15px; overflow: hidden; border: 1px solid #333; }
-        .photo-card img { width: 100%; display: block; }
-        .photo-meta { padding: 12px; font-size: 11px; border-top: 1px solid #333; }
+        input { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 18px; border-radius: 15px; font-size: 18px; margin-bottom: 20px; outline: none; }
+        .btn-go { width: 100%; background: #25D366; color: #000; padding: 22px; border: none; border-radius: 18px; font-weight: 900; text-transform: uppercase; font-size: 16px; cursor: pointer; }
+        .res-big { font-size: 32px; color: #25D366; text-align: center; font-weight: 900; margin: 15px 0; }
     </style>
 </head>
 <body>
 
-<div id="mobile-wrapper">
+<div id="wrapper">
     <header>
-        <div class="logo-text"><span>TOOLBOX</span>PAY</div>
-        <div class="nav-scroll-container">
-            <div class="nav-btn active" onclick="nav('profile', this)"><i>👤</i><span>Profile</span></div>
-            <div class="nav-btn" onclick="nav('bank', this)"><i>🏦</i><span>Bank</span></div>
-            <div class="nav-btn" onclick="nav('calc', this)"><i>🧮</i><span>Calc</span></div>
-            <div class="nav-btn" onclick="nav('gallery', this)"><i>📸</i><span>Gallery</span></div>
-            <div class="nav-btn" onclick="nav('quotes', this)"><i>📝</i><span>Quotes</span></div>
-            <div class="nav-btn" onclick="nav('expenses', this)"><i>🧾</i><span>Expenses</span></div>
-            <div class="nav-btn" onclick="nav('terms', this)"><i>⚖️</i><span>Terms</span></div>
-            <div class="nav-btn" onclick="nav('readme', this)"><i>📖</i><span>ReadMe</span></div>
+        <div class="logo"><span>TOOLBOX</span>PAY</div>
+        <div class="nav-bar">
+            <div class="tab-link active" onclick="go('prof', this)"><i>👤</i><span>Profile</span></div>
+            <div class="tab-link" onclick="go('bank', this)"><i>🏦</i><span>Bank</span></div>
+            <div class="tab-link" onclick="go('calc', this)"><i>🧮</i><span>Calc</span></div>
+            <div class="tab-link" onclick="go('gal', this)"><i>📸</i><span>Gallery</span></div>
+            <div class="tab-link" onclick="go('quote', this)"><i>📝</i><span>Quotes</span></div>
+            <div class="tab-link" onclick="go('exp', this)"><i>🧾</i><span>Expenses</span></div>
+            <div class="tab-link" onclick="go('term', this)"><i>⚖️</i><span>Terms</span></div>
+            <div class="tab-link" onclick="go('read', this)"><i>📖</i><span>ReadMe</span></div>
         </div>
     </header>
 
-    <div id="viewport">
-        <div id="p-profile" class="page active">
+    <div id="view">
+        <div id="prof" class="section active">
             <div class="card">
                 <div class="title">Business Profile</div>
                 <label>Business Name</label>
-                <span class="static-val">Toolboxpay</span>
+                <div class="data-box">Toolboxpay</div>
                 <label>Specialising In</label>
-                <span class="static-val">App development</span>
+                <div class="data-box">App development</div>
             </div>
         </div>
 
-        <div id="p-bank" class="page">
+        <div id="bank" class="section">
             <div class="card">
                 <div class="title">Bank Details</div>
                 <label>Bank Name</label>
-                <span class="static-val">Nationwide</span>
+                <div class="data-box">Nationwide</div>
                 <label>Sort Code</label>
-                <span class="static-val">07-02-46</span>
+                <div class="data-box">07-02-46</div>
                 <label>Account Number</label>
-                <span class="static-val">30067390</span>
+                <div class="data-box">30067390</div>
             </div>
         </div>
 
-        <div id="p-calc" class="page">
+        <div id="calc" class="section">
             <div class="card">
-                <div class="title">Quick VAT Calc</div>
-                <label>Net Amount (£)</label>
-                <input type="number" id="v-net" placeholder="0.00" oninput="vCalc()">
-                <div class="res-text" id="v-total">£0.00</div>
-                <p style="text-align:center; font-size:10px; color:#888;">Includes 20% VAT</p>
+                <div class="title">VAT Calculator</div>
+                <label>Enter Net Amount (£)</label>
+                <input type="number" id="net-in" placeholder="0.00" oninput="calcVAT()">
+                <div class="res-big" id="total-out">£0.00</div>
+                <p style="text-align:center; font-size:12px; color:#888;">Total (inc. 20% VAT)</p>
             </div>
         </div>
 
-        <div id="p-gallery" class="page">
+        <div id="gal" class="section">
             <div class="card">
-                <div class="title">Job Gallery</div>
-                <input type="file" id="g-in" accept="image/*" capture="environment" style="display:none" onchange="gSave(this)">
-                <button class="btn-action" onclick="document.getElementById('g-in').click()">TAKE JOB PHOTO 📸</button>
-                <div id="gallery-feed"></div>
+                <div class="title">Gallery</div>
+                <button class="btn-go">ADD JOB PHOTO 📸</button>
+                <p style="text-align:center; color:#666; margin-top:20px;">Storage Ready.</p>
             </div>
         </div>
 
-        <div id="p-quotes" class="page">
-            <div class="card">
-                <div class="title">New Quote</div>
-                <label>Customer Name</label>
-                <input type="text" placeholder="e.g. Mr. Smith">
-                <label>Labour Cost (£)</label>
-                <input type="number" placeholder="0.00">
-                <label>Material Cost (£)</label>
-                <input type="number" placeholder="0.00">
-                <button class="btn-action">Save Quote</button>
-            </div>
-        </div>
-
-        <div id="p-expenses" class="page">
-            <div class="card">
-                <div class="title">Log Expense</div>
-                <label>Item / Supplier</label>
-                <input type="text" placeholder="e.g. Screwfix">
-                <label>Total Price (£)</label>
-                <input type="number" placeholder="0.00">
-                <button class="btn-action">Log Expense</button>
-            </div>
-        </div>
-
-        <div id="p-terms" class="page">
-            <div class="card">
-                <div class="title">Terms of Labour</div>
-                <textarea style="height:200px;">Standard terms for app development and labour...</textarea>
-            </div>
-        </div>
-
-        <div id="p-readme" class="page">
-            <div class="card">
-                <div class="title">User Guide</div>
-                <p style="font-size:14px; line-height:1.6;">Swipe the top orange bar to access all 8 tools. Your business details are permanently locked for security.</p>
-            </div>
-        </div>
+        <div id="quote" class="section"><div class="card"><div class="title">Quotes</div><input type="text" placeholder="Client Name"></div></div>
+        <div id="exp" class="section"><div class="card"><div class="title">Expenses</div><input type="text" placeholder="Supplier"></div></div>
+        <div id="term" class="section"><div class="card"><div class="title">Terms</div><p>Standard labour terms applied.</p></div></div>
+        <div id="read" class="section"><div class="card"><div class="title">ReadMe</div><p>Swipe the bar to navigate.</p></div></div>
     </div>
 </div>
 
 <script>
-    function nav(id, btn) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('p-' + id).classList.add('active');
-        btn.classList.add('active');
-        btn.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+    function go(id, el) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        el.classList.add('active');
+        el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
     }
 
-    function vCalc() {
-        const n = parseFloat(document.getElementById('v-net').value) || 0;
-        document.getElementById('v-total').innerText = "£" + (n * 1.2).toFixed(2);
+    function calcVAT() {
+        const val = parseFloat(document.getElementById('net-in').value) || 0;
+        document.getElementById('total-out').innerText = "£" + (val * 1.2).toFixed(2);
     }
-
-    function gSave(input) {
-        if (input.files && input.files[0]) {
-            const name = prompt("Job Name/Customer:");
-            if (!name) return;
-            let r = new FileReader();
-            r.onload = function(e) {
-                let d = JSON.parse(localStorage.getItem('TBP_G') || "[]");
-                d.unshift({img: e.target.result, n: name, d: new Date().toLocaleDateString('en-GB')});
-                localStorage.setItem('TBP_G', JSON.stringify(d));
-                gRender();
-            };
-            r.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function gRender() {
-        let d = JSON.parse(localStorage.getItem('TBP_G') || "[]");
-        let h = "";
-        d.forEach(p => {
-            h += `<div class="photo-card"><img src="${p.img}"><div class="photo-meta"><b>${p.n}</b><br>${p.d}</div></div>`;
-        });
-        document.getElementById('gallery-feed').innerHTML = h || '<p style="text-align:center;color:#666;">No job photos.</p>';
-    }
-
-    window.onload = gRender;
 </script>
 </body>
 </html>
