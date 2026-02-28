@@ -3,129 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.48 STABLE</title>
+    <title>toolboxpay - v21.49 FORCE RESET</title>
     <style>
-        /* REPEAT WHAT WORKS: BOLD, ORANGE, BLACK */
+        /* THE VISUAL LOCK */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif !important; font-weight: 900 !important; }
         body { background-color: #1a1a1a; color: #ffffff; padding: 15px; display: flex; flex-direction: column; align-items: center; }
 
-        .container { width: 100%; max-width: 500px; }
+        .shell { width: 100%; max-width: 500px; }
 
-        /* LOGO - CENTERED */
-        header { padding: 20px 0; text-align: center; }
-        .logo { font-size: 28px; text-transform: uppercase; }
+        /* LOGO */
+        header { padding: 25px 0; text-align: center; }
+        .logo { font-size: 30px; text-transform: uppercase; }
         .logo .orange { color: #ff6600; }
         .logo .white { color: #ffffff; }
 
-        /* NAV - THE 2x2 GRID THAT WORKS */
-        nav { 
-            background: #000; padding: 12px; border: 4px solid #444; 
-            border-bottom: 8px solid #ff6600; border-radius: 15px; margin-bottom: 20px; 
-        }
-        .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .nav-btn { 
-            height: 55px; background: #333; color: #ff6600; border: 3px solid #555; 
+        /* NAV - 2x2 GRID */
+        nav { background: #000; padding: 12px; border: 4px solid #444; border-bottom: 8px solid #ff6600; border-radius: 15px; margin-bottom: 25px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn { 
+            height: 60px; background: #333; color: #ff6600; border: 3px solid #555; 
             border-radius: 12px; text-transform: uppercase; cursor: pointer; 
             font-size: 14px; display: flex; align-items: center; justify-content: center;
         }
-        .nav-btn.active-btn { background: #ff6600 !important; color: #fff !important; border-color: #fff !important; }
+        .btn-on { background: #ff6600 !important; color: #fff !important; border-color: #fff !important; }
 
-        /* CARDS */
-        .card { display: none; background: #111; padding: 20px; border-radius: 20px; border: 8px solid #ff6600; }
-        .active-card { display: block !important; }
-        .title { color: #ff6600; font-size: 22px; text-transform: uppercase; margin-bottom: 20px; text-align: center; }
+        /* CONTENT */
+        .box { display: none; background: #111; padding: 25px; border-radius: 20px; border: 8px solid #ff6600; }
+        .box-on { display: block !important; }
+        .tt { color: #ff6600; font-size: 24px; text-transform: uppercase; margin-bottom: 25px; text-align: center; }
 
-        /* INPUTS - MATCHING THE SCREENSHOTS */
-        .label { color: #ffffff; font-size: 14px; display: block; margin-bottom: 6px; text-transform: uppercase; }
+        /* INPUTS - BRITISH ENGLISH LABOUR */
+        .lbl { color: #ffffff; font-size: 14px; display: block; margin-bottom: 8px; text-transform: uppercase; }
         input, textarea { 
             width: 100% !important; background: #ffffff !important; color: #000000 !important; 
             border: 6px solid #ff6600 !important; border-radius: 15px !important; 
-            font-size: 22px !important; padding: 15px !important; margin-bottom: 20px !important;
+            font-size: 22px !important; padding: 15px !important; margin-bottom: 25px !important;
             display: block !important; outline: none !important;
         }
-        textarea { min-height: 100px; resize: none; }
+        textarea { min-height: 120px; resize: none; }
 
-        /* CALC RESULTS */
-        .res-box { background: #000; padding: 25px; border-radius: 15px; border: 6px solid #ff6600; text-align: center; }
-        .res-text { font-size: 40px; color: #ffffff; }
+        /* CALCULATIONS [cite: 2026-02-28] */
+        .res { background: #000; padding: 30px; border-radius: 15px; border: 6px solid #ff6600; text-align: center; }
+        .res-out { font-size: 45px; color: #ffffff; }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="shell">
         <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
         
         <nav>
-            <div class="nav-grid">
-                <button id="m1" class="nav-btn active-btn" onclick="st(1)">Profile</button>
-                <button id="m2" class="nav-btn" onclick="st(2)">Bank</button>
-                <button id="m3" class="nav-btn" onclick="st(3)">VAT</button>
-                <button id="m4" class="nav-btn" onclick="st(4)">Biz Calc</button>
+            <div class="grid">
+                <button id="b1" class="btn btn-on" onclick="go(1)">Profile</button>
+                <button id="b2" class="btn" onclick="go(2)">Bank</button>
+                <button id="b3" class="btn" onclick="go(3)">VAT</button>
+                <button id="b4" class="btn" onclick="go(4)">Biz Calc</button>
             </div>
         </nav>
 
         <main>
-            <div id="v1" class="card active-card">
-                <h2 class="title">BUSINESS PROFILE</h2>
-                <label class="label">TRADING NAME</label>
-                <input type="text" id="p_name" placeholder="Name" oninput="sv('p_name')">
-                <label class="label">SPECIALISING IN</label>
-                <input type="text" id="p_trade" placeholder="Trade" oninput="sv('p_trade')">
-                <label class="label">ADDRESS</label>
-                <textarea id="p_addr" placeholder="Address" oninput="sv('p_addr')"></textarea>
+            <div id="p1" class="box box-on">
+                <h2 class="tt">BUSINESS PROFILE</h2>
+                <label class="lbl">TRADING NAME</label>
+                <input type="text" id="f_name" placeholder="Name" oninput="save('f_name')">
+                <label class="lbl">SPECIALISING IN</label>
+                <input type="text" id="f_trade" placeholder="Trade" oninput="save('f_trade')">
+                <label class="lbl">ADDRESS</label>
+                <textarea id="f_addr" placeholder="Address" oninput="save('f_addr')"></textarea>
             </div>
 
-            <div id="v2" class="card">
-                <h2 class="title">BANK DETAILS</h2>
-                <label class="label">BANK NAME</label><input type="text" id="p_bank" oninput="sv('p_bank')">
-                <label class="label">SORT CODE</label><input type="text" id="p_sort" oninput="sv('p_sort')">
-                <label class="label">ACCOUNT NUMBER</label><input type="text" id="p_acc" oninput="sv('p_acc')">
+            <div id="p2" class="box">
+                <h2 class="tt">BANK DETAILS</h2>
+                <label class="lbl">BANK NAME</label><input type="text" id="f_bank" oninput="save('f_bank')">
+                <label class="lbl">SORT CODE</label><input type="text" id="f_sort" oninput="save('f_sort')">
+                <label class="lbl">ACCOUNT NUMBER</label><input type="text" id="f_acc" oninput="save('f_acc')">
             </div>
 
-            <div id="v3" class="card">
-                <h2 class="title">VAT CALCULATOR</h2>
-                <label class="label">NET AMOUNT (£)</label>
-                <input type="number" id="vIn" placeholder="0.00" oninput="doV()">
-                <div class="res-box"><div id="vOut" class="res-text">£0.00</div></div>
+            <div id="p3" class="box">
+                <h2 class="tt">VAT CALCULATOR</h2>
+                <label class="lbl">NET AMOUNT (£)</label>
+                <input type="number" id="vIn" placeholder="0.00" oninput="calcV()">
+                <div class="res"><div id="vOut" class="res-out">£0.00</div></div>
             </div>
 
-            <div id="v4" class="card">
-                <h2 class="title">BUSINESS CALC</h2>
-                <label class="label">LABOUR (£)</label><input type="number" id="bL" oninput="doB()">
-                <label class="label">MATERIALS (£)</label><input type="number" id="bM" oninput="doB()">
-                <label class="label">MARKUP (%)</label><input type="number" id="bMk" value="20" oninput="doB()">
-                <div class="res-box"><div id="bQ" class="res-text">£0.00</div></div>
+            <div id="p4" class="box">
+                <h2 class="tt">BUSINESS CALC</h2>
+                <label class="lbl">LABOUR (£)</label><input type="number" id="bL" oninput="calcB()">
+                <label class="lbl">MATERIALS (£)</label><input type="number" id="bM" oninput="calcB()">
+                <label class="lbl">MARKUP (%)</label><input type="number" id="bMk" value="20" oninput="calcB()">
+                <div class="res"><div id="bQ" class="res-out">£0.00</div></div>
             </div>
         </main>
     </div>
 
 <script>
-    function st(n) {
+    /* NEW FORCE-LOGIC [cite: 2026-02-28] */
+    function go(n) {
+        // Force reset all displays
         for(let i=1; i<=4; i++) {
-            document.getElementById('v' + i).style.display = 'none';
-            document.getElementById('m' + i).classList.remove('active-btn');
+            document.getElementById('p' + i).classList.remove('box-on');
+            document.getElementById('b' + i).classList.remove('btn-on');
         }
-        document.getElementById('v' + n).style.display = 'block';
-        document.getElementById('m' + n).classList.add('active-btn');
+        // Force activate selection
+        document.getElementById('p' + n).classList.add('box-on');
+        document.getElementById('b' + n).classList.add('btn-on');
+        window.scrollTo(0, 0);
     }
 
-    function sv(id) { localStorage.setItem('TBOX_V_' + id, document.getElementById(id).value); }
+    /* AUTO-SAVE [cite: 2026-02-26] */
+    function save(id) { localStorage.setItem('TBOX_F_' + id, document.getElementById(id).value); }
 
-    function doV() {
-        let n = parseFloat(document.getElementById('vIn').value) || 0;
-        document.getElementById('vOut').innerText = "£" + (n * 1.2).toFixed(2);
+    function calcV() {
+        let val = parseFloat(document.getElementById('vIn').value) || 0;
+        document.getElementById('vOut').innerText = "£" + (val * 1.2).toFixed(2);
     }
 
-    function doB() {
+    function calcB() {
         let l = parseFloat(document.getElementById('bL').value) || 0;
         let m = parseFloat(document.getElementById('bM').value) || 0;
         let mk = (parseFloat(document.getElementById('bMk').value) || 0) / 100;
         document.getElementById('bQ').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
     }
 
+    /* INITIAL LOAD */
     window.onload = function() {
-        ['p_name', 'p_trade', 'p_addr', 'p_bank', 'p_sort', 'p_acc'].forEach(id => {
-            let val = localStorage.getItem('TBOX_V_' + id);
+        ['f_name', 'f_trade', 'f_addr', 'f_bank', 'f_sort', 'f_acc'].forEach(id => {
+            let val = localStorage.getItem('TBOX_F_' + id);
             if (val && document.getElementById(id)) document.getElementById(id).value = val;
         });
     };
