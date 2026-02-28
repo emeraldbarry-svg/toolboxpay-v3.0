@@ -3,84 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v18.0 HARD-CODED</title>
+    <title>toolboxpay - v18.5 RESTORED</title>
     <style>
-        /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
+        /* BRANDING & THEME [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: #111; color: #fff; font-family: sans-serif; }
-        #app-shell { max-width: 500px; margin: 0 auto; background: #4a4a4a; min-height: 100vh; padding-bottom: 40px; }
+        body { background: #111; color: #fff; font-family: sans-serif; overflow: hidden; position: fixed; width: 100%; height: 100%; }
+        #app-wrapper { max-width: 500px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; background: #4a4a4a; }
         
-        header { background: #4a4a4a; padding: 20px; border-bottom: 4px solid #ff6600; text-align: center; position: sticky; top: 0; z-index: 100; }
-        .logo-main { font-size: 26px; font-weight: 900; text-transform: uppercase; }
-        .logo-main span { color: #ff6600; }
+        header { background: #4a4a4a; padding: 15px 15px 5px 15px; text-align: center; border-bottom: 1px solid #333; }
+        .logo { font-size: 24px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
+        .logo span { color: #ff6600; }
 
-        /* SCROLLABLE NAV [cite: 2026-02-28] */
-        .nav-ribbon { overflow-x: auto; display: flex; gap: 15px; padding: 15px; background: #222; white-space: nowrap; -webkit-overflow-scrolling: touch; border-bottom: 1px solid #333; }
-        .nav-item { flex: 0 0 140px; background: #333; border: 2px solid #ff6600; border-radius: 15px; padding: 18px 10px; text-align: center; text-decoration: none; }
-        .nav-item span { color: #fff; font-size: 13px; font-weight: 900; text-transform: uppercase; }
+        /* HORIZONTAL SCROLLING NAV [cite: 2026-02-28] */
+        .nav-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding: 10px 15px 20px 15px;
+            background: #4a4a4a;
+            -webkit-overflow-scrolling: touch;
+        }
+        .nav-scroll::-webkit-scrollbar { display: none; }
 
-        /* CONTENT CARDS [cite: 2026-02-28] */
-        .card-container { padding: 15px; }
-        .content-card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-bottom: 20px; }
-        .card-title { color: #ff6600; font-size: 22px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; text-align: center; }
+        .nav-item { 
+            flex: 0 0 120px; 
+            background: #222; 
+            border: 2px solid #444; 
+            border-radius: 12px; 
+            padding: 18px 5px; 
+            text-align: center; 
+            cursor: pointer;
+        }
+        .nav-item span { color: #ff6600; font-size: 11px; font-weight: 900; text-transform: uppercase; }
+        .nav-item.active { background: #ff6600 !important; border-color: #fff !important; }
+        .nav-item.active span { color: #fff !important; }
+
+        /* VERTICAL CONTENT STACK [cite: 2026-02-28] */
+        #viewport { flex-grow: 1; padding: 20px; overflow-y: auto; }
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .card { background: #1e1e1e; border-radius: 20px; padding: 25px; border: 1px solid #333; margin-bottom: 15px; }
+        .title { color: #ff6600; font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 8px; text-align: center; }
         
-        label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 6px; font-weight: 900; text-transform: uppercase; }
-        .permanent-box { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #444; color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 20px; }
-        
-        /* CALC STYLES [cite: 2026-02-28] */
-        .calc-input { width: 100%; background: #000; border: 2px solid #ff6600; color: #fff; padding: 22px; border-radius: 15px; font-size: 24px; margin-bottom: 15px; outline: none; text-align: center; }
-        .calc-result-box { font-size: 38px; color: #25D366; text-align: center; font-weight: 900; padding: 20px; background: #000; border-radius: 15px; border: 1px solid #333; }
+        /* VERTICAL TEXT BOXES [cite: 2026-02-28] */
+        label { display: block; font-size: 10px; color: #ff6600; margin-bottom: 6px; font-weight: 900; text-transform: uppercase; }
+        input { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 16px; border-radius: 12px; font-size: 16px; margin-bottom: 20px; outline: none; }
+        input:focus { border-color: #ff6600; }
+
+        .calc-box { font-size: 34px; color: #25D366; text-align: center; font-weight: 900; padding: 15px; background: #000; border-radius: 12px; }
     </style>
 </head>
 <body>
 
-<div id="app-shell">
+<div id="app-wrapper">
     <header>
-        <div class="logo-main">TOOLBOX<span>PAY</span></div>
+        <div class="logo">TOOLBOX<span>PAY</span></div>
     </header>
 
-    <div class="nav-ribbon">
-        <a href="#profile" class="nav-item"><span>Profile</span></a>
-        <a href="#bank" class="nav-item"><span>Bank</span></a>
-        <a href="#calculator" class="nav-item"><span>Calculator</span></a>
+    <div class="nav-scroll">
+        <div id="tab-p" class="nav-item active" onclick="nav('p')"><span>Profile</span></div>
+        <div id="tab-b" class="nav-item" onclick="nav('b')"><span>Bank</span></div>
+        <div id="tab-c" class="nav-item" onclick="nav('c')"><span>Calc</span></div>
+        <div id="tab-g" class="nav-item" onclick="nav('g')"><span>Gallery</span></div>
+        <div id="tab-q" class="nav-item" onclick="nav('q')"><span>Quotes</span></div>
+        <div id="tab-e" class="nav-item" onclick="nav('e')"><span>Expenses</span></div>
+        <div id="tab-t" class="nav-item" onclick="nav('t')"><span>Terms</span></div>
+        <div id="tab-r" class="nav-item" onclick="nav('r')"><span>ReadMe</span></div>
     </div>
 
-    <div class="card-container">
-        <div id="profile" class="content-card">
-            <div class="card-title">Business Profile</div>
-            <label>Business Name</label>
-            <div class="permanent-box">Toolboxpay</div>
-            <label>Specialising In</label>
-            <div class="permanent-box">App development</div>
+    <div id="viewport">
+        <div id="view-p" class="page active">
+            <div class="card">
+                <div class="title">Business Profile</div>
+                <label>Business Name</label>
+                <input type="text" id="biz" placeholder="Your Business" oninput="save('biz')">
+                <label>Specialising In</label>
+                <input type="text" id="spec" placeholder="e.g. Carpentry" oninput="save('spec')">
+            </div>
         </div>
 
-        <div id="bank" class="content-card">
-            <div class="card-title">Bank Details</div>
-            <label>Bank Name</label>
-            <div class="permanent-box">Nationwide</div>
-            <label>Sort Code</label>
-            <div class="permanent-box">07-02-46</div>
-            <label>Account Number</label>
-            <div class="permanent-box">30067390</div>
+        <div id="view-b" class="page">
+            <div class="card">
+                <div class="title">Bank Details</div>
+                <label>Bank Name</label>
+                <input type="text" id="bnk" placeholder="Bank Name" oninput="save('bnk')">
+                <label>Sort Code</label>
+                <input type="text" id="sort" placeholder="00-00-00" oninput="save('sort')">
+                <label>Account Number</label>
+                <input type="text" id="acc" placeholder="00000000" oninput="save('acc')">
+            </div>
         </div>
 
-        <div id="calculator" class="content-card">
-            <div class="card-title">VAT Calculator</div>
-            <label>Net Amount (£)</label>
-            <input type="number" class="calc-input" id="netField" placeholder="0.00" oninput="runVat()">
-            <div class="calc-result-box" id="totalField">£0.00</div>
-            <p style="text-align:center; margin-top:12px; font-size:12px; color:#888;">Total includes 20% UK VAT</p>
+        <div id="view-c" class="page">
+            <div class="card">
+                <div class="title">VAT Calculator</div>
+                <label>Net Amount (£)</label>
+                <input type="number" id="net" placeholder="0.00" oninput="runCalc()">
+                <div class="calc-box" id="total">£0.00</div>
+            </div>
         </div>
+
+        <div id="view-g" class="page"><div class="card"><div class="title">Gallery</div></div></div>
+        <div id="view-q" class="page"><div class="card"><div class="title">Quotes</div></div></div>
+        <div id="view-e" class="page"><div class="card"><div class="title">Expenses</div></div></div>
+        <div id="view-t" class="page"><div class="card"><div class="title">Terms</div></div></div>
+        <div id="view-r" class="page"><div class="card"><div class="title">ReadMe</div></div></div>
     </div>
 </div>
 
 <script>
-    // HARD-CODED CALC LOGIC [cite: 2026-02-28]
-    function runVat() {
-        const net = parseFloat(document.getElementById('netField').value) || 0;
-        const vatTotal = net * 1.20;
-        document.getElementById('totalField').innerText = "£" + vatTotal.toFixed(2);
+    /* DYNAMIC SAVING [cite: 2026-02-28] */
+    const keys = ['biz', 'spec', 'bnk', 'sort', 'acc'];
+
+    function save(id) {
+        localStorage.setItem('TBOX_' + id, document.getElementById(id).value);
     }
+
+    function load() {
+        keys.forEach(id => {
+            const val = localStorage.getItem('TBOX_' + id);
+            if (val) document.getElementById(id).value = val;
+        });
+    }
+
+    function nav(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById('view-' + id).classList.add('active');
+        document.getElementById('tab-' + id).classList.add('active');
+        // Auto-center the scroll box [cite: 2026-02-28]
+        document.getElementById('tab-' + id).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
+    function runCalc() {
+        const n = parseFloat(document.getElementById('net').value) || 0;
+        document.getElementById('total').innerText = "£" + (n * 1.20).toFixed(2);
+    }
+
+    window.onload = load;
 </script>
 
 </body>
