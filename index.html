@@ -3,30 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v18.6 REBOOT</title>
+    <title>toolboxpay - v18.7 TEXT-FIX</title>
     <style>
-        /* BRANDING & THEME */
+        /* CORE BRANDING [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: #111; color: #fff; font-family: sans-serif; overflow: hidden; position: fixed; width: 100%; height: 100%; }
+        body { background: #111; color: #ffffff; font-family: sans-serif; overflow: hidden; position: fixed; width: 100%; height: 100%; }
         #app-frame { max-width: 500px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; background: #4a4a4a; }
         
-        header { background: #4a4a4a; padding: 15px 15px 5px 15px; text-align: center; }
-        .brand-text { font-size: 24px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
-        .brand-text span { color: #ff6600; }
+        header { background: #4a4a4a; padding: 15px; text-align: center; }
+        .brand-logo { font-size: 26px; font-weight: 900; text-transform: uppercase; color: #ffffff !important; display: block; }
+        .brand-logo span { color: #ff6600 !important; }
 
-        /* HORIZONTAL SCROLLING RIBBON */
-        .ribbon-container {
+        /* HORIZONTAL SCROLLING NAV [cite: 2026-02-28] */
+        .nav-ribbon {
             display: flex;
             overflow-x: auto;
             gap: 12px;
             padding: 10px 15px 25px 15px;
             background: #4a4a4a;
-            border-bottom: 1px solid #333;
+            border-bottom: 2px solid #333;
             -webkit-overflow-scrolling: touch;
         }
-        .ribbon-container::-webkit-scrollbar { display: none; }
+        .nav-ribbon::-webkit-scrollbar { display: none; }
 
-        .box-link { 
+        .nav-box { 
             flex: 0 0 130px; 
             background: #222; 
             border: 2px solid #444; 
@@ -35,112 +35,103 @@
             text-align: center; 
             cursor: pointer;
         }
-        .box-link span { color: #ff6600; font-size: 11px; font-weight: 900; text-transform: uppercase; }
-        .box-link.lit { background: #ff6600 !important; border-color: #fff !important; }
-        .box-link.lit span { color: #fff !important; }
+        .nav-box span { color: #ff6600 !important; font-size: 12px; font-weight: 900; text-transform: uppercase; display: block; visibility: visible; }
+        .nav-box.active { background: #ff6600 !important; border-color: #ffffff !important; }
+        .nav-box.active span { color: #ffffff !important; }
 
-        /* VERTICAL CONTENT */
-        #content-area { flex-grow: 1; padding: 20px; overflow-y: auto; }
-        .screen-layer { display: none; }
-        .screen-layer.lit { display: block; }
+        /* CONTENT AREAS [cite: 2026-02-28] */
+        #content-viewport { flex-grow: 1; padding: 20px; overflow-y: auto; }
+        .tab-layer { display: none; }
+        .tab-layer.active { display: block; }
 
-        .form-card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-bottom: 20px; }
-        .screen-title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; text-align: center; }
+        .card { background: #1e1e1e; border-radius: 25px; padding: 30px; border: 1px solid #333; margin-bottom: 20px; }
+        .title-text { color: #ff6600 !important; font-size: 22px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; text-align: center; display: block; }
         
-        label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 8px; font-weight: 900; text-transform: uppercase; }
-        input { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 18px; border-radius: 15px; font-size: 18px; margin-bottom: 20px; outline: none; transition: 0.3s; }
+        label { display: block; font-size: 12px; color: #ff6600 !important; margin-bottom: 8px; font-weight: 900; text-transform: uppercase; visibility: visible; }
+        input { width: 100%; background: #000; border: 1px solid #444; color: #ffffff !important; padding: 18px; border-radius: 15px; font-size: 18px; margin-bottom: 20px; outline: none; display: block; }
         input:focus { border-color: #ff6600; }
 
-        .result-text { font-size: 38px; color: #25D366; text-align: center; font-weight: 900; padding: 20px; background: #000; border-radius: 15px; border: 1px solid #333; }
+        .calc-result { font-size: 38px; color: #25D366 !important; text-align: center; font-weight: 900; padding: 20px; background: #000; border-radius: 15px; border: 1px solid #333; }
     </style>
 </head>
 <body>
 
 <div id="app-frame">
     <header>
-        <div class="brand-text">TOOLBOX<span>PAY</span></div>
+        <div class="brand-logo">TOOLBOX<span>PAY</span></div>
     </header>
 
-    <div class="ribbon-container">
-        <div id="nav-1" class="box-link lit" onclick="show(1)"><span>Profile</span></div>
-        <div id="nav-2" class="box-link" onclick="show(2)"><span>Bank</span></div>
-        <div id="nav-3" class="box-link" onclick="show(3)"><span>Calc</span></div>
-        <div id="nav-4" class="box-link" onclick="show(4)"><span>Gallery</span></div>
-        <div id="nav-5" class="box-link" onclick="show(5)"><span>Quotes</span></div>
-        <div id="nav-6" class="box-link" onclick="show(6)"><span>Expenses</span></div>
-        <div id="nav-7" class="box-link" onclick="show(7)"><span>Terms</span></div>
-        <div id="nav-8" class="box-link" onclick="show(8)"><span>ReadMe</span></div>
+    <div class="nav-ribbon">
+        <div id="btn-1" class="nav-box active" onclick="tab(1)"><span>Profile</span></div>
+        <div id="btn-2" class="nav-box" onclick="tab(2)"><span>Bank</span></div>
+        <div id="btn-3" class="nav-box" onclick="tab(3)"><span>Calc</span></div>
+        <div id="btn-4" class="nav-box" onclick="tab(4)"><span>Gallery</span></div>
+        <div id="btn-5" class="nav-box" onclick="tab(5)"><span>Quotes</span></div>
+        <div id="btn-6" class="nav-box" onclick="tab(6)"><span>Expenses</span></div>
+        <div id="btn-7" class="nav-box" onclick="tab(7)"><span>Terms</span></div>
+        <div id="btn-8" class="nav-box" onclick="tab(8)"><span>ReadMe</span></div>
     </div>
 
-    <div id="content-area">
-        <div id="layer-1" class="screen-layer lit">
-            <div class="form-card">
-                <div class="screen-title">Business Profile</div>
+    <div id="content-viewport">
+        <div id="tab-1" class="tab-layer active">
+            <div class="card">
+                <div class="title-text">Business Profile</div>
                 <label>Business Name</label>
-                <input type="text" id="f-name" placeholder="Business Name" oninput="up('name')">
+                <input type="text" id="in-name" placeholder="Enter Business Name">
                 <label>Specialising In</label>
-                <input type="text" id="f-spec" placeholder="Specialising in..." oninput="up('spec')">
+                <input type="text" id="in-spec" placeholder="e.g. Electrician">
             </div>
         </div>
 
-        <div id="layer-2" class="screen-layer">
-            <div class="form-card">
-                <div class="screen-title">Bank Details</div>
+        <div id="tab-2" class="tab-layer">
+            <div class="card">
+                <div class="title-text">Bank Details</div>
                 <label>Bank Name</label>
-                <input type="text" id="f-bank" placeholder="Bank Name" oninput="up('bank')">
+                <input type="text" id="in-bank" placeholder="Nationwide">
                 <label>Sort Code</label>
-                <input type="text" id="f-sort" placeholder="00-00-00" oninput="up('sort')">
+                <input type="text" id="in-sort" placeholder="00-00-00">
                 <label>Account Number</label>
-                <input type="text" id="f-acc" placeholder="00000000" oninput="up('acc')">
+                <input type="text" id="in-acc" placeholder="00000000">
             </div>
         </div>
 
-        <div id="layer-3" class="screen-layer">
-            <div class="form-card">
-                <div class="screen-title">VAT Calculator</div>
+        <div id="tab-3" class="tab-layer">
+            <div class="card">
+                <div class="title-text">VAT Calculator</div>
                 <label>Net Amount (£)</label>
-                <input type="number" id="f-net" placeholder="0.00" oninput="runV()">
-                <div class="result-text" id="f-total">£0.00</div>
+                <input type="number" id="in-net" placeholder="0.00" oninput="runVat()">
+                <div class="calc-result" id="res-total">£0.00</div>
             </div>
         </div>
 
-        <div id="layer-4" class="screen-layer"><div class="form-card"><div class="screen-title">Gallery</div></div></div>
-        <div id="layer-5" class="screen-layer"><div class="form-card"><div class="screen-title">Quotes</div></div></div>
-        <div id="layer-6" class="screen-layer"><div class="form-card"><div class="screen-title">Expenses</div></div></div>
-        <div id="layer-7" class="screen-layer"><div class="form-card"><div class="screen-title">Terms</div></div></div>
-        <div id="layer-8" class="screen-layer"><div class="form-card"><div class="screen-title">ReadMe</div></div></div>
+        <div id="tab-4" class="tab-layer"><div class="card"><div class="title-text">Gallery</div></div></div>
+        <div id="tab-5" class="tab-layer"><div class="card"><div class="title-text">Quotes</div></div></div>
+        <div id="tab-6" class="tab-layer"><div class="card"><div class="title-text">Expenses</div></div></div>
+        <div id="tab-7" class="tab-layer"><div class="card"><div class="title-text">Terms</div></div></div>
+        <div id="tab-8" class="tab-layer"><div class="card"><div class="title-text">ReadMe</div></div></div>
     </div>
 </div>
 
 <script>
-    /* DYNAMIC DATA */
-    const ids = ['name', 'spec', 'bank', 'sort', 'acc'];
+    function tab(n) {
+        // Switch Pages
+        var layers = document.getElementsByClassName('tab-layer');
+        for (var i = 0; i < layers.length; i++) { layers[i].classList.remove('active'); }
+        document.getElementById('tab-' + n).classList.add('active');
 
-    function up(key) {
-        localStorage.setItem('TBPX_' + key, document.getElementById('f-' + key).value);
+        // Switch Buttons
+        var btns = document.getElementsByClassName('nav-box');
+        for (var j = 0; j < btns.length; j++) { btns[j].classList.remove('active'); }
+        document.getElementById('btn-' + n).classList.add('active');
+
+        // Center scroll
+        document.getElementById('btn-' + n).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
 
-    function init() {
-        ids.forEach(key => {
-            const val = localStorage.getItem('TBPX_' + key);
-            if (val) document.getElementById('f-' + key).value = val;
-        });
+    function runVat() {
+        var val = parseFloat(document.getElementById('in-net').value) || 0;
+        document.getElementById('res-total').innerText = "£" + (val * 1.20).toFixed(2);
     }
-
-    function show(num) {
-        document.querySelectorAll('.screen-layer').forEach(l => l.classList.remove('lit'));
-        document.querySelectorAll('.box-link').forEach(b => b.classList.remove('lit'));
-        document.getElementById('layer-' + num).classList.add('lit');
-        document.getElementById('nav-' + num).classList.add('lit');
-        document.getElementById('nav-' + num).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-    }
-
-    function runV() {
-        const amt = parseFloat(document.getElementById('f-net').value) || 0;
-        document.getElementById('f-total').innerText = "£" + (amt * 1.20).toFixed(2);
-    }
-
-    window.onload = init;
 </script>
 
 </body>
