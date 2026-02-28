@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v12.4</title>
+    <title>toolboxpay - v12.5</title>
     <style>
-        /* THEME & LAYOUT [cite: 2020-02-20, 2026-02-21] */
+        /* THEME & LAYOUT */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body { background: #4a4a4a; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
-        /* STICKY HEADER [cite: 2026-02-28] */
+        /* STICKY HEADER */
         #dashboard-header { 
             position: sticky; top: 0; width: 100%; max-width: 420px; 
             background: #4a4a4a; padding: 15px 20px; z-index: 100; 
@@ -25,20 +25,23 @@
         .jump-btn { background: #222; border: 1px solid #444; border-radius: 12px; padding: 10px; text-decoration: none; display: flex; flex-direction: column; align-items: center; min-width: 85px; }
         .jump-btn span { color: #ff6600; font-weight: 800; font-size: 10px; text-transform: uppercase; margin-top: 4px; }
 
-        /* CONTENT CONTAINERS [cite: 2026-02-28] */
+        /* CONTENT CONTAINERS */
         #content-area { width: 100%; max-width: 420px; padding: 20px; }
         .section-box { background: #1e1e1e; border-radius: 25px; padding: 25px; border: 1px solid #333; margin-bottom: 80vh; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .section-title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; text-align: center; }
 
-        /* FORM STYLING [cite: 2020-02-20] */
+        /* DYNAMIC ITEM LISTS */
+        .item-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
+        .item-row input { margin-bottom: 0; padding: 12px; font-size: 14px; }
+        .desc-input { flex: 2; }
+        .price-input { flex: 1; text-align: right; }
+        .add-btn { background: #ff6600; color: #fff; border: none; border-radius: 50%; width: 30px; height: 30px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+        .remove-btn { color: #ff4444; font-size: 18px; font-weight: 900; padding: 0 5px; }
+
+        /* FORM STYLING */
         label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
         input, textarea, select { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 15px; outline: none; margin-bottom: 20px; }
         .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 16px; }
-
-        /* PROFIT DISPLAY [cite: 2026-02-28] */
-        .profit-bar { background: #000; padding: 15px; border-radius: 12px; border: 1px solid #333; margin-top: 10px; display: flex; justify-content: space-between; }
-        .profit-label { font-size: 10px; color: #888; text-transform: uppercase; }
-        .profit-val { font-size: 16px; color: #25D366; font-weight: 800; }
 
         .total-box { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; margin: 20px 0; text-align: right; }
         .total-val { font-size: 45px; color: #ff6600; font-weight: 900; }
@@ -63,29 +66,41 @@
         <div id="r-box" class="section-box">
             <div class="section-title">Operating Manual</div>
             <div style="font-size:13px; color:#ccc; line-height:1.6; background:#111; padding:15px; border-radius:15px; border-left:4px solid #ff6600;">
-                <p>• <b>Profit Tracking:</b> The calculator now shows your <b>Take Home Pay</b>. This is your total minus materials and VAT/Tax provision.</p><br>
-                <p>• <b>Receipt Mode:</b> Use the toggle in the Quote section to turn a Quote into a <b>Proof of Payment</b> receipt.</p><br>
-                <p>• <b>Client Memory:</b> Always save a client first; this allows you to pull their site address into quotes with one click.</p>
+                <p>• <b>Itemised Quotes:</b> Use the <b>[+]</b> buttons to add individual labour tasks or materials. This breakdown builds trust with clients.</p><br>
+                <p>• <b>Automatic Totals:</b> The Grand Total updates instantly as you add or remove items.</p><br>
+                <p>• <b>Pro Tip:</b> Keep descriptions short (e.g., "Kitchen Rewire" or "Consumer Unit").</p>
             </div>
         </div>
 
         <div id="q-box" class="section-box">
-            <div class="section-title">Quote / Receipt</div>
+            <div class="section-title">Job Quote</div>
             <label>Select Client</label><select id="q-cli-pick"><option>Loading...</option></select>
-            <label>Description</label><textarea id="qd" style="height:100px;"></textarea>
-            <label>Price (£)</label><input type="number" id="qp" oninput="upQ()">
             
-            <div style="background:#111; padding:15px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                <label style="margin-bottom:0; color:#fff;">Receipt Mode (Mark as Paid)</label>
-                <input type="checkbox" id="receipt-mode" style="width:30px; margin-bottom:0;">
+            <label>Labour Items</label>
+            <div id="labour-list">
+                <div class="item-row">
+                    <input type="text" class="desc-input lab-desc" placeholder="Work description">
+                    <input type="number" class="price-input lab-price" placeholder="£" oninput="upQ()">
+                </div>
             </div>
+            <button class="add-btn" onclick="addItem('labour-list', 'lab-desc', 'lab-price')">+</button>
 
-            <div style="background:#111; padding:15px; border-radius:12px; margin-bottom:20px;">
-                <input type="checkbox" id="tc-on" checked> <label for="tc-on" style="display:inline; color:#fff; font-size:12px;">Include Terms & Conditions</label>
+            <label>Materials</label>
+            <div id="materials-list">
+                <div class="item-row">
+                    <input type="text" class="desc-input mat-desc" placeholder="Material description">
+                    <input type="number" class="price-input mat-price" placeholder="£" oninput="upQ()">
+                </div>
+            </div>
+            <button class="add-btn" onclick="addItem('materials-list', 'mat-desc', 'mat-price')">+</button>
+
+            <div style="background:#111; padding:15px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                <label style="margin-bottom:0; color:#fff;">Receipt Mode (Paid)</label>
+                <input type="checkbox" id="receipt-mode" style="width:30px; margin-bottom:0;" onchange="upQ()">
             </div>
 
             <div class="total-box"><div class="total-val" id="qt">£0.00</div></div>
-            <button class="btn-green" onclick="sendW()">Send via WhatsApp</button>
+            <button class="btn-green" onclick="sendW()">Send Quote</button>
         </div>
 
         <div id="c-box" class="section-box">
@@ -98,24 +113,18 @@
         </div>
 
         <div id="m-box" class="section-box">
-            <div class="section-title">Profit Calculator</div>
+            <div class="section-title">Pricing Tool</div>
             <label>Day Rate (£)</label><input type="number" id="cr" oninput="upM()">
             <label>Days</label><input type="number" id="cd" oninput="upM()">
             <label>Materials Cost (£)</label><input type="number" id="cm" oninput="upM()">
-            
-            <div class="profit-bar">
-                <div><span class="profit-label">Net Profit (Labour)</span><div class="profit-val" id="net-labour">£0.00</div></div>
-                <div><span class="profit-label">Tax Provision (20%)</span><div class="profit-val" id="tax-prov" style="color:#ff4444;">£0.00</div></div>
-            </div>
-
-            <div class="total-box"><div class="profit-label">Gross Quote Total (Inc. 20% Markup)</div><div class="total-val" id="mt">£0.00</div></div>
+            <div class="total-box"><div class="total-val" id="mt">£0.00</div></div>
         </div>
 
         <div id="p-box" class="section-box">
             <div class="section-title">Job Gallery</div>
             <select id="p-tag"><option value="Before">Before</option><option value="During">During</option><option value="After">After</option></select>
             <input type="file" id="p-file" accept="image/*" style="display:none;" onchange="addP(this)">
-            <button class="btn-green" onclick="document.getElementById('p-file').click()">Capture Image</button>
+            <button class="btn-green" onclick="document.getElementById('p-file').click()">Upload Photo</button>
             <div id="p-grid" style="display:grid; grid-template-columns:1fr; gap:15px; margin-top:20px;"></div>
         </div>
 
@@ -130,114 +139,108 @@
     </div>
 
 <script>
-    /* MATH LOGIC [cite: 2026-02-28] */
-    function upQ() { document.getElementById('qt').innerText = "£" + (parseFloat(document.getElementById('qp').value) || 0).toFixed(2); }
+    /* ITEMISED LOGIC */
+    function addItem(listId, descClass, priceClass) {
+        var div = document.createElement('div');
+        div.className = 'item-row';
+        div.innerHTML = `<input type="text" class="desc-input ${descClass}" placeholder="Description">
+                         <input type="number" class="price-input ${priceClass}" placeholder="£" oninput="upQ()">
+                         <span class="remove-btn" onclick="this.parentElement.remove(); upQ();">×</span>`;
+        document.getElementById(listId).appendChild(div);
+    }
+
+    function upQ() {
+        var total = 0;
+        document.querySelectorAll('.lab-price, .mat-price').forEach(input => {
+            total += parseFloat(input.value) || 0;
+        });
+        document.getElementById('qt').innerText = "£" + total.toFixed(2);
+    }
+
     function upM() {
         var r = parseFloat(document.getElementById('cr').value) || 0;
         var d = parseFloat(document.getElementById('cd').value) || 0;
         var m = parseFloat(document.getElementById('cm').value) || 0;
-        var labour = r * d;
-        var gross = (labour + m) * 1.2;
-        var tax = labour * 0.20;
-        document.getElementById('mt').innerText = "£" + gross.toFixed(2);
-        document.getElementById('net-labour').innerText = "£" + labour.toFixed(2);
-        document.getElementById('tax-prov').innerText = "£" + tax.toFixed(2);
+        document.getElementById('mt').innerText = "£" + ((r * d + m) * 1.2).toFixed(2);
     }
+
     function sv(k, v) { localStorage.setItem('TBP_' + k, v); }
 
-    /* CRM [cite: 2026-02-28] */
+    /* WHATSAPP GENERATOR */
+    function sendW() {
+        var type = document.getElementById('receipt-mode').checked ? "PAID RECEIPT" : "JOB QUOTE";
+        var b = document.getElementById('bn').value;
+        var s = document.getElementById('sc').value;
+        var a = document.getElementById('an').value;
+        var tc = document.getElementById('master-tc').value;
+        
+        var message = `ToolboxPay ${type}:%0A%0A`;
+        
+        message += `*LABOUR:*%0A`;
+        document.querySelectorAll('.item-row').forEach(row => {
+            var d = row.querySelector('.lab-desc');
+            var p = row.querySelector('.lab-price');
+            if(d && d.value) message += `- ${d.value}: £${parseFloat(p.value).toFixed(2)}%0A`;
+        });
+
+        message += `%0A*MATERIALS:*%0A`;
+        document.querySelectorAll('.item-row').forEach(row => {
+            var d = row.querySelector('.mat-desc');
+            var p = row.querySelector('.mat-price');
+            if(d && d.value) message += `- ${d.value}: £${parseFloat(p.value).toFixed(2)}%0A`;
+        });
+
+        message += `%0A*TOTAL: ${document.getElementById('qt').innerText}*%0A%0A`;
+        message += `Pay to: ${b}%0AAcc: ${a}%0ASort: ${s}`;
+
+        if(!document.getElementById('receipt-mode').checked) {
+            message += `%0A%0A*Terms:*%0A${encodeURIComponent(tc)}`;
+        } else {
+            message += `%0A%0AStatus: Paid in Full - Thank you!`;
+        }
+        
+        window.open("https://wa.me/?text=" + message);
+    }
+
+    /* PREVIOUS PERSISTENCE LOGIC */
     function saveC() {
-        var n = document.getElementById('cn').value;
-        var a = document.getElementById('ca').value;
-        var t = document.getElementById('ctel').value;
+        var n = document.getElementById('cn').value; var a = document.getElementById('ca').value; var t = document.getElementById('ctel').value;
         if(!n) return;
         var list = JSON.parse(localStorage.getItem('TBP_LIST') || "[]");
-        list.push({n, a, t});
-        localStorage.setItem('TBP_LIST', JSON.stringify(list));
-        document.getElementById('cn').value=''; document.getElementById('ca').value=''; document.getElementById('ctel').value='';
-        showC();
+        list.push({n, a, t}); localStorage.setItem('TBP_LIST', JSON.stringify(list));
+        document.getElementById('cn').value=''; document.getElementById('ca').value=''; document.getElementById('ctel').value=''; showC();
     }
     function showC() {
         var list = JSON.parse(localStorage.getItem('TBP_LIST') || "[]");
         var h = ""; var sel = '<option>Select Client...</option>';
         list.forEach((c, i) => {
-            h += `<div style="background:#000; padding:15px; border-radius:15px; margin-bottom:10px; border-left:4px solid #ff6600;">
-                    <b>${c.n}</b><br><small>${c.a}</small>
-                    <div style="display:flex; gap:10px; margin-top:10px;">
-                        <a href="tel:${c.t}" style="flex:1; background:#222; color:#25D366; text-align:center; padding:8px; border-radius:8px; text-decoration:none; font-size:12px; font-weight:800; border:1px solid #25D366;">CALL</a>
-                        <div style="flex:0.3; background:#222; color:red; text-align:center; padding:8px; border-radius:8px; border:1px solid red; font-size:12px;" onclick="delC(${i})">X</div>
-                    </div>
-                  </div>`;
+            h += `<div style="background:#000; padding:15px; border-radius:15px; margin-bottom:10px; border-left:4px solid #ff6600;"><b>${c.n}</b><br><small>${c.a}</small></div>`;
             sel += `<option value="${i}">${c.n}</option>`;
         });
         document.getElementById('cl-list').innerHTML = h;
         document.getElementById('q-cli-pick').innerHTML = sel;
     }
-    function delC(i) {
-        var list = JSON.parse(localStorage.getItem('TBP_LIST') || "[]");
-        list.splice(i, 1);
-        localStorage.setItem('TBP_LIST', JSON.stringify(list));
-        showC();
-    }
-
-    /* PHOTOS [cite: 2026-02-28] */
     function addP(input) {
         if (input.files && input.files[0]) {
-            var tag = document.getElementById('p-tag').value;
             var reader = new FileReader();
             reader.onload = function(e) {
                 var ph = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
-                ph.push({src: e.target.result, tag: tag, date: new Date().toLocaleDateString('en-GB')});
-                localStorage.setItem('TBP_PH', JSON.stringify(ph));
-                showP();
+                ph.push({src: e.target.result, tag: document.getElementById('p-tag').value, date: new Date().toLocaleDateString('en-GB')});
+                localStorage.setItem('TBP_PH', JSON.stringify(ph)); showP();
             };
             reader.readAsDataURL(input.files[0]);
         }
     }
     function showP() {
         var ph = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
-        var h = "";
-        ph.forEach((p, i) => {
-            h += `<div style="position:relative; background:#000; border-radius:15px; overflow:hidden;">
-                    <img src="${p.src}" style="width:100%; height:150px; object-fit:cover;">
-                    <div style="position:absolute; bottom:10px; left:10px; background:rgba(255,102,0,0.8); color:#fff; padding:4px 8px; border-radius:5px; font-size:10px;">${p.tag} - ${p.date}</div>
-                    <div style="position:absolute; top:10px; right:10px; background:red; color:#fff; padding:5px; border-radius:5px; font-size:10px;" onclick="delP(${i})">X</div>
-                  </div>`;
+        var h = ""; ph.forEach((p, i) => {
+            h += `<div style="position:relative; background:#000; border-radius:15px; overflow:hidden; margin-bottom:10px;"><img src="${p.src}" style="width:100%; height:150px; object-fit:cover;"><div style="position:absolute; bottom:10px; left:10px; background:rgba(255,102,0,0.8); color:#fff; padding:4px 8px; border-radius:5px; font-size:10px;">${p.tag} - ${p.date}</div></div>`;
         });
         document.getElementById('p-grid').innerHTML = h;
-    }
-    function delP(i) {
-        var ph = JSON.parse(localStorage.getItem('TBP_PH') || "[]");
-        ph.splice(i, 1);
-        localStorage.setItem('TBP_PH', JSON.stringify(ph));
-        showP();
-    }
-
-    function sendW() {
-        var d = document.getElementById('qd').value;
-        var p = document.getElementById('qt').innerText;
-        var b = document.getElementById('bn').value;
-        var s = document.getElementById('sc').value;
-        var a = document.getElementById('an').value;
-        var tc = document.getElementById('master-tc').value;
-        var type = document.getElementById('receipt-mode').checked ? "PAID RECEIPT" : "JOB QUOTE";
-        
-        var msg = `ToolboxPay ${type}:%0A${d}%0A%0ATotal: ${p}%0A%0APayment to: ${b}%0A${s} / ${a}`;
-        if(!document.getElementById('receipt-mode').checked && document.getElementById('tc-on').checked) {
-            msg += `%0A%0ATerms:%0A${encodeURIComponent(tc)}`;
-        } else if(document.getElementById('receipt-mode').checked) {
-            msg += `%0A%0AStatus: Payment Received with Thanks.`;
-        }
-        window.open("https://wa.me/?text=" + msg);
     }
 
     window.onload = function() {
         showC(); showP();
         document.getElementById('bn').value = localStorage.getItem('TBP_bn') || "";
         document.getElementById('sc').value = localStorage.getItem('TBP_sc') || "";
-        document.getElementById('an').value = localStorage.getItem('TBP_an') || "";
-        document.getElementById('master-tc').value = localStorage.getItem('TBP_tc') || "1. Quote valid for 30 days.\n2. 25% material deposit required.\n3. Payment due on completion.";
-    };
-</script>
-</body>
-</html>
+        document
