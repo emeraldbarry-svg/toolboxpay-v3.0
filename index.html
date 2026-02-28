@@ -3,83 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.41 FIXED</title>
+    <title>toolboxpay - v21.42 FINAL STABLE</title>
     <style>
-        /* RESET TO WHAT WORKS [cite: 2020-02-20, 2026-02-28] */
+        /* THE "HARD" SYSTEM */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif !important; font-weight: 900 !important; }
-        body { background-color: #1a1a1a; color: #ffffff; padding-top: 140px; }
+        
+        body { background-color: #1a1a1a; color: #ffffff; padding: 10px; }
 
-        /* HEADER */
-        .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #000; }
-        header { padding: 20px 0; text-align: center; border-bottom: 4px solid #444; }
-        .logo { font-size: 24px; text-transform: uppercase; }
+        /* HEADER & NAV - REMOVED 'FIXED' TO PREVENT CLICK BLOCKING */
+        header { padding: 20px 0; text-align: center; background: #000; border-bottom: 4px solid #444; }
+        .logo { font-size: 26px; text-transform: uppercase; margin-bottom: 15px; }
         .logo .orange { color: #ff6600; }
         .logo .white { color: #ffffff; }
 
-        /* NAVIGATION - REVERTS TO WORKING LOGIC */
-        nav { background: #000; border-bottom: 6px solid #ff6600; overflow-x: auto; }
-        .nav-inner { display: flex; padding: 12px; gap: 10px; }
+        nav { background: #000; border-bottom: 6px solid #ff6600; margin-bottom: 20px; }
+        .nav-inner { display: flex; padding: 10px; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .nav-btn { 
-            padding: 12px 20px; background: #333; color: #ff6600; 
-            border-radius: 8px; font-size: 13px; border: 1px solid #555; 
+            padding: 15px 20px; background: #333; color: #ff6600; 
+            border-radius: 10px; font-size: 14px; border: 2px solid #555; 
             text-transform: uppercase; cursor: pointer; flex-shrink: 0;
+            min-width: 100px; text-align: center;
         }
-        .nav-btn.active-btn { background: #ff6600 !important; color: #fff !important; }
+        .nav-btn.active-btn { background: #ff6600 !important; color: #fff !important; border-color: #ff6600 !important; }
 
-        /* CONTENT [cite: 2026-02-28] */
-        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
-        .card { display: none; background: #111; padding: 25px; border-radius: 20px; border: 6px solid #ff6600; }
+        /* CONTENT CARDS */
+        .container { max-width: 600px; margin: 0 auto; }
+        .card { display: none; background: #111; padding: 25px; border-radius: 20px; border: 8px solid #ff6600; }
         .active-card { display: block !important; }
 
-        .title { color: #ff6600; font-size: 26px; text-transform: uppercase; margin-bottom: 25px; text-align: center; }
+        .title { color: #ff6600; font-size: 28px; text-transform: uppercase; margin-bottom: 25px; text-align: center; }
         .label { color: #ffffff; font-size: 16px; display: block; margin-bottom: 10px; text-transform: uppercase; }
 
-        /* INPUTS - RESTORED TEXT VISIBILITY */
+        /* INPUT FIX - GUARANTEED TEXT VISIBILITY */
         input, textarea { 
-            width: 100%; display: block; background: #ffffff; color: #000000; 
-            border: 6px solid #ff6600; border-radius: 15px; margin-bottom: 30px; 
-            font-size: 22px; padding: 20px; outline: none; -webkit-appearance: none;
+            width: 100% !important; 
+            background: #ffffff !important; 
+            color: #000000 !important; 
+            border: 8px solid #ff6600 !important; 
+            border-radius: 15px !important; 
+            margin-bottom: 30px !important; 
+            font-size: 26px !important; /* Large but fits */
+            padding: 20px !important; /* Balanced padding */
+            outline: none !important;
+            -webkit-appearance: none !important;
+            display: block !important;
         }
-        textarea { min-height: 140px; }
 
-        /* RESULTS [cite: 2026-02-28] */
-        .res-box { background: #000; padding: 30px; border-radius: 15px; border: 6px solid #ff6600; text-align: center; }
-        .res-text { font-size: 45px; color: #ffffff; }
+        textarea { min-height: 150px; resize: none; }
+
+        /* CALC RESULTS */
+        .res-box { background: #000; padding: 35px; border-radius: 15px; border: 8px solid #ff6600; text-align: center; }
+        .res-text { font-size: 55px; color: #ffffff; }
     </style>
 </head>
 <body>
 
-    <div class="fixed-top">
-        <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
+    <header>
+        <div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div>
         <nav>
             <div class="nav-inner">
-                <div id="m1" class="nav-btn active-btn" onclick="st(1)">Profile</div>
-                <div id="m2" class="nav-btn" onclick="st(2)">Bank</div>
-                <div id="m3" class="nav-btn" onclick="st(3)">VAT</div>
-                <div id="m4" class="nav-btn" onclick="st(4)">Biz Calc</div>
+                <button id="m1" class="nav-btn active-btn" onclick="st(1)">Profile</button>
+                <button id="m2" class="nav-btn" onclick="st(2)">Bank</button>
+                <button id="m3" class="nav-btn" onclick="st(3)">VAT</button>
+                <button id="m4" class="nav-btn" onclick="st(4)">Biz Calc</button>
             </div>
         </nav>
-    </div>
+    </header>
 
     <main class="container">
         <div id="v1" class="card active-card">
             <h2 class="title">BUSINESS PROFILE</h2>
             <label class="label">TRADING NAME</label>
-            <input type="text" id="w_name" placeholder="Enter Name" oninput="sv('w_name')">
+            <input type="text" id="z_name" placeholder="Enter Name" oninput="sv('z_name')">
             <label class="label">SPECIALISING IN</label>
-            <input type="text" id="w_trade" placeholder="e.g. Electrical" oninput="sv('w_trade')">
+            <input type="text" id="z_trade" placeholder="e.g. Electrical" oninput="sv('z_trade')">
             <label class="label">BUSINESS ADDRESS</label>
-            <textarea id="w_addr" placeholder="Full Address" oninput="sv('w_addr')"></textarea>
+            <textarea id="z_addr" placeholder="Full Address" oninput="sv('z_addr')"></textarea>
         </div>
 
         <div id="v2" class="card">
             <h2 class="title">BANK DETAILS</h2>
             <label class="label">BANK NAME</label>
-            <input type="text" id="w_bank" placeholder="BANK" oninput="sv('w_bank')">
+            <input type="text" id="z_bank" placeholder="BANK" oninput="sv('z_bank')">
             <label class="label">SORT CODE</label>
-            <input type="text" id="w_sort" placeholder="00-00-00" oninput="sv('w_sort')">
+            <input type="text" id="z_sort" placeholder="00-00-00" oninput="sv('z_sort')">
             <label class="label">ACCOUNT NUMBER</label>
-            <input type="text" id="w_acc" placeholder="NUMBER" oninput="sv('w_acc')">
+            <input type="text" id="z_acc" placeholder="NUMBER" oninput="sv('z_acc')">
         </div>
 
         <div id="v3" class="card">
@@ -102,18 +111,21 @@
     </main>
 
 <script>
-    /* SIMPLE TAB LOGIC THAT WORKS [cite: 2026-02-28] */
+    /* DIRECT TAB SWITCHING */
     function st(n) {
+        // Hide all
         for(let i=1; i<=4; i++) {
-            document.getElementById('v' + i).style.display = 'none';
+            document.getElementById('v' + i).style.setProperty('display', 'none', 'important');
             document.getElementById('m' + i).classList.remove('active-btn');
         }
-        document.getElementById('v' + n).style.display = 'block';
+        // Show active
+        document.getElementById('v' + n).style.setProperty('display', 'block', 'important');
         document.getElementById('m' + n).classList.add('active-btn');
+        window.scrollTo(0, 0); // Reset scroll to see the top of the card
     }
 
-    /* DATA SAVING [cite: 2026-02-26, 2026-02-28] */
-    function sv(id) { localStorage.setItem('TBOX_W_' + id, document.getElementById(id).value); }
+    /* DATA STORAGE */
+    function sv(id) { localStorage.setItem('TBOX_Z_' + id, document.getElementById(id).value); }
 
     function doV() {
         let n = parseFloat(document.getElementById('vIn').value) || 0;
@@ -128,8 +140,8 @@
     }
 
     window.onload = function() {
-        ['w_name', 'w_trade', 'w_addr', 'w_bank', 'w_sort', 'w_acc'].forEach(id => {
-            let val = localStorage.getItem('TBOX_W_' + id);
+        ['z_name', 'z_trade', 'z_addr', 'z_bank', 'z_sort', 'z_acc'].forEach(id => {
+            let val = localStorage.getItem('TBOX_Z_' + id);
             if (val && document.getElementById(id)) document.getElementById(id).value = val;
         });
     };
