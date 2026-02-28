@@ -3,198 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v13.8</title>
+    <title>toolboxpay - v13.9</title>
     <style>
-        /* THEME & LAYOUT [cite: 2020-02-20, 2026-02-21] */
+        /* CORE RESET [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         
         body { 
             background: #4a4a4a; color: #fff; font-family: sans-serif; 
-            height: 100vh; width: 100vw; overflow: hidden;
+            height: 100vh; width: 100vw; overflow: hidden; position: fixed;
         }
 
-        /* HEADER & NAV FIXED AT TOP */
-        #header-nav-container {
-            position: fixed; top: 0; left: 0; width: 100%;
+        /* HIGH-PRIORITY NAV HEADER */
+        #fixed-header {
+            position: absolute; top: 0; left: 0; width: 100%;
             background: #4a4a4a; border-bottom: 3px solid #ff6600;
-            z-index: 9999; padding-bottom: 10px;
+            z-index: 100000; padding-bottom: 10px;
         }
 
-        .logo { text-align: center; font-size: 24px; font-weight: 900; padding: 10px 0; }
+        .logo { text-align: center; font-size: 24px; font-weight: 900; padding: 10px 0; pointer-events: none; }
         .logo .o { color: #ff6600; }
-        .logo .w { color: #ffffff; }
 
-        .tile-strip { 
+        .nav-scroll { 
             display: flex; gap: 10px; overflow-x: auto; padding: 0 15px; 
             scrollbar-width: none; -webkit-overflow-scrolling: touch;
         }
-        .tile-strip::-webkit-scrollbar { display: none; }
+        .nav-scroll::-webkit-scrollbar { display: none; }
         
-        /* THE BUTTONS - BIGGER TOUCH AREA */
-        .jump-btn { 
-            background: #222; border: 2px solid #444; border-radius: 15px; 
-            padding: 20px 10px; display: flex; flex-direction: column; 
-            align-items: center; min-width: 110px; flex-shrink: 0;
-            cursor: pointer; transition: background 0.2s;
+        /* TOUCH-SENSITIVE BUTTONS [cite: 2026-02-28] */
+        .nav-btn { 
+            background: #222; border: 2px solid #444; border-radius: 12px; 
+            padding: 18px 5px; display: flex; flex-direction: column; 
+            align-items: center; min-width: 95px; flex-shrink: 0;
+            cursor: pointer; touch-action: manipulation;
+            position: relative; z-index: 100001; /* Ensure buttons are on top of everything */
         }
-        .jump-btn i { font-style: normal; font-size: 22px; margin-bottom: 5px; }
-        .jump-btn span { color: #888; font-weight: 800; font-size: 11px; text-transform: uppercase; }
+        .nav-btn i { font-style: normal; font-size: 20px; margin-bottom: 4px; pointer-events: none; }
+        .nav-btn span { color: #888; font-weight: 800; font-size: 10px; text-transform: uppercase; pointer-events: none; }
         
-        /* FORCED GLOW [cite: 2026-02-28] */
-        .jump-btn.active { 
+        /* ACTIVE GLOW STATE [cite: 2026-02-28] */
+        .nav-btn.active { 
             background: #ff6600 !important; 
             border-color: #ffffff !important; 
-            box-shadow: 0 4px 15px rgba(255,102,0,0.4);
         }
-        .jump-btn.active span { color: #ffffff !important; }
+        .nav-btn.active span { color: #ffffff !important; }
 
-        /* SCROLLABLE CONTENT AREA */
-        #main-view { 
-            margin-top: 170px; /* Space for the fixed header */
-            height: calc(100vh - 170px); 
+        /* THE VIEWER */
+        #view-port { 
+            margin-top: 165px; 
+            height: calc(100vh - 165px); 
             overflow-y: auto; padding: 15px;
             -webkit-overflow-scrolling: touch;
         }
         
-        /* PAGE ISOLATION */
-        .page { display: none; }
-        .page.active-view { display: block; }
+        /* PAGE LOCKING */
+        .view-section { display: none; }
+        .view-section.active-page { display: block; }
 
-        .section-box { 
-            background: #1e1e1e; border-radius: 25px; padding: 25px; 
-            border: 2px solid #333; margin-bottom: 30px;
+        .card { 
+            background: #1e1e1e; border-radius: 20px; padding: 25px; 
+            border: 2px solid #333; margin-bottom: 20px;
         }
 
-        .section-title { color: #ff6600; font-size: 22px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; text-align: center; }
+        .title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; text-align: center; }
 
-        /* README STYLE */
-        .readme-card { background: #111; padding: 15px; border-radius: 15px; border-left: 5px solid #ff6600; margin-bottom: 15px; font-size: 14px; line-height: 1.7; }
+        /* README RESTORED */
+        .manual-row { background: #111; padding: 15px; border-radius: 12px; border-left: 5px solid #ff6600; margin-bottom: 12px; font-size: 14px; line-height: 1.6; }
 
-        /* INPUTS */
-        label { display: block; font-size: 12px; color: #ff6600; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
-        input, select, textarea { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 18px; border-radius: 12px; font-size: 16px; margin-bottom: 15px; outline: none; }
-        .btn-green { width: 100%; background: #25D366; color: #000; padding: 22px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; font-size: 16px; margin-top: 10px; }
-        .add-row-btn { background: #333; color: #ff6600; border: 1px dashed #ff6600; padding: 15px; border-radius: 12px; width: 100%; font-weight: 900; margin-bottom: 20px; }
-        .total-box { background: #000; padding: 25px; border-radius: 15px; border: 1px solid #333; margin: 15px 0; text-align: right; }
-        .total-val { font-size: 44px; color: #ff6600; font-weight: 900; }
+        /* FORM ELEMENTS */
+        label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 5px; font-weight: 800; text-transform: uppercase; }
+        input, select, textarea { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 15px; border-radius: 10px; font-size: 16px; margin-bottom: 12px; outline: none; }
+        .go-btn { width: 100%; background: #25D366; color: #000; padding: 18px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 16px; margin-top: 10px; }
+        .add-btn { background: #333; color: #ff6600; border: 1px dashed #ff6600; padding: 12px; border-radius: 10px; width: 100%; font-weight: 900; margin-bottom: 15px; }
+        .total-box { background: #000; padding: 20px; border-radius: 15px; text-align: right; border: 1px solid #333; margin-bottom: 15px; }
+        .total-txt { font-size: 38px; color: #ff6600; font-weight: 900; }
     </style>
 </head>
 <body>
 
-    <div id="header-nav-container">
-        <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
-        <div class="tile-strip">
-            <div class="jump-btn active" id="btn-readme" onclick="nav('readme')"><i>📖</i><span>ReadMe</span></div>
-            <div class="jump-btn" id="btn-quotes" onclick="nav('quotes')"><i>📝</i><span>Quotes</span></div>
-            <div class="jump-btn" id="btn-clients" onclick="nav('clients')"><i>👥</i><span>Clients</span></div>
-            <div class="jump-btn" id="btn-calc" onclick="nav('calc')"><i>🧮</i><span>Calc</span></div>
-            <div class="jump-btn" id="btn-gallery" onclick="nav('gallery')"><i>📸</i><span>Gallery</span></div>
-            <div class="jump-btn" id="btn-profile" onclick="nav('profile')"><i>🏦</i><span>Profile</span></div>
+    <div id="fixed-header">
+        <div class="logo"><span class="o">toolbox</span>pay</div>
+        <div class="nav-scroll">
+            <div class="nav-btn active" id="btn-readme" onclick="go('readme')"><i>📖</i><span>ReadMe</span></div>
+            <div class="nav-btn" id="btn-quotes" onclick="go('quotes')"><i>📝</i><span>Quotes</span></div>
+            <div class="nav-btn" id="btn-clients" onclick="go('clients')"><i>👥</i><span>Clients</span></div>
+            <div class="nav-btn" id="btn-calc" onclick="go('calc')"><i>🧮</i><span>Calc</span></div>
+            <div class="nav-btn" id="btn-gallery" onclick="go('gallery')"><i>📸</i><span>Gallery</span></div>
+            <div class="nav-btn" id="btn-profile" onclick="go('profile')"><i>🏦</i><span>Profile</span></div>
         </div>
     </div>
 
-    <div id="main-view">
-        <div id="view-readme" class="page active-view">
-            <div class="section-box">
-                <div class="section-title">Operating Manual</div>
-                <div class="readme-card"><b>Instant Switch:</b> The navigation buttons now "Swap" pages rather than scrolling. This prevents categories from running into each other.</div>
-                <div class="readme-card"><b>The Glow:</b> The active button will remain <b>Orange & White</b> so you always know which tool is currently open.</div>
-                <div class="readme-card"><b>Auto-Save:</b> Your business and bank details are saved to your phone's memory the moment you type them.</div>
+    <div id="view-port">
+        <div id="page-readme" class="view-section active-page">
+            <div class="card">
+                <div class="title">Operating Manual</div>
+                <div class="manual-row"><b>1. Fixed Navigation:</b> Tapping the top buttons now swaps the screen entirely. You can no longer scroll "between" sections. [cite: 2026-02-28]</div>
+                <div class="manual-row"><b>2. Quotes:</b> Select a client, add labour/materials, and hit send. It uses your saved profile details automatically. [cite: 2026-02-28]</div>
+                <div class="manual-row"><b>3. Client Gallery:</b> Tag photos to specific clients to keep a visual record of every job. [cite: 2026-02-28]</div>
+                <div class="manual-row"><b>4. Auto-Save:</b> Your Bank Details and Clients are saved the moment you type them. [cite: 2026-02-28]</div>
             </div>
         </div>
 
-        <div id="view-quotes" class="page">
-            <div class="section-box">
-                <div class="section-title">Job Quote</div>
+        <div id="page-quotes" class="view-section">
+            <div class="card">
+                <div class="title">Job Quote</div>
                 <label>Client</label><select id="q-cli-pick"></select>
-                <div id="lab-container"><div class="item-row" style="display:flex;gap:5px;margin-bottom:10px;"><input type="text" class="l-desc" style="flex:2;" placeholder="Labour Item"><input type="number" class="l-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
-                <button class="add-row-btn" onclick="addR('lab-container','l-desc','l-price')">+ LABOUR</button>
-                <div id="mat-container"><div class="item-row" style="display:flex;gap:5px;margin-bottom:10px;"><input type="text" class="m-desc" style="flex:2;" placeholder="Material Item"><input type="number" class="m-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
-                <button class="add-row-btn" onclick="addR('mat-container','m-desc','m-price')">+ MATERIAL</button>
-                <div class="total-box"><div class="total-val" id="qt">£0.00</div></div>
-                <button class="btn-green" onclick="sendW()">Send WhatsApp Quote</button>
+                <div id="lab-list"><div style="display:flex;gap:5px;margin-bottom:8px;"><input type="text" class="l-desc" style="flex:2;" placeholder="Labour"><input type="number" class="l-price" style="flex:0.8;" placeholder="£" oninput="sum()"></div></div>
+                <button class="add-btn" onclick="add('lab-list','l-desc','l-price')">+ LABOUR</button>
+                <div id="mat-list"><div style="display:flex;gap:5px;margin-bottom:8px;"><input type="text" class="m-desc" style="flex:2;" placeholder="Material"><input type="number" class="m-price" style="flex:0.8;" placeholder="£" oninput="sum()"></div></div>
+                <button class="add-btn" onclick="add('mat-list','m-desc','m-price')">+ MATERIAL</button>
+                <div class="total-box"><div class="total-txt" id="qt">£0.00</div></div>
+                <button class="go-btn" onclick="whatsapp()">Send Quote</button>
             </div>
         </div>
 
-        <div id="view-clients" class="page">
-            <div class="section-box">
-                <div class="section-title">Client Records</div>
-                <label>Full Name</label><input type="text" id="cn">
-                <label>Address</label><textarea id="ca" style="height:80px;"></textarea>
-                <label>Phone Number</label><input type="tel" id="ctel">
-                <button class="btn-green" style="background:#ff6600; color:#fff;" onclick="saveC()">Save Client Details</button>
-                <div id="cl-list" style="margin-top:20px;"></div>
+        <div id="page-clients" class="view-section">
+            <div class="card">
+                <div class="title">Client Records</div>
+                <label>Name</label><input type="text" id="cn">
+                <label>Address</label><textarea id="ca" style="height:60px;"></textarea>
+                <label>Phone</label><input type="tel" id="ctel">
+                <button class="go-btn" style="background:#ff6600; color:#fff;" onclick="saveC()">Save Client</button>
+                <div id="cl-list" style="margin-top:15px;"></div>
             </div>
         </div>
 
-        <div id="view-calc" class="page">
-            <div class="section-box">
-                <div class="section-title">Pricing Tool</div>
-                <label>Day Rate (£)</label><input type="number" id="dr" oninput="calcM()">
-                <label>Number of Days</label><input type="number" id="dn" oninput="calcM()">
-                <label>Materials Cost (£)</label><input type="number" id="mc" oninput="calcM()">
-                <div class="total-box"><div class="total-val" id="mt">£0.00</div></div>
+        <div id="page-calc" class="view-section">
+            <div class="card">
+                <div class="title">Pricing Tool</div>
+                <label>Day Rate (£)</label><input type="number" id="dr" oninput="math()">
+                <label>Days</label><input type="number" id="dn" oninput="math()">
+                <label>Materials (£)</label><input type="number" id="mc" oninput="math()">
+                <div class="total-box"><div class="total-txt" id="mt">£0.00</div></div>
             </div>
         </div>
 
-        <div id="view-gallery" class="page">
-            <div class="section-box">
-                <div class="section-title">Job Gallery</div>
-                <label>Filter Photos</label><select id="p-filter" onchange="loadP()"><option value="ALL">Show All</option></select>
-                <label>Tag to Client</label><select id="p-tag-cli"></select>
+        <div id="page-gallery" class="view-section">
+            <div class="card">
+                <div class="title">Job Gallery</div>
+                <label>Filter</label><select id="p-filter" onchange="loadP()"><option value="ALL">Show All</option></select>
+                <label>Tag Client</label><select id="p-tag-cli"></select>
                 <input type="file" id="pf" style="display:none;" onchange="handleP(this)">
-                <button class="btn-green" onclick="document.getElementById('pf').click()">Capture Photo</button>
-                <div id="p-grid" style="margin-top:20px;"></div>
+                <button class="go-btn" onclick="document.getElementById('pf').click()">Take Photo</button>
+                <div id="p-grid" style="margin-top:15px;"></div>
             </div>
         </div>
 
-        <div id="view-profile" class="page">
-            <div class="section-box">
-                <div class="section-title">Business Profile</div>
+        <div id="page-profile" class="view-section">
+            <div class="card">
+                <div class="title">Business Profile</div>
                 <label>Trading Name</label><input type="text" id="bn" oninput="sv('bn',this.value)">
-                <label>Bank Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
-                <label>Bank Account Number</label><input type="text" id="an" oninput="sv('an',this.value)">
-                <label>Terms & Conditions</label><textarea id="tc" oninput="sv('tc',this.value)" style="height:100px;"></textarea>
+                <label>Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
+                <label>Account Number</label><input type="text" id="an" oninput="sv('an',this.value)">
+                <label>Terms</label><textarea id="tc" oninput="sv('tc',this.value)" style="height:80px;"></textarea>
             </div>
         </div>
     </div>
 
 <script>
-    /* THE HARD-WIRED NAVIGATION [cite: 2026-02-28] */
-    function nav(targetId) {
-        // 1. Hide all views
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active-view'));
-        // 2. Clear all button glows
-        document.querySelectorAll('.jump-btn').forEach(b => b.classList.remove('active'));
+    /* DIRECT PAGE SWAP [cite: 2026-02-28] */
+    function go(id) {
+        // 1. Swap Visibility
+        document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active-page'));
+        document.getElementById('page-' + id).classList.add('active-page');
         
-        // 3. Show the one we want
-        const selectedPage = document.getElementById('view-' + targetId);
-        const selectedBtn = document.getElementById('btn-' + targetId);
+        // 2. Swap Button Glow
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        const btn = document.getElementById('btn-' + id);
+        btn.classList.add('active');
         
-        if(selectedPage && selectedBtn) {
-            selectedPage.classList.add('active-view');
-            selectedBtn.classList.add('active');
-            
-            // Scroll the navigation strip to center the button
-            selectedBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-            
-            // Scroll the main content area back to the top
-            document.getElementById('main-view').scrollTop = 0;
-        }
+        // 3. Center Nav Button
+        btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        
+        // 4. Reset scroll
+        document.getElementById('view-port').scrollTop = 0;
     }
 
-    /* BUSINESS LOGIC */
-    function addR(id, d, p) {
+    /* APP LOGIC */
+    function add(id, d, p) {
         const div = document.createElement('div');
-        div.className = 'item-row'; div.style.display="flex"; div.style.gap="5px"; div.style.marginBottom="10px";
-        div.innerHTML = `<input type="text" class="${d}" style="flex:2;"><input type="number" class="${p}" style="flex:0.8;" oninput="runTotal()"><span onclick="this.parentElement.remove();runTotal();" style="color:#ff4444;padding:12px;font-weight:bold;">×</span>`;
+        div.style.display="flex"; div.style.gap="5px"; div.style.marginBottom="8px";
+        div.innerHTML = `<input type="text" class="${d}" style="flex:2;"><input type="number" class="${p}" style="flex:0.8;" oninput="sum()"><span onclick="this.parentElement.remove();sum();" style="color:red;padding:12px;font-weight:bold;">×</span>`;
         document.getElementById(id).appendChild(div);
     }
-    function runTotal() {
+    function sum() {
         let t = 0; document.querySelectorAll('.l-price, .m-price').forEach(i => t += parseFloat(i.value) || 0);
         document.getElementById('qt').innerText = "£" + t.toFixed(2);
     }
-    function sendW() {
+    function whatsapp() {
         const b = document.getElementById('bn').value; const s = document.getElementById('sc').value; const a = document.getElementById('an').value;
         let msg = `*QUOTE FROM ${b}*%0A%0A*TOTAL: ${document.getElementById('qt').innerText}*%0A%0APay: ${s} / ${a}`;
         window.open("https://wa.me/?text=" + msg);
@@ -210,7 +205,7 @@
         let l = JSON.parse(localStorage.getItem('TBP_CL') || "[]");
         let h = ""; let s = '<option>Select Client...</option>';
         l.forEach(c => {
-            h += `<div style="background:#000;padding:15px;border-radius:15px;margin-bottom:10px;border-left:4px solid #ff6600;"><b>${c.n}</b></div>`;
+            h += `<div style="background:#000;padding:15px;border-radius:12px;margin-bottom:10px;border-left:4px solid #ff6600;"><b>${c.n}</b></div>`;
             s += `<option value="${c.n}">${c.n}</option>`;
         });
         document.getElementById('cl-list').innerHTML = h;
@@ -224,23 +219,23 @@
         if(input.files[0]) {
             let r = new FileReader();
             r.onload = function(e) {
-                let ph = JSON.parse(localStorage.getItem('TBP_PH_V8') || "[]");
+                let ph = JSON.parse(localStorage.getItem('TBP_PH_V9') || "[]");
                 ph.push({src: e.target.result, cli: cli});
-                localStorage.setItem('TBP_PH_V8', JSON.stringify(ph)); loadP();
+                localStorage.setItem('TBP_PH_V9', JSON.stringify(ph)); loadP();
             };
             r.readAsDataURL(input.files[0]);
         }
     }
     function loadP() {
         const f = document.getElementById('p-filter').value;
-        const ph = JSON.parse(localStorage.getItem('TBP_PH_V8') || "[]");
+        const ph = JSON.parse(localStorage.getItem('TBP_PH_V9') || "[]");
         let h = "";
         ph.forEach(p => {
             if(f === "ALL" || p.cli === f) h += `<div style="background:#000;border-radius:15px;overflow:hidden;margin-bottom:15px;border:1px solid #333;"><img src="${p.src}" style="width:100%;height:200px;object-fit:cover;"><div style="padding:10px;color:#ff6600;">${p.cli}</div></div>`;
         });
         document.getElementById('p-grid').innerHTML = h;
     }
-    function calcM() {
+    function math() {
         let r = parseFloat(document.getElementById('dr').value) || 0;
         let d = parseFloat(document.getElementById('dn').value) || 0;
         let m = parseFloat(document.getElementById('mc').value) || 0;
