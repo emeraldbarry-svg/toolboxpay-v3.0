@@ -3,183 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v13.7</title>
+    <title>toolboxpay - v13.8</title>
     <style>
         /* THEME & LAYOUT [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         
-        /* Prevent the whole screen from scrolling wildly */
         body { 
             background: #4a4a4a; color: #fff; font-family: sans-serif; 
-            height: 100vh; width: 100vw; overflow: hidden; position: fixed;
+            height: 100vh; width: 100vw; overflow: hidden;
         }
 
-        /* HEADER */
-        #dashboard-header { 
-            background: #4a4a4a; padding: 10px 5px; 
-            border-bottom: 3px solid #ff6600; z-index: 1000;
+        /* HEADER & NAV FIXED AT TOP */
+        #header-nav-container {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: #4a4a4a; border-bottom: 3px solid #ff6600;
+            z-index: 9999; padding-bottom: 10px;
         }
-        .logo { text-align: center; font-size: 24px; font-weight: 900; margin-bottom: 8px; }
+
+        .logo { text-align: center; font-size: 24px; font-weight: 900; padding: 10px 0; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* NAVIGATION STRIP */
         .tile-strip { 
-            display: flex; gap: 10px; overflow-x: auto; padding: 5px 10px; 
+            display: flex; gap: 10px; overflow-x: auto; padding: 0 15px; 
             scrollbar-width: none; -webkit-overflow-scrolling: touch;
         }
         .tile-strip::-webkit-scrollbar { display: none; }
         
+        /* THE BUTTONS - BIGGER TOUCH AREA */
         .jump-btn { 
             background: #222; border: 2px solid #444; border-radius: 15px; 
-            padding: 22px 10px; display: flex; flex-direction: column; 
-            align-items: center; min-width: 105px; flex-shrink: 0;
-            cursor: pointer;
+            padding: 20px 10px; display: flex; flex-direction: column; 
+            align-items: center; min-width: 110px; flex-shrink: 0;
+            cursor: pointer; transition: background 0.2s;
         }
-        .jump-btn i { font-style: normal; font-size: 22px; margin-bottom: 5px; pointer-events: none; }
-        .jump-btn span { color: #888; font-weight: 800; font-size: 10px; text-transform: uppercase; pointer-events: none; }
+        .jump-btn i { font-style: normal; font-size: 22px; margin-bottom: 5px; }
+        .jump-btn span { color: #888; font-weight: 800; font-size: 11px; text-transform: uppercase; }
         
-        /* THE GLOW [cite: 2026-02-28] */
+        /* FORCED GLOW [cite: 2026-02-28] */
         .jump-btn.active { 
             background: #ff6600 !important; 
             border-color: #ffffff !important; 
+            box-shadow: 0 4px 15px rgba(255,102,0,0.4);
         }
         .jump-btn.active span { color: #ffffff !important; }
 
-        /* CONTENT AREA - INDEPENDENT SCROLLING */
-        #content-area { 
-            height: calc(100vh - 160px); 
+        /* SCROLLABLE CONTENT AREA */
+        #main-view { 
+            margin-top: 170px; /* Space for the fixed header */
+            height: calc(100vh - 170px); 
             overflow-y: auto; padding: 15px;
             -webkit-overflow-scrolling: touch;
         }
         
-        /* HIDE ALL BY DEFAULT */
+        /* PAGE ISOLATION */
+        .page { display: none; }
+        .page.active-view { display: block; }
+
         .section-box { 
-            display: none; 
             background: #1e1e1e; border-radius: 25px; padding: 25px; 
-            border: 2px solid #333; margin-bottom: 20px;
+            border: 2px solid #333; margin-bottom: 30px;
         }
-        
-        /* ONLY THE SELECTED ONE SHOWS */
-        .section-box.visible { display: block; }
 
-        .section-title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 8px; text-align: center; }
+        .section-title { color: #ff6600; font-size: 22px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; text-align: center; }
 
-        /* README RESTORED */
-        .readme-card { background: #111; padding: 15px; border-radius: 12px; border-left: 4px solid #ff6600; margin-bottom: 12px; font-size: 14px; line-height: 1.6; }
-        .readme-card b { color: #ff6600; }
+        /* README STYLE */
+        .readme-card { background: #111; padding: 15px; border-radius: 15px; border-left: 5px solid #ff6600; margin-bottom: 15px; font-size: 14px; line-height: 1.7; }
 
-        /* INPUTS & BUTTONS */
-        label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; }
+        /* INPUTS */
+        label { display: block; font-size: 12px; color: #ff6600; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
         input, select, textarea { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 18px; border-radius: 12px; font-size: 16px; margin-bottom: 15px; outline: none; }
-        .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; font-size: 16px; margin-top: 10px; }
-        .add-row-btn { background: #333; color: #ff6600; border: 1px dashed #ff6600; padding: 12px; border-radius: 10px; width: 100%; font-weight: 900; margin-bottom: 20px; }
-        .total-box { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; margin: 15px 0; text-align: right; }
-        .total-val { font-size: 40px; color: #ff6600; font-weight: 900; }
-        .photo-card { background: #000; border-radius: 15px; overflow: hidden; margin-bottom: 15px; border: 1px solid #333; }
-        .photo-card img { width: 100%; height: 200px; object-fit: cover; }
+        .btn-green { width: 100%; background: #25D366; color: #000; padding: 22px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; font-size: 16px; margin-top: 10px; }
+        .add-row-btn { background: #333; color: #ff6600; border: 1px dashed #ff6600; padding: 15px; border-radius: 12px; width: 100%; font-weight: 900; margin-bottom: 20px; }
+        .total-box { background: #000; padding: 25px; border-radius: 15px; border: 1px solid #333; margin: 15px 0; text-align: right; }
+        .total-val { font-size: 44px; color: #ff6600; font-weight: 900; }
     </style>
 </head>
 <body>
 
-    <div id="dashboard-header">
+    <div id="header-nav-container">
         <div class="logo"><span class="o">toolbox</span><span class="w">pay</span></div>
         <div class="tile-strip">
-            <div class="jump-btn active" id="btn-readme" onclick="swap('readme')"><i>📖</i><span>ReadMe</span></div>
-            <div class="jump-btn" id="btn-quotes" onclick="swap('quotes')"><i>📝</i><span>Quotes</span></div>
-            <div class="jump-btn" id="btn-clients" onclick="swap('clients')"><i>👥</i><span>Clients</span></div>
-            <div class="jump-btn" id="btn-calc" onclick="swap('calc')"><i>🧮</i><span>Calc</span></div>
-            <div class="jump-btn" id="btn-gallery" onclick="swap('gallery')"><i>📸</i><span>Gallery</span></div>
-            <div class="jump-btn" id="btn-profile" onclick="swap('profile')"><i>🏦</i><span>Profile</span></div>
+            <div class="jump-btn active" id="btn-readme" onclick="nav('readme')"><i>📖</i><span>ReadMe</span></div>
+            <div class="jump-btn" id="btn-quotes" onclick="nav('quotes')"><i>📝</i><span>Quotes</span></div>
+            <div class="jump-btn" id="btn-clients" onclick="nav('clients')"><i>👥</i><span>Clients</span></div>
+            <div class="jump-btn" id="btn-calc" onclick="nav('calc')"><i>🧮</i><span>Calc</span></div>
+            <div class="jump-btn" id="btn-gallery" onclick="nav('gallery')"><i>📸</i><span>Gallery</span></div>
+            <div class="jump-btn" id="btn-profile" onclick="nav('profile')"><i>🏦</i><span>Profile</span></div>
         </div>
     </div>
 
-    <div id="content-area">
-        <div id="page-readme" class="section-box visible">
-            <div class="section-title">Operating Manual</div>
-            <div class="readme-card"><b>1. Fixed Navigation:</b> Tapping the top buttons now swaps the screen entirely. You can no longer scroll "between" sections.</div>
-            <div class="readme-card"><b>2. Quotes:</b> Select a client, add labour/materials, and hit send. It uses your saved profile details automatically.</div>
-            <div class="readme-card"><b>3. Client Gallery:</b> Tag photos to specific clients to keep a visual record of every job.</div>
-            <div class="readme-card"><b>4. Auto-Save:</b> Your Bank Details and Clients are saved the moment you type them.</div>
+    <div id="main-view">
+        <div id="view-readme" class="page active-view">
+            <div class="section-box">
+                <div class="section-title">Operating Manual</div>
+                <div class="readme-card"><b>Instant Switch:</b> The navigation buttons now "Swap" pages rather than scrolling. This prevents categories from running into each other.</div>
+                <div class="readme-card"><b>The Glow:</b> The active button will remain <b>Orange & White</b> so you always know which tool is currently open.</div>
+                <div class="readme-card"><b>Auto-Save:</b> Your business and bank details are saved to your phone's memory the moment you type them.</div>
+            </div>
         </div>
 
-        <div id="page-quotes" class="section-box">
-            <div class="section-title">Job Quote</div>
-            <label>Select Client</label><select id="q-cli-pick"></select>
-            <div id="lab-container"><div class="item-row" style="display:flex;gap:5px;margin-bottom:10px;"><input type="text" class="l-desc" style="flex:2;" placeholder="Labour"><input type="number" class="l-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
-            <button class="add-row-btn" onclick="addR('lab-container','l-desc','l-price')">+ ADD LABOUR</button>
-            <div id="mat-container"><div class="item-row" style="display:flex;gap:5px;margin-bottom:10px;"><input type="text" class="m-desc" style="flex:2;" placeholder="Material"><input type="number" class="m-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
-            <button class="add-row-btn" onclick="addR('mat-container','m-desc','m-price')">+ ADD MATERIAL</button>
-            <div class="total-box"><div class="total-val" id="qt">£0.00</div></div>
-            <button class="btn-green" onclick="sendW()">Send WhatsApp Quote</button>
+        <div id="view-quotes" class="page">
+            <div class="section-box">
+                <div class="section-title">Job Quote</div>
+                <label>Client</label><select id="q-cli-pick"></select>
+                <div id="lab-container"><div class="item-row" style="display:flex;gap:5px;margin-bottom:10px;"><input type="text" class="l-desc" style="flex:2;" placeholder="Labour Item"><input type="number" class="l-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
+                <button class="add-row-btn" onclick="addR('lab-container','l-desc','l-price')">+ LABOUR</button>
+                <div id="mat-container"><div class="item-row" style="display:flex;gap:5px;margin-bottom:10px;"><input type="text" class="m-desc" style="flex:2;" placeholder="Material Item"><input type="number" class="m-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
+                <button class="add-row-btn" onclick="addR('mat-container','m-desc','m-price')">+ MATERIAL</button>
+                <div class="total-box"><div class="total-val" id="qt">£0.00</div></div>
+                <button class="btn-green" onclick="sendW()">Send WhatsApp Quote</button>
+            </div>
         </div>
 
-        <div id="page-clients" class="section-box">
-            <div class="section-title">Client Records</div>
-            <label>Name</label><input type="text" id="cn">
-            <label>Address</label><textarea id="ca" style="height:60px;"></textarea>
-            <label>Phone</label><input type="tel" id="ctel">
-            <button class="btn-green" style="background:#ff6600; color:#fff;" onclick="saveC()">Save Client</button>
-            <div id="cl-list" style="margin-top:20px;"></div>
+        <div id="view-clients" class="page">
+            <div class="section-box">
+                <div class="section-title">Client Records</div>
+                <label>Full Name</label><input type="text" id="cn">
+                <label>Address</label><textarea id="ca" style="height:80px;"></textarea>
+                <label>Phone Number</label><input type="tel" id="ctel">
+                <button class="btn-green" style="background:#ff6600; color:#fff;" onclick="saveC()">Save Client Details</button>
+                <div id="cl-list" style="margin-top:20px;"></div>
+            </div>
         </div>
 
-        <div id="page-calc" class="section-box">
-            <div class="section-title">Pricing Tool</div>
-            <label>Day Rate (£)</label><input type="number" id="dr" oninput="calcM()">
-            <label>Days</label><input type="number" id="dn" oninput="calcM()">
-            <label>Materials (£)</label><input type="number" id="mc" oninput="calcM()">
-            <div class="total-box"><div class="total-val" id="mt">£0.00</div></div>
+        <div id="view-calc" class="page">
+            <div class="section-box">
+                <div class="section-title">Pricing Tool</div>
+                <label>Day Rate (£)</label><input type="number" id="dr" oninput="calcM()">
+                <label>Number of Days</label><input type="number" id="dn" oninput="calcM()">
+                <label>Materials Cost (£)</label><input type="number" id="mc" oninput="calcM()">
+                <div class="total-box"><div class="total-val" id="mt">£0.00</div></div>
+            </div>
         </div>
 
-        <div id="page-gallery" class="section-box">
-            <div class="section-title">Job Gallery</div>
-            <label>Filter</label><select id="p-filter" onchange="loadP()"><option value="ALL">All Photos</option></select>
-            <label>Tag Client</label><select id="p-tag-cli"></select>
-            <input type="file" id="pf" style="display:none;" onchange="handleP(this)">
-            <button class="btn-green" onclick="document.getElementById('pf').click()">Add Photo</button>
-            <div id="p-grid" style="margin-top:20px;"></div>
+        <div id="view-gallery" class="page">
+            <div class="section-box">
+                <div class="section-title">Job Gallery</div>
+                <label>Filter Photos</label><select id="p-filter" onchange="loadP()"><option value="ALL">Show All</option></select>
+                <label>Tag to Client</label><select id="p-tag-cli"></select>
+                <input type="file" id="pf" style="display:none;" onchange="handleP(this)">
+                <button class="btn-green" onclick="document.getElementById('pf').click()">Capture Photo</button>
+                <div id="p-grid" style="margin-top:20px;"></div>
+            </div>
         </div>
 
-        <div id="page-profile" class="section-box">
-            <div class="section-title">Business Profile</div>
-            <label>Trading Name</label><input type="text" id="bn" oninput="sv('bn',this.value)">
-            <label>Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
-            <label>Account Number</label><input type="text" id="an" oninput="sv('an',this.value)">
-            <label>Standard Terms</label><textarea id="tc" oninput="sv('tc',this.value)"></textarea>
+        <div id="view-profile" class="page">
+            <div class="section-box">
+                <div class="section-title">Business Profile</div>
+                <label>Trading Name</label><input type="text" id="bn" oninput="sv('bn',this.value)">
+                <label>Bank Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
+                <label>Bank Account Number</label><input type="text" id="an" oninput="sv('an',this.value)">
+                <label>Terms & Conditions</label><textarea id="tc" oninput="sv('tc',this.value)" style="height:100px;"></textarea>
+            </div>
         </div>
     </div>
 
 <script>
-    /* THE HARD-WIRED SWAP [cite: 2026-02-28] */
-    function swap(pageId) {
-        // 1. Hide all boxes
-        const boxes = document.querySelectorAll('.section-box');
-        boxes.forEach(box => box.classList.remove('visible'));
+    /* THE HARD-WIRED NAVIGATION [cite: 2026-02-28] */
+    function nav(targetId) {
+        // 1. Hide all views
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active-view'));
+        // 2. Clear all button glows
+        document.querySelectorAll('.jump-btn').forEach(b => b.classList.remove('active'));
         
-        // 2. Show the specific box
-        const target = document.getElementById('page-' + pageId);
-        if(target) target.classList.add('visible');
+        // 3. Show the one we want
+        const selectedPage = document.getElementById('view-' + targetId);
+        const selectedBtn = document.getElementById('btn-' + targetId);
         
-        // 3. Clear all button glows
-        const btns = document.querySelectorAll('.jump-btn');
-        btns.forEach(btn => btn.classList.remove('active'));
-        
-        // 4. Glow the active one
-        const activeBtn = document.getElementById('btn-' + pageId);
-        if(activeBtn) {
-            activeBtn.classList.add('active');
-            activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        if(selectedPage && selectedBtn) {
+            selectedPage.classList.add('active-view');
+            selectedBtn.classList.add('active');
+            
+            // Scroll the navigation strip to center the button
+            selectedBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            
+            // Scroll the main content area back to the top
+            document.getElementById('main-view').scrollTop = 0;
         }
-
-        // 5. Back to top of the new page
-        document.getElementById('content-area').scrollTop = 0;
     }
 
     /* BUSINESS LOGIC */
     function addR(id, d, p) {
         const div = document.createElement('div');
         div.className = 'item-row'; div.style.display="flex"; div.style.gap="5px"; div.style.marginBottom="10px";
-        div.innerHTML = `<input type="text" class="${d}" style="flex:2;"><input type="number" class="${p}" style="flex:0.8;" oninput="runTotal()"><span onclick="this.parentElement.remove();runTotal();" style="color:red;padding:10px;font-weight:bold;">×</span>`;
+        div.innerHTML = `<input type="text" class="${d}" style="flex:2;"><input type="number" class="${p}" style="flex:0.8;" oninput="runTotal()"><span onclick="this.parentElement.remove();runTotal();" style="color:#ff4444;padding:12px;font-weight:bold;">×</span>`;
         document.getElementById(id).appendChild(div);
     }
     function runTotal() {
@@ -208,7 +216,7 @@
         document.getElementById('cl-list').innerHTML = h;
         document.getElementById('q-cli-pick').innerHTML = s;
         document.getElementById('p-tag-cli').innerHTML = s;
-        document.getElementById('p-filter').innerHTML = '<option value="ALL">All Photos</option>' + s;
+        document.getElementById('p-filter').innerHTML = '<option value="ALL">Show All</option>' + s;
     }
     function handleP(input) {
         const cli = document.getElementById('p-tag-cli').value;
@@ -216,19 +224,19 @@
         if(input.files[0]) {
             let r = new FileReader();
             r.onload = function(e) {
-                let ph = JSON.parse(localStorage.getItem('TBP_PH_V7') || "[]");
+                let ph = JSON.parse(localStorage.getItem('TBP_PH_V8') || "[]");
                 ph.push({src: e.target.result, cli: cli});
-                localStorage.setItem('TBP_PH_V7', JSON.stringify(ph)); loadP();
+                localStorage.setItem('TBP_PH_V8', JSON.stringify(ph)); loadP();
             };
             r.readAsDataURL(input.files[0]);
         }
     }
     function loadP() {
         const f = document.getElementById('p-filter').value;
-        const ph = JSON.parse(localStorage.getItem('TBP_PH_V7') || "[]");
+        const ph = JSON.parse(localStorage.getItem('TBP_PH_V8') || "[]");
         let h = "";
         ph.forEach(p => {
-            if(f === "ALL" || p.cli === f) h += `<div class="photo-card"><img src="${p.src}"><div style="padding:10px;color:#ff6600;">${p.cli}</div></div>`;
+            if(f === "ALL" || p.cli === f) h += `<div style="background:#000;border-radius:15px;overflow:hidden;margin-bottom:15px;border:1px solid #333;"><img src="${p.src}" style="width:100%;height:200px;object-fit:cover;"><div style="padding:10px;color:#ff6600;">${p.cli}</div></div>`;
         });
         document.getElementById('p-grid').innerHTML = h;
     }
