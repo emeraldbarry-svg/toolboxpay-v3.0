@@ -3,102 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>toolboxpay - v19.9 FULL</title>
+    <title>toolboxpay - v20.0 MASTER</title>
     <style>
-        /* FULL BLEED RESET */
+        /* FULL SCREEN FIX */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { 
-            background-color: #4a4a4a; 
-            color: #fff; 
-            font-family: sans-serif; 
-            width: 100%; 
-            height: 100%;
-            overflow-x: hidden;
-        }
+        html, body { background-color: #4a4a4a; color: #fff; font-family: sans-serif; width: 100%; overflow-x: hidden; }
 
-        /* MAIN CONTAINER - NO LIMITS */
-        .app-shell { 
-            width: 100vw; 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column;
-            background-color: #4a4a4a;
-        }
-
-        /* HEADER */
-        header { 
-            width: 100%;
-            padding: 30px 0; 
-            text-align: center; 
-            border-bottom: 5px solid #ff6600; 
-            background: #4a4a4a; 
-        }
-        .logo { font-size: 32px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .app-shell { width: 100vw; min-height: 100vh; display: flex; flex-direction: column; background-color: #4a4a4a; }
+        
+        /* LOGO */
+        header { width: 100%; padding: 25px 0; text-align: center; border-bottom: 5px solid #ff6600; background: #4a4a4a; }
+        .logo { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
         .logo span { color: #ff6600; }
 
         /* NAV RIBBON */
-        nav { 
-            width: 100%;
-            background: #222; 
-            border-bottom: 2px solid #333; 
-            overflow-x: auto; 
-            white-space: nowrap;
-        }
+        nav { width: 100%; background: #222; border-bottom: 2px solid #333; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
         nav::-webkit-scrollbar { display: none; }
-        .nav-inner { display: flex; padding: 15px; gap: 10px; }
-        .nav-btn { 
-            flex: 0 0 120px; 
-            background: #333; 
-            color: #ff6600; 
-            padding: 18px 0; 
-            border-radius: 12px; 
-            text-align: center; 
-            font-weight: 900; 
-            text-transform: uppercase; 
-            border: 2px solid #444; 
-            font-size: 13px;
-        }
-        .nav-btn.active { background: #ff6600; color: #fff; border-color: #fff; }
-
-        /* CONTENT CARDS - EDGE TO EDGE */
-        .content { padding: 15px; width: 100%; }
-        .card { 
-            background: #1e1e1e; 
-            padding: 25px; 
-            border-radius: 20px; 
-            border: 1px solid #000; 
-            width: 100%; 
-            margin: 0 auto;
-        }
-        .card-h { 
-            color: #ff6600; 
-            text-transform: uppercase; 
-            text-align: center; 
-            margin-bottom: 25px; 
-            border-bottom: 2px solid #ff6600; 
-            padding-bottom: 12px; 
-            font-size: 20px; 
-            font-weight: 900; 
-        }
-
-        /* INPUTS */
-        label { color: #ff6600; font-size: 12px; font-weight: 900; display: block; margin-bottom: 8px; text-transform: uppercase; }
-        input { 
-            width: 100%; 
-            padding: 20px; 
-            background: #000; 
-            border: 1px solid #444; 
-            color: #fff; 
-            border-radius: 12px; 
-            margin-bottom: 25px; 
-            font-size: 18px; 
-            display: block;
-        }
+        .nav-inner { display: flex; padding: 15px; gap: 10px; width: max-content; }
+        .nav-btn { flex: 0 0 110px; background: #333; color: #ff6600; padding: 15px 0; border-radius: 12px; text-align: center; font-weight: 900; text-transform: uppercase; border: 2px solid #444; font-size: 11px; cursor: pointer; transition: 0.2s; }
         
-        /* CALC BOXES */
+        /* ACTIVE BUTTON GLOW */
+        .nav-btn.active { background: #ff6600 !important; color: #fff !important; border-color: #fff !important; box-shadow: 0 0 15px rgba(255,102,0,0.5); }
+
+        .content { padding: 15px; width: 100%; flex-grow: 1; }
+        .card { background: #1e1e1e; padding: 25px; border-radius: 20px; border: 1px solid #000; width: 100%; margin-bottom: 20px; }
+        .card-h { color: #ff6600; text-transform: uppercase; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; font-size: 18px; font-weight: 900; }
+
+        label { color: #ff6600; font-size: 11px; font-weight: 900; display: block; margin-bottom: 8px; text-transform: uppercase; }
+        input, textarea { width: 100%; padding: 16px; background: #000; border: 1px solid #444; color: #fff; border-radius: 10px; margin-bottom: 20px; font-size: 16px; outline: none; display: block; font-family: sans-serif; }
+        
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .box { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; text-align: center; }
-        .val { font-size: 20px; font-weight: 900; margin-top: 5px; }
+        .box { background: #000; padding: 15px; border-radius: 12px; border: 1px solid #333; text-align: center; }
+        .val { font-size: 18px; font-weight: 900; margin-top: 5px; }
 
         .view { display: none; }
         .view.active { display: block; }
@@ -111,34 +47,101 @@
 
     <nav>
         <div class="nav-inner">
-            <div id="m1" class="nav-btn" onclick="show(1)">Profile</div>
+            <div id="m1" class="nav-btn active" onclick="show(1)">Profile</div>
             <div id="m2" class="nav-btn" onclick="show(2)">Bank</div>
             <div id="m3" class="nav-btn" onclick="show(3)">VAT</div>
-            <div id="m4" class="nav-btn active" onclick="show(4)">Biz Calc</div>
+            <div id="m4" class="nav-btn" onclick="show(4)">Biz Calc</div>
         </div>
     </nav>
 
     <main class="content">
-        <div id="v4" class="view active">
+        <div id="v1" class="view active">
+            <div class="card">
+                <h2 class="card-h">Business Profile</h2>
+                <label>Business Name</label>
+                <input type="text" id="f1" placeholder="e.g. Toolboxpay" oninput="sv('f1')">
+                <label>Specialising In</label>
+                <input type="text" id="f2" placeholder="e.g. Electrical" oninput="sv('f2')">
+                <label>Business Address</label>
+                <textarea id="f3" rows="3" oninput="sv('f3')" style="width:100%; background:#000; border:1px solid #444; border-radius:10px; color:#fff; padding:15px;"></textarea>
+            </div>
+        </div>
+
+        <div id="v2" class="view">
+            <div class="card">
+                <h2 class="card-h">Bank Details</h2>
+                <label>Bank Name</label>
+                <input type="text" id="f4" placeholder="e.g. Nationwide" oninput="sv('f4')">
+                <label>Branch</label>
+                <input type="text" id="f7" placeholder="e.g. Wellingborough" oninput="sv('f7')">
+                <label>Sort Code</label>
+                <input type="text" id="f5" placeholder="00-00-00" oninput="sv('f5')">
+                <label>Account Number</label>
+                <input type="text" id="f6" placeholder="00000000" oninput="sv('f6')">
+                <label>IBAN Number</label>
+                <input type="text" id="f8" placeholder="GB00 XXXX..." oninput="sv('f8')">
+            </div>
+        </div>
+
+        <div id="v3" class="view">
+            <div class="card">
+                <h2 class="card-h">VAT Quick Calc</h2>
+                <label>Amount (£)</label>
+                <input type="number" id="vIn" placeholder="0.00" oninput="calcV()">
+                <div class="grid">
+                    <div class="box"><div style="color:#ff6600; font-size:10px; font-weight:900;">VAT (20%)</div><div id="vTax" class="val">£0.00</div></div>
+                    <div class="box"><div style="color:#ff6600; font-size:10px; font-weight:900;">GROSS</div><div id="vTotal" class="val" style="color:#25D366;">£0.00</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="v4" class="view">
             <div class="card">
                 <h2 class="card-h">Business Calc</h2>
-                
                 <label>Labour Cost (£)</label>
                 <input type="number" id="bzLab" placeholder="0.00" oninput="calcB()">
-                
                 <label>Material Cost (£)</label>
                 <input type="number" id="bzMat" placeholder="0.00" oninput="calcB()">
-                
                 <label>Markup (%)</label>
                 <input type="number" id="bzMark" value="20" oninput="calcB()">
-                
                 <div class="box" style="border-color: #ff6600; margin-bottom: 15px;">
-                    <div style="color:#ff6600; font-size: 11px; font-weight:900; text-transform:uppercase;">Recommended Quote</div>
-                    <div id="bzQuote" class="val" style="font-size: 32px; color: #fff;">£0.00</div>
+                    <div style="color:#ff6600; font-size: 10px; font-weight:900;">REC. QUOTE</div>
+                    <div id="bzQuote" class="val" style="font-size: 24px;">£0.00</div>
                 </div>
-
                 <div class="grid">
-                    <div class="box">
-                        <div style="color:#ff6600; font-size:10px; font-weight:900;">PROFIT</div>
-                        <div id="bzProf" class="val" style="color:#25D366;">£0.00</div>
-                    </div>
+                    <div class="box"><div style="color:#ff6600; font-size:10px; font-weight:900;">PROFIT</div><div id="bzProf" class="val" style="color:#25D366;">£0.00</div></div>
+                    <div class="box"><div style="color:#ff6600; font-size:10px; font-weight:900;">MARGIN</div><div id="bzMarg" class="val">0%</div></div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    /* TAB LOGIC - FIXED GLOW */
+    function show(n) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        
+        document.getElementById('v' + n).classList.add('active');
+        document.getElementById('m' + n).classList.add('active');
+        
+        document.getElementById('m' + n).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
+    /* STORAGE */
+    function sv(id) {
+        localStorage.setItem('TBOX_V20_' + id, document.getElementById(id).value);
+    }
+
+    function calcV() {
+        let n = parseFloat(document.getElementById('vIn').value) || 0;
+        document.getElementById('vTax').innerText = "£" + (n * 0.2).toFixed(2);
+        document.getElementById('vTotal').innerText = "£" + (n * 1.2).toFixed(2);
+    }
+
+    function calcB() {
+        let lab = parseFloat(document.getElementById('bzLab').value) || 0;
+        let mat = parseFloat(document.getElementById('bzMat').value) || 0;
+        let mark = (parseFloat(document.getElementById('bzMark').value) || 0) / 100;
+        let
