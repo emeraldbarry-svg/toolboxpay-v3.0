@@ -3,61 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.16 MAX</title>
+    <title>toolboxpay - v21.17 FORCE</title>
     <style>
-        /* BRITISH THEME & UNIFIED FONT [cite: 2020-02-20, 2026-02-28] */
+        /* BRITISH SPELLING & UNIFIED FONT */
         * { 
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            font-family: sans-serif !important; 
+            font-family: Arial, Helvetica, sans-serif !important; 
         }
         
-        body { background-color: #2a2a2a; color: #ffffff; padding-top: 170px; }
+        body { background-color: #2a2a2a; color: #ffffff; padding-top: 180px; }
 
-        /* HEADER [cite: 2020-02-20] */
+        /* FIXED HEADER */
         .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #2a2a2a; }
-        header { background: #1a1a1a; padding: 30px 0; text-align: center; border-bottom: 8px solid #ff6600; }
-        .logo { font-size: 32px; font-weight: 900; text-transform: uppercase; }
+        header { background: #1a1a1a; padding: 35px 0; text-align: center; border-bottom: 8px solid #ff6600; }
+        .logo { font-size: 34px; font-weight: 900; text-transform: uppercase; }
         .logo .orange { color: #ff6600; }
         .logo .white { color: #ffffff; }
 
         nav { background: #000; overflow-x: auto; border-bottom: 2px solid #444; }
-        .nav-inner { display: flex; padding: 20px; gap: 15px; width: max-content; }
+        .nav-inner { display: flex; padding: 25px; gap: 15px; width: max-content; }
         .nav-btn { 
-            width: 125px; padding: 20px 0; background: #333; color: #ff6600; 
+            width: 130px; padding: 22px 0; background: #333; color: #ff6600; 
             text-align: center; border-radius: 12px; font-weight: 900; 
-            font-size: 14px; border: 1px solid #555; text-transform: uppercase;
+            font-size: 15px; border: 1px solid #555; text-transform: uppercase;
         }
 
-        /* MAX SCALE CONTAINERS [cite: 2026-02-28] */
+        /* CARD STYLE */
         .container { padding: 20px; max-width: 600px; margin: 0 auto; }
-        .card { display: none; background: #1a1a1a; padding: 40px; border-radius: 30px; border: 5px solid #ff6600; }
+        .card { display: none; background: #1a1a1a; padding: 45px; border-radius: 35px; border: 6px solid #ff6600; }
         .active { display: block !important; }
 
-        .title { color: #ff6600; font-size: 30px; font-weight: 900; text-transform: uppercase; margin-bottom: 35px; text-align: center; }
-        .label { color: #ffffff; font-size: 18px; font-weight: 900; display: block; margin-bottom: 15px; text-transform: uppercase; }
+        .title { color: #ff6600; font-size: 32px; font-weight: 900; text-transform: uppercase; margin-bottom: 40px; text-align: center; }
+        .label { color: #ffffff; font-size: 20px; font-weight: 900; display: block; margin-bottom: 20px; text-transform: uppercase; }
 
-        /* THE MAX-FIELD FIX [cite: 2026-02-28] */
+        /* THE FORCE-FILL FIX */
         input, textarea { 
             width: 100%; 
-            min-height: 110px !important; /* Massive height [cite: 2026-02-28] */
-            padding: 30px !important; 
+            height: 120px !important; /* HARD HEIGHT */
+            padding: 40px !important; /* HARD PADDING */
             background: #ffffff !important; 
-            border: 5px solid #ff6600 !important; 
-            border-radius: 18px;
-            margin-bottom: 50px !important; /* Huge separation [cite: 2026-02-28] */
+            border: 6px solid #ff6600 !important; 
+            border-radius: 20px;
+            margin-bottom: 60px !important; 
             display: block;
             outline: none;
             color: #000000 !important; 
             -webkit-text-fill-color: #000000 !important; 
-            font-size: 28px !important; /* Massive text [cite: 2026-02-28] */
+            font-size: 32px !important; /* MASSIVE TEXT */
             font-weight: 900 !important;
+            appearance: none;
+            -webkit-appearance: none;
         }
 
-        /* CALC BOXES [cite: 2026-02-28] */
-        .res-box { background: #000; padding: 35px; border-radius: 25px; border: 3px solid #ff6600; text-align: center; }
-        .res-text { font-size: 48px; font-weight: 900; color: #ffffff; }
+        textarea { height: 200px !important; } /* Extra space for address */
+
+        /* CALC BOXES */
+        .res-box { background: #000; padding: 40px; border-radius: 30px; border: 4px solid #ff6600; text-align: center; }
+        .res-text { font-size: 55px; font-weight: 900; color: #ffffff; }
     </style>
 </head>
 <body>
@@ -78,25 +82,25 @@
         <div id="v1" class="card active">
             <h2 class="title">Business Profile</h2>
             <label class="label">Trading Name</label>
-            <input type="text" id="k1" placeholder="Enter Name" oninput="save('k1')">
+            <input type="text" id="z1" placeholder="NAME" oninput="save('z1')">
             
             <label class="label">Specialising In</label>
-            <input type="text" id="k2" placeholder="e.g. Electrical" oninput="save('k2')">
+            <input type="text" id="z2" placeholder="TRADE" oninput="save('z2')">
             
             <label class="label">Business Address</label>
-            <textarea id="k3" rows="4" placeholder="Full Address" oninput="save('k3')"></textarea>
+            <textarea id="z3" placeholder="ADDRESS" oninput="save('z3')"></textarea>
         </div>
 
         <div id="v2" class="card">
             <h2 class="title">Bank Details</h2>
             <label class="label">Bank Name</label>
-            <input type="text" id="k4" placeholder="Bank" oninput="save('k4')">
+            <input type="text" id="z4" placeholder="BANK" oninput="save('z4')">
             
             <label class="label">Sort Code</label>
-            <input type="text" id="k5" placeholder="00-00-00" oninput="save('k5')">
+            <input type="text" id="z5" placeholder="00-00-00" oninput="save('z5')">
             
             <label class="label">Account Number</label>
-            <input type="text" id="k6" placeholder="8-Digits" oninput="save('k6')">
+            <input type="text" id="z6" placeholder="NUMBER" oninput="save('z6')">
         </div>
 
         <div id="v3" class="card">
@@ -104,7 +108,7 @@
             <label class="label">Net Amount (£)</label>
             <input type="number" id="vIn" oninput="doV()">
             <div class="res-box">
-                <div style="color:#ff6600; font-size:16px; font-weight:900; margin-bottom:15px;">TOTAL (INC 20% VAT)</div>
+                <div style="color:#ff6600; font-size:18px; font-weight:900; margin-bottom:20px;">TOTAL (INC 20% VAT)</div>
                 <div id="vOut" class="res-text">£0.00</div>
             </div>
         </div>
@@ -121,7 +125,7 @@
             <input type="number" id="bMk" value="20" oninput="doB()">
             
             <div class="res-box">
-                <div style="color:#ff6600; font-size:16px; font-weight:900; margin-bottom:15px;">REC. QUOTE</div>
+                <div style="color:#ff6600; font-size:18px; font-weight:900; margin-bottom:20px;">REC. QUOTE</div>
                 <div id="bQ" class="res-text">£0.00</div>
             </div>
         </div>
@@ -135,12 +139,12 @@
             b.style.background = '#333'; b.style.color = '#ff6600';
         }
         document.getElementById('v' + n).classList.add('active');
-        let act = document.getElementById('m' + n);
-        act.style.background = '#ff6600'; act.style.color = '#fff';
+        let act = document.getElementById('btn' + n);
+        if(act) { act.style.background = '#ff6600'; act.style.color = '#fff'; }
     }
 
     function save(id) {
-        localStorage.setItem('TBOX_V2116_' + id, document.getElementById(id).value);
+        localStorage.setItem('TBOX_V2117_' + id, document.getElementById(id).value);
     }
 
     function doV() {
@@ -156,8 +160,8 @@
     }
 
     window.onload = function() {
-        ['k1', 'k2', 'k3', 'k4', 'k5', 'k6'].forEach(id => {
-            let val = localStorage.getItem('TBOX_V2116_' + id);
+        ['z1', 'z2', 'z3', 'z4', 'z5', 'z6'].forEach(id => {
+            let val = localStorage.getItem('TBOX_V2117_' + id);
             if (val && document.getElementById(id)) document.getElementById(id).value = val;
         });
     };
