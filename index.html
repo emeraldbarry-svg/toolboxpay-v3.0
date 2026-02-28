@@ -3,64 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.24 PRECISION</title>
+    <title>toolboxpay - v21.26 REVERTED SCALE</title>
     <style>
-        /* BRITISH TYPOGRAPHY & RESET [cite: 2020-02-20] */
+        /* THE ORIGINAL FORMULA [cite: 2020-02-20, 2026-02-28] */
         * { 
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            font-family: 'Segoe UI', Helvetica, Arial, sans-serif !important; 
-            font-weight: 700 !important;
+            font-family: sans-serif !important; 
+            font-weight: 900 !important;
         }
         
-        body { background-color: #121212; color: #ffffff; padding-top: 130px; }
+        body { background-color: #1a1a1a; color: #ffffff; padding-top: 160px; }
 
-        /* REFINED HEADER [cite: 2020-02-20] */
-        .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #121212; }
-        header { padding: 20px 0; text-align: center; border-bottom: 4px solid #ff6600; background: #1a1a1a; }
-        .logo { font-size: 26px; text-transform: uppercase; letter-spacing: 2px; }
+        /* HEADER [cite: 2020-02-20] */
+        .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #1a1a1a; }
+        header { background: #111; padding: 35px 0; text-align: center; border-bottom: 8px solid #ff6600; }
+        .logo { font-size: 32px; text-transform: uppercase; }
         .logo .orange { color: #ff6600; }
         .logo .white { color: #ffffff; }
 
-        nav { background: #000; overflow-x: auto; border-bottom: 2px solid #333; }
-        .nav-inner { display: flex; padding: 12px; gap: 10px; width: max-content; }
+        nav { background: #000; overflow-x: auto; border-bottom: 4px solid #444; }
+        .nav-inner { display: flex; padding: 25px; gap: 20px; width: max-content; }
         .nav-btn { 
-            width: 100px; padding: 12px 0; background: #222; color: #ff6600; 
-            text-align: center; border-radius: 6px; 
-            font-size: 12px; border: 1px solid #444; text-transform: uppercase;
+            width: 130px; padding: 22px 0; background: #333; color: #ff6600; 
+            text-align: center; border-radius: 14px; 
+            font-size: 16px; border: 2px solid #555; text-transform: uppercase;
         }
 
-        /* PRECISION CONTAINERS [cite: 2026-02-28] */
-        .container { padding: 15px; max-width: 450px; margin: 0 auto; }
-        .card { display: none; background: #1a1a1a; padding: 25px; border-radius: 15px; border: 2px solid #ff6600; }
+        /* SCALE CONTAINERS [cite: 2026-02-28] */
+        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
+        .card { display: none; background: #111; padding: 45px; border-radius: 40px; border: 8px solid #ff6600; }
         .active { display: block !important; }
 
-        .title { color: #ff6600; font-size: 20px; text-transform: uppercase; margin-bottom: 20px; text-align: center; border-bottom: 1px solid #333; padding-bottom: 12px; }
-        .label { color: #ffffff; font-size: 13px; display: block; margin-bottom: 8px; text-transform: uppercase; opacity: 0.8; }
+        .title { color: #ff6600; font-size: 32px; text-transform: uppercase; margin-bottom: 45px; text-align: center; }
+        .label { color: #ffffff; font-size: 20px; display: block; margin-bottom: 25px; text-transform: uppercase; }
 
-        /* THE REDUCED FIELD STYLE [cite: 2026-02-28] */
+        /* THE REVERTED FORMULA: 20% REDUCTION FROM V21.19 [cite: 2026-02-28] */
         input, textarea { 
             width: 100% !important; 
             display: block !important;
             background: #ffffff !important; 
             color: #000000 !important; 
             -webkit-text-fill-color: #000000 !important; 
-            border: 2px solid #ff6600 !important; 
-            border-radius: 8px !important;
-            margin-bottom: 20px !important; 
-            font-size: 18px !important; /* Balanced for mobile readability [cite: 2026-02-28] */
+            border: 8px solid #ff6600 !important; 
+            border-radius: 24px !important;
+            margin-bottom: 60px !important; 
+            font-size: 34px !important; /* Scaled down from 42px [cite: 2026-02-28] */
             outline: none !important;
-            padding: 15px 12px !important; 
+            padding: 48px 32px !important; /* Scaled down from 60px [cite: 2026-02-28] */
             appearance: none !important;
             -webkit-appearance: none !important;
         }
 
-        textarea { min-height: 100px !important; line-height: 1.4; }
+        textarea { min-height: 240px !important; }
 
         /* RESULTS BOX [cite: 2026-02-28] */
-        .res-box { background: #000; padding: 25px; border-radius: 12px; border: 2px solid #ff6600; text-align: center; }
-        .res-text { font-size: 38px; color: #ffffff; }
+        .res-box { background: #000; padding: 45px; border-radius: 30px; border: 5px solid #ff6600; text-align: center; }
+        .res-text { font-size: 60px; color: #ffffff; }
     </style>
 </head>
 <body>
@@ -81,23 +81,23 @@
         <div id="v1" class="card active">
             <h2 class="title">Business Profile</h2>
             <label class="label">Trading Name</label>
-            <input type="text" id="p1_name" placeholder="Enter Name" oninput="sv('p1_name')">
+            <input type="text" id="z1" placeholder="NAME" oninput="sv('z1')">
             
             <label class="label">Specialising In</label>
-            <input type="text" id="p1_trade" placeholder="e.g. Plumbing" oninput="sv('p1_trade')">
+            <input type="text" id="z2" placeholder="TRADE" oninput="sv('z2')">
             
             <label class="label">Business Address</label>
-            <textarea id="p1_addr" placeholder="Full Address" oninput="sv('p1_addr')"></textarea>
+            <textarea id="z3" placeholder="ADDRESS" oninput="sv('z3')"></textarea>
         </div>
 
         <div id="v2" class="card">
             <h2 class="title">Bank Details</h2>
             <label class="label">Bank Name</label>
-            <input type="text" id="p2_bank" placeholder="Institution" oninput="sv('p2_bank')">
+            <input type="text" id="z4" placeholder="BANK" oninput="sv('z4')">
             <label class="label">Sort Code</label>
-            <input type="text" id="p2_sort" placeholder="00-00-00" oninput="sv('p2_sort')">
+            <input type="text" id="z5" placeholder="00-00-00" oninput="sv('z5')">
             <label class="label">Account Number</label>
-            <input type="text" id="p2_acc" placeholder="8-Digits" oninput="sv('p2_acc')">
+            <input type="text" id="z6" placeholder="NUMBER" oninput="sv('z6')">
         </div>
 
         <div id="v3" class="card">
@@ -105,7 +105,7 @@
             <label class="label">Net Amount (£)</label>
             <input type="number" id="vIn" oninput="doV()">
             <div class="res-box">
-                <div style="color:#ff6600; font-size:13px; margin-bottom:10px;">TOTAL (INC 20% VAT)</div>
+                <div style="color:#ff6600; font-size:22px; margin-bottom:25px;">TOTAL (INC 20% VAT)</div>
                 <div id="vOut" class="res-text">£0.00</div>
             </div>
         </div>
@@ -116,10 +116,10 @@
             <input type="number" id="bL" oninput="doB()">
             <label class="label">Materials Cost (£)</label>
             <input type="number" id="bM" oninput="doB()">
-            <label class="label">Profit Markup (%)</label>
+            <label class="label">Markup (%)</label>
             <input type="number" id="bMk" value="20" oninput="doB()">
             <div class="res-box">
-                <div style="color:#ff6600; font-size:13px; margin-bottom:10px;">RECOMMENDED QUOTE</div>
+                <div style="color:#ff6600; font-size:22px; margin-bottom:25px;">REC. QUOTE</div>
                 <div id="bQ" class="res-text">£0.00</div>
             </div>
         </div>
@@ -130,14 +130,14 @@
         for(let i=1; i<=4; i++) {
             document.getElementById('v' + i).classList.remove('active');
             let b = document.getElementById('m' + i);
-            b.style.background = '#222'; b.style.color = '#ff6600';
+            b.style.background = '#333'; b.style.color = '#ff6600';
         }
         document.getElementById('v' + n).classList.add('active');
         let act = document.getElementById('m' + n);
         act.style.background = '#ff6600'; act.style.color = '#fff';
     }
 
-    function sv(id) { localStorage.setItem('TBOX_V2124_' + id, document.getElementById(id).value); }
+    function sv(id) { localStorage.setItem('TBOX_V2126_' + id, document.getElementById(id).value); }
 
     function doV() {
         let n = parseFloat(document.getElementById('vIn').value) || 0;
@@ -152,8 +152,8 @@
     }
 
     window.onload = function() {
-        ['p1_name', 'p1_trade', 'p1_addr', 'p2_bank', 'p2_sort', 'p2_acc'].forEach(id => {
-            let val = localStorage.getItem('TBOX_V2124_' + id);
+        ['z1', 'z2', 'z3', 'z4', 'z5', 'z6'].forEach(id => {
+            let val = localStorage.getItem('TBOX_V2126_' + id);
             if (val && document.getElementById(id)) document.getElementById(id).value = val;
         });
     };
