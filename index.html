@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.37 FIXED</title>
+    <title>toolboxpay - v21.39 TEXT RESTORED</title>
     <style>
-        /* THE RESTORED SYSTEM [cite: 2020-02-20, 2026-02-28] */
+        /* THE BALANCED MOBILE SYSTEM */
         * { 
             box-sizing: border-box; 
             margin: 0; 
@@ -16,43 +16,56 @@
         
         body { background-color: #1a1a1a; color: #ffffff; padding-top: 160px; }
 
-        /* HEADER */
+        /* HEADER & LOGO */
         .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #000; }
-        header { padding: 20px 0; text-align: center; }
-        .logo { font-size: 26px; text-transform: uppercase; letter-spacing: 1px; }
+        header { padding: 25px 0; text-align: center; }
+        .logo { font-size: 26px; text-transform: uppercase; }
         .logo .orange { color: #ff6600; }
         .logo .white { color: #ffffff; }
 
-        /* NAVIGATION FIX */
-        nav { background: #000; border-top: 4px solid #444; border-bottom: 4px solid #ff6600; overflow-x: auto; }
+        /* NAVIGATION BUTTONS */
+        nav { background: #000; border-top: 4px solid #444; border-bottom: 6px solid #ff6600; overflow-x: auto; }
         .nav-inner { display: flex; padding: 15px; gap: 10px; justify-content: flex-start; }
         .nav-btn { 
-            padding: 12px 20px; background: #333; color: #ff6600; 
-            border-radius: 8px; font-size: 13px; border: 1px solid #444; 
+            padding: 15px 22px; background: #333; color: #ff6600; 
+            border-radius: 12px; font-size: 14px; border: 2px solid #555; 
             text-transform: uppercase; cursor: pointer; flex-shrink: 0;
-            min-width: 90px; text-align: center;
+            min-width: 100px; text-align: center;
         }
-        .nav-btn.active-btn { background: #ff6600; color: #fff; border-color: #ff6600; }
+        .nav-btn.active-btn { background: #ff6600 !important; color: #fff !important; border-color: #ff6600 !important; }
 
-        /* CONTENT SYSTEM [cite: 2026-02-28] */
-        .container { padding: 15px; max-width: 650px; margin: 0 auto; }
-        .card { display: none; background: #111; padding: 25px; border-radius: 20px; border: 5px solid #ff6600; }
+        /* MAIN CONTAINER */
+        .container { padding: 20px; max-width: 650px; margin: 0 auto; }
+        .card { display: none; background: #111; padding: 30px; border-radius: 25px; border: 8px solid #ff6600; }
         .active-card { display: block !important; }
 
-        .title { color: #ff6600; font-size: 24px; text-transform: uppercase; margin-bottom: 25px; text-align: center; }
-        .label { color: #ffffff; font-size: 16px; display: block; margin-bottom: 12px; text-transform: uppercase; }
+        .title { color: #ff6600; font-size: 30px; text-transform: uppercase; margin-bottom: 30px; text-align: center; }
+        .label { color: #ffffff; font-size: 18px; display: block; margin-bottom: 15px; text-transform: uppercase; }
 
-        /* INPUTS MATCHING SCREENSHOTS */
+        /* TEXT RESTORATION FORMULA */
         input, textarea { 
-            width: 100%; display: block; background: #ffffff; color: #000000; 
-            border: 5px solid #ff6600; border-radius: 15px; margin-bottom: 30px; 
-            font-size: 22px; padding: 20px 15px; outline: none; -webkit-appearance: none;
+            width: 100% !important; 
+            display: block !important;
+            background: #ffffff !important; 
+            color: #000000 !important; 
+            border: 8px solid #ff6600 !important; 
+            border-radius: 20px !important; 
+            margin-bottom: 40px !important; 
+            font-size: 32px !important; /* Bold, visible size */
+            padding: 35px 25px !important; /* Reduced padding to bring text back into view */
+            outline: none !important;
+            -webkit-appearance: none !important;
+            line-height: normal !important;
         }
-        textarea { min-height: 180px; }
+        
+        /* Specific fix for placeholders and entered text */
+        input::placeholder, textarea::placeholder { color: #666 !important; opacity: 1; }
 
-        /* RESULTS [cite: 2026-02-28] */
-        .res-box { background: #000; padding: 30px; border-radius: 15px; border: 5px solid #ff6600; text-align: center; }
-        .res-text { font-size: 40px; color: #ffffff; }
+        textarea { min-height: 180px; resize: none; }
+
+        /* CALC RESULTS */
+        .res-box { background: #000; padding: 40px; border-radius: 20px; border: 8px solid #ff6600; text-align: center; }
+        .res-text { font-size: 60px; color: #ffffff; }
     </style>
 </head>
 <body>
@@ -72,22 +85,22 @@
     <main class="container">
         <div id="v1" class="card active-card">
             <h2 class="title">BUSINESS PROFILE</h2>
-            <label class="label">FULL TRADING NAME</label>
-            <input type="text" id="s_name" placeholder="Enter Name" oninput="sv('s_name')">
+            <label class="label">TRADING NAME</label>
+            <input type="text" id="r_name" placeholder="Enter Name" oninput="sv('r_name')">
             <label class="label">SPECIALISING IN</label>
-            <input type="text" id="s_trade" placeholder="e.g. Plumbing" oninput="sv('s_trade')">
+            <input type="text" id="r_trade" placeholder="e.g. Electrical" oninput="sv('r_trade')">
             <label class="label">BUSINESS ADDRESS</label>
-            <textarea id="s_addr" placeholder="Full Address" oninput="sv('s_addr')"></textarea>
+            <textarea id="r_addr" placeholder="Full Address" oninput="sv('r_addr')"></textarea>
         </div>
 
         <div id="v2" class="card">
             <h2 class="title">BANK DETAILS</h2>
             <label class="label">BANK NAME</label>
-            <input type="text" id="s_bank" placeholder="BANK" oninput="sv('s_bank')">
+            <input type="text" id="r_bank" placeholder="BANK" oninput="sv('r_bank')">
             <label class="label">SORT CODE</label>
-            <input type="text" id="s_sort" placeholder="00-00-00" oninput="sv('s_sort')">
+            <input type="text" id="r_sort" placeholder="00-00-00" oninput="sv('r_sort')">
             <label class="label">ACCOUNT NUMBER</label>
-            <input type="text" id="s_acc" placeholder="NUMBER" oninput="sv('s_acc')">
+            <input type="text" id="r_acc" placeholder="NUMBER" oninput="sv('r_acc')">
         </div>
 
         <div id="v3" class="card">
@@ -110,41 +123,10 @@
     </main>
 
 <script>
-    /* SIMPLE TAB LOGIC [cite: 2026-02-28] */
+    /* TAB LOGIC */
     function st(n) {
-        // Hide all cards
         document.querySelectorAll('.card').forEach(c => c.classList.remove('active-card'));
-        // Deactivate all buttons
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-btn'));
-        
-        // Show selected
         document.getElementById('v' + n).classList.add('active-card');
         document.getElementById('m' + n).classList.add('active-btn');
     }
-
-    /* DATA SAVING [cite: 2026-02-26, 2026-02-28] */
-    function sv(id) { 
-        localStorage.setItem('TBOX_S_' + id, document.getElementById(id).value); 
-    }
-
-    function doV() {
-        let n = parseFloat(document.getElementById('vIn').value) || 0;
-        document.getElementById('vOut').innerText = "£" + (n * 1.2).toFixed(2);
-    }
-
-    function doB() {
-        let l = parseFloat(document.getElementById('bL').value) || 0;
-        let m = parseFloat(document.getElementById('bM').value) || 0;
-        let mk = (parseFloat(document.getElementById('bMk').value) || 0) / 100;
-        document.getElementById('bQ').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
-    }
-
-    window.onload = function() {
-        ['s_name', 's_trade', 's_addr', 's_bank', 's_sort', 's_acc'].forEach(id => {
-            let val = localStorage.getItem('TBOX_S_' + id);
-            if (val && document.getElementById(id)) document.getElementById(id).value = val;
-        });
-    };
-</script>
-</body>
-</html>
