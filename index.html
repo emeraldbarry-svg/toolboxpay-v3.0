@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.29 DUPLICATE</title>
+    <title>toolboxpay - v21.30 MASTER</title>
     <style>
-        /* THE WORKING SYSTEM - DO NOT CHANGE [cite: 2020-02-20, 2026-02-28] */
+        /* THE PROVEN SYSTEM */
         * { 
             box-sizing: border-box; 
             margin: 0; 
@@ -16,7 +16,7 @@
         
         body { background-color: #1a1a1a; color: #ffffff; padding-top: 180px; }
 
-        /* HEADER [cite: 2020-02-20] */
+        /* HEADER & NAV SYSTEM */
         .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #1a1a1a; }
         header { background: #111; padding: 45px 0; text-align: center; border-bottom: 10px solid #ff6600; }
         .logo { font-size: 38px; text-transform: uppercase; }
@@ -31,7 +31,7 @@
             font-size: 18px; border: 3px solid #555; text-transform: uppercase;
         }
 
-        /* CONTAINER SYSTEM [cite: 2026-02-28] */
+        /* CONTAINER SYSTEM */
         .container { padding: 25px; max-width: 700px; margin: 0 auto; }
         .card { display: none; background: #111; padding: 55px; border-radius: 50px; border: 10px solid #ff6600; }
         .active { display: block !important; }
@@ -39,7 +39,7 @@
         .title { color: #ff6600; font-size: 40px; text-transform: uppercase; margin-bottom: 55px; text-align: center; }
         .label { color: #ffffff; font-size: 24px; display: block; margin-bottom: 30px; text-transform: uppercase; }
 
-        /* THE EXACT INPUT FORMULA FROM YOUR SCREENSHOTS [cite: 2026-02-28] */
+        /* THE EXACT PROFILE TAB FORMULA - DUPLICATED TO ALL TABS */
         input, textarea { 
             width: 100% !important; 
             display: block !important;
@@ -58,7 +58,7 @@
 
         textarea { min-height: 300px !important; }
 
-        /* RESULTS BOX - DUPLICATED STYLE [cite: 2026-02-28] */
+        /* THE RESULT BOX SYSTEM */
         .res-box { background: #000; padding: 60px; border-radius: 40px; border: 10px solid #ff6600; text-align: center; }
         .res-text { font-size: 85px; color: #ffffff; }
     </style>
@@ -79,39 +79,39 @@
 
     <main class="container">
         <div id="v1" class="card active">
-            <h2 class="title">Business Profile</h2>
-            <label class="label">Trading Name</label>
-            <input type="text" id="dup_name" placeholder="NAME" oninput="sv('dup_name')">
-            <label class="label">Specialising In</label>
-            <input type="text" id="dup_trade" placeholder="TRADE" oninput="sv('dup_trade')">
-            <label class="label">Business Address</label>
-            <textarea id="dup_addr" placeholder="ADDRESS" oninput="sv('dup_addr')"></textarea>
+            <h2 class="title">BUSINESS PROFILE</h2>
+            <label class="label">TRADING NAME</label>
+            <input type="text" id="sys_name" placeholder="NAME" oninput="sv('sys_name')">
+            <label class="label">SPECIALISING IN</label>
+            <input type="text" id="sys_trade" placeholder="TRADE" oninput="sv('sys_trade')">
+            <label class="label">BUSINESS ADDRESS</label>
+            <textarea id="sys_addr" placeholder="ADDRESS" oninput="sv('sys_addr')"></textarea>
         </div>
 
         <div id="v2" class="card">
-            <h2 class="title">Bank Details</h2>
-            <label class="label">Bank Name</label>
-            <input type="text" id="dup_bank" placeholder="BANK" oninput="sv('dup_bank')">
-            <label class="label">Sort Code</label>
-            <input type="text" id="dup_sort" placeholder="00-00-00" oninput="sv('dup_sort')">
-            <label class="label">Account Number</label>
-            <input type="text" id="dup_acc" placeholder="NUMBER" oninput="sv('dup_acc')">
+            <h2 class="title">BANK DETAILS</h2>
+            <label class="label">BANK NAME</label>
+            <input type="text" id="sys_bank" placeholder="BANK" oninput="sv('sys_bank')">
+            <label class="label">SORT CODE</label>
+            <input type="text" id="sys_sort" placeholder="00-00-00" oninput="sv('sys_sort')">
+            <label class="label">ACCOUNT NUMBER</label>
+            <input type="text" id="sys_acc" placeholder="NUMBER" oninput="sv('sys_acc')">
         </div>
 
         <div id="v3" class="card">
-            <h2 class="title">VAT Calculator</h2>
-            <label class="label">Net Amount (£)</label>
+            <h2 class="title">VAT CALCULATOR</h2>
+            <label class="label">NET AMOUNT (£)</label>
             <input type="number" id="vIn" placeholder="0.00" oninput="doV()">
             <div class="res-box"><div id="vOut" class="res-text">£0.00</div></div>
         </div>
 
         <div id="v4" class="card">
-            <h2 class="title">Business Calc</h2>
-            <label class="label">Labour Cost (£)</label>
+            <h2 class="title">BUSINESS CALC</h2>
+            <label class="label">LABOUR COST (£)</label>
             <input type="number" id="bL" placeholder="0.00" oninput="doB()">
-            <label class="label">Materials Cost (£)</label>
+            <label class="label">MATERIALS COST (£)</label>
             <input type="number" id="bM" placeholder="0.00" oninput="doB()">
-            <label class="label">Markup (%)</label>
+            <label class="label">MARKUP (%)</label>
             <input type="number" id="bMk" value="20" oninput="doB()">
             <div class="res-box"><div id="bQ" class="res-text">£0.00</div></div>
         </div>
@@ -124,31 +124,4 @@
             let b = document.getElementById('m' + i);
             b.style.background = '#333'; b.style.color = '#ff6600';
         }
-        document.getElementById('v' + n).classList.add('active');
-        let act = document.getElementById('m' + n);
-        act.style.background = '#ff6600'; act.style.color = '#fff';
-    }
-
-    function sv(id) { localStorage.setItem('TBOX_DUP_' + id, document.getElementById(id).value); }
-
-    function doV() {
-        let n = parseFloat(document.getElementById('vIn').value) || 0;
-        document.getElementById('vOut').innerText = "£" + (n * 1.2).toFixed(2);
-    }
-
-    function doB() {
-        let l = parseFloat(document.getElementById('bL').value) || 0;
-        let m = parseFloat(document.getElementById('bM').value) || 0;
-        let mk = (parseFloat(document.getElementById('bMk').value) || 0) / 100;
-        document.getElementById('bQ').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
-    }
-
-    window.onload = function() {
-        ['dup_name', 'dup_trade', 'dup_addr', 'dup_bank', 'dup_sort', 'dup_acc'].forEach(id => {
-            let val = localStorage.getItem('TBOX_DUP_' + id);
-            if (val && document.getElementById(id)) document.getElementById(id).value = val;
-        });
-    };
-</script>
-</body>
-</html>
+        document.
