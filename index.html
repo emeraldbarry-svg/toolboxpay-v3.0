@@ -3,64 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v21.22 GOLDILOCKS</title>
+    <title>toolboxpay - v21.23 MODERN</title>
     <style>
-        /* BRITISH TYPOGRAPHY & RESET */
+        /* BRITISH TYPOGRAPHY & BRANDING [cite: 2020-02-20] */
         * { 
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            font-family: 'Helvetica Neue', Arial, sans-serif !important; 
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif !important; 
             font-weight: 800 !important;
         }
         
-        body { background-color: #1a1a1a; color: #ffffff; padding-top: 160px; }
+        body { background-color: #121212; color: #ffffff; padding-top: 140px; }
 
-        /* HEADER & LOGO */
-        .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #1a1a1a; }
-        header { padding: 30px 0; text-align: center; border-bottom: 5px solid #ff6600; }
-        .logo { font-size: 32px; text-transform: uppercase; letter-spacing: 1px; }
+        /* REFINED HEADER [cite: 2020-02-20] */
+        .fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #121212; }
+        header { padding: 25px 0; text-align: center; border-bottom: 4px solid #ff6600; background: #1a1a1a; }
+        .logo { font-size: 28px; text-transform: uppercase; letter-spacing: 2px; }
         .logo .orange { color: #ff6600; }
         .logo .white { color: #ffffff; }
 
         nav { background: #000; overflow-x: auto; border-bottom: 2px solid #333; }
-        .nav-inner { display: flex; padding: 20px; gap: 15px; width: max-content; }
+        .nav-inner { display: flex; padding: 15px; gap: 12px; width: max-content; }
         .nav-btn { 
-            width: 120px; padding: 18px 0; background: #333; color: #ff6600; 
-            text-align: center; border-radius: 12px; 
-            font-size: 14px; border: 1px solid #444; text-transform: uppercase;
+            width: 110px; padding: 15px 0; background: #222; color: #ff6600; 
+            text-align: center; border-radius: 8px; 
+            font-size: 13px; border: 1px solid #444; text-transform: uppercase;
         }
 
-        /* THE PERFECT CONTAINER */
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
-        .card { display: none; background: #222; padding: 35px; border-radius: 25px; border: 4px solid #ff6600; }
+        /* CLEAN CONTAINERS [cite: 2026-02-28] */
+        .container { padding: 15px; max-width: 480px; margin: 0 auto; }
+        .card { display: none; background: #1a1a1a; padding: 30px; border-radius: 20px; border: 3px solid #ff6600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .active { display: block !important; }
 
-        .title { color: #ff6600; font-size: 26px; text-transform: uppercase; margin-bottom: 35px; text-align: center; border-left: 6px solid #ff6600; padding-left: 15px; }
-        .label { color: #ffffff; font-size: 16px; display: block; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .title { color: #ff6600; font-size: 22px; text-transform: uppercase; margin-bottom: 25px; text-align: center; border-bottom: 2px solid #333; padding-bottom: 15px; }
+        .label { color: #ffffff; font-size: 14px; display: block; margin-bottom: 8px; text-transform: uppercase; opacity: 0.8; }
 
-        /* THE "JUST RIGHT" FIELD STYLE */
+        /* THE REFINED FIELD STYLE [cite: 2026-02-28] */
         input, textarea { 
             width: 100% !important; 
             display: block !important;
             background: #ffffff !important; 
             color: #000000 !important; 
             -webkit-text-fill-color: #000000 !important; 
-            border: 4px solid #ff6600 !important; 
-            border-radius: 18px !important;
-            margin-bottom: 35px !important; 
-            font-size: 24px !important; /* Bold, clear, but fits */
+            border: 3px solid #ff6600 !important; 
+            border-radius: 12px !important;
+            margin-bottom: 25px !important; 
+            font-size: 20px !important; /* Large but professionally scaled [cite: 2026-02-28] */
             outline: none !important;
-            padding: 22px 20px !important; 
+            padding: 18px 15px !important; 
             appearance: none !important;
             -webkit-appearance: none !important;
         }
 
-        textarea { min-height: 140px !important; }
+        textarea { min-height: 120px !important; line-height: 1.4; }
 
-        /* CALCULATOR BOXES */
-        .res-box { background: #000; padding: 35px; border-radius: 20px; border: 3px solid #ff6600; text-align: center; }
-        .res-text { font-size: 48px; color: #ffffff; }
+        /* CALCULATOR BOXES [cite: 2026-02-28] */
+        .res-box { background: #000; padding: 30px; border-radius: 15px; border: 2px solid #ff6600; text-align: center; }
+        .res-text { font-size: 42px; color: #ffffff; }
     </style>
 </head>
 <body>
@@ -80,24 +80,24 @@
     <main class="container">
         <div id="v1" class="card active">
             <h2 class="title">Business Profile</h2>
-            <label class="label">Full Trading Name</label>
-            <input type="text" id="g1" placeholder="Enter Name" oninput="sv('g1')">
+            <label class="label">Trading Name</label>
+            <input type="text" id="m1_name" placeholder="Enter Name" oninput="sv('m1_name')">
             
             <label class="label">Specialising In</label>
-            <input type="text" id="g2" placeholder="e.g. Plumbing" oninput="sv('g2')">
+            <input type="text" id="m1_trade" placeholder="e.g. Electrical" oninput="sv('m1_trade')">
             
             <label class="label">Business Address</label>
-            <textarea id="g3" placeholder="Full Address" oninput="sv('g3')"></textarea>
+            <textarea id="m1_addr" placeholder="Full Address" oninput="sv('m1_addr')"></textarea>
         </div>
 
         <div id="v2" class="card">
             <h2 class="title">Bank Details</h2>
             <label class="label">Bank Name</label>
-            <input type="text" id="g4" placeholder="Institution" oninput="sv('g4')">
+            <input type="text" id="m2_bank" placeholder="Institution" oninput="sv('m2_bank')">
             <label class="label">Sort Code</label>
-            <input type="text" id="g5" placeholder="00-00-00" oninput="sv('g5')">
+            <input type="text" id="m2_sort" placeholder="00-00-00" oninput="sv('m2_sort')">
             <label class="label">Account Number</label>
-            <input type="text" id="g6" placeholder="8-Digits" oninput="sv('g6')">
+            <input type="text" id="m2_acc" placeholder="8-Digits" oninput="sv('m2_acc')">
         </div>
 
         <div id="v3" class="card">
@@ -105,7 +105,7 @@
             <label class="label">Net Amount (£)</label>
             <input type="number" id="vIn" oninput="doV()">
             <div class="res-box">
-                <div style="color:#ff6600; font-size:16px; margin-bottom:15px;">TOTAL (INC 20% VAT)</div>
+                <div style="color:#ff6600; font-size:14px; margin-bottom:12px;">TOTAL (INC 20% VAT)</div>
                 <div id="vOut" class="res-text">£0.00</div>
             </div>
         </div>
@@ -116,10 +116,10 @@
             <input type="number" id="bL" oninput="doB()">
             <label class="label">Materials Cost (£)</label>
             <input type="number" id="bM" oninput="doB()">
-            <label class="label">Markup (%)</label>
+            <label class="label">Profit Markup (%)</label>
             <input type="number" id="bMk" value="20" oninput="doB()">
             <div class="res-box">
-                <div style="color:#ff6600; font-size:16px; margin-bottom:15px;">REC. QUOTE</div>
+                <div style="color:#ff6600; font-size:14px; margin-bottom:12px;">RECOMMENDED QUOTE</div>
                 <div id="bQ" class="res-text">£0.00</div>
             </div>
         </div>
@@ -130,11 +130,33 @@
         for(let i=1; i<=4; i++) {
             document.getElementById('v' + i).classList.remove('active');
             let b = document.getElementById('m' + i);
-            b.style.background = '#333'; b.style.color = '#ff6600';
+            b.style.background = '#222'; b.style.color = '#ff6600';
         }
         document.getElementById('v' + n).classList.add('active');
         let act = document.getElementById('m' + n);
         act.style.background = '#ff6600'; act.style.color = '#fff';
     }
 
-    function sv(id) { localStorage.setItem('TBOX_
+    function sv(id) { localStorage.setItem('TBOX_V2123_' + id, document.getElementById(id).value); }
+
+    function doV() {
+        let n = parseFloat(document.getElementById('vIn').value) || 0;
+        document.getElementById('vOut').innerText = "£" + (n * 1.2).toFixed(2);
+    }
+
+    function doB() {
+        let l = parseFloat(document.getElementById('bL').value) || 0;
+        let m = parseFloat(document.getElementById('bM').value) || 0;
+        let mk = (parseFloat(document.getElementById('bMk').value) || 0) / 100;
+        document.getElementById('bQ').innerText = "£" + ((l + m) * (1 + mk)).toFixed(2);
+    }
+
+    window.onload = function() {
+        ['m1_name', 'm1_trade', 'm1_addr', 'm2_bank', 'm2_sort', 'm2_acc'].forEach(id => {
+            let val = localStorage.getItem('TBOX_V2123_' + id);
+            if (val && document.getElementById(id)) document.getElementById(id).value = val;
+        });
+    };
+</script>
+</body>
+</html>
