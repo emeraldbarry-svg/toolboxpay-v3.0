@@ -3,100 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v17.8 FIXED</title>
+    <title>toolboxpay - v17.7 PERMANENT</title>
     <style>
         /* BRANDING [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: #111; color: #fff; font-family: sans-serif; }
-        #app { max-width: 500px; margin: 0 auto; background: #4a4a4a; min-height: 100vh; display: flex; flex-direction: column; }
+        body { background: #111; color: #fff; font-family: sans-serif; line-height: 1.6; }
         
-        header { background: #4a4a4a; padding: 15px; border-bottom: 4px solid #ff6600; text-align: center; }
-        .logo { font-size: 24px; font-weight: 900; text-transform: uppercase; }
+        #container { max-width: 500px; margin: 0 auto; background: #4a4a4a; min-height: 100vh; padding-bottom: 50px; }
+        
+        header { background: #4a4a4a; padding: 20px; border-bottom: 4px solid #ff6600; text-align: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 26px; font-weight: 900; text-transform: uppercase; }
         .logo span { color: #ff6600; }
 
-        /* SCROLL NAV [cite: 2026-02-28] */
-        .nav-wrap { overflow-x: auto; display: flex; gap: 10px; padding: 15px; background: #222; white-space: nowrap; -webkit-overflow-scrolling: touch; }
-        .nav-item { flex: 0 0 130px; background: #333; border: 2px solid #444; border-radius: 12px; padding: 15px 5px; text-align: center; cursor: pointer; }
-        .nav-item span { color: #ff6600; font-size: 11px; font-weight: 900; text-transform: uppercase; }
-        .nav-item.active { background: #ff6600; border-color: #fff; }
-        .nav-item.active span { color: #fff; }
+        /* LARGE SCROLLABLE NAV [cite: 2026-02-28] */
+        .nav-ribbon { overflow-x: auto; display: flex; gap: 15px; padding: 15px; background: #222; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+        .nav-item { flex: 0 0 140px; background: #333; border: 2px solid #ff6600; border-radius: 15px; padding: 20px 10px; text-align: center; text-decoration: none; }
+        .nav-item span { color: #fff; font-size: 14px; font-weight: 900; text-transform: uppercase; }
 
-        /* CONTENT [cite: 2026-02-28] */
-        #viewport { flex-grow: 1; padding: 15px; overflow-y: auto; }
-        .page { display: none; }
-        .page.active { display: block; }
-
-        .card { background: #1e1e1e; border-radius: 20px; padding: 25px; border: 1px solid #333; margin-bottom: 15px; }
-        .title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 8px; text-align: center; }
+        /* CONTENT CARDS [cite: 2026-02-28] */
+        .section-card { background: #1e1e1e; margin: 20px 15px; border-radius: 25px; padding: 30px; border: 1px solid #333; }
+        .section-title { color: #ff6600; font-size: 24px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 10px; }
         
-        label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 5px; font-weight: 900; text-transform: uppercase; }
-        .info-box { background: #000; padding: 18px; border-radius: 12px; border: 1px solid #444; color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 15px; }
+        label { display: block; font-size: 12px; color: #ff6600; margin-bottom: 8px; font-weight: 900; text-transform: uppercase; }
+        .output-box { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #444; color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 25px; }
         
-        input { width: 100%; background: #000; border: 1px solid #ff6600; color: #fff; padding: 18px; border-radius: 12px; font-size: 20px; margin-bottom: 15px; outline: none; }
-        .big-res { font-size: 32px; color: #25D366; text-align: center; font-weight: 900; padding: 15px; background: #000; border-radius: 12px; }
+        input { width: 100%; background: #000; border: 2px solid #444; color: #fff; padding: 20px; border-radius: 15px; font-size: 20px; margin-bottom: 20px; outline: none; }
+        .calc-result { font-size: 36px; color: #25D366; text-align: center; font-weight: 900; padding: 15px; background: #000; border-radius: 15px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div id="app">
+<div id="container">
     <header>
         <div class="logo"><span>TOOLBOX</span>PAY</div>
     </header>
 
-    <div class="nav-wrap">
-        <div class="nav-item active" onclick="tab('identity', this)"><span>Identity</span></div>
-        <div class="nav-item" onclick="tab('calc', this)"><span>Calculator</span></div>
-        <div class="nav-item" onclick="tab('gal', this)"><span>Gallery</span></div>
-        <div class="nav-item" onclick="tab('work', this)"><span>Work Logs</span></div>
+    <div class="nav-ribbon">
+        <a href="#profile" class="nav-item"><span>Profile</span></a>
+        <a href="#bank" class="nav-item"><span>Bank</span></a>
+        <a href="#calc" class="nav-item"><span>Calculator</span></a>
+        <a href="#gallery" class="nav-item"><span>Gallery</span></a>
+        <a href="#quotes" class="nav-item"><span>Quotes</span></a>
     </div>
 
-    <div id="viewport">
-        <div id="identity" class="page active">
-            <div class="card">
-                <div class="title">Business Profile</div>
-                <label>Business Name</label>
-                <div class="info-box">Toolboxpay</div>
-                <label>Specialising In</label>
-                <div class="info-box">App development</div>
-            </div>
-            
-            <div class="card">
-                <div class="title">Bank Details</div>
-                <label>Bank Name</label>
-                <div class="info-box">Nationwide</div>
-                <label>Sort Code</label>
-                <div class="info-box">07-02-46</div>
-                <label>Account Number</label>
-                <div class="info-box">30067390</div>
-            </div>
-        </div>
-
-        <div id="calc" class="page">
-            <div class="card">
-                <div class="title">VAT Calc</div>
-                <label>Net Amount (£)</label>
-                <input type="number" id="netIn" placeholder="0.00" oninput="doTotal()">
-                <div class="big-res" id="totalOut">£0.00</div>
-            </div>
-        </div>
-
-        <div id="gal" class="page"><div class="card"><div class="title">Gallery Ready</div></div></div>
-        <div id="work" class="page"><div class="card"><div class="title">Work Logs</div></div></div>
+    <div id="profile" class="section-card">
+        <div class="section-title">Business Profile</div>
+        <label>Business Name</label>
+        <div class="output-box">Toolboxpay</div>
+        <label>Specialising In</label>
+        <div class="output-box">App development</div>
     </div>
+
+    <div id="bank" class="section-card">
+        <div class="section-title">Bank Details</div>
+        <label>Bank Name</label>
+        <div class="output-box">Nationwide</div>
+        <label>Sort Code</label>
+        <div class="output-box">07-02-46</div>
+        <label>Account Number</label>
+        <div class="output-box">30067390</div>
+    </div>
+
+    <div id="calc" class="section-card">
+        <div class="section-title">VAT Calculator</div>
+        <label>Net Amount (£)</label>
+        <input type="number" id="netAmount" placeholder="0.00" oninput="runTotal()">
+        <div class="calc-result" id="totalDisplay">£0.00</div>
+        <p style="text-align:center; margin-top:10px; font-size:12px; color:#888;">Calculated at 20% VAT</p>
+    </div>
+
+    <div id="gallery" class="section-card">
+        <div class="section-title">Job Gallery</div>
+        <div style="text-align:center; padding:20px; border:2px dashed #444; border-radius:15px; color:#888;">
+            Gallery Storage Active
+        </div>
+    </div>
+
 </div>
 
 <script>
-    function tab(id, el) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        el.classList.add('active');
-        el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-    }
-
-    function doTotal() {
-        const n = parseFloat(document.getElementById('netIn').value) || 0;
-        document.getElementById('totalOut').innerText = "£" + (n * 1.2).toFixed(2);
+    // SIMPLE CALC [cite: 2026-02-28]
+    function runTotal() {
+        const net = parseFloat(document.getElementById('netAmount').value) || 0;
+        const total = net * 1.20;
+        document.getElementById('totalDisplay').innerText = "£" + total.toFixed(2);
     }
 </script>
 
