@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v16.0</title>
+    <title>toolboxpay - v16.1</title>
     <style>
         /* CORE SETUP */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -52,24 +52,15 @@
         .card { background: #1e1e1e; border-radius: 20px; padding: 20px; border: 1px solid #333; margin-bottom: 15px; }
         .title { color: #ff6600; font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; border-bottom: 2px solid #ff6600; padding-bottom: 8px; text-align: center; }
         
-        label { display: block; font-size: 10px; color: #ff6600; margin-bottom: 4px; font-weight: 800; text-transform: uppercase; }
-        input { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 14px; border-radius: 10px; font-size: 18px; margin-bottom: 12px; outline: none; }
+        .btn-green { width: 100%; background: #25D366; color: #000; padding: 18px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 14px; cursor: pointer; }
 
-        /* CALC SPECIFIC */
-        .calc-display { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; text-align: right; margin-top: 10px; }
-        .calc-total { color: #ff6600; font-size: 32px; font-weight: 900; display: block; }
-        .calc-sub { color: #888; font-size: 12px; font-weight: 800; margin-top: 5px; }
-
-        .vat-toggle { display: flex; align-items: center; justify-content: space-between; background: #222; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
-        .vat-toggle span { color: #fff; font-weight: 800; font-size: 14px; }
-        
-        /* British Switch Style */
-        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #ff6600; }
-        input:checked + .slider:before { transform: translateX(24px); }
+        /* GALLERY FEED */
+        #gallery-feed { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        .photo-card { background: #000; border-radius: 15px; border: 1px solid #333; overflow: hidden; position: relative; }
+        .photo-card img { width: 100%; height: auto; display: block; }
+        .photo-meta { padding: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .photo-date { color: #ff6600; font-size: 10px; font-weight: 900; }
+        .photo-del { color: #ff4444; font-size: 10px; font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -81,8 +72,8 @@
             <div class="nav-btn" id="btn-readme" onclick="show('readme')"><i>📖</i><span>ReadMe</span></div>
             <div class="nav-btn" id="btn-quotes" onclick="show('quotes')"><i>📝</i><span>Quotes</span></div>
             <div class="nav-btn" id="btn-expenses" onclick="show('expenses')"><i>🧾</i><span>Exp.</span></div>
-            <div class="nav-btn active" id="btn-calc" onclick="show('calc')"><i>🧮</i><span>Calc</span></div>
-            <div class="nav-btn" id="btn-gallery" onclick="show('gallery')"><i>📸</i><span>Gallery</span></div>
+            <div class="nav-btn" id="btn-calc" onclick="show('calc')"><i>🧮</i><span>Calc</span></div>
+            <div class="nav-btn active" id="btn-gallery" onclick="show('gallery')"><i>📸</i><span>Gallery</span></div>
             <div class="nav-btn" id="btn-bank" onclick="show('bank')"><i>🏦</i><span>Bank</span></div>
             <div class="nav-btn" id="btn-terms" onclick="show('terms')"><i>⚖️</i><span>Terms</span></div>
             <div class="nav-btn" id="btn-profile" onclick="show('profile')"><i>👤</i><span>Profile</span></div>
@@ -90,18 +81,12 @@
     </header>
 
     <div id="viewport">
-        <div id="p-calc" class="page active">
+        <div id="p-gallery" class="page active">
             <div class="card">
-                <div class="title">Labour Calculator</div>
+                <div class="title">Job Photos</div>
+                <label style="text-align:center; display:block; margin-bottom:15px; color:#aaa;">Document your work specialising in excellence.</label>
                 
-                <label>Day Rate (£)</label>
-                <input type="number" id="calc-rate" placeholder="0.00" oninput="runCalc()">
+                <input type="file" id="gal-input" accept="image/*" capture="environment" style="display:none;" onchange="addPhoto(this)">
+                <button class="btn-green" onclick="document.getElementById('gal-input').click()">CAPTURE NEW PHOTO 📸</button>
 
-                <label>Days Worked</label>
-                <input type="number" id="calc-days" value="1" oninput="runCalc()">
-
-                <div class="vat-toggle">
-                    <span>ADD VAT (20%)</span>
-                    <label class="switch">
-                        <input type="checkbox" id="calc-vat" onchange="runCalc()">
-                        <span class="slider">
+                <div id="gallery-feed">
