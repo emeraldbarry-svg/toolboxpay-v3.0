@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v13.2</title>
+    <title>toolboxpay - v13.3</title>
     <style>
         /* THEME & LAYOUT [cite: 2020-02-20, 2026-02-21] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -15,60 +15,77 @@
             position: sticky; top: 0; width: 100%; 
             background: #4a4a4a; padding: 15px 10px; z-index: 99999; 
             border-bottom: 3px solid #ff6600;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 25px rgba(0,0,0,0.6);
         }
         .logo { text-align: center; font-size: 28px; font-weight: 900; margin-bottom: 12px; pointer-events: none; }
         .logo .o { color: #ff6600; }
         .logo .w { color: #ffffff; }
 
-        /* NAVIGATION STRIP */
+        /* NAVIGATION STRIP - BIGGER BUTTONS */
         .tile-strip { 
-            display: flex; gap: 10px; overflow-x: auto; padding: 5px; 
+            display: flex; gap: 12px; overflow-x: auto; padding: 10px 5px; 
             scrollbar-width: none; -webkit-overflow-scrolling: touch;
         }
         .tile-strip::-webkit-scrollbar { display: none; }
         
-        /* THE BUTTONS [cite: 2026-02-28] */
         .jump-btn { 
-            background: #222; border: 2px solid #444; border-radius: 12px; 
-            padding: 18px 12px; display: flex; flex-direction: column; 
-            align-items: center; min-width: 100px; flex-shrink: 0;
-            cursor: pointer; transition: 0.1s; touch-action: manipulation;
+            background: #222; border: 2px solid #444; border-radius: 14px; 
+            padding: 22px 15px; display: flex; flex-direction: column; 
+            align-items: center; min-width: 110px; flex-shrink: 0;
+            cursor: pointer; transition: 0.15s; touch-action: manipulation;
         }
-        .jump-btn i { font-style: normal; font-size: 20px; margin-bottom: 4px; pointer-events: none; }
+        .jump-btn i { font-style: normal; font-size: 22px; margin-bottom: 6px; pointer-events: none; }
         .jump-btn span { color: #888; font-weight: 800; font-size: 11px; text-transform: uppercase; pointer-events: none; }
         
         /* TWO-COLOUR ACTIVE STATE [cite: 2026-02-28] */
         .jump-btn.active { 
             background: #ff6600 !important; 
             border-color: #ffffff !important; 
-            transform: scale(0.95);
+            box-shadow: 0 0 15px rgba(255,102,0,0.6);
         }
         .jump-btn.active span { color: #ffffff !important; }
 
-        /* CONTENT */
-        #content-area { width: 100%; max-width: 420px; margin: 0 auto; padding: 20px; }
+        /* CONTENT - BETTER SPACING [cite: 2026-02-28] */
+        #content-area { width: 100%; max-width: 440px; margin: 0 auto; padding: 20px; }
+        
         .section-box { 
-            background: #1e1e1e; border-radius: 25px; padding: 25px; 
-            border: 1px solid #333; margin-bottom: 60vh;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: #1e1e1e; border-radius: 25px; padding: 30px 25px; 
+            border: 2px solid #333; 
+            margin-bottom: 120px; /* Increased to prevent scrolling into each other */
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            position: relative;
         }
-        .section-title { color: #ff6600; font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; text-align: center; }
-
-        /* FORM GEAR */
-        label { display: block; font-size: 11px; color: #ff6600; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; }
-        input, select, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 16px; border-radius: 12px; font-size: 16px; margin-bottom: 15px; outline: none; }
-        .btn-green { width: 100%; background: #25D366; color: #000; padding: 20px; border: none; border-radius: 15px; font-weight: 900; text-transform: uppercase; font-size: 16px; cursor: pointer; }
         
-        .item-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        /* Clear indicator for top of section */
+        .section-box::before {
+            content: ''; position: absolute; top: -150px; height: 1px; width: 100%;
+        }
+
+        .section-title { color: #ff6600; font-size: 22px; font-weight: 900; text-transform: uppercase; margin-bottom: 25px; border-bottom: 2px solid #ff6600; padding-bottom: 12px; text-align: center; }
+
+        /* README TEXT STYLING */
+        .readme-text { font-size: 14px; color: #ddd; line-height: 1.8; }
+        .readme-text b { color: #ff6600; }
+        .readme-card { background: #111; padding: 20px; border-radius: 15px; border-left: 5px solid #ff6600; margin-bottom: 15px; }
+
+        /* FORM ELEMENTS */
+        label { display: block; font-size: 12px; color: #ff6600; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select, textarea { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 18px; border-radius: 12px; font-size: 16px; margin-bottom: 20px; outline: none; transition: border 0.3s; }
+        input:focus { border-color: #ff6600; }
+        
+        .btn-green { width: 100%; background: #25D366; color: #000; padding: 22px; border: none; border-radius: 18px; font-weight: 900; text-transform: uppercase; font-size: 17px; cursor: pointer; margin-top: 10px; }
+        
+        .item-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: center; }
         .item-row input { margin-bottom: 0; }
-        .add-row-btn { background: #333; color: #ff6600; border: 1px dashed #ff6600; padding: 12px; border-radius: 10px; width: 100%; font-weight: 900; margin-bottom: 20px; cursor: pointer; }
+        .add-row-btn { background: #2a2a2a; color: #ff6600; border: 2px dashed #ff6600; padding: 14px; border-radius: 12px; width: 100%; font-weight: 900; margin-bottom: 25px; cursor: pointer; }
 
-        .total-box { background: #000; padding: 20px; border-radius: 15px; border: 1px solid #333; margin: 15px 0; text-align: right; }
-        .total-val { font-size: 40px; color: #ff6600; font-weight: 900; }
+        .total-box { background: #000; padding: 25px; border-radius: 20px; border: 2px solid #333; margin: 20px 0; text-align: right; }
+        .total-val { font-size: 44px; color: #ff6600; font-weight: 900; }
         
-        .photo-card { background: #000; border-radius: 15px; overflow: hidden; margin-bottom: 15px; border: 1px solid #333; }
-        .photo-card img { width: 100%; height: 200px; object-fit: cover; }
+        .photo-card { background: #000; border-radius: 20px; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
+        .photo-card img { width: 100%; height: 220px; object-fit: cover; border-bottom: 2px solid #333; }
+        
+        .footer-pad { height: 100px; }
     </style>
 </head>
 <body>
@@ -88,99 +105,118 @@
     <div id="content-area">
         <div id="r-box" class="section-box">
             <div class="section-title">Operating Manual</div>
-            <div style="font-size:14px; color:#ccc; line-height:1.6; background:#111; padding:20px; border-radius:15px; border-left:4px solid #ff6600;">
-                <p>• <b>Fixed Buttons:</b> We are now using 'PointerDown' logic. The buttons respond the instant you touch them.</p><br>
-                <p>• <b>Active Tracking:</b> The buttons glow <b>Orange & White</b> to show exactly where you are.</p><br>
-                <p>• <b>Manual Flow:</b> No more jumping. Just smooth, clean scrolling.</p>
+            <div class="readme-text">
+                <div class="readme-card">
+                    <p><b>1. Navigation:</b> Use the top bar to jump between tools. The active tool will glow <b>Orange & White</b>.</p>
+                </div>
+                <div class="readme-card">
+                    <p><b>2. Smart Quotes:</b> Select a client, add labour or material lines, and hit 'Send'. It formats everything for WhatsApp instantly.</p>
+                </div>
+                <div class="readme-card">
+                    <p><b>3. Job Gallery:</b> Take photos and <b>Tag</b> them to a client. Use the Filter at the top to see only that job's history.</p>
+                </div>
+                <div class="readme-card">
+                    <p><b>4. Profile:</b> Enter your bank details once in the 'Profile' section; they are saved automatically for every quote you send.</p>
+                </div>
             </div>
         </div>
 
         <div id="q-box" class="section-box">
             <div class="section-title">Job Quote</div>
-            <label>Client</label><select id="q-cli-pick"></select>
-            <label>Labour</label>
-            <div id="lab-container"><div class="item-row"><input type="text" class="l-desc" style="flex:2;" placeholder="Labour Task"><input type="number" class="l-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
-            <button class="add-row-btn" onclick="addNewRow('lab-container', 'l-desc', 'l-price')">+ ADD LABOUR</button>
-            <label>Materials</label>
-            <div id="mat-container"><div class="item-row"><input type="text" class="m-desc" style="flex:2;" placeholder="Material"><input type="number" class="m-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
-            <button class="add-row-btn" onclick="addNewRow('mat-container', 'm-desc', 'm-price')">+ ADD MATERIAL</button>
+            <label>Select Client</label><select id="q-cli-pick"></select>
+            <label>Labour Window</label>
+            <div id="lab-container"><div class="item-row"><input type="text" class="l-desc" style="flex:2;" placeholder="Description"><input type="number" class="l-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
+            <button class="add-row-btn" onclick="addNewRow('lab-container', 'l-desc', 'l-price')">+ ADD LABOUR ITEM</button>
+            
+            <label>Materials Window</label>
+            <div id="mat-container"><div class="item-row"><input type="text" class="m-desc" style="flex:2;" placeholder="Item"><input type="number" class="m-price" style="flex:0.8;" placeholder="£" oninput="runTotal()"></div></div>
+            <button class="add-row-btn" onclick="addNewRow('mat-container', 'm-desc', 'm-price')">+ ADD MATERIAL ITEM</button>
+            
             <div class="total-box"><div class="total-val" id="qt">£0.00</div></div>
-            <button class="btn-green" onclick="sendW()">Send Quote</button>
+            <button class="btn-green" onclick="sendW()">Send Quote via WhatsApp</button>
         </div>
 
         <div id="c-box" class="section-box">
             <div class="section-title">Client Records</div>
-            <label>Name</label><input type="text" id="cn">
-            <label>Address</label><textarea id="ca" style="height:60px;"></textarea>
-            <label>Phone</label><input type="tel" id="ctel">
-            <button class="btn-green" style="background:#ff6600; color:#fff;" onclick="saveC()">Save Client</button>
-            <div id="cl-list" style="margin-top:20px;"></div>
+            <label>Full Name</label><input type="text" id="cn">
+            <label>Site Address</label><textarea id="ca" style="height:80px;"></textarea>
+            <label>Phone Number</label><input type="tel" id="ctel">
+            <button class="btn-green" style="background:#ff6600; color:#fff;" onclick="saveC()">Save Client Details</button>
+            <div id="cl-list" style="margin-top:25px;"></div>
         </div>
 
         <div id="m-box" class="section-box">
             <div class="section-title">Pricing Tool</div>
-            <label>Day Rate (£)</label><input type="number" id="dr" oninput="calcM()">
-            <label>Days</label><input type="number" id="dn" oninput="calcM()">
-            <label>Materials (£)</label><input type="number" id="mc" oninput="calcM()">
+            <label>Day Rate (£)</label><input type="number" id="dr" placeholder="0.00" oninput="calcM()">
+            <label>Number of Days</label><input type="number" id="dn" placeholder="0" oninput="calcM()">
+            <label>Total Materials (£)</label><input type="number" id="mc" placeholder="0.00" oninput="calcM()">
+            <div style="font-size:11px; color:#888; text-align:center; margin-bottom:10px;">Calculated with +20% Markup</div>
             <div class="total-box"><div class="total-val" id="mt">£0.00</div></div>
         </div>
 
         <div id="p-box" class="section-box">
             <div class="section-title">Job Gallery</div>
-            <label>Filter By Client</label><select id="p-filter" onchange="loadP()"><option value="ALL">All Photos</option></select>
-            <label>Tag to Client</label><select id="p-tag-cli"></select>
-            <input type="file" id="pf" style="display:none;" onchange="handleP(this)">
-            <button class="btn-green" onclick="document.getElementById('pf').click()">Add Photo</button>
-            <div id="p-grid" style="margin-top:20px;"></div>
+            <label>Filter Gallery by Client</label><select id="p-filter" onchange="loadP()"><option value="ALL">Show All Photos</option></select>
+            <label>Tag New Photo to Client</label><select id="p-tag-cli"></select>
+            <input type="file" id="pf" accept="image/*" style="display:none;" onchange="handleP(this)">
+            <button class="btn-green" onclick="document.getElementById('pf').click()">Add Job Photo</button>
+            <div id="p-grid" style="margin-top:25px;"></div>
         </div>
 
         <div id="b-box" class="section-box">
             <div class="section-title">Business Profile</div>
-            <label>Trading Name</label><input type="text" id="bn" oninput="sv('bn',this.value)">
-            <label>Sort Code</label><input type="text" id="sc" oninput="sv('sc',this.value)">
-            <label>Account Number</label><input type="text" id="an" oninput="sv('an',this.value)">
-            <label>Terms</label><textarea id="tc" oninput="sv('tc',this.value)"></textarea>
+            <label>Trading Name</label><input type="text" id="bn" placeholder="e.g. JS Plumbing" oninput="sv('bn',this.value)">
+            <label>Bank Sort Code</label><input type="text" id="sc" placeholder="00-00-00" oninput="sv('sc',this.value)">
+            <label>Bank Account Number</label><input type="text" id="an" placeholder="12345678" oninput="sv('an',this.value)">
+            <label>Standard Terms</label><textarea id="tc" placeholder="e.g. Payment due on receipt." style="height:120px;" oninput="sv('tc',this.value)"></textarea>
         </div>
+
+        <div class="footer-pad"></div>
     </div>
 
 <script>
-    /* HYPER-RESPONSIVE NAVIGATION [cite: 2026-02-28] */
+    /* HYPER-RESPONSIVE NAVIGATION */
     function goto(id) {
-        // Instant visual feedback
         document.querySelectorAll('.jump-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('nav-' + id).classList.add('active');
         
-        // Scroll logic
         const target = document.getElementById(id);
+        const headerOffset = 180;
+        const elementPosition = target.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
         window.scrollTo({
-            top: target.offsetTop - 150,
+            top: offsetPosition,
             behavior: "smooth"
         });
 
-        // Center the button in the horizontal strip
         document.getElementById('nav-' + id).scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
 
-    /* SCROLL HIGHLIGHTER (RELIABLE) */
+    /* SCROLL HIGHLIGHTER */
+    let scrollTimeout;
     window.addEventListener("scroll", () => {
-        let current = "";
-        document.querySelectorAll(".section-box").forEach(sb => {
-            if (window.pageYOffset >= (sb.offsetTop - 250)) {
-                current = sb.getAttribute("id");
+        if (scrollTimeout) { window.cancelAnimationFrame(scrollTimeout); }
+        scrollTimeout = window.requestAnimationFrame(() => {
+            let current = "";
+            document.querySelectorAll(".section-box").forEach(sb => {
+                if (window.pageYOffset >= (sb.offsetTop - 250)) {
+                    current = sb.getAttribute("id");
+                }
+            });
+            if (current) {
+                document.querySelectorAll('.jump-btn').forEach(b => b.classList.remove('active'));
+                const activeBtn = document.getElementById('nav-' + current);
+                if(activeBtn) activeBtn.classList.add('active');
             }
         });
-        if (current) {
-            document.querySelectorAll('.jump-btn').forEach(b => b.classList.remove('active'));
-            const activeBtn = document.getElementById('nav-' + current);
-            if(activeBtn) activeBtn.classList.add('active');
-        }
     });
 
-    /* CORE LOGIC */
+    /* QUOTE LOGIC */
     function addNewRow(contId, dCl, pCl) {
         const d = document.createElement('div');
         d.className = 'item-row';
-        d.innerHTML = `<input type="text" class="${dCl}" style="flex:2;"><input type="number" class="${pCl}" style="flex:0.8;" oninput="runTotal()"><span onclick="this.parentElement.remove();runTotal();" style="color:red;padding:12px;font-weight:bold;cursor:pointer;">×</span>`;
+        d.innerHTML = `<input type="text" class="${dCl}" style="flex:2;"><input type="number" class="${pCl}" style="flex:0.8;" oninput="runTotal()"><span onclick="this.parentElement.remove();runTotal();" style="color:#ff4444;padding:12px;font-weight:bold;cursor:pointer;font-size:20px;">×</span>`;
         document.getElementById(contId).appendChild(d);
     }
     function runTotal() {
@@ -191,37 +227,41 @@
         const b = document.getElementById('bn').value;
         const s = document.getElementById('sc').value;
         const a = document.getElementById('an').value;
-        let msg = `*QUOTE*%0A%0A*TOTAL: ${document.getElementById('qt').innerText}*%0A%0APay: ${b} (${s}/${a})`;
+        const client = document.getElementById('q-cli-pick').value;
+        let msg = `*QUOTE FROM ${b.toUpperCase()}*%0A%0A*CLIENT:* ${client}%0A%0A*TOTAL: ${document.getElementById('qt').innerText}*%0A%0A*PAYMENT DETAILS:*%0ASort: ${s}%0AAcc: ${a}%0A%0A*TERMS:*%0A${encodeURIComponent(document.getElementById('tc').value)}`;
         window.open("https://wa.me/?text=" + msg);
     }
+
+    /* CLIENTS & PHOTOS */
     function saveC() {
         let n = document.getElementById('cn').value;
         if(!n) return;
         let l = JSON.parse(localStorage.getItem('TBP_CL') || "[]");
         l.push({n, a: document.getElementById('ca').value, t: document.getElementById('ctel').value});
         localStorage.setItem('TBP_CL', JSON.stringify(l));
-        document.getElementById('cn').value=''; loadC();
+        document.getElementById('cn').value=''; document.getElementById('ca').value=''; document.getElementById('ctel').value='';
+        loadC();
     }
     function loadC() {
         let l = JSON.parse(localStorage.getItem('TBP_CL') || "[]");
         let h = ""; let s = '<option>Select Client...</option>';
         l.forEach(c => {
-            h += `<div style="background:#000;padding:15px;border-radius:15px;margin-bottom:10px;border-left:4px solid #ff6600;"><b>${c.n}</b></div>`;
+            h += `<div style="background:#000;padding:18px;border-radius:15px;margin-bottom:12px;border-left:5px solid #ff6600;box-shadow:0 4px 10px rgba(0,0,0,0.3);"><b>${c.n}</b><br><small style="color:#888;">${c.a}</small></div>`;
             s += `<option value="${c.n}">${c.n}</option>`;
         });
-        document.getElementById('cl-list').innerHTML = h;
+        document.getElementById('cl-list').innerHTML = h || "<p style='color:#666;text-align:center;'>No clients saved yet.</p>";
         document.getElementById('q-cli-pick').innerHTML = s;
         document.getElementById('p-tag-cli').innerHTML = s;
-        document.getElementById('p-filter').innerHTML = '<option value="ALL">All Photos</option>' + s;
+        document.getElementById('p-filter').innerHTML = '<option value="ALL">Show All Photos</option>' + s;
     }
     function handleP(input) {
         const cli = document.getElementById('p-tag-cli').value;
-        if(cli === "Select Client...") { alert("Tag a client first"); return; }
+        if(cli === "Select Client...") { alert("Please tag a client first"); return; }
         if(input.files[0]) {
             let r = new FileReader();
             r.onload = function(e) {
                 let ph = JSON.parse(localStorage.getItem('TBP_PH_V3') || "[]");
-                ph.push({src: e.target.result, cli: cli});
+                ph.push({src: e.target.result, cli: cli, dt: new Date().toLocaleDateString('en-GB')});
                 localStorage.setItem('TBP_PH_V3', JSON.stringify(ph)); loadP();
             };
             r.readAsDataURL(input.files[0]);
@@ -232,10 +272,11 @@
         const ph = JSON.parse(localStorage.getItem('TBP_PH_V3') || "[]");
         let h = "";
         ph.forEach(p => {
-            if(f === "ALL" || p.cli === f) h += `<div class="photo-card"><img src="${p.src}"><div style="padding:10px;font-size:10px;color:#ff6600;">${p.cli}</div></div>`;
+            if(f === "ALL" || p.cli === f) h += `<div class="photo-card"><img src="${p.src}"><div style="padding:12px;display:flex;justify-content:space-between;align-items:center;"><span style="color:#ff6600;font-weight:bold;font-size:12px;">${p.cli}</span><span style="color:#666;font-size:10px;">${p.dt}</span></div></div>`;
         });
-        document.getElementById('p-grid').innerHTML = h;
+        document.getElementById('p-grid').innerHTML = h || "<p style='color:#666;text-align:center;'>No photos found.</p>";
     }
+    
     function calcM() {
         let r = parseFloat(document.getElementById('dr').value) || 0;
         let d = parseFloat(document.getElementById('dn').value) || 0;
@@ -249,7 +290,7 @@
         document.getElementById('bn').value = localStorage.getItem('TBP_bn') || "";
         document.getElementById('sc').value = localStorage.getItem('TBP_sc') || "";
         document.getElementById('an').value = localStorage.getItem('TBP_an') || "";
-        document.getElementById('tc').value = localStorage.getItem('TBP_tc') || "";
+        document.getElementById('tc').value = localStorage.getItem('TBP_tc') || "1. Quote valid for 30 days.\n2. Payment due on completion.";
     };
 </script>
 </body>
