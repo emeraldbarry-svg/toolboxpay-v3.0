@@ -3,19 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - v22.11 Secure</title>
+    <title>toolboxpay - v22.11 LIVE</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <button class="top-btn is-hidden" id="goTop">TOP</button>
+
     <div class="app-shell">
         <header>
             <div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div>
         </header>
         
-        <main>
-            <section class="card">
-                <h2 class="title">SYSTEM ONLINE</h2>
-                <p style="color:white; text-align:center;">If you see this text, the HTML is working.</p>
+        <main id="main-container">
+            <section class="card" id="profileSection">
+                <h2 class="title">BUSINESS PROFILE</h2>
+                <label class="lbl">TRADING NAME</label>
+                <input type="text" id="fn_name" class="save-field" placeholder="Enter Company Name">
+                <label class="lbl">SPECIALISING IN</label>
+                <input type="text" id="fn_trade" class="save-field" placeholder="e.g. Carpentry">
+                <label class="lbl">ADDRESS</label>
+                <textarea id="fn_addr" class="save-field" placeholder="Registered Office Address"></textarea>
+            </section>
+
+            <section class="card" id="bankSection">
+                <h2 class="title">BANK DETAILS</h2>
+                <label class="lbl">BANK NAME</label><input type="text" id="fn_bank" class="save-field">
+                <label class="lbl">SORT CODE</label><input type="text" id="fn_sort" class="save-field" placeholder="00-00-00">
+                <label class="lbl">ACCOUNT NUMBER</label><input type="text" id="fn_acc" class="save-field" placeholder="8-digit number">
+            </section>
+
+            <section class="card" id="vatSection">
+                <h2 class="title">VAT CALCULATOR</h2>
+                <label class="lbl">NET AMOUNT (£)</label>
+                <input type="number" id="vIn" placeholder="0.00">
+                <div class="res-box"><div id="vOut" class="res-val">£0.00</div></div>
+            </section>
+
+            <section class="card" id="bizSection">
+                <h2 class="title">BUSINESS CALC</h2>
+                <label class="lbl">LABOUR (£)</label><input type="number" id="bL" placeholder="0.00">
+                <label class="lbl">MATERIALS (£)</label><input type="number" id="bM" placeholder="0.00">
+                <label class="lbl">MARKUP (%)</label><input type="number" id="bMk" value="20">
+                <div class="res-box"><div id="bQ" class="res-val">£0.00</div></div>
             </section>
         </main>
     </div>
