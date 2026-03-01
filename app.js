@@ -1,68 +1,76 @@
-/* v22.07 - Senior Frontend Engineering Update 
-   Focus: State-driven logic and numerical validation [cite: 2026-03-01]
+/* v22.08 - Senior Frontend Engineering Update 
+   Focus: VAT Integration and Currency Localisation [cite: 2026-03-01]
 */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Select existing elements without renaming classes [cite: 2026-03-01]
+    // 1. SELECTORS - BUSINESS CALC [cite: 2026-03-01]
     const labourInput = document.getElementById('bL');
     const materialInput = document.getElementById('bM');
     const markupInput = document.getElementById('bMk');
-    const output = document.getElementById('bQ');
-    const card = document.getElementById('calcSection');
+    const bizOutput = document.getElementById('bQ');
+    const bizCard = document.getElementById('calcSection');
+
+    // 2. SELECTORS - VAT CALC [cite: 2026-03-01]
+    const vatInput = document.getElementById('vIn');
+    const vatOutput = document.getElementById('vOut');
+    const vatCard = document.querySelector('.card:has(#vIn)'); // Targets the VAT card container
+
+    // 3. SELECTORS - GENERAL [cite: 2026-02-28]
     const topBtn = document.getElementById('goTop');
 
     /**
-     * core calculation engine
-     * Handles British currency formatting and state classes [cite: 2020-02-20]
+     * BUSINESS CALCULATION ENGINE [cite: 2020-02-20]
      */
-    const calculateResults = () => {
-        // Parse values with fallbacks [cite: 2026-03-01]
+    const calculateBizResults = () => {
         const l = parseFloat(labourInput.value) || 0;
         const m = parseFloat(materialInput.value) || 0;
         const mk = (parseFloat(markupInput.value) || 0) / 100;
 
-        // 1. Validate Labour Input State [cite: 2026-03-01]
+        // Validation States [cite: 2026-03-01]
         if (labourInput.value !== "" && l < 0) {
             labourInput.classList.add('has-error');
-            document.getElementById('labourError').classList.remove('is-hidden');
         } else {
             labourInput.classList.remove('has-error');
-            document.getElementById('labourError').classList.add('is-hidden');
         }
 
-        // 2. Validate Material Input State [cite: 2026-03-01]
-        if (materialInput.value !== "" && m < 0) {
-            materialInput.classList.add('has-error');
-            document.getElementById('materialError').classList.remove('is-hidden');
-        } else {
-            materialInput.classList.remove('has-error');
-            document.getElementById('materialError').classList.add('is-hidden');
+        if (bizCard) {
+            bizCard.classList.add('is-active');
+            setTimeout(() => bizCard.classList.remove('is-active'), 600);
         }
 
-        // 3. Trigger Active UI State [cite: 2026-03-01]
-        if (l > 0 || m > 0) {
-            card.classList.add('is-active');
-            // Brief timeout to allow the orange glow to pulse [cite: 2020-02-21]
-            setTimeout(() => card.classList.remove('is-active'), 600);
-        }
-
-        // 4. Final Calculation [cite: 2020-02-20]
         const total = (l + m) * (1 + mk);
-        output.innerText = "£" + total.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        bizOutput.innerText = "£" + total.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
-    // Attach listeners for real-time interaction [cite: 2026-03-01]
-    if (labourInput) labourInput.addEventListener('input', calculateResults);
-    if (materialInput) materialInput.addEventListener('input', calculateResults);
-    if (markupInput) markupInput.addEventListener('input', calculateResults);
+    /**
+     * VAT CALCULATION ENGINE [cite: 2026-02-28]
+     */
+    const calculateVAT = () => {
+        if (!vatInput || !vatOutput) return;
 
-    // Navigation Logic [cite: 2026-02-28]
+        const net = parseFloat(vatInput.value) || 0;
+        const gross = net * 1.20; // Standard 20% VAT [cite: 2026-02-28]
+
+        // Trigger Orange Glow State [cite: 2020-02-21]
+        if (vatCard) {
+            vatCard.classList.add('is-active');
+            setTimeout(() => vatCard.classList.remove('is-active'), 600);
+        }
+
+        vatOutput.innerText = "£" + gross.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    };
+
+    // 4. ATTACH EVENT LISTENERS [cite: 2026-03-01]
+    if (labourInput) labourInput.addEventListener('input', calculateBizResults);
+    if (materialInput) materialInput.addEventListener('input', calculateBizResults);
+    if (markupInput) markupInput.addEventListener('input', calculateBizResults);
+    
+    if (vatInput) vatInput.addEventListener('input', calculateVAT);
+
+    // 5. NAVIGATION LOGIC [cite: 2026-02-28]
     if (topBtn) {
         topBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 });
