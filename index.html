@@ -3,19 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - v23.05 Full Restore</title>
-    <link rel="stylesheet" href="css/style.css?v=23.05">
+    <title>toolboxpay - v24.00</title>
+    <link rel="stylesheet" href="css/style.css?v=24.00">
     <style>
-        /* Essential layout for the new buttons and fields */
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
         .store-btn { grid-column: span 2; background: #FF8C00; color: white; border: none; padding: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase; }
         .edit-btn { background: #333; color: #FF8C00; border: 2px solid #FF8C00; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; }
         .clear-btn { background: #444; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; }
         .gen-row { display: flex; gap: 5px; align-items: center; }
         .gen-btn { background: #FF8C00; color: white; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.7rem; }
-        .store-btn:active, .edit-btn:active, .clear-btn:active, .gen-btn:active { opacity: 0.7; }
-        
-        /* Ensure logo colours are strictly applied */
         .orange { color: #FF8C00; }
         .white { color: #FFFFFF; }
     </style>
@@ -34,6 +30,31 @@
     </nav>
     
     <main id="main-container">
+        <section id="client" class="page">
+            <div class="card">
+                <h2 class="title">CLIENT DETAILS</h2>
+                <label class="lbl">CLIENT NAME</label><input type="text" id="cl_name" class="save-field">
+                
+                <label class="lbl">CLIENT EMAIL</label><input type="email" id="cl_email" class="save-field">
+                
+                <label class="lbl">SITE ADDRESS</label><textarea id="cl_addr" class="save-field"></textarea>
+                <label class="lbl">MOBILE NUMBER</label><input type="tel" id="cl_mob" class="save-field">
+                <label class="lbl">LANDLINE NUMBER</label><input type="tel" id="cl_land" class="save-field">
+                
+                <label class="lbl">REFERENCE / JOB NO.</label>
+                <div class="gen-row">
+                    <input type="text" id="cl_ref" class="save-field" style="flex:1;">
+                    <button class="gen-btn" onclick="generateRef()">GEN</button>
+                </div>
+
+                <div class="btn-grid">
+                    <button class="store-btn" onclick="manualStore()">STORE DETAILS</button>
+                    <button class="edit-btn" onclick="focusFirst()">EDIT</button>
+                    <button class="clear-btn" onclick="clearClientFields()">CLEAR</button>
+                </div>
+            </div>
+        </section>
+
         <section id="profile" class="page active">
             <div class="card">
                 <h2 class="title">BUSINESS PROFILE</h2>
@@ -54,27 +75,6 @@
                 <label class="lbl">SORT CODE</label><input type="text" id="fn_sort" class="save-field">
                 <label class="lbl">ACCOUNT NUMBER</label><input type="text" id="fn_acc" class="save-field">
                 <label class="lbl">IBAN / SWIFT</label><input type="text" id="fn_iban" class="save-field">
-            </div>
-        </section>
-
-        <section id="client" class="page">
-            <div class="card">
-                <h2 class="title">CLIENT DETAILS</h2>
-                <label class="lbl">CLIENT NAME</label><input type="text" id="cl_name" class="save-field">
-                <label class="lbl">SITE ADDRESS</label><textarea id="cl_addr" class="save-field"></textarea>
-                <label class="lbl">CLIENT EMAIL</label><input type="email" id="cl_email" class="save-field">
-                <label class="lbl">MOBILE NUMBER</label><input type="tel" id="cl_mob" class="save-field">
-                <label class="lbl">LANDLINE NUMBER</label><input type="tel" id="cl_land" class="save-field">
-                <label class="lbl">REFERENCE / JOB NO.</label>
-                <div class="gen-row">
-                    <input type="text" id="cl_ref" class="save-field" style="flex:1;">
-                    <button class="gen-btn" onclick="generateRef()">GEN</button>
-                </div>
-                <div class="btn-grid">
-                    <button class="store-btn" onclick="manualStore()">STORE DETAILS</button>
-                    <button class="edit-btn" onclick="focusFirst()">EDIT</button>
-                    <button class="clear-btn" onclick="clearClientFields()">CLEAR</button>
-                </div>
             </div>
         </section>
 
@@ -129,6 +129,6 @@
         </section>
     </main>
 
-    <script src="js/app.js?v=23.05"></script>
+    <script src="js/app.js?v=24.00"></script>
 </body>
 </html>
