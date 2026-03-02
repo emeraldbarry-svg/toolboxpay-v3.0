@@ -3,214 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v36.00 RECOVERY</title>
+    <title>TOOLBOXPAY - RESTORE v38.00</title>
     <style>
-        :root { --orange: #FF8C00; --dark: #1a1a1a; --card: #262626; --text: #ffffff; }
-        body { background-color: var(--dark); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-        header { background: #000; padding: 20px; text-align: center; border-bottom: 2px solid var(--orange); }
-        .logo { font-weight: 900; font-size: 1.8rem; letter-spacing: 1px; }
-        .orange { color: var(--orange); }
-        .white { color: #fff; }
+        /* Orange & White Theme [cite: 2026-02-20, 2026-02-21] */
+        :root { --orange: #FF8C00; --dark-bg: #121212; --card-bg: #1e272e; }
+        body { background: var(--dark-bg); color: #ffffff; font-family: Arial, sans-serif; margin: 0; padding: 0; }
         
-        /* Navigation */
-        .nav-reel { display: flex; overflow-x: auto; background: #111; padding: 10px; gap: 10px; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
-        .reel-btn { background: #333; color: #aaa; border: none; padding: 10px 20px; border-radius: 20px; white-space: nowrap; font-weight: bold; font-size: 0.8rem; }
-        .reel-btn.active { background: var(--orange); color: white; }
+        header { background: #000; padding: 25px; text-align: center; border-bottom: 3px solid var(--orange); }
+        .logo-t { color: var(--orange); font-weight: 900; font-size: 1.8rem; }
+        .logo-p { color: #ffffff; font-weight: 900; font-size: 1.8rem; }
 
-        /* Layout */
-        main { padding: 15px; padding-bottom: 100px; }
+        /* Navigation Reel */
+        .nav-reel { display: flex; overflow-x: auto; background: #1a1a1a; padding: 12px; gap: 10px; border-bottom: 1px solid #333; }
+        .reel-btn { background: #333; color: #fff; border: 1px solid var(--orange); padding: 12px 20px; border-radius: 25px; white-space: nowrap; font-weight: bold; cursor: pointer; }
+        .reel-btn.active { background: var(--orange); }
+
+        /* Content Areas */
+        main { padding: 15px; }
         .page { display: none; }
         .page.active { display: block; }
-        .card { background: var(--card); border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin-bottom: 20px; }
-        .title { color: var(--orange); font-size: 1.2rem; margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #444; padding-bottom: 10px; }
+        .card { background: var(--card-bg); border: 1px solid var(--orange); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        h2 { border-bottom: 1px solid var(--orange); padding-bottom: 10px; text-transform: uppercase; font-size: 1.2rem; }
 
-        /* Form Fields */
-        .lbl { display: block; font-size: 0.75rem; font-weight: bold; margin-bottom: 8px; color: #bbb; text-transform: uppercase; }
-        input, textarea { width: 100%; padding: 15px; background: #111; border: 1px solid #444; border-radius: 8px; color: white; margin-bottom: 20px; box-sizing: border-box; font-size: 1rem; }
-        input:focus { border-color: var(--orange); outline: none; }
+        /* Form Elements */
+        .lbl { display: block; color: var(--orange); font-weight: bold; font-size: 0.8rem; margin: 15px 0 5px; text-transform: uppercase; }
+        input, textarea { width: 100%; padding: 15px; border-radius: 8px; border: none; background: #fff; color: #000; font-size: 1.1rem; box-sizing: border-box; }
 
-        /* Chunky Mobile Buttons */
-        .action-stack { display: flex; flex-direction: column; gap: 12px; }
-        .btn-main { width: 100%; padding: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; text-transform: uppercase; border: none; font-size: 1rem; }
-        .orange-btn { background: var(--orange); color: white; }
-        .dark-btn { background: #333; color: var(--orange); border: 2px solid var(--orange); }
-        .grey-btn { background: #444; color: white; }
-        
-        .gen-row { display: flex; gap: 8px; align-items: flex-start; }
-        .gen-btn { background: var(--orange); color: white; border: none; padding: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; }
+        /* Chunky Mobile Buttons [cite: 2026-03-02] */
+        .action-stack { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .btn-chunky { width: 100%; padding: 20px; border-radius: 12px; border: none; font-weight: bold; text-transform: uppercase; font-size: 1rem; cursor: pointer; }
+        .btn-orange { background: var(--orange); color: #fff; }
+        .btn-outline { background: transparent; border: 2px solid var(--orange); color: var(--orange); }
 
-        /* Results Display */
-        .res-box { background: #111; padding: 15px; border-radius: 8px; border-left: 4px solid var(--orange); margin-top: 10px; }
-        .res-val { font-size: 1.8rem; font-weight: bold; color: var(--orange); }
-
-        /* Success Overlay */
-        #success-tick { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 0 30px rgba(0,0,0,0.5); text-align: center; }
-        .circle { width: 90px; height: 90px; border: 6px solid #28a745; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
-        .tick { color: #28a745; font-size: 60px; font-weight: bold; }
+        /* Success Haptic Overlay [cite: 2026-03-02] */
+        #success-overlay { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 40px; border-radius: 20px; text-align: center; z-index: 1000; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
+        .tick-icon { font-size: 50px; color: #2ecc71; }
     </style>
 </head>
 <body>
-    <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
 
-    <div id="success-tick"><div class="circle"><span class="tick">✔</span></div><p style="color:#333; font-weight:bold; margin-top:15px; font-size:1.2rem;">DONE</p></div>
+<header><span class="logo-t">TOOLBOX</span><span class="logo-p">PAY</span></header>
 
-    <nav class="nav-reel" id="nav-bar">
-        <button class="reel-btn active" onclick="nav('profile', this)">PROFILE</button>
-        <button class="reel-btn" onclick="nav('bank', this)">BANK</button>
-        <button class="reel-btn" onclick="nav('client', this)">CLIENT</button>
-        <button class="reel-btn" onclick="nav('vat', this)">VAT</button>
-        <button class="reel-btn" onclick="nav('calc', this)">BIZ CALC</button>
-    </nav>
-    
-    <main>
-        <section id="profile" class="page active">
-            <div class="card">
-                <h2 class="title">BUSINESS PROFILE</h2>
-                <label class="lbl">TRADING NAME / BUSINESS NAME</label>
-                <input type="text" id="fn_name" class="save-field">
-                <label class="lbl">BUSINESS EMAIL ADDRESS</label>
-                <input type="email" id="fn_email" class="save-field">
-                <label class="lbl">BUSINESS ADDRESS</label>
-                <textarea id="fn_addr" class="save-field" style="height:80px;"></textarea>
+<div id="success-overlay"><div class="tick-icon">✔</div><b style="color:#000">ACTION SAVED</b></div>
+
+<nav class="nav-reel">
+    <button class="reel-btn active" onclick="openTab('profile', this)">PROFILE</button>
+    <button class="reel-btn" onclick="openTab('bank', this)">BANK</button>
+    <button class="reel-btn" onclick="openTab('client', this)">CLIENT</button>
+    <button class="reel-btn" onclick="openTab('vat', this)">VAT</button>
+</nav>
+
+<main>
+    <section id="profile" class="page active">
+        <div class="card">
+            <h2>Business Profile</h2>
+            <label class="lbl">Trading Name / Business Name</label>
+            <input type="text" id="fn_name" class="save-me">
+            <label class="lbl">Specialising In / Primary Trade</label>
+            <input type="text" id="fn_trade" class="save-me">
+            <label class="lbl">Business Email Address</label>
+            <input type="email" id="fn_email" class="save-me">
+            <label class="lbl">Business Address</label>
+            <textarea id="fn_addr" class="save-me" rows="4"></textarea>
+        </div>
+    </section>
+
+    <section id="bank" class="page">
+        <div class="card">
+            <h2>Bank Details</h2>
+            <label class="lbl">Full Bank Name</label>
+            <input type="text" id="fn_bank" class="save-me">
+            <label class="lbl">Sort Code (6 Digits)</label>
+            <input type="text" id="fn_sort" class="save-me" placeholder="00-00-00">
+            <label class="lbl">Account Number (8 Digits)</label>
+            <input type="text" id="fn_acc" class="save-me">
+        </div>
+    </section>
+
+    <section id="client" class="page">
+        <div class="card">
+            <h2>Client Details</h2>
+            <label class="lbl">Client Email Address</label>
+            <input type="email" id="cl_email" class="save-me">
+            <label class="lbl">Full Client Name</label>
+            <input type="text" id="cl_name" class="save-me">
+            <label class="lbl">Site Address</label>
+            <textarea id="cl_addr" class="save-me" rows="3"></textarea>
+            
+            <div class="action-stack">
+                <button class="btn-chunky btn-orange" onclick="triggerDone()">Store Client Details</button>
+                <button class="btn-chunky btn-outline" onclick="clearClientFields()">Clear Fields</button>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="bank" class="page">
-            <div class="card">
-                <h2 class="title">BANK DETAILS</h2>
-                <label class="lbl">FULL BANK NAME</label>
-                <input type="text" id="fn_bank" class="save-field" placeholder="e.g. Barclays">
-                <label class="lbl">SORT CODE (6 DIGITS)</label>
-                <input type="text" id="fn_sort" class="save-field" placeholder="00-00-00">
-                <label class="lbl">ACCOUNT NUMBER (8 DIGITS)</label>
-                <input type="text" id="fn_acc" class="save-field">
+    <section id="vat" class="page">
+        <div class="card">
+            <h2>VAT Calculator</h2>
+            <label class="lbl">Net Amount (£) - Labour & Materials</label>
+            <input type="number" id="vat_in" class="save-me" placeholder="0.00">
+            <div style="background:#111; padding:20px; border-radius:8px; margin-top:20px;">
+                <label class="lbl" style="margin:0">Total Including VAT (20%)</label>
+                <div id="vat_out" style="font-size:2rem; font-weight:bold; color:var(--orange);">£0.00</div>
             </div>
-        </section>
+        </div>
+    </section>
+</main>
 
-        <section id="client" class="page">
-            <div class="card">
-                <h2 class="title">CLIENT DETAILS</h2>
-                <label class="lbl">CLIENT EMAIL ADDRESS</label>
-                <input type="email" id="cl_email" class="save-field">
-                <label class="lbl">FULL CLIENT NAME</label>
-                <input type="text" id="cl_name" class="save-field">
-                <label class="lbl">SITE ADDRESS</label>
-                <textarea id="cl_addr" class="save-field" style="height:80px;"></textarea>
-                
-                <label class="lbl">REFERENCE / JOB NO.</label>
-                <div class="gen-row">
-                    <input type="text" id="cl_ref" class="save-field" style="flex:1;">
-                    <button class="gen-btn" onclick="genRef()">GEN</button>
-                </div>
+<script>
+    // Tab Switching
+    function openTab(id, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.reel-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+        window.scrollTo(0,0);
+    }
 
-                <div class="action-stack">
-                    <button class="btn-main orange-btn" onclick="storeData()">STORE CLIENT DETAILS</button>
-                    <button class="btn-main grey-btn" onclick="clearFields()">CLEAR ALL FIELDS</button>
-                </div>
-            </div>
-        </section>
+    // Success Haptics [cite: 2026-03-02]
+    function triggerDone() {
+        if ("vibrate" in navigator) navigator.vibrate([100, 50, 100]);
+        const overlay = document.getElementById('success-overlay');
+        overlay.style.display = 'block';
+        setTimeout(() => { overlay.style.display = 'none'; }, 1500);
+    }
 
-        <section id="vat" class="page">
-            <div class="card">
-                <h2 class="title">VAT CALCULATOR</h2>
-                <label class="lbl">NET AMOUNT (£) - EXCLUDING VAT</label>
-                <input type="number" id="vIn" class="save-field" placeholder="0.00">
-                <div class="res-box">
-                    <label class="lbl" style="margin:0; color:white;">VAT AMOUNT (20%)</label>
-                    <div id="vTax" class="res-val">£0.00</div>
-                    <hr style="border:0; border-top:1px solid var(--orange); margin:10px 0;">
-                    <label class="lbl" style="margin:0; color:white;">TOTAL INC. VAT</label>
-                    <div id="vOut" class="res-val">£0.00</div>
-                </div>
-            </div>
-        </section>
-
-        <section id="calc" class="page">
-            <div class="card">
-                <h2 class="title">BUSINESS CALCULATOR</h2>
-                <label class="lbl">LABOUR COST (£)</label>
-                <input type="number" id="bL" class="save-field" placeholder="0.00">
-                <label class="lbl">MATERIALS COST (£)</label>
-                <input type="number" id="bM" class="save-field" placeholder="0.00">
-                <div class="res-box">
-                    <label class="lbl" style="margin:0; color:white;">TOTAL ESTIMATE</label>
-                    <div id="bTotal" class="res-val">£0.00</div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <script>
-        // NAVIGATION ENGINE
-        function nav(pageId, btn) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.reel-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            btn.classList.add('active');
-            window.scrollTo(0,0);
-        }
-
-        // FEEDBACK ENGINE
-        function showSuccess() {
-            if ("vibrate" in navigator) navigator.vibrate([100, 50, 100]);
-            const tick = document.getElementById('success-tick');
-            tick.style.display = 'block';
-            setTimeout(() => { tick.style.display = 'none'; }, 1500);
-        }
-
-        // STORAGE & LOGIC
-        function genRef() {
-            let last = localStorage.getItem('tbox_last_ref') || '1000';
-            let next = parseInt(last) + 1;
-            document.getElementById('cl_ref').value = next;
-            localStorage.setItem('tbox_last_ref', next);
-            localStorage.setItem('tbox_cl_ref', next);
-            showSuccess();
-        }
-
-        function storeData() {
-            if(!document.getElementById('cl_name').value) {
-                alert("Please enter a Client Name first");
-                return;
-            }
-            showSuccess();
-            setTimeout(() => { location.reload(); }, 1600);
-        }
-
-        function clearFields() {
-            if(confirm("Are you sure you want to clear these fields?")) {
-                const ids = ['cl_email', 'cl_name', 'cl_addr', 'cl_ref'];
-                ids.forEach(id => {
-                    document.getElementById(id).value = '';
-                    localStorage.removeItem('tbox_' + id);
-                });
-            }
-        }
-
-        function runMath() {
-            // VAT Math
-            const vIn = parseFloat(document.getElementById('vIn').value) || 0;
-            const vTax = vIn * 0.2;
-            document.getElementById('vTax').innerText = "£" + vTax.toFixed(2);
-            document.getElementById('vOut').innerText = "£" + (vIn + vTax).toFixed(2);
-
-            // Biz Calc Math
-            const bL = parseFloat(document.getElementById('bL').value) || 0;
-            const bM = parseFloat(document.getElementById('bM').value) || 0;
-            document.getElementById('bTotal').innerText = "£" + (bL + bM).toFixed(2);
-        }
-
-        // AUTO-SAVE INITIALISATION
-        document.querySelectorAll('.save-field').forEach(field => {
-            field.value = localStorage.getItem('tbox_' + field.id) || '';
-            field.addEventListener('input', () => {
-                localStorage.setItem('tbox_' + field.id, field.value);
-                runMath();
+    // Clear Logic
+    function clearClientFields() {
+        if(confirm("Clear client details?")) {
+            ['cl_email', 'cl_name', 'cl_addr'].forEach(id => {
+                document.getElementById(id).value = '';
+                localStorage.removeItem('tbox_' + id);
             });
-        });
+        }
+    }
 
-        // Run math on load
-        runMath();
-    </script>
+    // Auto-Save Engine [cite: 2026-02-26]
+    document.querySelectorAll('.save-me').forEach(el => {
+        el.value = localStorage.getItem('tbox_' + el.id) || '';
+        el.addEventListener('input', () => {
+            localStorage.setItem('tbox_' + el.id, el.value);
+            if(el.id === 'vat_in') {
+                const val = parseFloat(el.value) || 0;
+                document.getElementById('vat_out').innerText = "£" + (val * 1.2).toFixed(2);
+            }
+        });
+    });
+
+    // Run VAT math on load
+    const startV = parseFloat(document.getElementById('vat_in').value) || 0;
+    document.getElementById('vat_out').innerText = "£" + (startV * 1.2).toFixed(2);
+</script>
+
 </body>
 </html>
