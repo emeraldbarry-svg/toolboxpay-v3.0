@@ -2,166 +2,129 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <title>TOOLBOXPAY v49.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TOOLBOXPAY v50.0</title>
     <style>
-        /* Strict Orange & White Theme [cite: 2026-02-20, 2026-02-21] */
-        body { 
-            background-color: #000; 
-            color: #fff; 
-            font-family: sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            overflow-x: hidden; 
-        }
+        /* CSS BLOCK [cite: 2026-03-01] */
+        :root { --orange: #FF8C00; --white: #ffffff; --dark: #111; }
+        body { background: #000; color: var(--white); font-family: sans-serif; margin: 0; padding: 0; }
+        
+        header { text-align: center; padding: 20px; border-bottom: 2px solid var(--orange); }
+        .logo-t { color: var(--orange); font-weight: bold; font-size: 24px; }
+        .logo-p { color: var(--white); font-weight: bold; font-size: 24px; }
 
-        /* Fixed width to stop stretching [cite: 2026-03-02] */
-        .app-container { 
-            width: 360px; 
-            margin: 0 auto; 
-            padding: 10px; 
-        }
+        .nav-reel { display: flex; overflow-x: auto; background: #1a1a1a; padding: 10px; gap: 10px; border-bottom: 1px solid #333; }
+        .nav-btn { background: #333; color: #fff; border: 1px solid var(--orange); padding: 10px 15px; border-radius: 5px; font-size: 12px; font-weight: bold; white-space: nowrap; }
+        .active { background: var(--orange); }
 
-        header { 
-            text-align: center; 
-            padding: 20px 0; 
-            border-bottom: 3px solid #FF8C00; 
-            margin-bottom: 20px; 
-        }
-        .logo-o { color: #FF8C00; font-weight: bold; font-size: 24px; }
-        .logo-w { color: #fff; font-weight: bold; font-size: 24px; }
-
-        /* Navigation Tabs - Side by Side [cite: 2026-03-02] */
-        .nav-tabs { 
-            display: table; 
-            width: 100%; 
-            border-collapse: separate; 
-            border-spacing: 5px; 
-            margin-bottom: 20px; 
-        }
-        .tab-link { 
-            display: table-cell; 
-            background: #222; 
-            color: #fff; 
-            border: 1px solid #FF8C00; 
-            padding: 10px 5px; 
-            text-align: center; 
-            font-size: 11px; 
-            font-weight: bold; 
-            border-radius: 5px; 
-            cursor: pointer;
-        }
-        .tab-link.active { background: #FF8C00; }
-
-        /* Card Sections */
+        main { padding: 15px; max-width: 400px; margin: 0 auto; }
         .page { display: none; }
-        .page.active { display: block; }
-        .card { 
-            background: #111; 
-            border: 1px solid #FF8C00; 
-            border-radius: 10px; 
-            padding: 20px; 
-            box-sizing: border-box; 
+        .page.visible { display: block; }
+
+        .card { background: var(--dark); border: 1px solid var(--orange); border-radius: 10px; padding: 20px; }
+        h2 { color: var(--orange); margin-top: 0; font-size: 18px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
+
+        /* Your Image Aspect Ratio Logic [cite: 2026-03-02] */
+        .image-container {
+            width: 100%;
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 ratio */
+            background: #222;
+            margin-top: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px dashed var(--orange);
+        }
+        .image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        h2 { color: #FF8C00; font-size: 18px; margin-top: 0; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
-
-        /* Labels and Inputs [cite: 2026-02-20, 2026-02-26] */
         label { display: block; font-size: 11px; font-weight: bold; color: #ccc; margin-top: 15px; margin-bottom: 5px; }
-        input, textarea { 
-            width: 100%; 
-            padding: 12px; 
-            border-radius: 5px; 
-            border: none; 
-            background: #fff; 
-            color: #000; 
-            font-size: 16px; 
-            box-sizing: border-box; 
-        }
+        input, textarea { width: 100%; padding: 12px; border-radius: 5px; border: none; background: #fff; color: #000; font-size: 16px; box-sizing: border-box; }
 
-        /* Chunky Action Buttons [cite: 2026-03-02] */
-        .btn-chunky { 
-            width: 100%; 
-            padding: 18px; 
-            background: #FF8C00; 
-            color: #fff; 
-            border: none; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            text-transform: uppercase; 
-            margin-top: 20px; 
-            cursor: pointer; 
-        }
+        .btn-chunky { width: 100%; padding: 18px; background: var(--orange); color: #fff; border: none; border-radius: 8px; font-weight: bold; text-transform: uppercase; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <header><span class="logo-o">TOOLBOX</span><span class="logo-w">PAY</span></header>
+<header><span class="logo-t">TOOLBOX</span><span class="logo-p">PAY</span></header>
 
-    <div class="nav-tabs">
-        <div class="tab-link active" onclick="openPage('p', this)">PROFILE</div>
-        <div class="tab-link" onclick="openPage('b', this)">BANK</div>
-        <div class="tab-link" onclick="openPage('c', this)">CLIENT</div>
-    </div>
-
-    <div id="p" class="page active">
-        <div class="card">
-            <h2>Business Profile</h2>
-            <label>TRADING NAME</label>
-            <input type="text" id="p_name" oninput="sv(this)">
-            <label>BUSINESS ADDRESS</label>
-            <textarea id="p_addr" rows="3" oninput="sv(this)"></textarea>
-        </div>
-    </div>
-
-    <div id="b" class="page">
-        <div class="card">
-            <h2>Bank Details</h2>
-            <label>FULL BANK NAME</label>
-            <input type="text" id="b_name" oninput="sv(this)">
-            <label>SORT CODE</label>
-            <input type="text" id="b_sort" placeholder="00-00-00" oninput="sv(this)">
-            <label>ACCOUNT NUMBER</label>
-            <input type="text" id="b_acc" oninput="sv(this)">
-        </div>
-    </div>
-
-    <div id="c" class="page">
-        <div class="card">
-            <h2>Client Details</h2>
-            <label>CLIENT NAME</label>
-            <input type="text" id="c_name" oninput="sv(this)">
-            <label>SITE ADDRESS</label>
-            <textarea id="c_addr" rows="3" oninput="sv(this)"></textarea>
-            <button class="btn-chunky" onclick="alert('Client Stored')">Store Details</button>
-        </div>
-    </div>
+<div class="nav-reel">
+    <div class="nav-btn active" onclick="tab('p', this)">PROFILE</div>
+    <div class="nav-btn" onclick="tab('b', this)">BANK</div>
+    <div class="nav-btn" onclick="tab('c', this)">CLIENT</div>
 </div>
 
+<main>
+    <section id="p" class="page visible">
+        <div class="card">
+            <h2>Business Profile</h2>
+            <label>TRADING NAME</label><input type="text" id="p_name" class="save">
+            <label>SPECIALISING IN</label><input type="text" id="p_trade" class="save">
+            <label>ADDRESS</label><textarea id="p_addr" class="save" rows="3"></textarea>
+        </div>
+    </section>
+
+    <section id="b" class="page">
+        <div class="card">
+            <h2>Bank Details</h2>
+            <label>BANK NAME</label><input type="text" id="b_name" class="save">
+            <label>SORT CODE</label><input type="text" id="b_sort" class="save" placeholder="00-00-00">
+            <label>ACCOUNT NUMBER</label><input type="text" id="b_acc" class="save">
+        </div>
+    </section>
+
+    <section id="c" class="page">
+        <div class="card">
+            <h2>Client Details</h2>
+            <label>CLIENT NAME</label><input type="text" id="c_name" class="save">
+            
+            <label>BEFORE PHOTO</label>
+            <div class="image-container">
+                <img id="prev_before" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+            </div>
+            <input type="file" accept="image/*" onchange="preview(this, 'prev_before')" style="margin-top:10px;">
+
+            <label>AFTER PHOTO</label>
+            <div class="image-container">
+                <img id="prev_after" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+            </div>
+            <input type="file" accept="image/*" onchange="preview(this, 'prev_after')" style="margin-top:10px;">
+
+            <button class="btn-chunky" onclick="alert('Client Stored')">Store Details</button>
+        </div>
+    </section>
+</main>
+
 <script>
-    function openPage(id, el) {
-        var pages = document.getElementsByClassName('page');
-        for (var i=0; i<pages.length; i++) { pages[i].classList.remove('active'); }
-        document.getElementById(id).classList.add('active');
-        
-        var tabs = document.getElementsByClassName('tab-link');
-        for (var j=0; j<tabs.length; j++) { tabs[j].classList.remove('active'); }
+    /* JS BLOCK [cite: 2026-03-01] */
+    function tab(id, el) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('visible');
         el.classList.add('active');
     }
 
-    /* Auto-Save [cite: 2026-02-26] */
-    function sv(el) {
-        localStorage.setItem('tbox_clean_' + el.id, el.value);
-    }
-
-    /* Auto-Load [cite: 2026-02-27] */
-    window.onload = function() {
-        var ids = ['p_name', 'p_addr', 'b_name', 'b_sort', 'b_acc', 'c_name', 'c_addr'];
-        for (var i=0; i<ids.length; i++) {
-            var val = localStorage.getItem('tbox_clean_' + ids[i]);
-            if (val) document.getElementById(ids[i]).value = val;
+    function preview(input, imgId) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) { document.getElementById(imgId).src = e.target.result; };
+            reader.readAsDataURL(input.files[0]);
         }
     }
+
+    /* Auto-Save Protocol [cite: 2026-02-26] */
+    document.querySelectorAll('.save').forEach(el => {
+        el.value = localStorage.getItem('tbox_v50_' + el.id) || '';
+        el.addEventListener('input', () => {
+            localStorage.setItem('tbox_v50_' + el.id, el.value);
+        });
+    });
 </script>
 
 </body>
