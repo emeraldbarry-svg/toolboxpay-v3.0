@@ -1,4 +1,4 @@
-/* TOOLBOXPAY v22.30 - ALIGNMENT RESTORATION [cite: 2026-03-02] */
+/* TOOLBOXPAY v22.31 - ALIGNMENT & BIZ CALC [cite: 2026-03-02] */
 :root {
     --orange: #ff6600;
     --slate: #2f3e46;
@@ -21,6 +21,7 @@ body {
 header { padding: 25px 0; font-size: 1.8rem; font-weight: bold; }
 .orange { color: var(--orange); }
 
+/* HORIZONTAL REEL [cite: 2026-03-02] */
 .nav-reel {
     width: 100%;
     display: flex;
@@ -44,6 +45,7 @@ header { padding: 25px 0; font-size: 1.8rem; font-weight: bold; }
 
 .reel-btn.active { background: var(--orange); color: var(--dark); }
 
+/* PAGE CONTAINER [cite: 2026-03-02] */
 #main-container {
     width: 100%;
     max-width: 500px;
@@ -59,23 +61,23 @@ header { padding: 25px 0; font-size: 1.8rem; font-weight: bold; }
     width: 100%;
 }
 
-.title { border-bottom: 1px solid var(--orange); padding-bottom: 10px; text-align: center; }
-
+.title { border-bottom: 1px solid var(--orange); padding-bottom: 10px; text-align: center; margin-top: 0; }
 .lbl { display: block; margin: 15px 0 5px; font-size: 0.8rem; color: var(--orange); font-weight: bold; }
 
-/* THE ALIGNMENT FIX [cite: 2026-03-02] */
+/* FIXES THE "OUT OF LINE" ADDRESS BOX [cite: 2026-03-02] */
 input, textarea {
-    width: 100% !important; /* Forces Address to match Name bar [cite: 2026-03-02] */
-    display: block;
+    width: 100% !important; 
+    display: block !important;
     padding: 12px;
     border-radius: 8px;
     border: none;
     background: var(--white);
     color: #333;
     font-size: 1rem;
+    margin-bottom: 10px;
 }
 
-textarea { height: 80px; resize: none; } /* Prevents manual resizing [cite: 2026-03-02] */
+textarea { height: 100px; resize: none; font-family: inherit; }
 
 .res-box {
     background: #000;
