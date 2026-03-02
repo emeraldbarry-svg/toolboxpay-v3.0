@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - v22.54 Professional Quote</title>
-    <link rel="stylesheet" href="css/style.css?v=17">
+    <title>toolboxpay - v22.56 Custom Spacing</title>
+    <link rel="stylesheet" href="css/style.css?v=19">
 </head>
 <body>
     <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
@@ -16,6 +16,8 @@
         <button class="reel-btn" onclick="showPage('quote')">QUOTE</button>
         <button class="reel-btn" onclick="showPage('vat')">VAT</button>
         <button class="reel-btn" onclick="showPage('calc')">BIZ CALC</button>
+        <button class="reel-btn" onclick="showPage('terms')">T&Cs</button>
+        <button class="reel-btn" onclick="showPage('readme')">HELP</button>
     </nav>
     
     <main id="main-container">
@@ -58,13 +60,15 @@
                 <label class="lbl">CUSTOMER NAME</label><input type="text" id="q_cust_name" class="save-field">
                 <label class="lbl">CUSTOMER ADDRESS</label><textarea id="q_cust_addr" class="save-field"></textarea>
                 <label class="lbl">CUSTOMER EMAIL</label><input type="email" id="q_cust_email" class="save-field">
-                <label class="lbl">MOBILE NUMBER</label><input type="tel" id="q_cust_mob" class="save-field" placeholder="07XXX XXXXXX">
-                <label class="lbl">LANDLINE NUMBER</label><input type="tel" id="q_cust_land" class="save-field">
+                <label class="lbl">MOBILE NUMBER</label>
+                <input type="tel" id="q_cust_mob" class="save-field" placeholder="e.g. 07700 123456">
+                <label class="lbl">LANDLINE NUMBER</label>
+                <input type="tel" id="q_cust_land" class="save-field" placeholder="e.g. 020 7946 0000">
 
                 <hr style="border:0; border-top:1px solid var(--orange); margin:20px 0;">
 
                 <label class="lbl">JOB DESCRIPTION</label>
-                <textarea id="q_desc" class="save-field" style="height: 80px;" placeholder="e.g. Supply and fit 4 internal doors..."></textarea>
+                <textarea id="q_desc" class="save-field" style="height: 80px;"></textarea>
 
                 <div class="res-box">
                     <label class="lbl" style="margin:0; color:white;">SUBTOTAL</label>
@@ -100,8 +104,25 @@
                 </div>
             </div>
         </section>
+
+        <section id="terms" class="page">
+            <div class="card">
+                <h2 class="title">TERMS & CONDITIONS</h2>
+                <textarea id="fn_terms" class="save-field" style="height: 300px;" placeholder="Type your standard T&Cs here..."></textarea>
+            </div>
+        </section>
+
+        <section id="readme" class="page">
+            <div class="card">
+                <h2 class="title">APP GUIDE</h2>
+                <p style="color:white; font-size: 0.85rem; line-height: 1.5;">
+                    <strong class="orange">SMART SAVING:</strong> Every box saves exactly how you type it, including spaces [cite: 2026-02-26].<br><br>
+                    <strong class="orange">PHONE NUMBERS:</strong> Type landlines with the correct area code space (e.g. 020 7... or 01604 ...) and it will be remembered [cite: 2026-03-02].
+                </p>
+            </div>
+        </section>
     </main>
 
-    <script src="js/app.js?v=17"></script>
+    <script src="js/app.js?v=19"></script>
 </body>
 </html>
