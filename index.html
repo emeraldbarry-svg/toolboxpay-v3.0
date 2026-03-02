@@ -3,48 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TOOLBOXPAY v54.3</title>
+    <title>TOOLBOXPAY v55.0 - LOCKED</title>
     <style>
-        /* CSS BLOCK: Forced Centre Alignment */
+        /* CSS BLOCK: v=1.0.2 [cite: 2026-03-01] */
         :root { --orange: #FF8C00; --white: #ffffff; --card-bg: #2c3e50; }
         
-        body { 
+        /* The "Nuclear" Fix: Forces the whole screen to stay centred */
+        html, body { 
             background: #000; 
-            color: #fff; 
-            font-family: sans-serif; 
             margin: 0; 
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Prevents the 'drifting' bug */
+            padding: 0; 
+            width: 100vw; 
+            overflow-x: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
         }
         
-        header { width: 100%; text-align: center; padding: 25px 0; border-bottom: 3px solid var(--orange); margin-bottom: 20px; }
-        .logo-t { color: var(--orange); font-weight: bold; font-size: 28px; letter-spacing: 1px; }
-        .logo-p { color: #fff; font-weight: bold; font-size: 28px; letter-spacing: 1px; }
+        header { width: 100%; text-align: center; padding: 25px 0; border-bottom: 3px solid var(--orange); background: #000; z-index: 10; }
+        .logo-t { color: var(--orange); font-weight: bold; font-size: 28px; }
+        .logo-p { color: #fff; font-weight: bold; font-size: 28px; }
 
-        /* Centred Navigation */
-        .nav-reel { width: 100%; display: flex; justify-content: center; background: #111; padding: 15px; gap: 10px; border-bottom: 1px solid #333; }
-        .nav-btn { background: transparent; color: #fff; border: 1.5px solid var(--orange); padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .nav-btn.active { background: var(--orange); box-shadow: 0 0 10px var(--orange); }
+        .nav-reel { 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            background: #111; 
+            padding: 15px 0; 
+            gap: 10px; 
+            border-bottom: 1px solid #333; 
+        }
+        .nav-btn { background: transparent; color: #fff; border: 1.5px solid var(--orange); padding: 10px 18px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; }
+        .nav-btn.active { background: var(--orange); box-shadow: 0 0 15px var(--orange); }
 
-        main { width: 100%; display: flex; flex-direction: column; align-items: center; padding-top: 20px; }
-        .page { display: none; width: 90%; max-width: 450px; }
+        /* Forces the main area to be a single, centred column */
+        main { 
+            display: block; 
+            width: 100%; 
+            max-width: 480px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            box-sizing: border-box; 
+        }
+        .page { display: none; width: 100%; }
         .page.visible { display: block; }
 
-        /* Card Styling */
-        .card { background: var(--card-bg); border: 2px solid var(--orange); border-radius: 20px; padding: 30px; box-sizing: border-box; }
-        h2 { color: #fff; text-align: center; font-size: 24px; margin-top: 0; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 15px; margin-bottom: 25px; }
+        .card { 
+            background: var(--card-bg); 
+            border: 2px solid var(--orange); 
+            border-radius: 25px; 
+            padding: 30px; 
+            width: 100%; 
+            box-sizing: border-box; 
+        }
+        h2 { color: #fff; text-align: center; font-size: 22px; text-transform: uppercase; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 15px; }
 
-        /* Labels & Inputs */
-        label { display: block; color: var(--orange); font-size: 13px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; margin-top: 15px; }
+        label { display: block; color: var(--orange); font-size: 12px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; margin-top: 20px; }
         input, textarea { width: 100%; padding: 15px; border-radius: 10px; border: none; background: #fff; color: #000; font-size: 16px; box-sizing: border-box; }
 
-        .res-box { background: #000; padding: 20px; border-radius: 12px; margin-top: 15px; border: 1px solid #444; text-align: center; }
-        .res-val { color: var(--orange); font-size: 28px; font-weight: bold; }
-
-        /* 16:9 Aspect Ratio Logic */
-        .img-box { width: 100%; position: relative; padding-bottom: 56.25%; background: #000; margin: 10px 0; border-radius: 8px; overflow: hidden; border: 1px dashed var(--orange); }
+        .img-box { width: 100%; position: relative; padding-bottom: 56.25%; background: #000; margin: 15px 0; border-radius: 10px; overflow: hidden; border: 1px dashed var(--orange); }
         .img-box img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
@@ -56,16 +73,14 @@
     <div class="nav-btn active" onclick="tab('p', this)">PROFILE</div>
     <div class="nav-btn" onclick="tab('b', this)">BANK</div>
     <div class="nav-btn" onclick="tab('c', this)">CLIENT</div>
-    <div class="nav-btn" onclick="tab('v', this)">VAT</div>
-    <div class="nav-btn" onclick="tab('bc', this)">CALC</div>
 </div>
 
 <main>
     <section id="p" class="page visible">
         <div class="card">
             <h2>Business Profile</h2>
-            <label>Trading Name / Business Name</label><input type="text" id="p_name" class="save">
-            <label>Business Email Address</label><input type="email" id="p_email" class="save">
+            <label>Trading Name</label><input type="text" id="p_name" class="save">
+            <label>Specialising In</label><input type="text" id="p_spec" class="save">
             <label>Business Address</label><textarea id="p_addr" class="save" rows="4"></textarea>
         </div>
     </section>
@@ -91,31 +106,16 @@
             <input type="file" accept="image/*" onchange="prev(this, 'i_aft')">
         </div>
     </section>
-
-    <section id="v" class="page">
-        <div class="card">
-            <h2>VAT Calculator</h2>
-            <label>Net Amount (£)</label><input type="number" id="v_in" class="save" oninput="cV()">
-            <div class="res-box"><div class="res-val" id="v_out">£0.00</div></div>
-        </div>
-    </section>
-
-    <section id="bc" class="page">
-        <div class="card">
-            <h2>Business Calculator</h2>
-            <label>Labour (£)</label><input type="number" id="bc_l" class="save" oninput="cB()">
-            <label>Materials (£)</label><input type="number" id="bc_m" class="save" oninput="cB()">
-            <div class="res-box"><div class="res-val" id="bc_out">£0.00</div></div>
-        </div>
-    </section>
 </main>
 
 <script>
+    /* JS BLOCK: v=1.0.2 [cite: 2026-03-01] */
     function tab(id, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('visible');
         el.classList.add('active');
+        window.scrollTo(0,0);
     }
 
     function prev(input, id) {
@@ -126,16 +126,14 @@
         }
     }
 
-    function cV() { var v = parseFloat(document.getElementById('v_in').value) || 0; document.getElementById('v_out').innerText = "£" + (v * 1.2).toFixed(2); }
-    function cB() { var l = parseFloat(document.getElementById('bc_l').value) || 0; var m = parseFloat(document.getElementById('bc_m').value) || 0; document.getElementById('bc_out').innerText = "£" + (l + m).toFixed(2); }
-
-    /* Auto-Save Engine */
-    const VER = 'v54_3';
+    /* Auto-Save Protocol [cite: 2026-02-26] */
+    const KEY_PREFIX = 'tbox_v55_';
     document.querySelectorAll('.save').forEach(el => {
-        el.value = localStorage.getItem('tbox_' + VER + '_' + el.id) || '';
-        el.addEventListener('input', () => { localStorage.setItem('tbox_' + VER + '_' + el.id, el.value); });
+        el.value = localStorage.getItem(KEY_PREFIX + el.id) || '';
+        el.addEventListener('input', () => { 
+            localStorage.setItem(KEY_PREFIX + el.id, el.value); 
+        });
     });
-    window.onload = () => { cV(); cB(); };
 </script>
 </body>
 </html>
