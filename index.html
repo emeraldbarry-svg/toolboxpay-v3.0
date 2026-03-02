@@ -2,97 +2,109 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <title>TOOLBOXPAY v48.0</title>
+    <title>TOOLBOXPAY v49.0</title>
     <style>
-        /* Force strictly Orange and White on Black [cite: 2026-02-20, 2026-02-21] */
+        /* Strict Orange & White Theme [cite: 2026-02-20, 2026-02-21] */
         body { 
-            background-color: #000000; 
-            color: #ffffff; 
+            background-color: #000; 
+            color: #fff; 
             font-family: sans-serif; 
             margin: 0; 
-            padding: 10px;
+            padding: 0; 
+            overflow-x: hidden; 
         }
 
-        /* Fixed Width Container to prevent stretching [cite: 2026-03-02] */
-        .wrapper { 
-            width: 320px; 
+        /* Fixed width to stop stretching [cite: 2026-03-02] */
+        .app-container { 
+            width: 360px; 
             margin: 0 auto; 
+            padding: 10px; 
         }
 
         header { 
             text-align: center; 
-            border-bottom: 2px solid #FF8C00; 
-            padding: 20px 0;
-            margin-bottom: 20px;
+            padding: 20px 0; 
+            border-bottom: 3px solid #FF8C00; 
+            margin-bottom: 20px; 
         }
+        .logo-o { color: #FF8C00; font-weight: bold; font-size: 24px; }
+        .logo-w { color: #fff; font-weight: bold; font-size: 24px; }
 
-        .logo-o { color: #FF8C00; font-weight: bold; font-size: 22px; }
-        .logo-w { color: #FFFFFF; font-weight: bold; font-size: 22px; }
-
-        /* Navigation Buttons - Simple Row [cite: 2026-03-02] */
-        .nav-bar { width: 100%; margin-bottom: 20px; text-align: center; }
-        .nav-btn { 
-            background: #333; 
+        /* Navigation Tabs - Side by Side [cite: 2026-03-02] */
+        .nav-tabs { 
+            display: table; 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 5px; 
+            margin-bottom: 20px; 
+        }
+        .tab-link { 
+            display: table-cell; 
+            background: #222; 
             color: #fff; 
             border: 1px solid #FF8C00; 
-            padding: 8px; 
+            padding: 10px 5px; 
+            text-align: center; 
             font-size: 11px; 
-            font-weight: bold;
+            font-weight: bold; 
+            border-radius: 5px; 
             cursor: pointer;
         }
-        .active-btn { background: #FF8C00; }
+        .tab-link.active { background: #FF8C00; }
 
-        /* Box Sections */
+        /* Card Sections */
         .page { display: none; }
-        .show { display: block; }
+        .page.active { display: block; }
         .card { 
-            border: 2px solid #FF8C00; 
             background: #111; 
-            padding: 15px; 
-            border-radius: 8px;
+            border: 1px solid #FF8C00; 
+            border-radius: 10px; 
+            padding: 20px; 
+            box-sizing: border-box; 
         }
 
-        h2 { color: #FF8C00; font-size: 16px; text-transform: uppercase; margin-top: 0; }
+        h2 { color: #FF8C00; font-size: 18px; margin-top: 0; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
 
         /* Labels and Inputs [cite: 2026-02-20, 2026-02-26] */
-        label { display: block; font-size: 10px; color: #ccc; margin-top: 10px; font-weight: bold; }
+        label { display: block; font-size: 11px; font-weight: bold; color: #ccc; margin-top: 15px; margin-bottom: 5px; }
         input, textarea { 
             width: 100%; 
-            padding: 10px; 
-            margin-top: 5px; 
-            border-radius: 4px; 
+            padding: 12px; 
+            border-radius: 5px; 
             border: none; 
             background: #fff; 
             color: #000; 
             font-size: 16px; 
-            box-sizing: border-box;
+            box-sizing: border-box; 
         }
 
-        /* Chunky Buttons [cite: 2026-03-02] */
-        .btn-big { 
+        /* Chunky Action Buttons [cite: 2026-03-02] */
+        .btn-chunky { 
             width: 100%; 
-            padding: 15px; 
+            padding: 18px; 
             background: #FF8C00; 
             color: #fff; 
             border: none; 
+            border-radius: 8px; 
             font-weight: bold; 
+            text-transform: uppercase; 
             margin-top: 20px; 
-            text-transform: uppercase;
+            cursor: pointer; 
         }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
+<div class="app-container">
     <header><span class="logo-o">TOOLBOX</span><span class="logo-w">PAY</span></header>
 
-    <div class="nav-bar">
-        <button id="b1" class="nav-btn active-btn" onclick="tab('p', this)">PROFILE</button>
-        <button id="b2" class="nav-btn" onclick="tab('b', this)">BANK</button>
-        <button id="b3" class="nav-btn" onclick="tab('c', this)">CLIENT</button>
+    <div class="nav-tabs">
+        <div class="tab-link active" onclick="openPage('p', this)">PROFILE</div>
+        <div class="tab-link" onclick="openPage('b', this)">BANK</div>
+        <div class="tab-link" onclick="openPage('c', this)">CLIENT</div>
     </div>
 
-    <div id="p" class="page show">
+    <div id="p" class="page active">
         <div class="card">
             <h2>Business Profile</h2>
             <label>TRADING NAME</label>
@@ -121,33 +133,32 @@
             <input type="text" id="c_name" oninput="sv(this)">
             <label>SITE ADDRESS</label>
             <textarea id="c_addr" rows="3" oninput="sv(this)"></textarea>
-            <button class="btn-big" onclick="alert('Saved')">STORE DETAILS</button>
+            <button class="btn-chunky" onclick="alert('Client Stored')">Store Details</button>
         </div>
     </div>
 </div>
 
 <script>
-    /* Tab Engine */
-    function tab(id, btn) {
-        var p = document.getElementsByClassName('page');
-        for (var i=0; i<p.length; i++) { p[i].style.display = 'none'; }
-        document.getElementById(id).style.display = 'block';
+    function openPage(id, el) {
+        var pages = document.getElementsByClassName('page');
+        for (var i=0; i<pages.length; i++) { pages[i].classList.remove('active'); }
+        document.getElementById(id).classList.add('active');
         
-        var b = document.getElementsByClassName('nav-btn');
-        for (var j=0; j<b.length; j++) { b[j].classList.remove('active-btn'); }
-        btn.classList.add('active-btn');
+        var tabs = document.getElementsByClassName('tab-link');
+        for (var j=0; j<tabs.length; j++) { tabs[j].classList.remove('active'); }
+        el.classList.add('active');
     }
 
-    /* Simple Save [cite: 2026-02-26] */
+    /* Auto-Save [cite: 2026-02-26] */
     function sv(el) {
-        localStorage.setItem('tbox_v48_' + el.id, el.value);
+        localStorage.setItem('tbox_clean_' + el.id, el.value);
     }
 
-    /* Load on start [cite: 2026-02-27] */
+    /* Auto-Load [cite: 2026-02-27] */
     window.onload = function() {
         var ids = ['p_name', 'p_addr', 'b_name', 'b_sort', 'b_acc', 'c_name', 'c_addr'];
         for (var i=0; i<ids.length; i++) {
-            var val = localStorage.getItem('tbox_v48_' + ids[i]);
+            var val = localStorage.getItem('tbox_clean_' + ids[i]);
             if (val) document.getElementById(ids[i]).value = val;
         }
     }
