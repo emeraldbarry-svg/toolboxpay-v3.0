@@ -3,76 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOOLBOXPAY</title>
+    <title>TOOLBOXPAY v56.0</title>
     <style>
-        /* CSS BLOCK: Original Aesthetic [cite: 2026-03-01] */
-        body { 
-            background-color: #000000; 
-            color: #ffffff; 
-            font-family: Arial, sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-        }
-        
-        .header { 
-            text-align: center; 
-            margin-bottom: 30px; 
-        }
-        
+        /* CSS BLOCK: Original Aesthetic [cite: 2026-03-01, 2026-02-21] */
+        body { background-color: #000; color: #fff; font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .header { text-align: center; margin-bottom: 25px; }
         .logo-toolbox { color: #FF8C00; font-weight: bold; font-size: 32px; }
         .logo-pay { color: #ffffff; font-weight: bold; font-size: 32px; }
 
-        .nav { 
-            display: flex; 
-            justify-content: center; 
-            gap: 10px; 
-            margin-bottom: 20px; 
-        }
-
+        /* Simple Navigation [cite: 2026-02-27] */
+        .nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px; }
         .nav-button { 
-            background-color: #333333; 
-            color: #ffffff; 
-            border: 2px solid #FF8C00; 
-            padding: 10px 20px; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-weight: bold;
+            background-color: #333; color: #fff; border: 2px solid #FF8C00; 
+            padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 12px;
         }
+        .nav-button.active { background-color: #FF8C00; }
 
-        .nav-button.active { 
-            background-color: #FF8C00; 
-        }
+        .card { background-color: #1a1a1a; border: 2px solid #FF8C00; border-radius: 15px; padding: 25px; max-width: 450px; margin: 0 auto; }
+        h2 { color: #FF8C00; text-align: center; text-transform: uppercase; margin-top: 0; }
+        label { display: block; margin-top: 15px; color: #FF8C00; font-size: 13px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 12px; margin-top: 5px; border-radius: 5px; border: none; box-sizing: border-box; font-size: 16px; }
 
-        .card { 
-            background-color: #1a1a1a; 
-            border: 2px solid #FF8C00; 
-            border-radius: 15px; 
-            padding: 20px; 
-            max-width: 400px; 
-            margin: 0 auto; 
-        }
-
-        h2 { 
-            color: #FF8C00; 
-            text-align: center; 
-            text-transform: uppercase; 
-        }
-
-        label { 
-            display: block; 
-            margin-top: 15px; 
-            color: #FF8C00; 
-            font-size: 14px; 
-        }
-
-        input, textarea { 
-            width: 100%; 
-            padding: 10px; 
-            margin-top: 5px; 
-            border-radius: 5px; 
-            border: none; 
-            box-sizing: border-box; 
-        }
+        /* Calculator Styling */
+        .res-box { background: #000; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #333; text-align: center; }
+        .res-val { color: #FF8C00; font-size: 24px; font-weight: bold; }
 
         .page { display: none; }
         .page.active { display: block; }
@@ -85,22 +39,21 @@
     </div>
 
     <div class="nav">
-        <button class="nav-button active" onclick="showPage('profile')">PROFILE</button>
-        <button class="nav-button" onclick="showPage('bank')">BANK</button>
-        <button class="nav-button" onclick="showPage('client')">CLIENT</button>
+        <button class="nav-button active" onclick="showPage('profile', this)">PROFILE</button>
+        <button class="nav-button" onclick="showPage('bank', this)">BANK</button>
+        <button class="nav-button" onclick="showPage('vat', this)">VAT</button>
+        <button class="nav-button" onclick="showPage('calc', this)">CALC</button>
     </div>
 
     <div id="profile" class="page active">
         <div class="card">
             <h2>Business Profile</h2>
             <label>Trading Name</label>
-            <input type="text" id="tradingName" oninput="saveData('tradingName', this.value)">
-            
+            <input type="text" id="tradingName" class="save">
             <label>Specialising In</label>
-            <input type="text" id="specialising" oninput="saveData('specialising', this.value)">
-            
+            <input type="text" id="specialising" class="save">
             <label>Business Address</label>
-            <textarea id="address" rows="4" oninput="saveData('address', this.value)"></textarea>
+            <textarea id="address" class="save" rows="4"></textarea>
         </div>
     </div>
 
@@ -108,48 +61,69 @@
         <div class="card">
             <h2>Bank Details</h2>
             <label>Bank Name</label>
-            <input type="text" id="bankName" oninput="saveData('bankName', this.value)">
-            
+            <input type="text" id="bankName" class="save">
             <label>Sort Code</label>
-            <input type="text" id="sortCode" oninput="saveData('sortCode', this.value)">
-            
+            <input type="text" id="sortCode" class="save" placeholder="00-00-00">
             <label>Account Number</label>
-            <input type="text" id="accountNumber" oninput="saveData('accountNumber', this.value)">
+            <input type="text" id="accountNumber" class="save">
         </div>
     </div>
 
-    <div id="client" class="page">
+    <div id="vat" class="page">
         <div class="card">
-            <h2>Client Details</h2>
-            <label>Client Name</label>
-            <input type="text" id="clientName" oninput="saveData('clientName', this.value)">
+            <h2>VAT Calculator</h2>
+            <label>Net Amount (£)</label>
+            <input type="number" id="vatIn" oninput="runVat()">
+            <div class="res-box">
+                <label style="margin:0">Total Inc. VAT (20%)</label>
+                <div id="vatOut" class="res-val">£0.00</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="calc" class="page">
+        <div class="card">
+            <h2>Job Calculator</h2>
+            <label>Labour Cost (£)</label>
+            <input type="number" id="labourIn" oninput="runCalc()">
+            <label>Materials Cost (£)</label>
+            <input type="number" id="materialsIn" oninput="runCalc()">
+            <div class="res-box">
+                <label style="margin:0">Total Estimate</label>
+                <div id="calcOut" class="res-val">£0.00</div>
+            </div>
         </div>
     </div>
 
     <script>
-        /* JS BLOCK: Simple Original Logic [cite: 2026-03-01] */
-        function showPage(pageId) {
+        /* JS BLOCK: Reliable Logic [cite: 2026-03-01] */
+        function showPage(pageId, btn) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
-            
             document.getElementById(pageId).classList.add('active');
-            event.currentTarget.classList.add('active');
+            btn.classList.add('active');
         }
 
-        function saveData(key, value) {
-            localStorage.setItem(key, value);
+        // VAT Logic
+        function runVat() {
+            const val = parseFloat(document.getElementById('vatIn').value) || 0;
+            document.getElementById('vatOut').innerText = "£" + (val * 1.20).toFixed(2);
         }
 
-        // Auto-load bank and business details on open [cite: 2026-02-26]
-        window.onload = function() {
-            const fields = ['tradingName', 'specialising', 'address', 'bankName', 'sortCode', 'accountNumber', 'clientName'];
-            fields.forEach(field => {
-                const savedValue = localStorage.getItem(field);
-                if (savedValue) {
-                    document.getElementById(field).value = savedValue;
-                }
+        // Job Calc Logic [cite: 2026-02-20]
+        function runCalc() {
+            const l = parseFloat(document.getElementById('labourIn').value) || 0;
+            const m = parseFloat(document.getElementById('materialsIn').value) || 0;
+            document.getElementById('calcOut').innerText = "£" + (l + m).toFixed(2);
+        }
+
+        // Simple Auto-Save Engine [cite: 2026-02-26]
+        document.querySelectorAll('.save').forEach(el => {
+            el.value = localStorage.getItem('tbox_stable_' + el.id) || '';
+            el.addEventListener('input', () => {
+                localStorage.setItem('tbox_stable_' + el.id, el.value);
             });
-        }
+        });
     </script>
 </body>
 </html>
