@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - v22.51 Client Update</title>
-    <link rel="stylesheet" href="css/style.css?v=14">
+    <title>toolboxpay - v22.52 Quote Update</title>
+    <link rel="stylesheet" href="css/style.css?v=15">
 </head>
 <body>
     <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
@@ -13,6 +13,7 @@
         <button class="reel-btn active" onclick="showPage('profile')">PROFILE</button>
         <button class="reel-btn" onclick="showPage('bank')">BANK</button>
         <button class="reel-btn" onclick="showPage('client')">CLIENT</button>
+        <button class="reel-btn" onclick="showPage('quote')">QUOTE</button>
         <button class="reel-btn" onclick="showPage('vat')">VAT</button>
         <button class="reel-btn" onclick="showPage('calc')">BIZ CALC</button>
     </nav>
@@ -51,6 +52,37 @@
             </div>
         </section>
 
+        <section id="quote" class="page">
+            <div class="card">
+                <h2 class="title">QUOTE GENERATOR</h2>
+                
+                <label class="lbl">CUSTOMER NAME</label>
+                <input type="text" id="q_cust_name" class="save-field">
+                
+                <label class="lbl">CUSTOMER ADDRESS</label>
+                <textarea id="q_cust_addr" class="save-field"></textarea>
+                
+                <label class="lbl">CUSTOMER EMAIL</label>
+                <input type="email" id="q_cust_email" class="save-field">
+
+                <label class="lbl">MOBILE NUMBER</label>
+                <input type="tel" id="q_cust_mob" class="save-field" placeholder="07XXX XXXXXX">
+
+                <label class="lbl">LANDLINE NUMBER</label>
+                <input type="tel" id="q_cust_land" class="save-field">
+
+                <hr style="border:0; border-top:1px solid var(--orange); margin:20px 0;">
+
+                <label class="lbl">JOB DESCRIPTION</label>
+                <textarea id="q_desc" class="save-field" style="height: 80px;"></textarea>
+
+                <div class="res-box">
+                    <label class="lbl" style="margin:0; color:white;">QUOTE TOTAL</label>
+                    <div id="q_grand_total" class="res-val">£0.00</div>
+                </div>
+            </div>
+        </section>
+
         <section id="vat" class="page">
             <div class="card">
                 <h2 class="title">VAT CALCULATOR</h2>
@@ -77,6 +109,6 @@
         </section>
     </main>
 
-    <script src="js/app.js?v=14"></script>
+    <script src="js/app.js?v=15"></script>
 </body>
 </html>
