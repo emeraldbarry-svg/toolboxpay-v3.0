@@ -1,44 +1,97 @@
-<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOOLBOXPAY v61.0</title>
-    <link rel="stylesheet" href="styles.css?v=61">
-</head>
-<body>
-    <header class="app-header">
-        <span class="logo-t">TOOLBOX</span><span class="logo-p">PAY</span>
-    </header>
+/* TOOLBOXPAY ENGINE v61.1 - ATOMIC UNIT [cite: 2026-03-02] */
+(() => {
+    if (window.__TBP_BOOTED__) return;
+    window.__TBP_BOOTED__ = true;
 
-    <nav class="nav-reel" id="main-nav">
-        <button class="nav-btn active" data-action="nav" data-page="profile">PROFILE</button>
-        <button class="nav-btn" data-action="nav" data-page="bank">BANK</button>
-        <button class="nav-btn" data-action="nav" data-page="calc">VAT</button>
-    </nav>
+    const APP_VERSION = "61.1";
+    const state = { view: "profile" };
 
-    <main id="app-viewport">
-        <section id="profile" class="view active">
-            <div class="card">
-                <h2>Business Profile</h2>
-                <label>Trading Name</label>
-                <input type="text" data-model="biz_name" placeholder="Acme Ltd">
-                <label>Specialising In</label>
-                <input type="text" data-model="biz_spec">
-            </div>
-        </section>
+    boot();
 
-        <section id="bank" class="view">
-            <div class="card">
-                <h2>Bank Details</h2>
-                <label>Bank Name</label>
-                <input type="text" data-model="bank_name">
-                <label>Account Number</label>
-                <input type="text" data-model="bank_acc">
-            </div>
-        </section>
-        </main>
+    function boot() {
+        injectAtomicStyles(); // Atomic fix for the unstyled bug in your screenshots [cite: 2026-03-02]
+        ensureVersion();
+        attachListeners();
+        render();
+    }
 
-    <script src="app.js?v=61"></script>
-</body>
-</html>
+    function injectAtomicStyles() {
+        if (document.getElementById("tbp-atomic")) return;
+        const css = `
+            * { box-sizing: border-box; }
+            body { 
+                background: #000; color: #fff; font-family: sans-serif; margin: 0; 
+                min-height: 100vh; display: grid; place-items: start center; 
+            }
+            .app-header { width: 100%; max-width: 500px; padding: 20px; text-align: center; border-bottom: 3px solid #FF8C00; }
+            .nav-reel { display: flex; justify-content: center; gap: 8px; padding: 20px; }
+            .nav-btn { background: #111; color: #fff; border: 1.5px solid #FF8C00; padding: 10px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+            .nav-btn.active { background: #FF8C00; box-shadow: 0 0 10px #FF8C00; }
+            .card { background: #2c3e50; border: 2px solid #FF8C00; border-radius: 25px; padding: 30px; width: 90vw; max-width: 450px; margin-top: 20px; }
+            h2 { text-align: center; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; text-transform: uppercase; }
+            label { display: block; margin-top: 15px; font-size: 11px; color: #FF8C00; text-transform: uppercase; font-weight: bold; }
+            input { width: 100%; padding: 12px; border-radius: 8px; border: none; margin-top: 6px; font-size: 16px; }
+            .view { display: none; }
+            .view.active { display: block; }
+        `;
+        const sheet = document.createElement("style");
+        sheet.id = "tbp-atomic";
+        sheet.textContent = css;
+        document.head.appendChild(sheet);
+    }
+
+    function ensureVersion() {
+        if (localStorage.getItem("tbp_ver") !== APP_VERSION) {
+            Object.keys(localStorage).filter(k => k.startsWith("tbp_")).forEach(k => localStorage.removeItem(k));
+            localStorage.setItem("tbp_ver", APP_VERSION);
+        }
+    }
+
+    const store = {
+        get(k) { return localStorage.getItem(`tbp_${APP_VERSION}_${k}`); },
+        set(k, v) { localStorage.setItem(`tbp_${APP_VERSION}_${k}`, v); }
+    };
+
+    function attachListeners() {
+        document.addEventListener("click", e => {
+            if (e.target.dataset.action === "nav") {
+                state.view = e.target.dataset.page;
+                render();
+            }
+        });
+        document.addEventListener("input", e => {
+            if (e.target.dataset.model) store.set(e.target.dataset.model, e.target.value);
+        });
+    }
+
+    function render() {
+        const mount = document.getElementById("app-viewport") || document.body;
+        const views = {
+            profile: `<div class="card"><h2>Business Profile</h2><label>Trading Name</label><input data-model="biz_name" placeholder="Acme Ltd"><label>Specialising In</label><input data-model="biz_spec"></div>`,
+            bank: `<div class="card"><h2>Bank Details</h2><label>Bank Name</label><input data-model="bank_name"><label>Account Number</label><input data-model="bank_acc"></div>`
+        };
+
+        document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.page === state.view));
+        
+        // Re-render the app shell if it's not present
+        if (!document.querySelector(".app-header")) {
+            document.body.innerHTML = `
+                <header class="app-header"><span style="color:#FF8C00">TOOLBOX</span>PAY</header>
+                <nav class="nav-reel">
+                    <button class="nav-btn" data-action="nav" data-page="profile">PROFILE</button>
+                    <button class="nav-btn" data-action="nav" data-page="bank">BANK</button>
+                </nav>
+                <div id="app-viewport"></div>
+            `;
+        }
+        
+        document.getElementById("app-viewport").innerHTML = views[state.view] || views.profile;
+        hydrate();
+    }
+
+    function hydrate() {
+        document.querySelectorAll("[data-model]").forEach(el => {
+            el.value = store.get(el.dataset.model) || "";
+        });
+    }
+})();
