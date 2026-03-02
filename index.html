@@ -2,153 +2,190 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <title>TOOLBOXPAY v44.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TOOLBOXPAY v46.0</title>
     <style>
-        /* Force strictly Orange and White on Black [cite: 2026-02-20, 2026-02-21] */
-        html, body { 
-            background-color: #000 !important; 
-            color: #fff !important; 
-            margin: 0; 
-            padding: 0; 
-            font-family: sans-serif; 
-            width: 100%;
-        }
+        /* Orange & White Theme [cite: 2026-02-20, 2026-02-21] */
+        :root { --orange: #FF8C00; --bg: #000; --card: #1a1a1a; }
+        body { background: var(--bg); color: #fff; font-family: sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
         
-        /* The main container forces a vertical stack [cite: 2026-03-02] */
-        .main-stack { 
-            width: 95%; 
-            max-width: 400px; 
-            margin: 0 auto; 
-            padding-top: 20px;
-        }
+        header { text-align: center; padding: 20px; border-bottom: 2px solid var(--orange); background: #000; }
+        .logo { font-size: 24px; font-weight: bold; text-transform: uppercase; }
+        .orange-txt { color: var(--orange); }
 
-        header { 
-            display: block;
-            width: 100%;
-            text-align: center; 
-            padding: 20px 0; 
-            border-bottom: 3px solid #FF8C00; 
-            margin-bottom: 20px; 
-            clear: both;
-        }
-        .logo-orange { color: #FF8C00; font-size: 24px; font-weight: bold; }
-        .logo-white { color: #ffffff; font-size: 24px; font-weight: bold; }
-
-        /* Forces each section to be its own independent 'row' [cite: 2026-03-02] */
-        .section-block { 
-            display: table; /* Stronger than 'block' for preventing row-merging */
-            width: 100%;
-            clear: both; 
-            float: none;
-            border: 2px solid #FF8C00; 
+        /* Navigation Reel - Side by Side Buttons [cite: 2026-03-02] */
+        .nav-reel { 
+            display: flex; 
+            overflow-x: auto; 
             background: #111; 
-            padding: 15px; 
-            margin-bottom: 25px; 
-            border-radius: 8px;
+            padding: 10px; 
+            gap: 10px; 
+            border-bottom: 1px solid #333;
+        }
+        .reel-btn { 
+            background: #333; 
+            color: #fff; 
+            border: 1px solid var(--orange); 
+            padding: 10px 18px; 
+            border-radius: 20px; 
+            white-space: nowrap; 
+            font-size: 13px; 
+            font-weight: bold;
+        }
+        .reel-btn.active { background: var(--orange); }
+
+        /* Page Handling */
+        main { padding: 15px; }
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* The Box Styling [cite: 2026-02-27] */
+        .card { 
+            background: var(--card); 
+            border: 1px solid var(--orange); 
+            border-radius: 12px; 
+            padding: 20px; 
             box-sizing: border-box;
         }
+        h2 { color: var(--orange); font-size: 18px; margin-top: 0; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
 
-        h2 { color: #FF8C00; font-size: 18px; margin: 0 0 10px 0; text-transform: uppercase; }
-
-        /* Labels and Inputs [cite: 2026-02-20, 2026-02-26] */
-        label { 
-            display: block; 
-            color: #ccc; 
-            font-size: 11px; 
-            font-weight: bold; 
-            margin-top: 15px; 
-            margin-bottom: 5px; 
-            width: 100%;
-            text-align: left;
-        }
-        
+        /* Input Fields [cite: 2026-02-20, 2026-02-26] */
+        label { display: block; color: #ccc; font-size: 11px; font-weight: bold; margin-top: 15px; margin-bottom: 5px; }
         input, textarea { 
-            display: block; 
             width: 100%; 
             padding: 12px; 
-            border: 1px solid #444; 
-            border-radius: 4px; 
+            border-radius: 6px; 
+            border: none; 
             background: #fff; 
             color: #000; 
             font-size: 16px; 
             box-sizing: border-box; 
-            clear: both;
         }
 
-        /* Large Chunky Buttons [cite: 2026-03-02] */
-        .btn-large { 
-            display: block; 
-            width: 100%; 
-            padding: 18px; 
-            background: #FF8C00; 
-            color: #fff; 
-            border: none; 
-            font-weight: bold; 
-            font-size: 16px; 
-            text-transform: uppercase; 
-            margin-top: 20px; 
-            cursor: pointer;
-            clear: both;
-        }
+        /* Chunky Buttons [cite: 2026-03-02] */
+        .action-stack { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .btn-main { width: 100%; padding: 16px; background: var(--orange); color: #fff; border: none; border-radius: 8px; font-weight: bold; text-transform: uppercase; font-size: 14px; }
+        .btn-outline { background: transparent; border: 1px solid var(--orange); color: var(--orange); padding: 12px; border-radius: 8px; font-weight: bold; }
+
+        /* Calc Results */
+        .res-box { background: #000; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #333; }
+        .res-val { color: var(--orange); font-size: 24px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="main-stack">
-    <header>
-        <span class="logo-orange">TOOLBOX</span><span class="logo-white">PAY</span>
-    </header>
+<header><div class="logo"><span class="orange-txt">TOOLBOX</span>PAY</div></header>
 
-    <div class="section-block">
-        <h2>Business Profile</h2>
-        <label>TRADING NAME</label>
-        <input type="text" id="p_name" oninput="saveData(this)">
-        
-        <label>BUSINESS ADDRESS</label>
-        <textarea id="p_addr" rows="3" oninput="saveData(this)"></textarea>
-    </div>
+<nav class="nav-reel">
+    <button class="reel-btn active" onclick="nav('profile', this)">PROFILE</button>
+    <button class="reel-btn" onclick="nav('bank', this)">BANK</button>
+    <button class="reel-btn" onclick="nav('client', this)">CLIENT</button>
+    <button class="reel-btn" onclick="nav('vat', this)">VAT</button>
+    <button class="reel-btn" onclick="nav('calc', this)">BIZ CALC</button>
+</nav>
 
-    <div class="section-block">
-        <h2>Bank Details</h2>
-        <label>FULL BANK NAME</label>
-        <input type="text" id="b_name" oninput="saveData(this)">
-        
-        <label>SORT CODE (6 DIGITS)</label>
-        <input type="text" id="b_sort" placeholder="00-00-00" oninput="saveData(this)">
-        
-        <label>ACCOUNT NUMBER (8 DIGITS)</label>
-        <input type="text" id="b_acc" oninput="saveData(this)">
-    </div>
+<main>
+    <section id="profile" class="page active">
+        <div class="card">
+            <h2>Business Profile</h2>
+            <label>TRADING NAME</label>
+            <input type="text" id="p_name" class="save">
+            <label>BUSINESS ADDRESS</label>
+            <textarea id="p_addr" class="save" rows="3"></textarea>
+        </div>
+    </section>
 
-    <div class="section-block">
-        <h2>Client Details</h2>
-        <label>FULL CLIENT NAME</label>
-        <input type="text" id="c_name" oninput="saveData(this)">
-        
-        <label>SITE ADDRESS</label>
-        <textarea id="c_addr" rows="3" oninput="saveData(this)"></textarea>
-        
-        <button class="btn-large" onclick="alert('Client Stored Successfully')">Store Client Details</button>
-    </div>
-</div>
+    <section id="bank" class="page">
+        <div class="card">
+            <h2>Bank Details</h2>
+            <label>FULL BANK NAME</label>
+            <input type="text" id="b_name" class="save">
+            <label>SORT CODE</label>
+            <input type="text" id="b_sort" class="save" placeholder="00-00-00">
+            <label>ACCOUNT NUMBER</label>
+            <input type="text" id="b_acc" class="save">
+        </div>
+    </section>
+
+    <section id="client" class="page">
+        <div class="card">
+            <h2>Client Details</h2>
+            <label>FULL CLIENT NAME</label>
+            <input type="text" id="c_name" class="save">
+            <label>SITE ADDRESS</label>
+            <textarea id="c_addr" class="save" rows="3"></textarea>
+            <div class="action-stack">
+                <button class="btn-main" onclick="alert('Client Stored')">Store Details</button>
+                <button class="btn-outline" onclick="clearC()">Clear Fields</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="vat" class="page">
+        <div class="card">
+            <h2>VAT Calculator</h2>
+            <label>NET AMOUNT (£)</label>
+            <input type="number" id="v_in" class="save" oninput="calcV()">
+            <div class="res-box">
+                <label style="margin:0">TOTAL INC. VAT (20%)</label>
+                <div id="v_out" class="res-val">£0.00</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="calc" class="page">
+        <div class="card">
+            <h2>Business Calculator</h2>
+            <label>LABOUR COST (£)</label>
+            <input type="number" id="calc_l" class="save" oninput="calcB()">
+            <label>MATERIALS COST (£)</label>
+            <input type="number" id="calc_m" class="save" oninput="calcB()">
+            <div class="res-box">
+                <label style="margin:0">TOTAL ESTIMATE</label>
+                <div id="b_out" class="res-val">£0.00</div>
+            </div>
+        </div>
+    </section>
+</main>
 
 <script>
-    /* Memory Engine [cite: 2026-02-26, 2026-02-27] */
-    function saveData(el) {
-        localStorage.setItem('tbox_v44_' + el.id, el.value);
+    function nav(id, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.reel-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+        window.scrollTo(0,0);
     }
 
-    /* Loading Engine [cite: 2026-02-27] */
-    window.onload = function() {
-        const ids = ['p_name', 'p_addr', 'b_name', 'b_sort', 'b_acc', 'c_name', 'c_addr'];
-        ids.forEach(id => {
-            const savedValue = localStorage.getItem('tbox_v44_' + id);
-            if (savedValue) {
-                document.getElementById(id).value = savedValue;
-            }
-        });
-    };
-</script>
+    function calcV() {
+        const val = parseFloat(document.getElementById('v_in').value) || 0;
+        document.getElementById('v_out').innerText = "£" + (val * 1.20).toFixed(2);
+    }
 
+    function calcB() {
+        const l = parseFloat(document.getElementById('calc_l').value) || 0;
+        const m = parseFloat(document.getElementById('calc_m').value) || 0;
+        document.getElementById('b_out').innerText = "£" + (l + m).toFixed(2);
+    }
+
+    function clearC() {
+        if(confirm("Clear client?")) {
+            ['c_name', 'c_addr'].forEach(id => {
+                document.getElementById(id).value = '';
+                localStorage.removeItem('tbox_v46_' + id);
+            });
+        }
+    }
+
+    // Auto-Save Engine [cite: 2026-02-26]
+    document.querySelectorAll('.save').forEach(el => {
+        el.value = localStorage.getItem('tbox_v46_' + el.id) || '';
+        el.addEventListener('input', () => {
+            localStorage.setItem('tbox_v46_' + el.id, el.value);
+        });
+    });
+
+    window.onload = () => { calcV(); calcB(); };
+</script>
 </body>
 </html>
