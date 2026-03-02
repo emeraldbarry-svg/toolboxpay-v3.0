@@ -1,16 +1,40 @@
-/* HORIZONTAL REEL STYLING [cite: 2026-03-01] */
+/* TOOLBOXPAY v22.21 - FULL REEL & BRANDING [cite: 2026-03-01] */
+:root {
+    --orange: #ff6600;      /* Vibrant Orange [cite: 2026-02-21] */
+    --slate: #2f3e46;       /* Slate Grey [cite: 2026-03-01] */
+    --dark: #121212;        /* Dark Background [cite: 2020-02-20] */
+    --white: #ffffff;
+}
+
+body {
+    background-color: var(--dark);
+    color: var(--white);
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.orange { color: var(--orange); }
+
+/* HORIZONTAL NAVIGATION REEL [cite: 2026-03-01] */
 .nav-reel {
     display: flex;
     overflow-x: auto;
-    white-space: nowrap;
-    padding: 10px 0;
+    padding: 10px;
     gap: 10px;
+    background: #1a1a1a;
     border-bottom: 2px solid var(--orange);
-    margin-bottom: 20px;
+    scrollbar-width: none; /* Hide scrollbar Firefox */
 }
 
-/* Hide scrollbar but keep functionality [cite: 2026-03-01] */
-.nav-reel::-webkit-scrollbar { display: none; }
+.nav-reel::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome */
 
 .reel-btn {
     background: var(--slate);
@@ -19,8 +43,8 @@
     padding: 10px 20px;
     border-radius: 20px;
     cursor: pointer;
+    white-space: nowrap;
     font-weight: bold;
-    flex-shrink: 0;
 }
 
 .reel-btn.active {
@@ -28,15 +52,24 @@
     color: var(--dark);
 }
 
-/* PAGE POP-UP EFFECT [cite: 2026-03-01] */
+/* PAGE LAYOUT [cite: 2026-03-01] */
 .page {
     display: none;
-    animation: slideUp 0.3s ease-out;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 .page.active { display: block; }
 
-@keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+.card {
+    background: var(--slate);
+    border: 2px solid var(--orange);
+    border-radius: 15px;
+    padding: 20px;
 }
+
+.lbl { display: block; margin: 15px 0 5px; font-size: 0.8rem; color: var(--orange); }
+input { width: 100%; padding: 12px; border-radius: 8px; border: none; margin-bottom: 10px; }
+.res-box { background: #000; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center; }
+.res-val { font-size: 1.4rem; color: var(--orange); font-weight: bold; }
