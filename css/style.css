@@ -1,75 +1,93 @@
-/* TOOLBOXPAY v22.21 - FULL REEL & BRANDING [cite: 2026-03-01] */
+/* TOOLBOXPAY v22.29 - FINAL ALIGNMENT [cite: 2026-03-01] */
 :root {
-    --orange: #ff6600;      /* Vibrant Orange [cite: 2026-02-21] */
-    --slate: #2f3e46;       /* Slate Grey [cite: 2026-03-01] */
-    --dark: #121212;        /* Dark Background [cite: 2020-02-20] */
+    --orange: #ff6600;
+    --slate: #2f3e46;
+    --dark: #121212;
     --white: #ffffff;
 }
+
+* { box-sizing: border-box; }
 
 body {
     background-color: var(--dark);
     color: var(--white);
-    font-family: sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centres the header and reel [cite: 2026-03-01] */
 }
 
-header {
-    text-align: center;
-    padding: 20px;
-    font-weight: bold;
-    font-size: 1.5rem;
-}
-
+header { padding: 30px 0; font-size: 2rem; font-weight: bold; }
 .orange { color: var(--orange); }
 
-/* HORIZONTAL NAVIGATION REEL [cite: 2026-03-01] */
 .nav-reel {
+    width: 100%;
     display: flex;
     overflow-x: auto;
-    padding: 10px;
-    gap: 10px;
+    padding: 15px;
+    gap: 12px;
     background: #1a1a1a;
     border-bottom: 2px solid var(--orange);
-    scrollbar-width: none; /* Hide scrollbar Firefox */
+    justify-content: center; /* Centres buttons on desktop [cite: 2026-03-01] */
 }
 
-.nav-reel::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome */
+.nav-reel::-webkit-scrollbar { display: none; }
 
 .reel-btn {
     background: var(--slate);
     color: var(--white);
     border: 1px solid var(--orange);
-    padding: 10px 20px;
-    border-radius: 20px;
+    padding: 10px 25px;
+    border-radius: 25px;
     cursor: pointer;
-    white-space: nowrap;
     font-weight: bold;
 }
 
-.reel-btn.active {
-    background: var(--orange);
-    color: var(--dark);
-}
+.reel-btn.active { background: var(--orange); color: var(--dark); }
 
-/* PAGE LAYOUT [cite: 2026-03-01] */
-.page {
-    display: none;
-    padding: 20px;
-    max-width: 500px;
-    margin: 0 auto;
+/* THIS FIXES THE ALIGNMENT [cite: 2026-03-01] */
+#main-container {
+    width: 100%;
+    max-width: 500px; /* Keeps the app mobile-sized even on big screens [cite: 2026-03-01] */
+    margin: 20px auto; /* Centres the container [cite: 2026-03-01] */
+    padding: 0 15px;
 }
-
-.page.active { display: block; }
 
 .card {
     background: var(--slate);
-    border: 2px solid var(--orange);
+    border: 3px solid var(--orange); /* Slightly thicker orange border [cite: 2026-03-01] */
     border-radius: 15px;
-    padding: 20px;
+    padding: 25px;
+    width: 100%;
 }
 
-.lbl { display: block; margin: 15px 0 5px; font-size: 0.8rem; color: var(--orange); }
-input { width: 100%; padding: 12px; border-radius: 8px; border: none; margin-bottom: 10px; }
-.res-box { background: #000; padding: 15px; border-radius: 8px; margin-top: 15px; text-align: center; }
-.res-val { font-size: 1.4rem; color: var(--orange); font-weight: bold; }
+.title { border-bottom: 1px solid var(--orange); padding-bottom: 10px; margin-bottom: 20px; }
+
+.lbl { display: block; margin: 15px 0 5px; font-size: 0.85rem; color: var(--orange); font-weight: bold; }
+
+/* FIXES THE "OUT OF LINE" BARS [cite: 2026-03-01] */
+input, textarea {
+    width: 100% !important; /* Forces full width [cite: 2026-03-01] */
+    display: block;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    background: var(--white);
+    color: #333;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+textarea { height: 100px; resize: none; } /* Makes the address box bigger [cite: 2026-03-01] */
+
+.res-box {
+    background: #000;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 25px;
+    text-align: center;
+    border-left: 6px solid var(--orange);
+}
+
+.res-val { font-size: 1.8rem; color: var(--orange); font-weight: bold; }
