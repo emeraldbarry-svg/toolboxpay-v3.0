@@ -1,4 +1,4 @@
-/* TOOLBOXPAY v22.33 - STACK FIX [cite: 2026-03-02] */
+/* TOOLBOXPAY v22.34 - FINAL STACK REPAIR [cite: 2026-03-02] */
 :root {
     --orange: #ff6600;
     --slate: #2f3e46;
@@ -60,7 +60,6 @@ header { padding: 25px 0; font-size: 1.8rem; font-weight: bold; }
 }
 
 .title { border-bottom: 1px solid var(--orange); padding-bottom: 10px; text-align: center; }
-
 .lbl { display: block; margin: 15px 0 5px; font-size: 0.8rem; color: var(--orange); font-weight: bold; }
 
 input, textarea {
@@ -72,11 +71,23 @@ input, textarea {
     background: var(--white);
     color: #333;
     font-size: 1rem;
+    margin-bottom: 10px;
 }
 
 textarea { height: 80px; resize: none; }
 
-/* THE STACK PREVENTER [cite: 2026-03-02] */
+.res-box {
+    background: #000;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+    border-left: 5px solid var(--orange);
+}
+
+.res-val { font-size: 1.6rem; color: var(--orange); font-weight: bold; }
+
+/* THE STACK PREVENTER - MUST BE AT THE END [cite: 2026-03-02] */
 .page { 
     display: none; 
 }
