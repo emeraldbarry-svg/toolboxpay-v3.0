@@ -2,157 +2,95 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TOOLBOXPAY - RESTORE v38.00</title>
+    <title>TOOLBOXPAY v39.0</title>
     <style>
-        /* Orange & White Theme [cite: 2026-02-20, 2026-02-21] */
-        :root { --orange: #FF8C00; --dark-bg: #121212; --card-bg: #1e272e; }
-        body { background: var(--dark-bg); color: #ffffff; font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        /* Simple British Aesthetic [cite: 2026-02-20] */
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 10px; }
+        header { text-align: center; padding: 15px; border-bottom: 2px solid #FF8C00; margin-bottom: 20px; }
+        .logo { font-size: 24px; font-weight: bold; }
+        .orange { color: #FF8C00; }
         
-        header { background: #000; padding: 25px; text-align: center; border-bottom: 3px solid var(--orange); }
-        .logo-t { color: var(--orange); font-weight: 900; font-size: 1.8rem; }
-        .logo-p { color: #ffffff; font-weight: 900; font-size: 1.8rem; }
-
-        /* Navigation Reel */
-        .nav-reel { display: flex; overflow-x: auto; background: #1a1a1a; padding: 12px; gap: 10px; border-bottom: 1px solid #333; }
-        .reel-btn { background: #333; color: #fff; border: 1px solid var(--orange); padding: 12px 20px; border-radius: 25px; white-space: nowrap; font-weight: bold; cursor: pointer; }
-        .reel-btn.active { background: var(--orange); }
-
-        /* Content Areas */
-        main { padding: 15px; }
-        .page { display: none; }
-        .page.active { display: block; }
-        .card { background: var(--card-bg); border: 1px solid var(--orange); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        h2 { border-bottom: 1px solid var(--orange); padding-bottom: 10px; text-transform: uppercase; font-size: 1.2rem; }
-
-        /* Form Elements */
-        .lbl { display: block; color: var(--orange); font-weight: bold; font-size: 0.8rem; margin: 15px 0 5px; text-transform: uppercase; }
-        input, textarea { width: 100%; padding: 15px; border-radius: 8px; border: none; background: #fff; color: #000; font-size: 1.1rem; box-sizing: border-box; }
-
-        /* Chunky Mobile Buttons [cite: 2026-03-02] */
-        .action-stack { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-        .btn-chunky { width: 100%; padding: 20px; border-radius: 12px; border: none; font-weight: bold; text-transform: uppercase; font-size: 1rem; cursor: pointer; }
-        .btn-orange { background: var(--orange); color: #fff; }
-        .btn-outline { background: transparent; border: 2px solid var(--orange); color: var(--orange); }
-
-        /* Success Haptic Overlay [cite: 2026-03-02] */
-        #success-overlay { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 40px; border-radius: 20px; text-align: center; z-index: 1000; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
-        .tick-icon { font-size: 50px; color: #2ecc71; }
+        /* Box Styling */
+        .section-box { background: #222; border: 1px solid #FF8C00; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+        h2 { color: #FF8C00; margin-top: 0; font-size: 18px; text-transform: uppercase; border-bottom: 1px solid #444; padding-bottom: 5px; }
+        
+        /* Labels and Inputs [cite: 2026-02-26] */
+        label { display: block; font-size: 12px; font-weight: bold; margin: 10px 0 5px; color: #ccc; }
+        input, textarea { width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #444; background: #fff; color: #000; box-sizing: border-box; font-size: 16px; }
+        
+        /* Simple Buttons [cite: 2026-03-02] */
+        .btn { width: 100%; padding: 15px; background: #FF8C00; color: #fff; border: none; border-radius: 4px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        .btn-clear { background: #444; }
     </style>
 </head>
 <body>
 
-<header><span class="logo-t">TOOLBOX</span><span class="logo-p">PAY</span></header>
+<header><span class="orange">TOOLBOX</span>PAY</header>
 
-<div id="success-overlay"><div class="tick-icon">✔</div><b style="color:#000">ACTION SAVED</b></div>
+<div class="section-box">
+    <h2>Business Profile</h2>
+    <label>TRADING NAME / BUSINESS NAME</label>
+    <input type="text" id="p_name" class="save">
+    
+    <label>SPECIALISING IN / PRIMARY TRADE</label>
+    <input type="text" id="p_trade" class="save">
+    
+    <label>BUSINESS ADDRESS</label>
+    <textarea id="p_addr" class="save" rows="3"></textarea>
+</div>
 
-<nav class="nav-reel">
-    <button class="reel-btn active" onclick="openTab('profile', this)">PROFILE</button>
-    <button class="reel-btn" onclick="openTab('bank', this)">BANK</button>
-    <button class="reel-btn" onclick="openTab('client', this)">CLIENT</button>
-    <button class="reel-btn" onclick="openTab('vat', this)">VAT</button>
-</nav>
+<div class="section-box">
+    <h2>Bank Details</h2>
+    <label>FULL BANK NAME</label>
+    <input type="text" id="b_name" class="save">
+    
+    <label>SORT CODE (6 DIGITS)</label>
+    <input type="text" id="b_sort" class="save" placeholder="00-00-00">
+    
+    <label>ACCOUNT NUMBER (8 DIGITS)</label>
+    <input type="text" id="b_acc" class="save">
+</div>
 
-<main>
-    <section id="profile" class="page active">
-        <div class="card">
-            <h2>Business Profile</h2>
-            <label class="lbl">Trading Name / Business Name</label>
-            <input type="text" id="fn_name" class="save-me">
-            <label class="lbl">Specialising In / Primary Trade</label>
-            <input type="text" id="fn_trade" class="save-me">
-            <label class="lbl">Business Email Address</label>
-            <input type="email" id="fn_email" class="save-me">
-            <label class="lbl">Business Address</label>
-            <textarea id="fn_addr" class="save-me" rows="4"></textarea>
-        </div>
-    </section>
+<div class="section-box">
+    <h2>Client Details</h2>
+    <label>CLIENT EMAIL ADDRESS</label>
+    <input type="email" id="c_email" class="save">
+    
+    <label>FULL CLIENT NAME</label>
+    <input type="text" id="c_name" class="save">
+    
+    <label>SITE ADDRESS</label>
+    <textarea id="c_addr" class="save" rows="3"></textarea>
 
-    <section id="bank" class="page">
-        <div class="card">
-            <h2>Bank Details</h2>
-            <label class="lbl">Full Bank Name</label>
-            <input type="text" id="fn_bank" class="save-me">
-            <label class="lbl">Sort Code (6 Digits)</label>
-            <input type="text" id="fn_sort" class="save-me" placeholder="00-00-00">
-            <label class="lbl">Account Number (8 Digits)</label>
-            <input type="text" id="fn_acc" class="save-me">
-        </div>
-    </section>
-
-    <section id="client" class="page">
-        <div class="card">
-            <h2>Client Details</h2>
-            <label class="lbl">Client Email Address</label>
-            <input type="email" id="cl_email" class="save-me">
-            <label class="lbl">Full Client Name</label>
-            <input type="text" id="cl_name" class="save-me">
-            <label class="lbl">Site Address</label>
-            <textarea id="cl_addr" class="save-me" rows="3"></textarea>
-            
-            <div class="action-stack">
-                <button class="btn-chunky btn-orange" onclick="triggerDone()">Store Client Details</button>
-                <button class="btn-chunky btn-outline" onclick="clearClientFields()">Clear Fields</button>
-            </div>
-        </div>
-    </section>
-
-    <section id="vat" class="page">
-        <div class="card">
-            <h2>VAT Calculator</h2>
-            <label class="lbl">Net Amount (£) - Labour & Materials</label>
-            <input type="number" id="vat_in" class="save-me" placeholder="0.00">
-            <div style="background:#111; padding:20px; border-radius:8px; margin-top:20px;">
-                <label class="lbl" style="margin:0">Total Including VAT (20%)</label>
-                <div id="vat_out" style="font-size:2rem; font-weight:bold; color:var(--orange);">£0.00</div>
-            </div>
-        </div>
-    </section>
-</main>
+    <button class="btn" onclick="saveAlert()">STORE CLIENT DETAILS</button>
+    <button class="btn btn-clear" onclick="clearClient()">CLEAR CLIENT FIELDS</button>
+</div>
 
 <script>
-    // Tab Switching
-    function openTab(id, btn) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.reel-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        btn.classList.add('active');
-        window.scrollTo(0,0);
+    // Memory Engine [cite: 2026-02-26]
+    document.querySelectorAll('.save').forEach(el => {
+        // Load saved info
+        el.value = localStorage.getItem('tbox_' + el.id) || '';
+        
+        // Save as you type
+        el.addEventListener('input', () => {
+            localStorage.setItem('tbox_' + el.id, el.value);
+        });
+    });
+
+    function saveAlert() {
+        alert("Client Details Saved Locally.");
+        if ("vibrate" in navigator) navigator.vibrate(100);
     }
 
-    // Success Haptics [cite: 2026-03-02]
-    function triggerDone() {
-        if ("vibrate" in navigator) navigator.vibrate([100, 50, 100]);
-        const overlay = document.getElementById('success-overlay');
-        overlay.style.display = 'block';
-        setTimeout(() => { overlay.style.display = 'none'; }, 1500);
-    }
-
-    // Clear Logic
-    function clearClientFields() {
-        if(confirm("Clear client details?")) {
-            ['cl_email', 'cl_name', 'cl_addr'].forEach(id => {
+    function clearClient() {
+        if(confirm("Clear client fields?")) {
+            ['c_email', 'c_name', 'c_addr'].forEach(id => {
                 document.getElementById(id).value = '';
                 localStorage.removeItem('tbox_' + id);
             });
         }
     }
-
-    // Auto-Save Engine [cite: 2026-02-26]
-    document.querySelectorAll('.save-me').forEach(el => {
-        el.value = localStorage.getItem('tbox_' + el.id) || '';
-        el.addEventListener('input', () => {
-            localStorage.setItem('tbox_' + el.id, el.value);
-            if(el.id === 'vat_in') {
-                const val = parseFloat(el.value) || 0;
-                document.getElementById('vat_out').innerText = "£" + (val * 1.2).toFixed(2);
-            }
-        });
-    });
-
-    // Run VAT math on load
-    const startV = parseFloat(document.getElementById('vat_in').value) || 0;
-    document.getElementById('vat_out').innerText = "£" + (startV * 1.2).toFixed(2);
 </script>
 
 </body>
