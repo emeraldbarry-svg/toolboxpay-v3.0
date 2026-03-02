@@ -1,4 +1,4 @@
-/* TOOLBOXPAY v22.29 - FINAL ALIGNMENT [cite: 2026-03-01] */
+/* TOOLBOXPAY v22.30 - ALIGNMENT RESTORATION [cite: 2026-03-02] */
 :root {
     --orange: #ff6600;
     --slate: #2f3e46;
@@ -15,79 +15,75 @@ body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centres the header and reel [cite: 2026-03-01] */
+    align-items: center;
 }
 
-header { padding: 30px 0; font-size: 2rem; font-weight: bold; }
+header { padding: 25px 0; font-size: 1.8rem; font-weight: bold; }
 .orange { color: var(--orange); }
 
 .nav-reel {
     width: 100%;
     display: flex;
     overflow-x: auto;
-    padding: 15px;
-    gap: 12px;
+    padding: 10px;
+    gap: 10px;
     background: #1a1a1a;
     border-bottom: 2px solid var(--orange);
-    justify-content: center; /* Centres buttons on desktop [cite: 2026-03-01] */
+    justify-content: center;
 }
-
-.nav-reel::-webkit-scrollbar { display: none; }
 
 .reel-btn {
     background: var(--slate);
     color: var(--white);
     border: 1px solid var(--orange);
-    padding: 10px 25px;
-    border-radius: 25px;
+    padding: 10px 20px;
+    border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
 }
 
 .reel-btn.active { background: var(--orange); color: var(--dark); }
 
-/* THIS FIXES THE ALIGNMENT [cite: 2026-03-01] */
 #main-container {
     width: 100%;
-    max-width: 500px; /* Keeps the app mobile-sized even on big screens [cite: 2026-03-01] */
-    margin: 20px auto; /* Centres the container [cite: 2026-03-01] */
+    max-width: 500px;
+    margin: 20px auto;
     padding: 0 15px;
 }
 
 .card {
     background: var(--slate);
-    border: 3px solid var(--orange); /* Slightly thicker orange border [cite: 2026-03-01] */
+    border: 2px solid var(--orange);
     border-radius: 15px;
     padding: 25px;
     width: 100%;
 }
 
-.title { border-bottom: 1px solid var(--orange); padding-bottom: 10px; margin-bottom: 20px; }
+.title { border-bottom: 1px solid var(--orange); padding-bottom: 10px; text-align: center; }
 
-.lbl { display: block; margin: 15px 0 5px; font-size: 0.85rem; color: var(--orange); font-weight: bold; }
+.lbl { display: block; margin: 15px 0 5px; font-size: 0.8rem; color: var(--orange); font-weight: bold; }
 
-/* FIXES THE "OUT OF LINE" BARS [cite: 2026-03-01] */
+/* THE ALIGNMENT FIX [cite: 2026-03-02] */
 input, textarea {
-    width: 100% !important; /* Forces full width [cite: 2026-03-01] */
+    width: 100% !important; /* Forces Address to match Name bar [cite: 2026-03-02] */
     display: block;
-    padding: 14px;
-    border-radius: 10px;
+    padding: 12px;
+    border-radius: 8px;
     border: none;
     background: var(--white);
     color: #333;
     font-size: 1rem;
-    font-family: inherit;
 }
 
-textarea { height: 100px; resize: none; } /* Makes the address box bigger [cite: 2026-03-01] */
+textarea { height: 80px; resize: none; } /* Prevents manual resizing [cite: 2026-03-02] */
 
 .res-box {
     background: #000;
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 25px;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
     text-align: center;
-    border-left: 6px solid var(--orange);
+    border-left: 5px solid var(--orange);
 }
 
-.res-val { font-size: 1.8rem; color: var(--orange); font-weight: bold; }
+.res-val { font-size: 1.6rem; color: var(--orange); font-weight: bold; }
