@@ -3,77 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v35.00</title>
-    <link rel="stylesheet" href="css/style.css?v=35.00">
+    <title>toolboxpay - v36.00 RECOVERY</title>
     <style>
-        /* Chunky Mobile UI */
-        .action-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-        .btn-main { width: 100%; padding: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; text-transform: uppercase; border: none; font-size: 1rem; }
-        .orange-btn { background: #FF8C00; color: white; }
-        .dark-btn { background: #333; color: #FF8C00; border: 2px solid #FF8C00; }
-        .grey-btn { background: #444; color: white; }
-        .gen-row { display: flex; gap: 8px; align-items: center; }
-        .gen-btn { background: #FF8C00; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        :root { --orange: #FF8C00; --dark: #1a1a1a; --card: #262626; --text: #ffffff; }
+        body { background-color: var(--dark); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
+        header { background: #000; padding: 20px; text-align: center; border-bottom: 2px solid var(--orange); }
+        .logo { font-weight: 900; font-size: 1.8rem; letter-spacing: 1px; }
+        .orange { color: var(--orange); }
+        .white { color: #fff; }
+        
+        /* Navigation */
+        .nav-reel { display: flex; overflow-x: auto; background: #111; padding: 10px; gap: 10px; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
+        .reel-btn { background: #333; color: #aaa; border: none; padding: 10px 20px; border-radius: 20px; white-space: nowrap; font-weight: bold; font-size: 0.8rem; }
+        .reel-btn.active { background: var(--orange); color: white; }
 
-        /* Success Haptic Overlay */
+        /* Layout */
+        main { padding: 15px; padding-bottom: 100px; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .card { background: var(--card); border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        .title { color: var(--orange); font-size: 1.2rem; margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #444; padding-bottom: 10px; }
+
+        /* Form Fields */
+        .lbl { display: block; font-size: 0.75rem; font-weight: bold; margin-bottom: 8px; color: #bbb; text-transform: uppercase; }
+        input, textarea { width: 100%; padding: 15px; background: #111; border: 1px solid #444; border-radius: 8px; color: white; margin-bottom: 20px; box-sizing: border-box; font-size: 1rem; }
+        input:focus { border-color: var(--orange); outline: none; }
+
+        /* Chunky Mobile Buttons */
+        .action-stack { display: flex; flex-direction: column; gap: 12px; }
+        .btn-main { width: 100%; padding: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; text-transform: uppercase; border: none; font-size: 1rem; }
+        .orange-btn { background: var(--orange); color: white; }
+        .dark-btn { background: #333; color: var(--orange); border: 2px solid var(--orange); }
+        .grey-btn { background: #444; color: white; }
+        
+        .gen-row { display: flex; gap: 8px; align-items: flex-start; }
+        .gen-btn { background: var(--orange); color: white; border: none; padding: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; }
+
+        /* Results Display */
+        .res-box { background: #111; padding: 15px; border-radius: 8px; border-left: 4px solid var(--orange); margin-top: 10px; }
+        .res-val { font-size: 1.8rem; font-weight: bold; color: var(--orange); }
+
+        /* Success Overlay */
         #success-tick { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 0 30px rgba(0,0,0,0.5); text-align: center; }
         .circle { width: 90px; height: 90px; border: 6px solid #28a745; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
         .tick { color: #28a745; font-size: 60px; font-weight: bold; }
-
-        /* Database Modal */
-        #client-list-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10001; overflow-y: auto; padding: 20px; box-sizing: border-box; }
-        .client-entry { background: #222; border-left: 4px solid #FF8C00; padding: 15px; margin-bottom: 10px; border-radius: 4px; color: white; text-align: left; }
-        .close-modal { background: #FF8C00; color: white; border: none; padding: 15px; border-radius: 5px; margin-bottom: 20px; font-weight: bold; width: 100%; cursor: pointer; }
     </style>
 </head>
 <body>
     <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
 
-    <div id="success-tick"><div class="circle"><span class="tick">✔</span></div><p style="color:#333; font-weight:bold; margin-top:15px;">DONE</p></div>
-    <div id="client-list-modal"><button class="close-modal" onclick="closeList()">CLOSE SAVED LIST</button><div id="list-content"></div></div>
+    <div id="success-tick"><div class="circle"><span class="tick">✔</span></div><p style="color:#333; font-weight:bold; margin-top:15px; font-size:1.2rem;">DONE</p></div>
 
-    <nav class="nav-reel">
-        <button class="reel-btn active" onclick="nav('profile')">PROFILE</button>
-        <button class="reel-btn" onclick="nav('bank')">BANK</button>
-        <button class="reel-btn" onclick="nav('client')">CLIENT</button>
-        <button class="reel-btn" onclick="nav('vat')">VAT</button>
-        <button class="reel-btn" onclick="nav('calc')">BIZ CALC</button>
+    <nav class="nav-reel" id="nav-bar">
+        <button class="reel-btn active" onclick="nav('profile', this)">PROFILE</button>
+        <button class="reel-btn" onclick="nav('bank', this)">BANK</button>
+        <button class="reel-btn" onclick="nav('client', this)">CLIENT</button>
+        <button class="reel-btn" onclick="nav('vat', this)">VAT</button>
+        <button class="reel-btn" onclick="nav('calc', this)">BIZ CALC</button>
     </nav>
     
-    <main id="main-container">
+    <main>
         <section id="profile" class="page active">
             <div class="card">
                 <h2 class="title">BUSINESS PROFILE</h2>
-                <label class="lbl">TRADING NAME / BUSINESS NAME</label><input type="text" id="fn_name" class="save-field">
-                <label class="lbl">BUSINESS EMAIL ADDRESS</label><input type="email" id="fn_email" class="save-field">
-                <label class="lbl">BUSINESS ADDRESS</label><textarea id="fn_addr" class="save-field"></textarea>
+                <label class="lbl">TRADING NAME / BUSINESS NAME</label>
+                <input type="text" id="fn_name" class="save-field">
+                <label class="lbl">BUSINESS EMAIL ADDRESS</label>
+                <input type="email" id="fn_email" class="save-field">
+                <label class="lbl">BUSINESS ADDRESS</label>
+                <textarea id="fn_addr" class="save-field" style="height:80px;"></textarea>
             </div>
         </section>
 
         <section id="bank" class="page">
             <div class="card">
                 <h2 class="title">BANK DETAILS</h2>
-                <label class="lbl">FULL BANK NAME</label><input type="text" id="fn_bank" class="save-field" placeholder="e.g. Barclays">
-                <label class="lbl">SORT CODE (6 DIGITS)</label><input type="text" id="fn_sort" class="save-field" placeholder="00-00-00">
-                <label class="lbl">ACCOUNT NUMBER (8 DIGITS)</label><input type="text" id="fn_acc" class="save-field">
+                <label class="lbl">FULL BANK NAME</label>
+                <input type="text" id="fn_bank" class="save-field" placeholder="e.g. Barclays">
+                <label class="lbl">SORT CODE (6 DIGITS)</label>
+                <input type="text" id="fn_sort" class="save-field" placeholder="00-00-00">
+                <label class="lbl">ACCOUNT NUMBER (8 DIGITS)</label>
+                <input type="text" id="fn_acc" class="save-field">
             </div>
         </section>
 
         <section id="client" class="page">
             <div class="card">
                 <h2 class="title">CLIENT DETAILS</h2>
-                <label class="lbl">CLIENT EMAIL ADDRESS</label><input type="email" id="cl_email" class="save-field">
-                <label class="lbl">FULL CLIENT NAME</label><input type="text" id="cl_name" class="save-field">
-                <label class="lbl">SITE ADDRESS</label><textarea id="cl_addr" class="save-field"></textarea>
+                <label class="lbl">CLIENT EMAIL ADDRESS</label>
+                <input type="email" id="cl_email" class="save-field">
+                <label class="lbl">FULL CLIENT NAME</label>
+                <input type="text" id="cl_name" class="save-field">
+                <label class="lbl">SITE ADDRESS</label>
+                <textarea id="cl_addr" class="save-field" style="height:80px;"></textarea>
+                
                 <label class="lbl">REFERENCE / JOB NO.</label>
                 <div class="gen-row">
                     <input type="text" id="cl_ref" class="save-field" style="flex:1;">
                     <button class="gen-btn" onclick="genRef()">GEN</button>
                 </div>
+
                 <div class="action-stack">
-                    <button class="btn-main orange-btn" onclick="storeCl()">STORE CLIENT DETAILS</button>
-                    <button class="btn-main dark-btn" onclick="viewCl()">VIEW SAVED CLIENTS</button>
-                    <button class="btn-main grey-btn" onclick="clearCl()">CLEAR FIELDS</button>
+                    <button class="btn-main orange-btn" onclick="storeData()">STORE CLIENT DETAILS</button>
+                    <button class="btn-main grey-btn" onclick="clearFields()">CLEAR ALL FIELDS</button>
                 </div>
             </div>
         </section>
@@ -86,74 +118,99 @@
                 <div class="res-box">
                     <label class="lbl" style="margin:0; color:white;">VAT AMOUNT (20%)</label>
                     <div id="vTax" class="res-val">£0.00</div>
-                    <hr style="border:0; border-top:1px solid #FF8C00; margin:10px 0;">
-                    <label class="lbl" style="margin:0; color:white;">TOTAL AMOUNT INCLUDING VAT</label>
+                    <hr style="border:0; border-top:1px solid var(--orange); margin:10px 0;">
+                    <label class="lbl" style="margin:0; color:white;">TOTAL INC. VAT</label>
                     <div id="vOut" class="res-val">£0.00</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="calc" class="page">
+            <div class="card">
+                <h2 class="title">BUSINESS CALCULATOR</h2>
+                <label class="lbl">LABOUR COST (£)</label>
+                <input type="number" id="bL" class="save-field" placeholder="0.00">
+                <label class="lbl">MATERIALS COST (£)</label>
+                <input type="number" id="bM" class="save-field" placeholder="0.00">
+                <div class="res-box">
+                    <label class="lbl" style="margin:0; color:white;">TOTAL ESTIMATE</label>
+                    <div id="bTotal" class="res-val">£0.00</div>
                 </div>
             </div>
         </section>
     </main>
 
     <script>
-        // CORE ENGINE - EMBEDDED FOR RELIABILITY
-        function nav(id) {
+        // NAVIGATION ENGINE
+        function nav(pageId, btn) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.reel-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            event.currentTarget.classList.add('active');
+            document.getElementById(pageId).classList.add('active');
+            btn.classList.add('active');
+            window.scrollTo(0,0);
         }
 
-        function done() {
+        // FEEDBACK ENGINE
+        function showSuccess() {
             if ("vibrate" in navigator) navigator.vibrate([100, 50, 100]);
-            document.getElementById('success-tick').style.display = 'block';
-            setTimeout(() => { document.getElementById('success-tick').style.display = 'none'; }, 1500);
+            const tick = document.getElementById('success-tick');
+            tick.style.display = 'block';
+            setTimeout(() => { tick.style.display = 'none'; }, 1500);
         }
 
-        function storeCl() {
-            const n = document.getElementById('cl_name').value;
-            const e = document.getElementById('cl_email').value;
-            const r = document.getElementById('cl_ref').value;
-            if(!n) return alert("Enter name");
-            let list = JSON.parse(localStorage.getItem('tbox_list') || "[]");
-            list.push({n, e, r});
-            localStorage.setItem('tbox_list', JSON.stringify(list));
-            done();
-            setTimeout(() => location.reload(), 1600);
-        }
-
-        function viewCl() {
-            const list = JSON.parse(localStorage.getItem('tbox_list') || "[]");
-            const cont = document.getElementById('list-content');
-            cont.innerHTML = list.length === 0 ? "<p>Empty</p>" : list.reverse().map(c => `<div class="client-entry"><h3>${c.n}</h3><p>${c.e}</p><p>Ref: ${c.r}</p></div>`).join('');
-            document.getElementById('client-list-modal').style.display = 'block';
-        }
-
-        function closeList() { document.getElementById('client-list-modal').style.display = 'none'; }
-
+        // STORAGE & LOGIC
         function genRef() {
             let last = localStorage.getItem('tbox_last_ref') || '1000';
             let next = parseInt(last) + 1;
             document.getElementById('cl_ref').value = next;
             localStorage.setItem('tbox_last_ref', next);
-            done();
+            localStorage.setItem('tbox_cl_ref', next);
+            showSuccess();
         }
 
-        function clearCl() {
-            if(confirm("Clear?")) {
-                ['cl_email', 'cl_name', 'cl_addr', 'cl_ref'].forEach(id => {
-                    localStorage.removeItem('tbox_' + id);
+        function storeData() {
+            if(!document.getElementById('cl_name').value) {
+                alert("Please enter a Client Name first");
+                return;
+            }
+            showSuccess();
+            setTimeout(() => { location.reload(); }, 1600);
+        }
+
+        function clearFields() {
+            if(confirm("Are you sure you want to clear these fields?")) {
+                const ids = ['cl_email', 'cl_name', 'cl_addr', 'cl_ref'];
+                ids.forEach(id => {
                     document.getElementById(id).value = '';
+                    localStorage.removeItem('tbox_' + id);
                 });
             }
         }
 
-        function math() {
-            const v = parseFloat(document.getElementById('vIn').value) || 0;
-            const tax = v * 0.2;
-            document.getElementById('vTax').innerText = "£" + tax.toFixed(2);
-            document.getElementById('vOut').innerText = "£" + (v + tax).toFixed(2);
+        function runMath() {
+            // VAT Math
+            const vIn = parseFloat(document.getElementById('vIn').value) || 0;
+            const vTax = vIn * 0.2;
+            document.getElementById('vTax').innerText = "£" + vTax.toFixed(2);
+            document.getElementById('vOut').innerText = "£" + (vIn + vTax).toFixed(2);
+
+            // Biz Calc Math
+            const bL = parseFloat(document.getElementById('bL').value) || 0;
+            const bM = parseFloat(document.getElementById('bM').value) || 0;
+            document.getElementById('bTotal').innerText = "£" + (bL + bM).toFixed(2);
         }
 
-        // AUTO-SAVE ENGINE
-        document.querySelectorAll('.save-field').forEach(f => {
-            f.value = localStorage.getItem('tbox_' + f.id) || '';
+        // AUTO-SAVE INITIALISATION
+        document.querySelectorAll('.save-field').forEach(field => {
+            field.value = localStorage.getItem('tbox_' + field.id) || '';
+            field.addEventListener('input', () => {
+                localStorage.setItem('tbox_' + field.id, field.value);
+                runMath();
+            });
+        });
+
+        // Run math on load
+        runMath();
+    </script>
+</body>
+</html>
