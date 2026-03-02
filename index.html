@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v33.00 Detail Restore</title>
-    <link rel="stylesheet" href="css/style.css?v=33.00">
+    <title>toolboxpay - v34.00 Reliable Build</title>
+    <link rel="stylesheet" href="css/style.css?v=34.00">
     <style>
         .action-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
         .btn-main { width: 100%; padding: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; text-transform: uppercase; border: none; font-size: 1rem; }
@@ -28,50 +28,27 @@
 <body>
     <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
 
-    <div id="success-tick"><div class="circle"><span class="tick">✔</span></div><p style="color:#333; font-weight:bold; margin-top:15px; font-size:1.2rem;">ACTION COMPLETE</p></div>
-    <div id="client-list-modal"><button class="close-modal" onclick="closeClientList()">CLOSE SAVED LIST</button><div id="list-content"></div></div>
+    <div id="success-tick"><div class="circle"><span class="tick">✔</span></div><p style="color:#333; font-weight:bold; margin-top:15px; font-size:1.2rem;">DONE</p></div>
+    <div id="client-list-modal"><button class="close-modal" onclick="window.closeClientList()">CLOSE SAVED LIST</button><div id="list-content"></div></div>
 
     <nav class="nav-reel">
-        <button class="reel-btn active" onclick="showPage('profile')">PROFILE</button>
-        <button class="reel-btn" onclick="showPage('bank')">BANK</button>
-        <button class="reel-btn" onclick="showPage('client')">CLIENT</button>
-        <button class="reel-btn" onclick="showPage('quote')">QUOTE</button>
-        <button class="reel-btn" onclick="showPage('vat')">VAT</button>
-        <button class="reel-btn" onclick="showPage('calc')">BIZ CALC</button>
-        <button class="reel-btn" onclick="showPage('terms')">T&Cs</button>
+        <button class="reel-btn active" onclick="window.showPage('profile')">PROFILE</button>
+        <button class="reel-btn" onclick="window.showPage('bank')">BANK</button>
+        <button class="reel-btn" onclick="window.showPage('client')">CLIENT</button>
+        <button class="reel-btn" onclick="window.showPage('quote')">QUOTE</button>
+        <button class="reel-btn" onclick="window.showPage('vat')">VAT</button>
+        <button class="reel-btn" onclick="window.showPage('calc')">BIZ CALC</button>
+        <button class="reel-btn" onclick="window.showPage('terms')">T&Cs</button>
     </nav>
     
     <main id="main-container">
         <section id="bank" class="page">
             <div class="card">
                 <h2 class="title">BANK DETAILS</h2>
-                <label class="lbl">FULL BANK NAME</label>
-                <input type="text" id="fn_bank" class="save-field" placeholder="e.g. Barclays, NatWest, etc.">
-                
-                <label class="lbl">SORT CODE (6 DIGITS)</label>
-                <input type="text" id="fn_sort" class="save-field" placeholder="00-00-00">
-                
-                <label class="lbl">ACCOUNT NUMBER (8 DIGITS)</label>
-                <input type="text" id="fn_acc" class="save-field">
-                
-                <label class="lbl">IBAN / SWIFT CODE (FOR INTERNATIONAL PAYMENTS)</label>
-                <input type="text" id="fn_iban" class="save-field">
-            </div>
-        </section>
-
-        <section id="vat" class="page">
-            <div class="card">
-                <h2 class="title">VAT CALCULATOR</h2>
-                <label class="lbl">NET AMOUNT (£) - EXCLUDING VAT</label>
-                <input type="number" id="vIn" placeholder="0.00">
-                
-                <div class="res-box">
-                    <label class="lbl" style="margin:0; color:white;">VAT AMOUNT (20%)</label>
-                    <div id="vTax" class="res-val">£0.00</div>
-                    <hr style="border:0; border-top:1px solid #FF8C00; margin:10px 0;">
-                    <label class="lbl" style="margin:0; color:white;">TOTAL AMOUNT INCLUDING VAT</label>
-                    <div id="vOut" class="res-val">£0.00</div>
-                </div>
+                <label class="lbl">FULL BANK NAME</label><input type="text" id="fn_bank" class="save-field" placeholder="e.g. Barclays">
+                <label class="lbl">SORT CODE (6 DIGITS)</label><input type="text" id="fn_sort" class="save-field" placeholder="00-00-00">
+                <label class="lbl">ACCOUNT NUMBER (8 DIGITS)</label><input type="text" id="fn_acc" class="save-field">
+                <label class="lbl">IBAN / SWIFT CODE</label><input type="text" id="fn_iban" class="save-field">
             </div>
         </section>
 
@@ -81,13 +58,38 @@
                 <label class="lbl">CLIENT EMAIL ADDRESS</label><input type="email" id="cl_email" class="save-field">
                 <label class="lbl">FULL CLIENT NAME</label><input type="text" id="cl_name" class="save-field">
                 <label class="lbl">SITE ADDRESS</label><textarea id="cl_addr" class="save-field"></textarea>
+                
                 <label class="lbl">REFERENCE / JOB NO.</label>
                 <div class="gen-row">
                     <input type="text" id="cl_ref" class="save-field" style="flex:1;">
-                    <button class="gen-btn" onclick="generateRef()">GEN</button>
+                    <button class="gen-btn" onclick="window.generateRef()">GEN</button>
                 </div>
+
                 <div class="action-stack">
-                    <button class="btn-main orange-btn" onclick="manualStore()">STORE CLIENT DETAILS</button>
-                    <button class="btn-main dark-btn" onclick="focusFirst()">EDIT CURRENT ENTRY</button>
-                    <button class="btn-main grey-btn" onclick="clearClientFields()">CLEAR ALL FIELDS</button>
-                    <button class="btn-main dark-btn" onclick="viewExistingClients()">VIEW ALL SAVED
+                    <button class="btn-main orange-btn" onclick="window.manualStore()">STORE CLIENT DETAILS</button>
+                    <button class="btn-main dark-btn" onclick="window.focusFirst()">EDIT CURRENT ENTRY</button>
+                    <button class="btn-main grey-btn" onclick="window.clearClientFields()">CLEAR ALL FIELDS</button>
+                    <button class="btn-main dark-btn" onclick="window.viewExistingClients()">VIEW ALL SAVED CLIENTS</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="vat" class="page">
+            <div class="card">
+                <h2 class="title">VAT CALCULATOR</h2>
+                <label class="lbl">NET AMOUNT (£) - EXCLUDING VAT</label>
+                <input type="number" id="vIn" placeholder="0.00">
+                <div class="res-box">
+                    <label class="lbl" style="margin:0; color:white;">VAT AMOUNT (20%)</label>
+                    <div id="vTax" class="res-val">£0.00</div>
+                    <hr style="border:0; border-top:1px solid #FF8C00; margin:10px 0;">
+                    <label class="lbl" style="margin:0; color:white;">TOTAL AMOUNT INCLUDING VAT</label>
+                    <div id="vOut" class="res-val">£0.00</div>
+                </div>
+            </div>
+        </section>
+        
+        </main>
+    <script src="js/app.js?v=34.00"></script>
+</body>
+</html>
