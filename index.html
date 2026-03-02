@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TOOLBOXPAY v50.0</title>
+    <title>TOOLBOXPAY v52.0</title>
     <style>
-        /* CSS BLOCK [cite: 2026-03-01] */
+        /* CSS BLOCK: Strictly Orange, White, and Black [cite: 2026-02-20, 2026-03-01] */
         :root { --orange: #FF8C00; --white: #ffffff; --dark: #111; }
         body { background: #000; color: var(--white); font-family: sans-serif; margin: 0; padding: 0; }
         
@@ -13,18 +13,19 @@
         .logo-t { color: var(--orange); font-weight: bold; font-size: 24px; }
         .logo-p { color: var(--white); font-weight: bold; font-size: 24px; }
 
+        /* Scrollable Nav Reel [cite: 2026-03-02] */
         .nav-reel { display: flex; overflow-x: auto; background: #1a1a1a; padding: 10px; gap: 10px; border-bottom: 1px solid #333; }
-        .nav-btn { background: #333; color: #fff; border: 1px solid var(--orange); padding: 10px 15px; border-radius: 5px; font-size: 12px; font-weight: bold; white-space: nowrap; }
+        .nav-btn { background: #333; color: #fff; border: 1px solid var(--orange); padding: 10px 15px; border-radius: 5px; font-size: 12px; font-weight: bold; white-space: nowrap; cursor: pointer; }
         .active { background: var(--orange); }
 
         main { padding: 15px; max-width: 400px; margin: 0 auto; }
         .page { display: none; }
         .page.visible { display: block; }
 
-        .card { background: var(--dark); border: 1px solid var(--orange); border-radius: 10px; padding: 20px; }
+        .card { background: var(--dark); border: 1px solid var(--orange); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
         h2 { color: var(--orange); margin-top: 0; font-size: 18px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
 
-        /* Your Image Aspect Ratio Logic [cite: 2026-03-02] */
+        /* User Suggested Aspect Ratio Logic [cite: 2026-03-02] */
         .image-container {
             width: 100%;
             position: relative;
@@ -41,13 +42,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: cover; /* Keeps aspect ratio inside container */
         }
 
         label { display: block; font-size: 11px; font-weight: bold; color: #ccc; margin-top: 15px; margin-bottom: 5px; }
         input, textarea { width: 100%; padding: 12px; border-radius: 5px; border: none; background: #fff; color: #000; font-size: 16px; box-sizing: border-box; }
 
-        .btn-chunky { width: 100%; padding: 18px; background: var(--orange); color: #fff; border: none; border-radius: 8px; font-weight: bold; text-transform: uppercase; margin-top: 20px; }
+        .res-box { background: #000; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #333; text-align: center; }
+        .res-val { color: var(--orange); font-size: 24px; font-weight: bold; }
+
+        .btn-chunky { width: 100%; padding: 18px; background: var(--orange); color: #fff; border: none; border-radius: 8px; font-weight: bold; text-transform: uppercase; margin-top: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -58,6 +62,8 @@
     <div class="nav-btn active" onclick="tab('p', this)">PROFILE</div>
     <div class="nav-btn" onclick="tab('b', this)">BANK</div>
     <div class="nav-btn" onclick="tab('c', this)">CLIENT</div>
+    <div class="nav-btn" onclick="tab('v', this)">VAT</div>
+    <div class="nav-btn" onclick="tab('bc', this)">BIZ CALC</div>
 </div>
 
 <main>
@@ -66,7 +72,7 @@
             <h2>Business Profile</h2>
             <label>TRADING NAME</label><input type="text" id="p_name" class="save">
             <label>SPECIALISING IN</label><input type="text" id="p_trade" class="save">
-            <label>ADDRESS</label><textarea id="p_addr" class="save" rows="3"></textarea>
+            <label>BUSINESS ADDRESS</label><textarea id="p_addr" class="save" rows="3"></textarea>
         </div>
     </section>
 
@@ -96,18 +102,44 @@
             </div>
             <input type="file" accept="image/*" onchange="preview(this, 'prev_after')" style="margin-top:10px;">
 
-            <button class="btn-chunky" onclick="alert('Client Stored')">Store Details</button>
+            <button class="btn-chunky" onclick="alert('Details Stored Safely')">Store Client Details</button>
         </div>
     </section>
+
+    <section id="v" class="page">
+        <div class="card">
+            <h2>VAT Calculator</h2>
+            <label>NET AMOUNT (£)</label>
+            <input type="number" id="v_in" class="save" oninput="calcV()">
+            <div class="res-box">
+                <label style="margin:0">TOTAL INC. VAT (20%)</label>
+                <div id="v_out" class="res-val">£0.00</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="bc" class="page">
+        <div class="card">
+            <h2>Business Calculator</h2>
+            <label>LABOUR COST (£)</label>
+            <input type="number" id="calc_l" class="save" oninput="calcB()">
+            <label>MATERIALS COST (£)</label>
+            <input type="number" id="calc_m" class="save" oninput="calcB()">
+            <div class="res-box">
+                <label style="margin:0">TOTAL JOB ESTIMATE</label>
+                <div id="b_out" class="res-val">£0.00</div>
+            </div>
+        </section>
 </main>
 
 <script>
-    /* JS BLOCK [cite: 2026-03-01] */
+    /* JS BLOCK: Logic Engine [cite: 2026-03-01] */
     function tab(id, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('visible');
         el.classList.add('active');
+        window.scrollTo(0,0);
     }
 
     function preview(input, imgId) {
@@ -118,13 +150,26 @@
         }
     }
 
-    /* Auto-Save Protocol [cite: 2026-02-26] */
+    function calcV() {
+        const val = parseFloat(document.getElementById('v_in').value) || 0;
+        document.getElementById('v_out').innerText = "£" + (val * 1.20).toFixed(2);
+    }
+
+    function calcB() {
+        const l = parseFloat(document.getElementById('calc_l').value) || 0;
+        const m = parseFloat(document.getElementById('calc_m').value) || 0;
+        document.getElementById('b_out').innerText = "£" + (l + m).toFixed(2);
+    }
+
+    /* British English Memory Engine [cite: 2026-02-26, 2026-02-20] */
     document.querySelectorAll('.save').forEach(el => {
-        el.value = localStorage.getItem('tbox_v50_' + el.id) || '';
+        el.value = localStorage.getItem('tbox_v52_' + el.id) || '';
         el.addEventListener('input', () => {
-            localStorage.setItem('tbox_v50_' + el.id, el.value);
+            localStorage.setItem('tbox_v52_' + el.id, el.value);
         });
     });
+
+    window.onload = () => { calcV(); calcB(); };
 </script>
 
 </body>
