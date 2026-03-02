@@ -2,135 +2,117 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <title>TOOLBOXPAY v42.0</title>
+    <title>TOOLBOXPAY v43.0</title>
     <style>
         /* Force strictly Orange and White on Black [cite: 2026-02-20, 2026-02-21] */
-        body { 
-            background-color: #000000 !important; 
-            color: #ffffff !important; 
-            font-family: sans-serif; 
-            margin: 0; 
-            padding: 20px;
-            text-align: left;
-        }
+        html, body { background-color: #000; color: #fff; margin: 0; padding: 0; font-family: sans-serif; }
+        
+        /* The main container forces a vertical stack [cite: 2026-03-02] */
+        .main-stack { width: 100%; max-width: 400px; margin: 0 auto; padding: 10px; }
 
-        /* Prevent all stretching [cite: 2026-03-02] */
-        .container { 
-            max-width: 320px; 
-            margin: 0 auto; 
-        }
+        header { text-align: center; padding: 20px 0; border-bottom: 3px solid #FF8C00; margin-bottom: 20px; }
+        .logo-orange { color: #FF8C00; font-size: 24px; font-weight: bold; }
+        .logo-white { color: #ffffff; font-size: 24px; font-weight: bold; }
 
-        header { 
-            border-bottom: 2px solid #FF8C00; 
-            padding-bottom: 10px; 
-            margin-bottom: 30px; 
-            text-align: center;
-        }
-
-        .orange { color: #FF8C00; font-weight: bold; }
-
-        /* Solid simple boxes [cite: 2026-03-02] */
-        .section { 
-            border: 1px solid #FF8C00; 
-            padding: 15px; 
-            margin-bottom: 25px; 
-            background: #111;
-        }
-
-        h2 { 
-            font-size: 1rem; 
-            color: #FF8C00; 
-            margin-top: 0; 
-            text-transform: uppercase; 
-        }
-
-        label { 
+        /* Each section is a 'block' to prevent single-row merging [cite: 2026-03-02] */
+        .section-block { 
             display: block; 
-            font-size: 0.7rem; 
-            margin-top: 15px; 
-            margin-bottom: 5px; 
-            color: #ccc;
+            clear: both; 
+            border: 2px solid #FF8C00; 
+            background: #111; 
+            padding: 15px; 
+            margin-bottom: 20px; 
+            border-radius: 8px;
         }
 
-        /* Standard white boxes for clarity */
+        h2 { color: #FF8C00; font-size: 18px; margin: 0 0 10px 0; text-transform: uppercase; }
+
+        /* Labels and Inputs [cite: 2026-02-20, 2026-02-26] */
+        label { display: block; color: #ccc; font-size: 11px; font-weight: bold; margin-top: 10px; margin-bottom: 4px; }
         input, textarea { 
+            display: block; 
             width: 100%; 
-            padding: 10px; 
-            border-radius: 4px; 
+            padding: 12px; 
             border: none; 
+            border-radius: 4px; 
             background: #fff; 
             color: #000; 
+            font-size: 16px; 
             box-sizing: border-box; 
-            display: block;
         }
 
-        /* Large tap targets [cite: 2026-03-02] */
-        .btn { 
+        /* Large Chunky Buttons [cite: 2026-03-02] */
+        .btn-large { 
+            display: block; 
             width: 100%; 
-            padding: 15px; 
+            padding: 18px; 
             background: #FF8C00; 
             color: #fff; 
             border: none; 
-            margin-top: 20px; 
             font-weight: bold; 
-            text-transform: uppercase;
+            font-size: 16px; 
+            text-transform: uppercase; 
+            margin-top: 15px; 
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="main-stack">
     <header>
-        <span class="orange">TOOLBOX</span>PAY
+        <span class="logo-orange">TOOLBOX</span><span class="logo-white">PAY</span>
     </header>
 
-    <div class="section">
+    <div class="section-block">
         <h2>Business Profile</h2>
         <label>TRADING NAME</label>
-        <input type="text" id="p_name" oninput="save(this)">
+        <input type="text" id="p_name" oninput="saveData(this)">
         
         <label>BUSINESS ADDRESS</label>
-        <textarea id="p_addr" rows="3" oninput="save(this)"></textarea>
+        <textarea id="p_addr" rows="3" oninput="saveData(this)"></textarea>
     </div>
 
-    <div class="section">
+    <div class="section-block">
         <h2>Bank Details</h2>
         <label>FULL BANK NAME</label>
-        <input type="text" id="b_name" oninput="save(this)">
+        <input type="text" id="b_name" oninput="saveData(this)">
         
         <label>SORT CODE (6 DIGITS)</label>
-        <input type="text" id="b_sort" placeholder="00-00-00" oninput="save(this)">
+        <input type="text" id="b_sort" placeholder="00-00-00" oninput="saveData(this)">
         
         <label>ACCOUNT NUMBER (8 DIGITS)</label>
-        <input type="text" id="b_acc" oninput="save(this)">
+        <input type="text" id="b_acc" oninput="saveData(this)">
     </div>
 
-    <div class="section">
+    <div class="section-block">
         <h2>Client Details</h2>
         <label>FULL CLIENT NAME</label>
-        <input type="text" id="c_name" oninput="save(this)">
+        <input type="text" id="c_name" oninput="saveData(this)">
         
         <label>SITE ADDRESS</label>
-        <textarea id="c_addr" rows="3" oninput="save(this)"></textarea>
+        <textarea id="c_addr" rows="3" oninput="saveData(this)"></textarea>
         
-        <button class="btn" onclick="alert('Information Saved Locally')">Save Details</button>
+        <button class="btn-large" onclick="alert('Client Stored Successfully')">Store Client Details</button>
     </div>
 </div>
 
 <script>
-    /* Simple Save Engine [cite: 2026-02-26] */
-    function save(el) {
-        localStorage.setItem('tbox_' + el.id, el.value);
+    /* Memory Engine [cite: 2026-02-26, 2026-02-27] */
+    function saveData(el) {
+        localStorage.setItem('tbox_save_' + el.id, el.value);
     }
 
-    /* Auto-Load Engine [cite: 2026-02-27] */
+    /* Loading Engine [cite: 2026-02-27] */
     window.onload = function() {
-        const fields = ['p_name', 'p_addr', 'b_name', 'b_sort', 'b_acc', 'c_name', 'c_addr'];
-        fields.forEach(id => {
-            const val = localStorage.getItem('tbox_' + id);
-            if (val) document.getElementById(id).value = val;
+        const ids = ['p_name', 'p_addr', 'b_name', 'b_sort', 'b_acc', 'c_name', 'c_addr'];
+        ids.forEach(id => {
+            const savedValue = localStorage.getItem('tbox_save_' + id);
+            if (savedValue) {
+                document.getElementById(id).value = savedValue;
+            }
         });
-    }
+    };
 </script>
 
 </body>
