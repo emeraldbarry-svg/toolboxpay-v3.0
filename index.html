@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - v22.26 Production</title>
+    <title>toolboxpay - v22.27 Production</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -15,7 +15,7 @@
         <button class="reel-btn active" onclick="showPage('profile')">PROFILE</button>
         <button class="reel-btn" onclick="showPage('bank')">BANK</button>
         <button class="reel-btn" onclick="showPage('vat')">VAT</button>
-        <button class="reel-btn" onclick="showPage('calc')">CALC</button>
+        <button class="reel-btn" onclick="showPage('calc')">BIZ CALC</button>
     </nav>
     
     <main id="main-container">
@@ -26,6 +26,8 @@
                 <input type="text" id="fn_name" class="save-field" placeholder="Enter Company Name">
                 <label class="lbl">SPECIALISING IN</label>
                 <input type="text" id="fn_trade" class="save-field" placeholder="e.g. Carpentry">
+                <label class="lbl">ADDRESS</label>
+                <textarea id="fn_addr" class="save-field" placeholder="Registered Office Address"></textarea>
             </div>
         </section>
 
@@ -34,6 +36,8 @@
                 <h2 class="title">BANK DETAILS</h2>
                 <label class="lbl">BANK NAME</label>
                 <input type="text" id="fn_bank" class="save-field">
+                <label class="lbl">SORT CODE</label>
+                <input type="text" id="fn_sort" class="save-field" placeholder="00-00-00">
                 <label class="lbl">ACCOUNT NUMBER</label>
                 <input type="text" id="fn_acc" class="save-field" placeholder="8-digit number">
             </div>
@@ -50,10 +54,16 @@
 
         <section id="calc" class="page">
             <div class="card">
-                <h2 class="title">BUSINESS CALC</h2>
+                <h2 class="title">BUSINESS CALCULATOR</h2>
                 <label class="lbl">LABOUR (£)</label>
                 <input type="number" id="bL" placeholder="0.00">
-                <div class="res-box"><div id="bQ" class="res-val">£0.00</div></div>
+                <label class="lbl">MATERIALS (£)</label>
+                <input type="number" id="bM" placeholder="0.00">
+                <label class="lbl">MARKUP (%)</label>
+                <input type="number" id="bMk" value="20">
+                <div class="res-box">
+                    <div id="bQ" class="res-val">£0.00</div>
+                </div>
             </div>
         </section>
     </main>
