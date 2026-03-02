@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - v22.42 Professional</title>
-    <link rel="stylesheet" href="css/style.css?v=5">
+    <title>toolboxpay - v22.44 Final Repair</title>
+    <link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
-    <header>
-        <div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div>
-    </header>
+    <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
 
     <nav class="nav-reel">
         <button class="reel-btn active" onclick="showPage('profile')">PROFILE</button>
@@ -23,13 +21,9 @@
             <div class="card">
                 <h2 class="title">BUSINESS PROFILE</h2>
                 <label class="lbl">TRADING NAME</label>
-                <input type="text" id="fn_name" class="save-field" placeholder="Enter Company Name">
+                <input type="text" id="fn_name" class="save-field">
                 <label class="lbl">SPECIALISING IN</label>
-                <input type="text" id="fn_trade" class="save-field" placeholder="e.g. Carpentry">
-                <label class="lbl">PHONE NUMBER</label>
-                <input type="tel" id="fn_phone" class="save-field">
-                <label class="lbl">EMAIL ADDRESS</label>
-                <input type="email" id="fn_email" class="save-field">
+                <input type="text" id="fn_trade" class="save-field">
                 <label class="lbl">ADDRESS</label>
                 <textarea id="fn_addr" class="save-field"></textarea>
             </div>
@@ -52,12 +46,11 @@
                 <h2 class="title">VAT CALCULATOR</h2>
                 <label class="lbl">NET AMOUNT (£)</label>
                 <input type="number" id="vIn" placeholder="0.00">
-                
                 <div class="res-box">
-                    <label class="lbl" style="margin:0; color:var(--white);">VAT AMOUNT (20%)</label>
-                    <div id="vTax" class="res-val" style="font-size: 1.2rem;">£0.00</div>
-                    <hr style="border:0; border-top:1px solid var(--orange); margin: 10px 0;">
-                    <label class="lbl" style="margin:0; color:var(--white);">TOTAL INC. VAT</label>
+                    <label class="lbl" style="margin:0; color:white;">VAT AMOUNT (20%)</label>
+                    <div id="vTax" class="res-val">£0.00</div>
+                    <hr style="border:0; border-top:1px solid var(--orange); margin:10px 0;">
+                    <label class="lbl" style="margin:0; color:white;">TOTAL INC. VAT</label>
                     <div id="vOut" class="res-val">£0.00</div>
                 </div>
             </div>
@@ -72,17 +65,16 @@
                 <input type="number" id="bM" placeholder="0.00">
                 <label class="lbl">MARKUP (%)</label>
                 <input type="number" id="bMk" value="20">
-
                 <div class="res-box">
-                    <label class="lbl" style="margin:0; color:var(--white);">SUBTOTAL (COST)</label>
-                    <div id="bSub" class="res-val" style="font-size: 1.1rem;">£0.00</div>
-                    <label class="lbl" style="margin:10px 0 0; color:var(--white);">TOTAL QUOTE (INC. MARKUP)</label>
+                    <label class="lbl" style="margin:0; color:white;">SUBTOTAL (COST)</label>
+                    <div id="bSub" class="res-val">£0.00</div>
+                    <label class="lbl" style="margin:10px 0 0; color:white;">TOTAL QUOTE</label>
                     <div id="bQ" class="res-val">£0.00</div>
                 </div>
             </div>
         </section>
     </main>
 
-    <script src="js/app.js?v=5"></script>
+    <script src="js/app.js?v=7"></script>
 </body>
 </html>
