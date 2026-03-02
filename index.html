@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - v22.28 Centred</title>
+    <title>toolboxpay - v22.37 Full Features</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -19,54 +19,67 @@
     </nav>
     
     <main id="main-container">
-        <div class="wrapper"> <section id="profile" class="page active">
-                <div class="card">
-                    <h2 class="title">BUSINESS PROFILE</h2>
-                    <label class="lbl">TRADING NAME</label>
-                    <input type="text" id="fn_name" class="save-field" placeholder="Enter Company Name">
-                    <label class="lbl">SPECIALISING IN</label>
-                    <input type="text" id="fn_trade" class="save-field" placeholder="e.g. Carpentry">
-                    <label class="lbl">ADDRESS</label>
-                    <textarea id="fn_addr" class="save-field" placeholder="Registered Office Address"></textarea>
-                </div>
-            </section>
+        <section id="profile" class="page active">
+            <div class="card">
+                <h2 class="title">BUSINESS PROFILE</h2>
+                <label class="lbl">TRADING NAME</label>
+                <input type="text" id="fn_name" class="save-field" placeholder="Enter Company Name">
+                <label class="lbl">SPECIALISING IN</label>
+                <input type="text" id="fn_trade" class="save-field" placeholder="e.g. Carpentry">
+                <label class="lbl">PHONE NUMBER</label>
+                <input type="tel" id="fn_phone" class="save-field" placeholder="07xxx xxxxxx">
+                <label class="lbl">EMAIL ADDRESS</label>
+                <input type="email" id="fn_email" class="save-field" placeholder="name@company.co.uk">
+                <label class="lbl">BUSINESS ADDRESS</label>
+                <textarea id="fn_addr" class="save-field" placeholder="Full Registered Address"></textarea>
+                <label class="lbl">VAT REGISTRATION NO.</label>
+                <input type="text" id="fn_vatno" class="save-field" placeholder="e.g. GB 123 4567 89">
+            </div>
+        </section>
 
-            <section id="bank" class="page">
-                <div class="card">
-                    <h2 class="title">BANK DETAILS</h2>
-                    <label class="lbl">BANK NAME</label>
-                    <input type="text" id="fn_bank" class="save-field">
-                    <label class="lbl">SORT CODE</label>
-                    <input type="text" id="fn_sort" class="save-field" placeholder="00-00-00">
-                    <label class="lbl">ACCOUNT NUMBER</label>
-                    <input type="text" id="fn_acc" class="save-field" placeholder="8-digit number">
-                </div>
-            </section>
+        <section id="bank" class="page">
+            <div class="card">
+                <h2 class="title">BANK DETAILS</h2>
+                <label class="lbl">ACCOUNT HOLDER NAME</label>
+                <input type="text" id="fn_acc_name" class="save-field">
+                <label class="lbl">BANK NAME</label>
+                <input type="text" id="fn_bank" class="save-field">
+                <label class="lbl">SORT CODE</label>
+                <input type="text" id="fn_sort" class="save-field" placeholder="00-00-00">
+                <label class="lbl">ACCOUNT NUMBER</label>
+                <input type="text" id="fn_acc" class="save-field" placeholder="8-digit number">
+                <label class="lbl">IBAN (FOR INT'L)</label>
+                <input type="text" id="fn_iban" class="save-field">
+            </div>
+        </section>
 
-            <section id="vat" class="page">
-                <div class="card">
-                    <h2 class="title">VAT CALCULATOR</h2>
-                    <label class="lbl">NET AMOUNT (£)</label>
-                    <input type="number" id="vIn" placeholder="0.00">
-                    <div class="res-box"><div id="vOut" class="res-val">£0.00</div></div>
+        <section id="vat" class="page">
+            <div class="card">
+                <h2 class="title">VAT CALCULATOR</h2>
+                <label class="lbl">NET AMOUNT (£)</label>
+                <input type="number" id="vIn" placeholder="0.00">
+                <div class="res-box">
+                    <div class="lbl" style="margin:0; font-size: 0.6rem;">TOTAL (INC. 20% VAT)</div>
+                    <div id="vOut" class="res-val">£0.00</div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section id="calc" class="page">
-                <div class="card">
-                    <h2 class="title">BUSINESS CALCULATOR</h2>
-                    <label class="lbl">LABOUR (£)</label>
-                    <input type="number" id="bL" placeholder="0.00">
-                    <label class="lbl">MATERIALS (£)</label>
-                    <input type="number" id="bM" placeholder="0.00">
-                    <label class="lbl">MARKUP (%)</label>
-                    <input type="number" id="bMk" value="20">
-                    <div class="res-box">
-                        <div id="bQ" class="res-val">£0.00</div>
-                    </div>
+        <section id="calc" class="page">
+            <div class="card">
+                <h2 class="title">BUSINESS CALCULATOR</h2>
+                <label class="lbl">LABOUR COST (£)</label>
+                <input type="number" id="bL" placeholder="0.00">
+                <label class="lbl">MATERIALS COST (£)</label>
+                <input type="number" id="bM" placeholder="0.00">
+                <label class="lbl">MARKUP (%)</label>
+                <input type="number" id="bMk" value="20">
+                <div class="res-box">
+                    <div class="lbl" style="margin:0; font-size: 0.6rem;">TOTAL QUOTE</div>
+                    <div id="bQ" class="res-val">£0.00</div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
     </main>
 
     <script src="js/app.js"></script>
