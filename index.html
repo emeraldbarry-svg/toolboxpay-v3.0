@@ -2,11 +2,44 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TOOLBOXPAY v60.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOOLBOXPAY v61.0</title>
+    <link rel="stylesheet" href="styles.css?v=61">
 </head>
 <body>
-    <div id="app"></div>
-    <script src="engine.js?v=60"></script>
+    <header class="app-header">
+        <span class="logo-t">TOOLBOX</span><span class="logo-p">PAY</span>
+    </header>
+
+    <nav class="nav-reel" id="main-nav">
+        <button class="nav-btn active" data-action="nav" data-page="profile">PROFILE</button>
+        <button class="nav-btn" data-action="nav" data-page="bank">BANK</button>
+        <button class="nav-btn" data-action="nav" data-page="calc">VAT</button>
+    </nav>
+
+    <main id="app-viewport">
+        <section id="profile" class="view active">
+            <div class="card">
+                <h2>Business Profile</h2>
+                <label>Trading Name</label>
+                <input type="text" data-model="biz_name" placeholder="Acme Ltd">
+                
+                <label>Specialising In</label>
+                <input type="text" data-model="biz_spec">
+            </div>
+        </section>
+
+        <section id="bank" class="view">
+            <div class="card">
+                <h2>Bank Details</h2>
+                <label>Bank Name</label>
+                <input type="text" data-model="bank_name">
+                <label>Account Number</label>
+                <input type="text" data-model="bank_acc">
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js?v=61"></script>
 </body>
 </html>
