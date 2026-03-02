@@ -2,190 +2,156 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TOOLBOXPAY v46.0</title>
+    <title>TOOLBOXPAY v48.0</title>
     <style>
-        /* Orange & White Theme [cite: 2026-02-20, 2026-02-21] */
-        :root { --orange: #FF8C00; --bg: #000; --card: #1a1a1a; }
-        body { background: var(--bg); color: #fff; font-family: sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
-        
-        header { text-align: center; padding: 20px; border-bottom: 2px solid var(--orange); background: #000; }
-        .logo { font-size: 24px; font-weight: bold; text-transform: uppercase; }
-        .orange-txt { color: var(--orange); }
-
-        /* Navigation Reel - Side by Side Buttons [cite: 2026-03-02] */
-        .nav-reel { 
-            display: flex; 
-            overflow-x: auto; 
-            background: #111; 
-            padding: 10px; 
-            gap: 10px; 
-            border-bottom: 1px solid #333;
+        /* Force strictly Orange and White on Black [cite: 2026-02-20, 2026-02-21] */
+        body { 
+            background-color: #000000; 
+            color: #ffffff; 
+            font-family: sans-serif; 
+            margin: 0; 
+            padding: 10px;
         }
-        .reel-btn { 
+
+        /* Fixed Width Container to prevent stretching [cite: 2026-03-02] */
+        .wrapper { 
+            width: 320px; 
+            margin: 0 auto; 
+        }
+
+        header { 
+            text-align: center; 
+            border-bottom: 2px solid #FF8C00; 
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        .logo-o { color: #FF8C00; font-weight: bold; font-size: 22px; }
+        .logo-w { color: #FFFFFF; font-weight: bold; font-size: 22px; }
+
+        /* Navigation Buttons - Simple Row [cite: 2026-03-02] */
+        .nav-bar { width: 100%; margin-bottom: 20px; text-align: center; }
+        .nav-btn { 
             background: #333; 
             color: #fff; 
-            border: 1px solid var(--orange); 
-            padding: 10px 18px; 
-            border-radius: 20px; 
-            white-space: nowrap; 
-            font-size: 13px; 
+            border: 1px solid #FF8C00; 
+            padding: 8px; 
+            font-size: 11px; 
             font-weight: bold;
+            cursor: pointer;
         }
-        .reel-btn.active { background: var(--orange); }
+        .active-btn { background: #FF8C00; }
 
-        /* Page Handling */
-        main { padding: 15px; }
+        /* Box Sections */
         .page { display: none; }
-        .page.active { display: block; }
-
-        /* The Box Styling [cite: 2026-02-27] */
+        .show { display: block; }
         .card { 
-            background: var(--card); 
-            border: 1px solid var(--orange); 
-            border-radius: 12px; 
-            padding: 20px; 
-            box-sizing: border-box;
+            border: 2px solid #FF8C00; 
+            background: #111; 
+            padding: 15px; 
+            border-radius: 8px;
         }
-        h2 { color: var(--orange); font-size: 18px; margin-top: 0; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
 
-        /* Input Fields [cite: 2026-02-20, 2026-02-26] */
-        label { display: block; color: #ccc; font-size: 11px; font-weight: bold; margin-top: 15px; margin-bottom: 5px; }
+        h2 { color: #FF8C00; font-size: 16px; text-transform: uppercase; margin-top: 0; }
+
+        /* Labels and Inputs [cite: 2026-02-20, 2026-02-26] */
+        label { display: block; font-size: 10px; color: #ccc; margin-top: 10px; font-weight: bold; }
         input, textarea { 
             width: 100%; 
-            padding: 12px; 
-            border-radius: 6px; 
+            padding: 10px; 
+            margin-top: 5px; 
+            border-radius: 4px; 
             border: none; 
             background: #fff; 
             color: #000; 
             font-size: 16px; 
-            box-sizing: border-box; 
+            box-sizing: border-box;
         }
 
         /* Chunky Buttons [cite: 2026-03-02] */
-        .action-stack { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .btn-main { width: 100%; padding: 16px; background: var(--orange); color: #fff; border: none; border-radius: 8px; font-weight: bold; text-transform: uppercase; font-size: 14px; }
-        .btn-outline { background: transparent; border: 1px solid var(--orange); color: var(--orange); padding: 12px; border-radius: 8px; font-weight: bold; }
-
-        /* Calc Results */
-        .res-box { background: #000; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #333; }
-        .res-val { color: var(--orange); font-size: 24px; font-weight: bold; }
+        .btn-big { 
+            width: 100%; 
+            padding: 15px; 
+            background: #FF8C00; 
+            color: #fff; 
+            border: none; 
+            font-weight: bold; 
+            margin-top: 20px; 
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
 
-<header><div class="logo"><span class="orange-txt">TOOLBOX</span>PAY</div></header>
+<div class="wrapper">
+    <header><span class="logo-o">TOOLBOX</span><span class="logo-w">PAY</span></header>
 
-<nav class="nav-reel">
-    <button class="reel-btn active" onclick="nav('profile', this)">PROFILE</button>
-    <button class="reel-btn" onclick="nav('bank', this)">BANK</button>
-    <button class="reel-btn" onclick="nav('client', this)">CLIENT</button>
-    <button class="reel-btn" onclick="nav('vat', this)">VAT</button>
-    <button class="reel-btn" onclick="nav('calc', this)">BIZ CALC</button>
-</nav>
+    <div class="nav-bar">
+        <button id="b1" class="nav-btn active-btn" onclick="tab('p', this)">PROFILE</button>
+        <button id="b2" class="nav-btn" onclick="tab('b', this)">BANK</button>
+        <button id="b3" class="nav-btn" onclick="tab('c', this)">CLIENT</button>
+    </div>
 
-<main>
-    <section id="profile" class="page active">
+    <div id="p" class="page show">
         <div class="card">
             <h2>Business Profile</h2>
             <label>TRADING NAME</label>
-            <input type="text" id="p_name" class="save">
+            <input type="text" id="p_name" oninput="sv(this)">
             <label>BUSINESS ADDRESS</label>
-            <textarea id="p_addr" class="save" rows="3"></textarea>
+            <textarea id="p_addr" rows="3" oninput="sv(this)"></textarea>
         </div>
-    </section>
+    </div>
 
-    <section id="bank" class="page">
+    <div id="b" class="page">
         <div class="card">
             <h2>Bank Details</h2>
             <label>FULL BANK NAME</label>
-            <input type="text" id="b_name" class="save">
+            <input type="text" id="b_name" oninput="sv(this)">
             <label>SORT CODE</label>
-            <input type="text" id="b_sort" class="save" placeholder="00-00-00">
+            <input type="text" id="b_sort" placeholder="00-00-00" oninput="sv(this)">
             <label>ACCOUNT NUMBER</label>
-            <input type="text" id="b_acc" class="save">
+            <input type="text" id="b_acc" oninput="sv(this)">
         </div>
-    </section>
+    </div>
 
-    <section id="client" class="page">
+    <div id="c" class="page">
         <div class="card">
             <h2>Client Details</h2>
-            <label>FULL CLIENT NAME</label>
-            <input type="text" id="c_name" class="save">
+            <label>CLIENT NAME</label>
+            <input type="text" id="c_name" oninput="sv(this)">
             <label>SITE ADDRESS</label>
-            <textarea id="c_addr" class="save" rows="3"></textarea>
-            <div class="action-stack">
-                <button class="btn-main" onclick="alert('Client Stored')">Store Details</button>
-                <button class="btn-outline" onclick="clearC()">Clear Fields</button>
-            </div>
+            <textarea id="c_addr" rows="3" oninput="sv(this)"></textarea>
+            <button class="btn-big" onclick="alert('Saved')">STORE DETAILS</button>
         </div>
-    </section>
-
-    <section id="vat" class="page">
-        <div class="card">
-            <h2>VAT Calculator</h2>
-            <label>NET AMOUNT (£)</label>
-            <input type="number" id="v_in" class="save" oninput="calcV()">
-            <div class="res-box">
-                <label style="margin:0">TOTAL INC. VAT (20%)</label>
-                <div id="v_out" class="res-val">£0.00</div>
-            </div>
-        </div>
-    </section>
-
-    <section id="calc" class="page">
-        <div class="card">
-            <h2>Business Calculator</h2>
-            <label>LABOUR COST (£)</label>
-            <input type="number" id="calc_l" class="save" oninput="calcB()">
-            <label>MATERIALS COST (£)</label>
-            <input type="number" id="calc_m" class="save" oninput="calcB()">
-            <div class="res-box">
-                <label style="margin:0">TOTAL ESTIMATE</label>
-                <div id="b_out" class="res-val">£0.00</div>
-            </div>
-        </div>
-    </section>
-</main>
+    </div>
+</div>
 
 <script>
-    function nav(id, btn) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.reel-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        btn.classList.add('active');
-        window.scrollTo(0,0);
+    /* Tab Engine */
+    function tab(id, btn) {
+        var p = document.getElementsByClassName('page');
+        for (var i=0; i<p.length; i++) { p[i].style.display = 'none'; }
+        document.getElementById(id).style.display = 'block';
+        
+        var b = document.getElementsByClassName('nav-btn');
+        for (var j=0; j<b.length; j++) { b[j].classList.remove('active-btn'); }
+        btn.classList.add('active-btn');
     }
 
-    function calcV() {
-        const val = parseFloat(document.getElementById('v_in').value) || 0;
-        document.getElementById('v_out').innerText = "£" + (val * 1.20).toFixed(2);
+    /* Simple Save [cite: 2026-02-26] */
+    function sv(el) {
+        localStorage.setItem('tbox_v48_' + el.id, el.value);
     }
 
-    function calcB() {
-        const l = parseFloat(document.getElementById('calc_l').value) || 0;
-        const m = parseFloat(document.getElementById('calc_m').value) || 0;
-        document.getElementById('b_out').innerText = "£" + (l + m).toFixed(2);
-    }
-
-    function clearC() {
-        if(confirm("Clear client?")) {
-            ['c_name', 'c_addr'].forEach(id => {
-                document.getElementById(id).value = '';
-                localStorage.removeItem('tbox_v46_' + id);
-            });
+    /* Load on start [cite: 2026-02-27] */
+    window.onload = function() {
+        var ids = ['p_name', 'p_addr', 'b_name', 'b_sort', 'b_acc', 'c_name', 'c_addr'];
+        for (var i=0; i<ids.length; i++) {
+            var val = localStorage.getItem('tbox_v48_' + ids[i]);
+            if (val) document.getElementById(ids[i]).value = val;
         }
     }
-
-    // Auto-Save Engine [cite: 2026-02-26]
-    document.querySelectorAll('.save').forEach(el => {
-        el.value = localStorage.getItem('tbox_v46_' + el.id) || '';
-        el.addEventListener('input', () => {
-            localStorage.setItem('tbox_v46_' + el.id, el.value);
-        });
-    });
-
-    window.onload = () => { calcV(); calcB(); };
 </script>
+
 </body>
 </html>
