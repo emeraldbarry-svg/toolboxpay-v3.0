@@ -3,8 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - v22.60</title>
-    <link rel="stylesheet" href="css/style.css?v=22.60">
+    <title>toolboxpay - v22.61 Master</title>
+    <link rel="stylesheet" href="css/style.css?v=22.61">
+    <style>
+        .store-btn {
+            margin-top: 20px;
+            background: #FF8C00; /* Orange */
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .store-btn:active {
+            background: #e67e00;
+        }
+    </style>
 </head>
 <body>
     <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
@@ -53,7 +70,7 @@
                 <label class="lbl">LANDLINE NUMBER</label><input type="tel" id="cl_land" class="save-field">
                 <label class="lbl">REFERENCE / JOB NO.</label><input type="text" id="cl_ref" class="save-field">
                 
-                <button class="store-btn" style="margin-top:20px; background: var(--orange); color: white; border: none; padding: 15px; width: 100%; font-weight: bold; border-radius: 8px; cursor: pointer;" onclick="location.reload()">STORE DETAILS</button>
+                <button class="store-btn" onclick="manualStore()">STORE DETAILS</button>
             </div>
         </section>
 
@@ -108,6 +125,6 @@
         </section>
     </main>
 
-    <script src="js/app.js?v=22.60"></script>
+    <script src="js/app.js?v=22.61"></script>
 </body>
 </html>
