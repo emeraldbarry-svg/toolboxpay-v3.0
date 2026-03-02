@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - v24.00</title>
-    <link rel="stylesheet" href="css/style.css?v=24.00">
+    <title>toolboxpay - v25.00 Haptic</title>
+    <link rel="stylesheet" href="css/style.css?v=25.00">
     <style>
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
         .store-btn { grid-column: span 2; background: #FF8C00; color: white; border: none; padding: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase; }
@@ -12,12 +12,47 @@
         .clear-btn { background: #444; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; }
         .gen-row { display: flex; gap: 5px; align-items: center; }
         .gen-btn { background: #FF8C00; color: white; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 0.7rem; }
-        .orange { color: #FF8C00; }
-        .white { color: #FFFFFF; }
+
+        /* SUCCESS TICK OVERLAY */
+        #success-tick {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .circle {
+            width: 80px;
+            height: 80px;
+            border: 5px solid #28a745; /* Green Outer Circle */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        .tick {
+            color: #28a745;
+            font-size: 50px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
+
+    <div id="success-tick">
+        <div class="circle">
+            <span class="tick">✔</span>
+        </div>
+        <p style="color: #333; font-weight: bold; margin-top: 15px;">ACTION COMPLETE</p>
+    </div>
 
     <nav class="nav-reel">
         <button class="reel-btn active" onclick="showPage('profile')">PROFILE</button>
@@ -34,19 +69,15 @@
             <div class="card">
                 <h2 class="title">CLIENT DETAILS</h2>
                 <label class="lbl">CLIENT NAME</label><input type="text" id="cl_name" class="save-field">
-                
                 <label class="lbl">CLIENT EMAIL</label><input type="email" id="cl_email" class="save-field">
-                
                 <label class="lbl">SITE ADDRESS</label><textarea id="cl_addr" class="save-field"></textarea>
                 <label class="lbl">MOBILE NUMBER</label><input type="tel" id="cl_mob" class="save-field">
                 <label class="lbl">LANDLINE NUMBER</label><input type="tel" id="cl_land" class="save-field">
-                
                 <label class="lbl">REFERENCE / JOB NO.</label>
                 <div class="gen-row">
                     <input type="text" id="cl_ref" class="save-field" style="flex:1;">
                     <button class="gen-btn" onclick="generateRef()">GEN</button>
                 </div>
-
                 <div class="btn-grid">
                     <button class="store-btn" onclick="manualStore()">STORE DETAILS</button>
                     <button class="edit-btn" onclick="focusFirst()">EDIT</button>
@@ -82,15 +113,8 @@
             <div class="card">
                 <h2 class="title">QUOTE GENERATOR</h2>
                 <label class="lbl">CUSTOMER NAME</label><input type="text" id="q_cust_name" class="save-field">
-                <label class="lbl">CUSTOMER ADDRESS</label><textarea id="q_cust_addr" class="save-field"></textarea>
-                <label class="lbl">CUSTOMER EMAIL</label><input type="email" id="q_cust_email" class="save-field">
-                <label class="lbl">MOBILE NUMBER</label><input type="tel" id="q_cust_mob" class="save-field">
-                <label class="lbl">LANDLINE NUMBER</label><input type="tel" id="q_cust_land" class="save-field">
-                <hr style="border:0; border-top:1px solid var(--orange); margin:20px 0;">
                 <label class="lbl">JOB DESCRIPTION</label><textarea id="q_desc" class="save-field" style="height: 80px;"></textarea>
                 <div class="res-box">
-                    <label class="lbl" style="margin:0; color:white;">SUBTOTAL</label><div id="q_sub" class="res-val" style="font-size: 1.2rem;">£0.00</div>
-                    <hr style="border:0; border-top:1px solid rgba(255,255,255,0.2); margin:5px 0;">
                     <label class="lbl" style="margin:0; color:white;">GRAND TOTAL</label><div id="q_grand_total" class="res-val">£0.00</div>
                 </div>
             </div>
@@ -101,8 +125,6 @@
                 <h2 class="title">VAT CALCULATOR</h2>
                 <label class="lbl">NET AMOUNT (£)</label><input type="number" id="vIn" placeholder="0.00">
                 <div class="res-box">
-                    <label class="lbl" style="margin:0; color:white;">VAT AMOUNT (20%)</label><div id="vTax" class="res-val">£0.00</div>
-                    <hr style="border:0; border-top:1px solid var(--orange); margin:10px 0;">
                     <label class="lbl" style="margin:0; color:white;">TOTAL INC. VAT</label><div id="vOut" class="res-val">£0.00</div>
                 </div>
             </div>
@@ -115,8 +137,7 @@
                 <label class="lbl">MATERIALS COST (£)</label><input type="number" id="bM" placeholder="0.00">
                 <label class="lbl">MARKUP (%)</label><input type="number" id="bMk" value="20">
                 <div class="res-box">
-                    <label class="lbl" style="margin:0; color:white;">SUBTOTAL (COST)</label><div id="bSub" class="res-val">£0.00</div>
-                    <label class="lbl" style="margin:10px 0 0; color:white;">TOTAL QUOTE</label><div id="bQ" class="res-val">£0.00</div>
+                    <label class="lbl" style="margin:0; color:white;">TOTAL QUOTE</label><div id="bQ" class="res-val">£0.00</div>
                 </div>
             </div>
         </section>
@@ -129,6 +150,6 @@
         </section>
     </main>
 
-    <script src="js/app.js?v=24.00"></script>
+    <script src="js/app.js?v=25.00"></script>
 </body>
 </html>
