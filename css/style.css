@@ -1,4 +1,4 @@
-/* TOOLBOXPAY v22.31 - ALIGNMENT & BIZ CALC [cite: 2026-03-02] */
+/* TOOLBOXPAY v22.33 - STACK FIX [cite: 2026-03-02] */
 :root {
     --orange: #ff6600;
     --slate: #2f3e46;
@@ -21,7 +21,6 @@ body {
 header { padding: 25px 0; font-size: 1.8rem; font-weight: bold; }
 .orange { color: var(--orange); }
 
-/* HORIZONTAL REEL [cite: 2026-03-02] */
 .nav-reel {
     width: 100%;
     display: flex;
@@ -45,7 +44,6 @@ header { padding: 25px 0; font-size: 1.8rem; font-weight: bold; }
 
 .reel-btn.active { background: var(--orange); color: var(--dark); }
 
-/* PAGE CONTAINER [cite: 2026-03-02] */
 #main-container {
     width: 100%;
     max-width: 500px;
@@ -61,31 +59,28 @@ header { padding: 25px 0; font-size: 1.8rem; font-weight: bold; }
     width: 100%;
 }
 
-.title { border-bottom: 1px solid var(--orange); padding-bottom: 10px; text-align: center; margin-top: 0; }
+.title { border-bottom: 1px solid var(--orange); padding-bottom: 10px; text-align: center; }
+
 .lbl { display: block; margin: 15px 0 5px; font-size: 0.8rem; color: var(--orange); font-weight: bold; }
 
-/* FIXES THE "OUT OF LINE" ADDRESS BOX [cite: 2026-03-02] */
 input, textarea {
-    width: 100% !important; 
-    display: block !important;
+    width: 100% !important;
+    display: block;
     padding: 12px;
     border-radius: 8px;
     border: none;
     background: var(--white);
     color: #333;
     font-size: 1rem;
-    margin-bottom: 10px;
 }
 
-textarea { height: 100px; resize: none; font-family: inherit; }
+textarea { height: 80px; resize: none; }
 
-.res-box {
-    background: #000;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 20px;
-    text-align: center;
-    border-left: 5px solid var(--orange);
+/* THE STACK PREVENTER [cite: 2026-03-02] */
+.page { 
+    display: none; 
 }
 
-.res-val { font-size: 1.6rem; color: var(--orange); font-weight: bold; }
+.page.active { 
+    display: block !important; 
+}
