@@ -2,43 +2,77 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <title>TOOLBOXPAY v43.0</title>
+    <title>TOOLBOXPAY v44.0</title>
     <style>
         /* Force strictly Orange and White on Black [cite: 2026-02-20, 2026-02-21] */
-        html, body { background-color: #000; color: #fff; margin: 0; padding: 0; font-family: sans-serif; }
+        html, body { 
+            background-color: #000 !important; 
+            color: #fff !important; 
+            margin: 0; 
+            padding: 0; 
+            font-family: sans-serif; 
+            width: 100%;
+        }
         
         /* The main container forces a vertical stack [cite: 2026-03-02] */
-        .main-stack { width: 100%; max-width: 400px; margin: 0 auto; padding: 10px; }
+        .main-stack { 
+            width: 95%; 
+            max-width: 400px; 
+            margin: 0 auto; 
+            padding-top: 20px;
+        }
 
-        header { text-align: center; padding: 20px 0; border-bottom: 3px solid #FF8C00; margin-bottom: 20px; }
+        header { 
+            display: block;
+            width: 100%;
+            text-align: center; 
+            padding: 20px 0; 
+            border-bottom: 3px solid #FF8C00; 
+            margin-bottom: 20px; 
+            clear: both;
+        }
         .logo-orange { color: #FF8C00; font-size: 24px; font-weight: bold; }
         .logo-white { color: #ffffff; font-size: 24px; font-weight: bold; }
 
-        /* Each section is a 'block' to prevent single-row merging [cite: 2026-03-02] */
+        /* Forces each section to be its own independent 'row' [cite: 2026-03-02] */
         .section-block { 
-            display: block; 
+            display: table; /* Stronger than 'block' for preventing row-merging */
+            width: 100%;
             clear: both; 
+            float: none;
             border: 2px solid #FF8C00; 
             background: #111; 
             padding: 15px; 
-            margin-bottom: 20px; 
+            margin-bottom: 25px; 
             border-radius: 8px;
+            box-sizing: border-box;
         }
 
         h2 { color: #FF8C00; font-size: 18px; margin: 0 0 10px 0; text-transform: uppercase; }
 
         /* Labels and Inputs [cite: 2026-02-20, 2026-02-26] */
-        label { display: block; color: #ccc; font-size: 11px; font-weight: bold; margin-top: 10px; margin-bottom: 4px; }
+        label { 
+            display: block; 
+            color: #ccc; 
+            font-size: 11px; 
+            font-weight: bold; 
+            margin-top: 15px; 
+            margin-bottom: 5px; 
+            width: 100%;
+            text-align: left;
+        }
+        
         input, textarea { 
             display: block; 
             width: 100%; 
             padding: 12px; 
-            border: none; 
+            border: 1px solid #444; 
             border-radius: 4px; 
             background: #fff; 
             color: #000; 
             font-size: 16px; 
             box-sizing: border-box; 
+            clear: both;
         }
 
         /* Large Chunky Buttons [cite: 2026-03-02] */
@@ -52,8 +86,9 @@
             font-weight: bold; 
             font-size: 16px; 
             text-transform: uppercase; 
-            margin-top: 15px; 
+            margin-top: 20px; 
             cursor: pointer;
+            clear: both;
         }
     </style>
 </head>
@@ -100,14 +135,14 @@
 <script>
     /* Memory Engine [cite: 2026-02-26, 2026-02-27] */
     function saveData(el) {
-        localStorage.setItem('tbox_save_' + el.id, el.value);
+        localStorage.setItem('tbox_v44_' + el.id, el.value);
     }
 
     /* Loading Engine [cite: 2026-02-27] */
     window.onload = function() {
         const ids = ['p_name', 'p_addr', 'b_name', 'b_sort', 'b_acc', 'c_name', 'c_addr'];
         ids.forEach(id => {
-            const savedValue = localStorage.getItem('tbox_save_' + id);
+            const savedValue = localStorage.getItem('tbox_v44_' + id);
             if (savedValue) {
                 document.getElementById(id).value = savedValue;
             }
