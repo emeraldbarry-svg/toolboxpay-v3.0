@@ -3,21 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>toolboxpay - v32.00</title>
-    <link rel="stylesheet" href="css/style.css?v=32.00">
+    <title>toolboxpay - v33.00 Detail Restore</title>
+    <link rel="stylesheet" href="css/style.css?v=33.00">
     <style>
-        /* Mobile-First Chunky UI */
         .action-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
         .btn-main { width: 100%; padding: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; text-transform: uppercase; border: none; font-size: 1rem; }
         .orange-btn { background: #FF8C00; color: white; }
         .dark-btn { background: #333; color: #FF8C00; border: 2px solid #FF8C00; }
         .grey-btn { background: #444; color: white; }
-        
-        /* Auto-Ref Row */
         .gen-row { display: flex; gap: 8px; align-items: center; }
         .gen-btn { background: #FF8C00; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; }
 
-        /* Haptic Success Overlay */
+        /* Success Haptic Overlay */
         #success-tick { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 0 30px rgba(0,0,0,0.5); text-align: center; }
         .circle { width: 90px; height: 90px; border: 6px solid #28a745; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
         .tick { color: #28a745; font-size: 60px; font-weight: bold; }
@@ -31,15 +28,8 @@
 <body>
     <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
 
-    <div id="success-tick">
-        <div class="circle"><span class="tick">✔</span></div>
-        <p style="color:#333; font-weight:bold; margin-top:15px; font-size:1.2rem;">ACTION COMPLETE</p>
-    </div>
-
-    <div id="client-list-modal">
-        <button class="close-modal" onclick="closeClientList()">CLOSE SAVED LIST</button>
-        <div id="list-content"></div>
-    </div>
+    <div id="success-tick"><div class="circle"><span class="tick">✔</span></div><p style="color:#333; font-weight:bold; margin-top:15px; font-size:1.2rem;">ACTION COMPLETE</p></div>
+    <div id="client-list-modal"><button class="close-modal" onclick="closeClientList()">CLOSE SAVED LIST</button><div id="list-content"></div></div>
 
     <nav class="nav-reel">
         <button class="reel-btn active" onclick="showPage('profile')">PROFILE</button>
@@ -52,22 +42,36 @@
     </nav>
     
     <main id="main-container">
-        <section id="profile" class="page active">
-            <div class="card">
-                <h2 class="title">BUSINESS PROFILE</h2>
-                <label class="lbl">TRADING NAME / BUSINESS NAME</label><input type="text" id="fn_name" class="save-field">
-                <label class="lbl">SPECIALISING IN / PRIMARY TRADE</label><input type="text" id="fn_trade" class="save-field">
-                <label class="lbl">BUSINESS EMAIL ADDRESS</label><input type="email" id="fn_email" class="save-field">
-                <label class="lbl">BUSINESS ADDRESS</label><textarea id="fn_addr" class="save-field"></textarea>
-            </div>
-        </section>
-
         <section id="bank" class="page">
             <div class="card">
                 <h2 class="title">BANK DETAILS</h2>
-                <label class="lbl">FULL BANK NAME</label><input type="text" id="fn_bank" class="save-field">
-                <label class="lbl">SORT CODE (6 DIGITS)</label><input type="text" id="fn_sort" class="save-field">
-                <label class="lbl">ACCOUNT NUMBER (8 DIGITS)</label><input type="text" id="fn_acc" class="save-field">
+                <label class="lbl">FULL BANK NAME</label>
+                <input type="text" id="fn_bank" class="save-field" placeholder="e.g. Barclays, NatWest, etc.">
+                
+                <label class="lbl">SORT CODE (6 DIGITS)</label>
+                <input type="text" id="fn_sort" class="save-field" placeholder="00-00-00">
+                
+                <label class="lbl">ACCOUNT NUMBER (8 DIGITS)</label>
+                <input type="text" id="fn_acc" class="save-field">
+                
+                <label class="lbl">IBAN / SWIFT CODE (FOR INTERNATIONAL PAYMENTS)</label>
+                <input type="text" id="fn_iban" class="save-field">
+            </div>
+        </section>
+
+        <section id="vat" class="page">
+            <div class="card">
+                <h2 class="title">VAT CALCULATOR</h2>
+                <label class="lbl">NET AMOUNT (£) - EXCLUDING VAT</label>
+                <input type="number" id="vIn" placeholder="0.00">
+                
+                <div class="res-box">
+                    <label class="lbl" style="margin:0; color:white;">VAT AMOUNT (20%)</label>
+                    <div id="vTax" class="res-val">£0.00</div>
+                    <hr style="border:0; border-top:1px solid #FF8C00; margin:10px 0;">
+                    <label class="lbl" style="margin:0; color:white;">TOTAL AMOUNT INCLUDING VAT</label>
+                    <div id="vOut" class="res-val">£0.00</div>
+                </div>
             </div>
         </section>
 
@@ -77,27 +81,13 @@
                 <label class="lbl">CLIENT EMAIL ADDRESS</label><input type="email" id="cl_email" class="save-field">
                 <label class="lbl">FULL CLIENT NAME</label><input type="text" id="cl_name" class="save-field">
                 <label class="lbl">SITE ADDRESS</label><textarea id="cl_addr" class="save-field"></textarea>
-                
-                <label class="lbl">UNIQUE REFERENCE / JOB NO.</label>
+                <label class="lbl">REFERENCE / JOB NO.</label>
                 <div class="gen-row">
                     <input type="text" id="cl_ref" class="save-field" style="flex:1;">
                     <button class="gen-btn" onclick="generateRef()">GEN</button>
                 </div>
-
                 <div class="action-stack">
                     <button class="btn-main orange-btn" onclick="manualStore()">STORE CLIENT DETAILS</button>
                     <button class="btn-main dark-btn" onclick="focusFirst()">EDIT CURRENT ENTRY</button>
                     <button class="btn-main grey-btn" onclick="clearClientFields()">CLEAR ALL FIELDS</button>
-                    <button class="btn-main dark-btn" onclick="viewExistingClients()">VIEW ALL SAVED CLIENTS</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="vat" class="page">
-            <div class="card"><h2 class="title">VAT CALCULATOR</h2><label class="lbl">NET AMOUNT (£)</label><input type="number" id="vIn" placeholder="0.00"><div class="res-box"><div id="vOut" class="res-val">£0.00</div></div></div>
-        </section>
-        <section id="calc" class="page">
-            <div class="card"><h2 class="title">BIZ CALC</h2><label class="lbl">LABOUR (£)</label><input type="number" id="bL"><label class="lbl">MATERIALS (£)</label><input type="number" id="bM"><div class="res-box"><div id="bQ" class="res-val">£0.00</div></div></div>
-        </section>
-        <section id="terms" class="page">
-            <div class="card"><h2 class="title">TERMS & CONDITIONS</h2><textarea id
+                    <button class="btn-main dark-btn" onclick="viewExistingClients()">VIEW ALL SAVED
