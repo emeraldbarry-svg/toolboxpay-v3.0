@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>toolboxpay - v22.49 Full Profile</title>
-    <link rel="stylesheet" href="css/style.css?v=12">
+    <title>toolboxpay - v22.50 Master Suite</title>
+    <link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body>
     <header><div class="logo"><span class="orange">TOOLBOX</span><span class="white">PAY</span></div></header>
@@ -12,62 +12,69 @@
     <nav class="nav-reel">
         <button class="reel-btn active" onclick="showPage('profile')">PROFILE</button>
         <button class="reel-btn" onclick="showPage('bank')">BANK</button>
+        <button class="reel-btn" onclick="showPage('client')">CLIENT</button>
+        <button class="reel-btn" onclick="showPage('quote')">QUOTE</button>
         <button class="reel-btn" onclick="showPage('vat')">VAT</button>
         <button class="reel-btn" onclick="showPage('calc')">BIZ CALC</button>
+        <button class="reel-btn" onclick="showPage('terms')">T&Cs</button>
+        <button class="reel-btn" onclick="showPage('readme')">HELP</button>
     </nav>
     
     <main id="main-container">
         <section id="profile" class="page active">
             <div class="card">
                 <h2 class="title">BUSINESS PROFILE</h2>
-                <label class="lbl">TRADING NAME</label>
-                <input type="text" id="fn_name" class="save-field">
-                
-                <label class="lbl">SPECIALISING IN</label>
-                <input type="text" id="fn_trade" class="save-field">
-                
-                <label class="lbl">PHONE NUMBER</label>
-                <input type="tel" id="fn_phone" class="save-field">
-                
-                <label class="lbl">EMAIL ADDRESS</label>
-                <input type="email" id="fn_email" class="save-field">
-
-                <label class="lbl">WEBSITE ADDRESS</label>
-                <input type="url" id="fn_web" class="save-field" placeholder="www.example.co.uk">
-                
-                <label class="lbl">BUSINESS ADDRESS</label>
-                <textarea id="fn_addr" class="save-field"></textarea>
-
-                <label class="lbl">VAT REGISTRATION NO.</label>
-                <input type="text" id="fn_vatno" class="save-field">
+                <label class="lbl">TRADING NAME</label><input type="text" id="fn_name" class="save-field">
+                <label class="lbl">SPECIALISING IN</label><input type="text" id="fn_trade" class="save-field">
+                <label class="lbl">PHONE NUMBER</label><input type="tel" id="fn_phone" class="save-field">
+                <label class="lbl">EMAIL ADDRESS</label><input type="email" id="fn_email" class="save-field">
+                <label class="lbl">WEBSITE ADDRESS</label><input type="url" id="fn_web" class="save-field">
+                <label class="lbl">BUSINESS ADDRESS</label><textarea id="fn_addr" class="save-field"></textarea>
+                <label class="lbl">VAT REGISTRATION NO.</label><input type="text" id="fn_vatno" class="save-field">
             </div>
         </section>
 
         <section id="bank" class="page">
             <div class="card">
                 <h2 class="title">BANK DETAILS</h2>
-                <label class="lbl">BANK NAME</label>
-                <input type="text" id="fn_bank" class="save-field">
-                <label class="lbl">SORT CODE</label>
-                <input type="text" id="fn_sort" class="save-field">
-                <label class="lbl">ACCOUNT NUMBER</label>
-                <input type="text" id="fn_acc" class="save-field">
-                <label class="lbl">IBAN / SWIFT</label>
-                <input type="text" id="fn_iban" class="save-field">
+                <label class="lbl">BANK NAME</label><input type="text" id="fn_bank" class="save-field">
+                <label class="lbl">SORT CODE</label><input type="text" id="fn_sort" class="save-field">
+                <label class="lbl">ACCOUNT NUMBER</label><input type="text" id="fn_acc" class="save-field">
+                <label class="lbl">IBAN / SWIFT</label><input type="text" id="fn_iban" class="save-field">
+            </div>
+        </section>
+
+        <section id="client" class="page">
+            <div class="card">
+                <h2 class="title">CLIENT DETAILS</h2>
+                <label class="lbl">CLIENT NAME</label><input type="text" id="cl_name" class="save-field">
+                <label class="lbl">SITE ADDRESS</label><textarea id="cl_addr" class="save-field"></textarea>
+                <label class="lbl">CONTACT NUMBER</label><input type="tel" id="cl_phone" class="save-field">
+                <label class="lbl">REFERENCE / JOB NO.</label><input type="text" id="cl_ref" class="save-field">
+            </div>
+        </section>
+
+        <section id="quote" class="page">
+            <div class="card">
+                <h2 class="title">QUOTE GENERATOR</h2>
+                <label class="lbl">JOB DESCRIPTION</label>
+                <textarea id="q_desc" class="save-field" style="height: 100px;"></textarea>
+                <label class="lbl">VALID UNTIL</label><input type="date" id="q_date" class="save-field">
+                <div class="res-box">
+                    <label class="lbl" style="margin:0; color:white;">TOTAL ESTIMATE</label>
+                    <div id="q_total" class="res-val">£0.00</div>
+                </div>
             </div>
         </section>
 
         <section id="vat" class="page">
             <div class="card">
                 <h2 class="title">VAT CALCULATOR</h2>
-                <label class="lbl">NET AMOUNT (£)</label>
-                <input type="number" id="vIn" placeholder="0.00">
+                <label class="lbl">NET AMOUNT (£)</label><input type="number" id="vIn" placeholder="0.00">
                 <div class="res-box">
-                    <label class="lbl" style="margin:0; color:white;">VAT AMOUNT (20%)</label>
-                    <div id="vTax" class="res-val">£0.00</div>
+                    <label class="lbl" style="margin:0; color:white;">VAT AMOUNT (20%)</label><div id="vTax" class="res-val">£0.00</div>
                     <hr style="border:0; border-top:1px solid var(--orange); margin:10px 0;">
-                    <label class="lbl" style="margin:0; color:white;">TOTAL INC. VAT</label>
-                    <div id="vOut" class="res-val">£0.00</div>
+                    <label class="lbl" style="margin:0; color:white;">TOTAL INC. VAT</label><div id="vOut" class="res-val">£0.00</div>
                 </div>
             </div>
         </section>
@@ -75,22 +82,35 @@
         <section id="calc" class="page">
             <div class="card">
                 <h2 class="title">BUSINESS CALCULATOR</h2>
-                <label class="lbl">LABOUR COST (£)</label>
-                <input type="number" id="bL" placeholder="0.00">
-                <label class="lbl">MATERIALS COST (£)</label>
-                <input type="number" id="bM" placeholder="0.00">
-                <label class="lbl">MARKUP (%)</label>
-                <input type="number" id="bMk" value="20">
+                <label class="lbl">LABOUR COST (£)</label><input type="number" id="bL" placeholder="0.00">
+                <label class="lbl">MATERIALS COST (£)</label><input type="number" id="bM" placeholder="0.00">
+                <label class="lbl">MARKUP (%)</label><input type="number" id="bMk" value="20">
                 <div class="res-box">
-                    <label class="lbl" style="margin:0; color:white;">SUBTOTAL (COST)</label>
-                    <div id="bSub" class="res-val">£0.00</div>
-                    <label class="lbl" style="margin:10px 0 0; color:white;">TOTAL QUOTE</label>
-                    <div id="bQ" class="res-val">£0.00</div>
+                    <label class="lbl" style="margin:0; color:white;">SUBTOTAL (COST)</label><div id="bSub" class="res-val">£0.00</div>
+                    <label class="lbl" style="margin:10px 0 0; color:white;">TOTAL QUOTE</label><div id="bQ" class="res-val">£0.00</div>
                 </div>
+            </div>
+        </section>
+
+        <section id="terms" class="page">
+            <div class="card">
+                <h2 class="title">TERMS & CONDITIONS</h2>
+                <textarea id="fn_terms" class="save-field" style="height: 250px;" placeholder="Type your standard T&Cs here..."></textarea>
+            </div>
+        </section>
+
+        <section id="readme" class="page">
+            <div class="card">
+                <h2 class="title">APP GUIDE</h2>
+                <p style="color:white; font-size: 0.8rem; line-height: 1.4;">
+                    <strong class="orange">AUTO-SAVE:</strong> Every bar saves the moment you type. You don't need a save button [cite: 2026-02-26].<br><br>
+                    <strong class="orange">QUOTES:</strong> Use the Biz Calc to find your price, then enter it into the Quote section for your client [cite: 2026-03-02].<br><br>
+                    <strong class="orange">PRIVACY:</strong> All data is stored locally on your device only [cite: 2026-02-26].
+                </p>
             </div>
         </section>
     </main>
 
-    <script src="js/app.js?v=12"></script>
+    <script src="js/app.js?v=13"></script>
 </body>
 </html>
