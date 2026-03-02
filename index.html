@@ -3,42 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TOOLBOXPAY - STABLE CORE</title>
-    <link rel="stylesheet" href="style.css?v=1.0.1">
+    <title>TOOLBOXPAY v58.0</title>
+    <link rel="stylesheet" href="style.css?v=58">
 </head>
-<body class="grid-lock">
+<body>
+    <div id="app"></div>
 
-    <header class="app-header">
-        <span class="logo-t">TOOLBOX</span><span class="logo-p">PAY</span>
-    </header>
-
-    <nav class="nav-reel" id="main-nav">
-        <button class="nav-btn active" data-target="profile">PROFILE</button>
-        <button class="nav-btn" data-target="bank">BANK</button>
-        <button class="nav-btn" data-target="vat">VAT</button>
-        <button class="nav-btn" data-target="calc">CALC</button>
-    </nav>
-
-    <main id="app-viewport">
-        <section id="profile" class="view visible">
-            <div class="card">
-                <h2>Business Profile</h2>
-                <label>Trading Name</label><input type="text" id="p_name" class="store">
-                <label>Specialising In</label><input type="text" id="p_spec" class="store">
-                <label>Address</label><textarea id="p_addr" class="store" rows="3"></textarea>
-            </div>
-        </section>
-
-        <section id="bank" class="view">
-            <div class="card">
-                <h2>Bank Details</h2>
-                <label>Bank Name</label><input type="text" id="b_name" class="store">
-                <label>Sort Code</label><input type="text" id="b_sort" class="store" placeholder="00-00-00">
-                <label>Account Number</label><input type="text" id="b_acc" class="store">
-            </div>
-        </section>
-    </main>
-
-    <script src="logic_v1_0_1.js?v=1.0.1"></script>
+    <script src="app.js?v=58"></script>
 </body>
 </html>
